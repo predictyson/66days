@@ -1,5 +1,8 @@
 # 66 days
 
+-> **[Notion](https://checker-clavicle-3f2.notion.site/01f13a28c11e44059a9752581920cbc7) 구경가기**<br>
+-> **[우리의 열정! 회의록](https://checker-clavicle-3f2.notion.site/b8cc947fe67c45bea2f91792a5a6380a) 구경가기**
+
 ## 목차
 
 1. 서비스 소개
