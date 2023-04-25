@@ -1,4 +1,4 @@
-package ssafy.db.repository;
+package com.ssafy.db.repository;
 
 public interface UserRepository {
 }

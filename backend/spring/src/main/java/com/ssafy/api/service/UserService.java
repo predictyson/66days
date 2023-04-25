@@ -1,4 +1,4 @@
-package ssafy.api.service;
+package com.ssafy.api.service;
 
 
 public interface UserService {

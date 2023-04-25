@@ -1,5 +1,6 @@
-package ssafy.api.controller;
+package com.ssafy.api.controller;
 
+import com.ssafy.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,6 @@ import com.kakao.auth.exception.ServerErrorException;
 import com.kakao.auth.helper.UrlHelper;
 import com.kakao.auth.response.OAuthToken;
 import com.kakao.auth.response.ResponseAuth;
-import ssafy.api.service.UserService;
 
 @Controller
 public class UserController {

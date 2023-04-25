@@ -1,4 +1,4 @@
-package ssafy.db.entity.user;
+package com.ssafy.db.entity.user;
 
 public enum Provider {
     KAKAO, GITHUB
