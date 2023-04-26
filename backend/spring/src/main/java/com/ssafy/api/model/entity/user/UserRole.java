@@ -1,4 +1,4 @@
-package com.ssafy.db.entity.user;
+package com.ssafy.api.model.entity.user;
 
 public enum UserRole {
     ROLE_USER, ROLE_ADMIN

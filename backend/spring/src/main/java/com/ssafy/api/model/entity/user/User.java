@@ -1,4 +1,4 @@
-package com.ssafy.db.entity.user;
+package com.ssafy.api.model.entity.user;
 
 import javax.persistence.*;
 import java.util.*;
