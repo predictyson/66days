@@ -8,6 +8,7 @@
 1. 서비스 소개
 1. 주요 기능
 1. 기능명세서
+1. Sequence Diagram
 1. 기술스택
 1. 와이어프레임
 1. ERD
@@ -35,51 +36,128 @@
 7. **랭킹**<br>
    개인별 연속 스트릭 일수, 경험치량, 완료한 습관 수 별로 서비스 내 전체 유저 랭킹을 제공합니다.
 
-<br>
+## 3. Sequence Diagram
 
----
+### 3-1. 그룹에 참여하는 순서
 
-## 3. 기능명세서
+```mermaid
+sequenceDiagram
+    participant UserA
+    participant Server
+    participant Public
+    participant UserB
+
+    UserA ->> Server: create a group
+    break when UserA owns a group
+      Server -->> UserA: not allowed
+    end
+    Server ->> Server: created a group
+    Server -->> UserA: return this group
+    UserA ->> Public: recruit users in public
+    UserB -->> Public: search for a group to join
+    Public ->> UserB: return a group
+    UserB -->> UserA: ask to join
+    UserA ->> Server: accept the request
+    alt is in more than 5 groups
+      Server ->> UserB: decline
+    else is not
+      Server ->> UserB: accept
+    end
+    UserB -->> UserA: join UserA's group
+
+```
+
+### 3-2. 챌린지에 참여하는 순서
+
+```mermaid
+sequenceDiagram
+    participant Owner
+    participant User
+    participant Server
+
+    User -->> Owner: ask to create a challenge
+    note left of User: write a post on Board
+    Owner ->> Server: create a challenge
+    Server ->> Server: created a challenge
+    Server -->> Owner: return this challenge
+    Owner ->> User: reply to User
+    note left of User: comment on the post
+    User ->> Server: ask to join the challenge
+    break when User is challenging the same category
+      Server -->> User: decline
+    end
+    Server -->> Owner: apply to the challenge
+    Owner ->> User: accept
+    User -->> Owner: join the challenge
+```
+
+### 3-3. 챌린지 진행 순서
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Challenge
+    participant Server
+
+    Challenge -->> User: Here is your job
+    alt do Challenge
+      User ->> Challenge: finished the challenge
+      Challenge -->> User: OK!
+    else not yet
+      loop Every 18, 21, 23 p.m.
+        Server -->> Challenge: check if User does
+        Challenge ->> Server: return User
+        Server -->> User: notify
+      end
+      Challenge ->> Server: freeze at midnight
+      break when freeze doesn't remains
+        Server -->> Challenge: failed Challenge
+      end
+      Server -->> Challenge: freezed!
+    end
+
+
+```
+
+## 4. 기능명세서
 
 - 습관 관련 기능 명세서
-  ![기능명세서](/%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C.png)
+  ![기능명세서](./assets//%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C.png)
   <br>
 
 - 포인트, 경험치 관련 기능 명세서
-  ![기능명세서2](/%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C2.png)
+  ![기능명세서2](./assets/%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C2.png)
 
 - 알림 관련 기능 명세서
   ![기능명세서3](/%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C3.png)
   <br>
   <br>
 
----
+### 5. 기술스택
 
-### 4. 기술스택
-
-![기술스택](/기술스택.png)
-![기술스택](/기술스택2.png)
+![기술스택](./assets/기술스택.png)
+![기술스택](./assets/기술스택2.png)
 
 ---
 
-## 5. 와이어프레임
+## 6. 와이어프레임
 
 - 메인 페이지<br>
-  ![메인페이지](wkdbf1.PNG)
+  ![메인페이지](./assets/wkdbf1.PNG)
 - 그룹 검색 페이지<br>
-  ![그룹 검색 페이지](wkdbf2.PNG)
+  ![그룹 검색 페이지](./assets/wkdbf2.PNG)
 - 마이 페이지<br>
-  ![마이 페이지](wkdbf3.PNG)
+  ![마이 페이지](./assets/wkdbf3.PNG)
 - 습관 페이지<br>
-  ![습관 페이지](wkdbf4.PNG)
+  ![습관 페이지](./assets/wkdbf4.PNG)
 
 ---
 
-## 6. ERD
+## 7. ERD
 
-![ERD](wkdbferd.PNG)
+![ERD](./assets/wkdbferd.PNG)
 
-## 7. 과제
+## 8. 과제
 
 프로젝트 개발에 앞서 직면한 문제점은 크게 세 가지가 있습니다.
 
