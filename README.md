@@ -40,96 +40,27 @@
 
 ### 3-1. 그룹에 참여하는 순서
 
-```mermaid
-sequenceDiagram
-    participant UserA
-    participant Server
-    participant Public
-    participant UserB
-
-    UserA ->> Server: create a group
-    break when UserA owns a group
-      Server -->> UserA: not allowed
-    end
-    Server ->> Server: created a group
-    Server -->> UserA: return this group
-    UserA ->> Public: recruit users in public
-    UserB -->> Public: search for a group to join
-    Public ->> UserB: return a group
-    UserB -->> UserA: ask to join
-    UserA ->> Server: accept the request
-    alt is in more than 5 groups
-      Server ->> UserB: decline
-    else is not
-      Server ->> UserB: accept
-    end
-    UserB -->> UserA: join UserA's group
-
-```
+![sequence1](./assets/sequence1.PNG)
 
 ### 3-2. 챌린지에 참여하는 순서
 
-```mermaid
-sequenceDiagram
-    participant Owner
-    participant User
-    participant Server
-
-    User -->> Owner: ask to create a challenge
-    note left of User: write a post on Board
-    Owner ->> Server: create a challenge
-    Server ->> Server: created a challenge
-    Server -->> Owner: return this challenge
-    Owner ->> User: reply to User
-    note left of User: comment on the post
-    User ->> Server: ask to join the challenge
-    break when User is challenging the same category
-      Server -->> User: decline
-    end
-    Server -->> Owner: apply to the challenge
-    Owner ->> User: accept
-    User -->> Owner: join the challenge
-```
+![sequence2](./assets/sequence2.PNG)
 
 ### 3-3. 챌린지 진행 순서
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant Challenge
-    participant Server
-
-    Challenge -->> User: Here is your job
-    alt do Challenge
-      User ->> Challenge: finished the challenge
-      Challenge -->> User: OK!
-    else not yet
-      loop Every 18, 21, 23 p.m.
-        Server -->> Challenge: check if User does
-        Challenge ->> Server: return User
-        Server -->> User: notify
-      end
-      Challenge ->> Server: freeze at midnight
-      break when freeze doesn't remains
-        Server -->> Challenge: failed Challenge
-      end
-      Server -->> Challenge: freezed!
-    end
-
-
-```
+![sequence3](./assets/sequence3.PNG)
 
 ## 4. 기능명세서
 
 - 습관 관련 기능 명세서
-  ![기능명세서](./assets//%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C.png)
+  ![기능명세서](./assets/%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C.png)
   <br>
 
 - 포인트, 경험치 관련 기능 명세서
   ![기능명세서2](./assets/%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C2.png)
 
 - 알림 관련 기능 명세서
-  ![기능명세서3](/%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C3.png)
+  ![기능명세서3](./assets/%EA%B8%B0%EB%8A%A5%EB%AA%85%EC%84%B8%EC%84%9C3.png)
   <br>
   <br>
 
