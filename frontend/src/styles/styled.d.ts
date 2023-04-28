@@ -1,5 +1,6 @@
 import "styled-components";
 
+declare module "*.ttf";
 declare module "styled-components" {
   export interface DefaultTheme {
     colors: {
@@ -24,7 +25,6 @@ declare module "styled-components" {
       semibold: number;
       bold: number;
       extrabold: number;
-      extraBold: number;
     };
   }
 }
