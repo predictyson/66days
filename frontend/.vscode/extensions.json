@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "mhutchie.git-graph",
+    "ecmel.vscode-html-css",
+    "kisstkondoros.vscode-gutter-preview",
+    "visualstudioexptteam.vscodeintellicode",
+    "christian-kohler.path-intellisense",
+    "styled-components.vscode-styled-components",
+    "wayou.vscode-todo-highlight"
+  ]
+}
