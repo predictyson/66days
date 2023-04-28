@@ -1,8 +1,16 @@
 import { useState } from "react";
+<<<<<<< HEAD:frontend/src/routes/Home.tsx
 import reactLogo from "../assets/react.svg";
 import viteLogo from "/vite.svg";
 
 export default function Home() {
+=======
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+
+function App() {
+>>>>>>> ff0e4c0 ( feat: Global Style 설정):frontend/src/App.tsx
   const [count, setCount] = useState(0);
 
   return (
@@ -30,3 +38,8 @@ export default function Home() {
     </>
   );
 }
+<<<<<<< HEAD:frontend/src/routes/Home.tsx
+=======
+
+export default App;
+>>>>>>> ff0e4c0 ( feat: Global Style 설정):frontend/src/App.tsx
