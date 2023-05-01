@@ -1,12 +1,11 @@
 import ReactDOM from "react-dom/client";
+import React from "react";
 import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import router from "./router";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { normalize } from "styled-normalize";
 import { theme } from "./styles/theme";
-// Kanit Font import
-
 import GlobalFont from "./styles/GlobalFont.tsx";
 
 const GlobalStyle = createGlobalStyle`
@@ -34,16 +33,11 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-
-  <ThemeProvider theme={theme}>
-    <GlobalStyle />
-<<<<<<< HEAD
-    <React.StrictMode>
-   <RouterProvider router={router} />
-    </React.StrictMode>
-=======
-    <GlobalFont />
-    <App />
->>>>>>> 1575142 (fix: 폰트 적용 오류 해결)
-  </ThemeProvider>
+  <React.StrictMode>
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <GlobalFont />
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  </React.StrictMode>
 );

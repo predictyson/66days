@@ -29,7 +29,7 @@ const StyledHeader = styled(Header)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
+  font-size: 1.6rem;
   .logo {
     display: flex;
   }
