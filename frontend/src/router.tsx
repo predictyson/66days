@@ -9,6 +9,7 @@ import Home from "./routes/Home";
 import LandingPage from "./routes/LandingPage";
 import Group from "./routes/Group";
 import Challenge from "./routes/Challenge";
+import MainPage from "./routes/MainPage";
 
 export default createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +22,7 @@ export default createBrowserRouter(
           path="/groups/:groupId/challenges/:challengeId"
           element={<Challenge />}
         />
+        <Route path="/main" element={<MainPage />} />
       </Route>
     </Route>
   )
