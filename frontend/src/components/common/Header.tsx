@@ -1,26 +1,10 @@
-import { Layout } from "antd";
+import { Header } from "antd/es/layout/layout";
 import styled from "styled-components";
 import LogoTitle from "../../assets/logo-title.svg";
 import Logo from "../../assets/logo.svg";
 import avartar from "../../assets/avatar.svg";
 
-const { Header, Footer, Content } = Layout;
-
-interface PropsType {
-  children: React.ReactNode;
-}
-
-export default function CustomLayout(props: PropsType) {
-  return (
-    <StyledLayout>
-      <CustomHeader />
-      <StyledContent>{props.children}</StyledContent>
-      <StyledFooter>Footer</StyledFooter>
-    </StyledLayout>
-  );
-}
-
-function CustomHeader() {
+export default function CustomHeader() {
   return (
     <StyledHeader>
       <div className="logo">
@@ -35,11 +19,6 @@ function CustomHeader() {
     </StyledHeader>
   );
 }
-
-const StyledLayout = styled(Layout)`
-  width: 100vw;
-  height: 100vh;
-`;
 
 const StyledHeader = styled(Header)`
   text-align: center;
@@ -63,20 +42,4 @@ const StyledHeader = styled(Header)`
       margin-right: 1rem;
     }
   }
-`;
-
-const StyledContent = styled(Content)`
-  text-align: center;
-  min-height: 120;
-  line-height: 120px;
-  color: #fff;
-  background-color: #108ee9;
-  padding-inline: 5rem;
-`;
-
-const StyledFooter = styled(Footer)`
-  text-align: center;
-  color: #fff;
-  background-color: #6d6d6d;
-  padding-inline: 5rem;
 `;
