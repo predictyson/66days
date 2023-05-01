@@ -20,14 +20,13 @@ export default function Root() {
 
 const StyledLayout = styled(Layout)`
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
 `;
 
 const StyledContent = styled(Content)`
-  text-align: center;
+  font-size: 1rem;
+  /* text-align: center; */
   min-height: 120;
-  line-height: 120px;
-  color: #fff;
-  background-color: #108ee9;
+  /* line-height: 120px; */
   padding-inline: 5rem;
 `;
