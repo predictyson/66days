@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { theme } from "../styles/theme";
+import LandingGif1 from "../assets/landing/landing1.gif";
 export default function LandingPage() {
   return (
     <>
@@ -20,7 +21,9 @@ export default function LandingPage() {
           </div>
           <JoinButton>66days 시작하기</JoinButton>
         </LeftWrapper>
-        <GifWrapper></GifWrapper>
+        <GifWrapper>
+          <img src={LandingGif1} alt="landing1" />
+        </GifWrapper>
       </Container>
       <Container></Container>
     </>
@@ -29,13 +32,14 @@ export default function LandingPage() {
 const Container = styled.div`
   width: 100%;
   height: 68.8rem;
+  border: solid 1px black;
   display: flex;
   padding: 0 7.5rem;
   font-family: Pretendard;
 `;
 
 const Title = styled.div`
-  margin-top: 17rem;
+  margin-top: 15rem;
   font-size: 4.8rem;
   font-family: Pretendard;
   font-weight: ${theme.fontWeight.semibold};
@@ -77,5 +81,7 @@ const JoinButton = styled.div`
 `;
 const GifWrapper = styled.div`
   width: 40%;
-  border: solid 1px red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
