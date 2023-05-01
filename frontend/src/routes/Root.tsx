@@ -25,10 +25,18 @@ const StyledLayout = styled(Layout)`
   background-color: ${theme.colors.white};
 `;
 
+// const StyledContent = styled(Content)`
+//   /* text-align: center; */
+//   min-height: 120;
+//   /* line-height: 120px; */
+// `;
+
 const StyledContent = styled(Content)`
-  /* text-align: center; */
+  font-size: 1rem;
+  text-align: center;
   min-height: 120;
-  /* line-height: 120px; */
+  line-height: 120px;
+  background-color: #fff;
   padding-inline: 5rem;
   font-size: 1rem;
 `;
