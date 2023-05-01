@@ -29,4 +29,5 @@ const StyledContent = styled(Content)`
   min-height: 120;
   /* line-height: 120px; */
   padding-inline: 5rem;
+  font-size: 1rem;
 `;
