@@ -48,10 +48,11 @@ const BoardBoxWrapper = styled(Content)`
     right: 2rem;
     font-size: 3rem;
     color: ${theme.colors.failure};
+    filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.2));
   }
 
   .admin:hover {
-    filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.3));
   }
 
   .board-title {

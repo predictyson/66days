@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { Layout } from "antd";
+import React, { useState } from "react";
+import { Layout, Checkbox } from "antd";
+import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import styled from "styled-components";
-import { TeamOutlined, TrophyFilled } from "@ant-design/icons";
+import { TeamOutlined, TrophyFilled, SettingFilled } from "@ant-design/icons";
 import { theme } from "../styles/theme";
 import Algorithms from "../assets/algorithm_badge.png";
 import CS from "../assets/cs_badge.png";
@@ -32,7 +33,10 @@ const badges = [
 ];
 
 export default function Group() {
-  const [memberListModal, setMemberListModal] = useState(false);
+  const [memberListModal, setMemberListModal] = useState<boolean>(false);
+  const [memberSettingModal, setMemberSettingModal] = useState(false);
+  const [createChallengeModal, setCreateChallengeModal] = useState(false);
+  const [tab, setTab] = useState(0);
 
   const [challengeList, setChallengeList] = useState([
     {
@@ -133,12 +137,154 @@ export default function Group() {
     },
   ]);
 
+  const TabContent = ({ ...props }) => {
+    if (props.tab === 0) {
+      return (
+        <TabContentWrapper>
+          {memberList.map((member) => (
+            <div className="member-setting-container">
+              <SingleMemberListBox
+                profile={member.profile}
+                nickname={member.nickname}
+                owner={member.owner}
+                manager={member.manager}
+                badge={member.badge}
+              />
+              <div className="setting-btn-box">
+                <CommonButton
+                  className="setting-btn"
+                  color={theme.colors.lightblue}
+                >
+                  매니저 지정
+                </CommonButton>
+                <CommonButton
+                  className="setting-btn"
+                  color={theme.colors.failure}
+                >
+                  강퇴하기
+                </CommonButton>
+              </div>
+            </div>
+          ))}
+        </TabContentWrapper>
+      );
+    } else {
+      return (
+        <TabContentWrapper>
+          {memberList.map((member) => (
+            <div className="member-setting-container">
+              <SingleMemberListBox
+                profile={member.profile}
+                nickname={member.nickname}
+                // owner={member.owner}
+                // manager={member.manager}
+                badge={member.badge}
+              />
+              <div className="setting-btn-box">
+                <CommonButton
+                  className="setting-btn"
+                  color={theme.colors.lightblue}
+                >
+                  수락
+                </CommonButton>
+                <CommonButton
+                  className="setting-btn"
+                  color={theme.colors.failure}
+                >
+                  거절
+                </CommonButton>
+              </div>
+            </div>
+          ))}
+        </TabContentWrapper>
+      );
+    }
+  };
+
+  function clickFirstTab() {
+    document.getElementById("second-tab")?.classList.remove("active-tab");
+    document.getElementById("first-tab")?.classList.add("active-tab");
+    setTab(0);
+  }
+
+  function clickSecondTab() {
+    document.getElementById("first-tab")?.classList.remove("active-tab");
+    document.getElementById("second-tab")?.classList.add("active-tab");
+    setTab(1);
+  }
+
+  const onChange = (e: CheckboxChangeEvent) => {
+    // 자기 자신을 제외한 체크박스 모두 해제
+    console.log(`checked = ${e.target.checked}`);
+  };
+
   return (
     <>
+      {createChallengeModal ? (
+        <Modal closeModal={() => setCreateChallengeModal(false)}>
+          <CreateChallengeModalWrapper>
+            <div className="modal-title">카테고리를 선택해주세요</div>
+            <div className="modal-info">
+              카테고리당 하나씩만 습관 형성이 가능합니다.
+            </div>
+            <CategoryBoxContainer>
+              <div className="category-box">
+                <Checkbox className="category-checkbox" onChange={onChange} />
+                <img className="category-img" src={Algorithms} />
+                <div className="category-info">알고리즘</div>
+              </div>
+              <div className="category-box">
+                <Checkbox className="category-checkbox" onChange={onChange} />
+                <img className="category-img" src={Lecture} />
+                <div className="category-info">강의 시청</div>
+              </div>
+              <div className="category-box">
+                <Checkbox className="category-checkbox" onChange={onChange} />
+                <img className="category-img" src={Blog} />
+                <div className="category-info">기술 블로그</div>
+              </div>
+              <div className="category-box">
+                <Checkbox className="category-checkbox" onChange={onChange} />
+                <img className="category-img" src={Book} />
+                <div className="category-info">개발 서적</div>
+              </div>
+              <div className="category-box">
+                <Checkbox className="category-checkbox" onChange={onChange} />
+                <img className="category-img" src={CS} />
+                <div className="category-info">CS 공부</div>
+              </div>
+            </CategoryBoxContainer>
+          </CreateChallengeModalWrapper>
+        </Modal>
+      ) : null}
+
+      {memberSettingModal ? (
+        <Modal closeModal={() => setMemberSettingModal(false)}>
+          <MemberSettingModalWrapper>
+            <div className="modal-title">그룹 관리</div>
+            <TabContainer>
+              <ul className="tab-list">
+                <li
+                  id="first-tab"
+                  className="active-tab"
+                  onClick={clickFirstTab}
+                >
+                  그룹원 관리
+                </li>
+                |
+                <li id="second-tab" onClick={clickSecondTab}>
+                  대기 중인 요청
+                </li>
+              </ul>
+            </TabContainer>
+            <TabContent tab={tab} />
+          </MemberSettingModalWrapper>
+        </Modal>
+      ) : null}
       {memberListModal ? (
         <Modal closeModal={() => setMemberListModal(false)}>
           <MemberModalWrapper>
-            <div className="member__modal-title">그룹원 목록</div>
+            <div className="modal-title">그룹원 목록</div>
             <MemberListContainer>
               {memberList.map((member) => (
                 <SingleMemberListBox
@@ -173,6 +319,7 @@ export default function Group() {
                 font="Kanit-Regular"
                 margin="0 1rem 0 0"
                 cursor={true}
+                onClick={() => setMemberSettingModal(true)}
               >
                 그룹 관리
               </CommonButton>
@@ -211,6 +358,7 @@ export default function Group() {
                 color={theme.colors.gray500}
                 font="Kanit-Regular"
                 cursor={true}
+                onClick={() => setCreateChallengeModal(true)}
               >
                 챌린지 추가
               </CommonButton>
@@ -398,15 +546,126 @@ const MemberModalWrapper = styled(Content)`
   background-color: ${theme.colors.white};
   padding: 4.8rem;
   border-radius: 1rem;
-
-  .member__modal-title {
-    font-size: 2.4rem;
-    font-weight: 700;
-    padding-bottom: 3.2rem;
-  }
 `;
 
 const MemberListContainer = styled(Content)`
   display: flex;
   flex-direction: column;
+`;
+
+const MemberSettingModalWrapper = styled(Content)`
+  height: fit-content;
+  max-height: 90vh;
+  overflow-y: scroll;
+  background-color: ${theme.colors.white};
+  padding: 6.4rem 8rem;
+  border-radius: 1rem;
+`;
+
+const TabContainer = styled(Content)`
+  display: flex;
+  flex-direction: column;
+
+  .tab-list {
+    padding-left: 0;
+    display: flex;
+  }
+
+  .tab-list li {
+    list-style: none;
+    padding-right: 1rem;
+    color: ${theme.colors.gray400};
+    cursor: pointer;
+
+    &:hover {
+      color: ${theme.colors.black};
+    }
+  }
+
+  .tab-list li:last-child {
+    padding-left: 1rem;
+    padding-right: 0;
+  }
+
+  .active-tab {
+    color: ${theme.colors.black} !important;
+    font-weight: 700;
+  }
+`;
+
+const TabContentWrapper = styled(Content)`
+  padding-top: 5rem;
+
+  .member-setting-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .setting-btn-box {
+    display: flex;
+    padding-left: 1rem;
+  }
+
+  .setting-btn {
+    margin-left: 1rem;
+    cursor: pointer;
+  }
+`;
+
+const CreateChallengeModalWrapper = styled(Content)`
+  width: 50vw;
+  height: fit-content;
+  max-height: 90vh;
+  overflow-y: scroll;
+  background-color: ${theme.colors.white};
+  padding: 6.4rem 8rem;
+  border-radius: 1rem;
+
+  .modal-info {
+    margin-top: -3rem;
+    color: ${theme.colors.gray500};
+  }
+`;
+
+const CategoryBoxContainer = styled(Content)`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-top: 2rem;
+
+  .category-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid ${theme.colors.gray200};
+    border-radius: 1rem;
+    width: 45%;
+    padding: 1.6rem 5%;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+  }
+
+  .category-box:nth-child(5),
+  .category-box:nth-child(6) {
+    margin-bottom: 0;
+  }
+
+  .category-checkbox {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .category-img {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 2rem;
+    object-fit: cover;
+  }
+
+  .category-info {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
 `;

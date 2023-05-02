@@ -43,4 +43,10 @@ const ModalContainer = styled(Content)`
   position: absolute;
   max-height: 90vh;
   overflow-y: scroll;
+
+  .modal-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    padding-bottom: 3.2rem;
+  }
 `;
