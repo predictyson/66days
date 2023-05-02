@@ -4,11 +4,27 @@ import { theme } from "../../styles/theme";
 import Profile1 from "../../assets/main/Profile1.png";
 import Profile2 from "../../assets/main/Profile2.png";
 import Profile3 from "../../assets/main/Profile3.png";
+import Vector1 from "../../assets/main/VectorMain.svg";
+import Vector2 from "../../assets/main/VectorMain2.svg";
 
 export default function Ranking() {
   return (
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
-      <LeftConainer>dd</LeftConainer>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        padding: "0 8rem",
+      }}
+    >
+      <LeftConainer>
+        <div className="title">Ranking</div>
+        <ImgConatiner>
+          <img src={Vector1} />
+        </ImgConatiner>
+        <ImgConatiner>
+          <img src={Vector2} />
+        </ImgConatiner>
+      </LeftConainer>
       <RightContainer>
         <RankingBox>
           <div className="title">경험치 Top3</div>
@@ -89,7 +105,7 @@ export default function Ranking() {
           </RankingWrapper>
           <MyRankingBox>
             My Rank #2
-            <div className="exp"> 1000 EXP</div>
+            <div className="exp"> 34개</div>
           </MyRankingBox>
         </RankingBox>
       </RightContainer>
@@ -99,13 +115,35 @@ export default function Ranking() {
 
 const LeftConainer = styled.div`
   margin-top: 3.2rem;
-  width: 48%;
-  height: 100%;
+  width: 50%;
+  height: 140rem;
   background-color: ${theme.colors.purple};
+  padding: 2rem;
+  .title {
+    font-size: 3.2rem;
+    font-weight: bold;
+  }
+  img {
+    width: 50rem;
+    height: 50rem;
+  }
+`;
+
+const ImgConatiner = styled.div`
+  width: 100%;
+  height: 45%;
+  /* border: solid 2px red; */
+  margin-top: 4rem;
 `;
 
 const RightContainer = styled.div`
   width: 50%;
+  display: flex;
+  /* align-items: flex-end; */
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; 
+  */
 `;
 
 const RankingBox = styled.div`
