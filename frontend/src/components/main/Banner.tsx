@@ -34,7 +34,7 @@ export default function Banner() {
 
 const Container = styled.div`
   width: 100%;
-  height: 76.8rem;
+  height: 67.2rem;
   display: flex;
   font-family: Pretendard;
   background-color: black;
