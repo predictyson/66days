@@ -157,7 +157,7 @@ const RankingBox = styled.div`
   flex-direction: column;
   .title {
     font-size: 3.2rem;
-    font-weight: bold;
+    font-weight: ${theme.fontWeight.extrabold};
     text-align: center;
   }
 `;

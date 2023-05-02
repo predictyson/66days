@@ -13,31 +13,8 @@ import Slider, { CustomArrowProps } from "react-slick";
 // interface ArrowProps extends CustomArrowProps {
 //   onClick?: MouseEventHandler<HTMLDivElement>;
 // }
+
 export default function GroupList() {
-  const [startIndex, setStartIndex] = useState<number>(0);
-  const [groupCount, setGroupCount] = useState<number>(3);
-
-  const handlePrevClick = () => {
-    setStartIndex(0);
-    setGroupCount(3);
-
-    // const newStartIndex = Math.max(startIndex - groupCount, 0);
-    // setStartIndex(newStartIndex);
-    // console.log(newStartIndex);
-  };
-
-  const handleNextClick = () => {
-    setStartIndex(3);
-    setGroupCount(5);
-
-    // const newStartIndex = Math.min(
-    //   startIndex + groupCount,
-    //   groupItems.length - groupCount
-    // );
-    // setStartIndex(newStartIndex);
-    // console.log(newStartIndex);
-  };
-
   const groupItems = [
     <GroupItem />,
     <GroupItem />,
@@ -45,11 +22,31 @@ export default function GroupList() {
     <GroupItem />,
     <GroupItem />,
   ];
+  let group: any = [];
+  group[0] = groupItems.slice(0, 3);
+  group[1] = groupItems.slice(3, groupItems.length);
+  if (groupItems.length === 5) {
+    group[1].push(<BoxWrapper />);
+  }
+  const [sliderdata, setSliderData] = useState(0);
+  const handlePrevClick = () => {
+    // const newStartIndex = Math.max(startIndex - groupCount, 0);
+    // setStartIndex(newStartIndex);
+    // console.log(newStartIndex);
+    setSliderData(Math.abs(sliderdata - 1));
+  };
 
-  const visibleGroupItems = groupItems.slice(
-    startIndex,
-    startIndex + groupCount
-  );
+  const handleNextClick = () => {
+    // const newStartIndex = Math.min(
+    //   startIndex + groupCount,
+    //   groupItems.length - groupCount
+    // );
+    // setStartIndex(newStartIndex);
+    // console.log(newStartIndex);
+    setSliderData(Math.abs(sliderdata - 1));
+  };
+
+  const visibleGroupItems = groupItems.slice();
 
   return (
     <Container>
@@ -60,7 +57,7 @@ export default function GroupList() {
           <img src={NextArrow} onClick={handleNextClick} />
         </ArrowWrapper>
       </Title>
-      <GroupContainer>{visibleGroupItems}</GroupContainer>
+      <GroupContainer>{group[sliderdata]}</GroupContainer>
     </Container>
   );
 }
@@ -94,4 +91,10 @@ const ArrowWrapper = styled.div`
   img {
     cursor: pointer;
   }
+`;
+
+const BoxWrapper = styled.div`
+  width: 33.2rem;
+  height: 43.8rem;
+  border-radius: 15px;
 `;
