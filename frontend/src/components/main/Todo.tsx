@@ -78,7 +78,6 @@ const Container = styled.div`
   font-family: Pretendard;
   padding: 7.6rem 8rem;
   height: 70rem;
-  border: solid 1px black;
   display: flex;
   flex-direction: column;
 `;
