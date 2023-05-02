@@ -2,6 +2,77 @@ import { SendOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
 import YoutubeFilled from "@ant-design/icons/lib/icons/YoutubeFilled";
 import { Avatar, Button, Checkbox, Input } from "antd";
 import styled from "styled-components";
+import FreezeIcon from "../assets/freeze.svg";
+import FlagIcon from "../assets/flag.svg";
+
+const mockGraph = [
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: true, freeze: false },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: true, freeze: false },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: true, freeze: false },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: true, freeze: false },
+  { checked: false, freeze: true },
+  { checked: false, freeze: true },
+  { checked: true, freeze: false },
+  { checked: false, freeze: true },
+];
 
 export default function Challenge() {
   return (
@@ -55,29 +126,116 @@ export default function Challenge() {
           </div>
         </StyledChat>
         <StyledMember>
-          <div style={{ margin: "1.4rem" }}>
+          <div className="title">
             <TeamOutlined style={{ fontSize: "2rem" }} />
             구성원(3인)
           </div>
-
-          <Checkbox
-            onChange={() => {}}
-            style={{
-              flexDirection: "row-reverse",
-              justifyContent: "space-between",
-            }}
-          >
-            <Avatar icon={<UserOutlined />} style={{ marginRight: "1rem" }} />
-            피그마마스터김태원
-          </Checkbox>
+          <div className="content">
+            <div>
+              <Avatar icon={<UserOutlined />} style={{ marginRight: "1rem" }} />
+              {"피그마마스터김태원 asldkj asl;kfdj ;askldjf ;laskdf j;aslkd f asdl;fkj as;dlfkj  as;kldfj as;dklfj "
+                .substring(0, 10)
+                .concat("...")}
+            </div>
+            <Checkbox
+              onChange={() => {}}
+              style={{
+                flexDirection: "row-reverse",
+                justifyContent: "space-between",
+              }}
+              checked
+            />
+          </div>
         </StyledMember>
+      </StyledContainer>
+      <StyledTitle>
+        <h2 className="title">
+          챌린지 그래프 <span className="title__days">35</span>
+          <span className="title__desc">일째</span>
+        </h2>
+      </StyledTitle>
+      <StyledContainer>
+        <StyledGraph>
+          <div className="graph">
+            {mockGraph.map((el, i) => (
+              <Checkbox
+                key={i}
+                indeterminate={el.freeze}
+                onChange={() => {}}
+                checked={el.checked}
+              />
+            ))}
+          </div>
+          <img className="flag" src={FlagIcon} />
+        </StyledGraph>
+        <StyledFreeze>
+          <img src={FreezeIcon} width={50} height={50} />
+          <span>0개</span>
+        </StyledFreeze>
       </StyledContainer>
     </>
   );
 }
 
+const StyledGraph = styled.section`
+  flex: 3;
+  display: flex;
+  padding: 2.4rem;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  margin-right: 3.2rem;
+
+  .graph {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    /* max-height: 4rem; */
+    height: 8rem;
+    margin: 0;
+
+    label {
+      margin: 0;
+    }
+  }
+
+  .flag {
+    width: 8rem;
+    height: 8rem;
+    display: block;
+  }
+
+  .ant-checkbox-inner {
+    background-color: #b8a9fb;
+    border-color: transparent;
+  }
+  .ant-checkbox-inner:after {
+    border: 0;
+  }
+  .ant-checkbox-indeterminate {
+    .ant-checkbox-inner:after {
+      background-color: #6854c4;
+    }
+  }
+`;
+
+const StyledFreeze = styled.section`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 2.4rem;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+
+  span {
+    font-size: 2.4rem;
+    margin-left: 1rem;
+  }
+`;
+
 const StyledContainer = styled.div`
   display: flex;
+  margin-bottom: 4rem;
 `;
 
 const StyledMember = styled.section`
@@ -87,6 +245,22 @@ const StyledMember = styled.section`
   min-height: 40rem;
   padding: 2rem;
   font-size: 1.6rem;
+
+  .title {
+    margin-bottom: 1.4rem;
+  }
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .ant-checkbox-inner {
+      background-color: #6cd3c0;
+      border-color: transparent;
+      color: #6cd3c0;
+    }
+  }
 `;
 
 const StyledChat = styled.section`
@@ -155,11 +329,22 @@ const StyledChat = styled.section`
 
 const StyledTitle = styled.section`
   margin-top: 4rem;
-  margin-bottom: 4rem;
+  margin-bottom: 1.6rem;
   h1 {
     font-size: 3.2rem;
     font-family: "Kanit-Bold";
     margin: 0;
+  }
+  h2.title {
+    font-size: 2.4rem;
+    font-family: "Kanit-Bold";
+
+    .title__days {
+      color: #b8a9fb;
+    }
+    .title__desc {
+      font-size: 1.6rem;
+    }
   }
   div {
     font-size: 1.6rem;

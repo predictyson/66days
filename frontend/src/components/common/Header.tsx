@@ -23,6 +23,7 @@ export default function CustomHeader() {
 const StyledHeader = styled(Header)`
   position: fixed;
   width: 100vw;
+  z-index: 1;
   top: 0;
   border-bottom: 1px solid rgba(158, 158, 158, 0.2);
   text-align: center;
