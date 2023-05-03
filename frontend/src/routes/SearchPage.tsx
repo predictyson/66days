@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { theme } from "../styles/theme";
+import BreadCrumb from "../components/search/BreadCrumb";
+import GroupItem from "../components/search/GroupItem";
 export default function SearchPage() {
   return (
     <Container>
@@ -12,6 +14,10 @@ export default function SearchPage() {
         type="text"
         placeholder="그룹장 또는 그룹명을 입력해주세요"
       ></SearchInput>
+      <BreadCrumb />
+      <ItemContainer>
+        <GroupItem />
+      </ItemContainer>
     </Container>
   );
 }
@@ -48,4 +54,9 @@ const SearchInput = styled.input`
   ::placeholder {
     color: ${theme.colors.gray300};
   }
+`;
+
+const ItemContainer = styled.div`
+  margin-top: 1.6rem;
+  display: flex;
 `;
