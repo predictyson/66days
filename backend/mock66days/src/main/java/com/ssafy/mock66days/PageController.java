@@ -1,6 +1,10 @@
-package com.ssafy.mock66days.controller;
+package com.ssafy.mock66days;
 
-import com.ssafy.mock66days.model.dto.UserUpdateParamDTO;
+import com.ssafy.mock66days.challenge.model.dto.ChallengeMainPageResponseDTO;
+import com.ssafy.mock66days.group.model.dto.GroupMainPageResponseDTO;
+import com.ssafy.mock66days.member.model.dto.MemberMainPageResponseDTO;
+import com.ssafy.mock66days.member.model.dto.UserUpdateParamDTO;
+import com.ssafy.mock66days.rank.model.dto.RankMainPageResponseDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -12,34 +16,33 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/member")
-@Api("MEMBER API")
-public class MemberController {
+@RequestMapping("/")
+@Api("PAGE API")
+public class PageController {
 
     private static final String SUCCESS = "success";
     private static final String RESULT = "result";
-
-//    @ApiOperation(value = "소셜 회원가입", notes = "소셜 회원의 회원가입을 진행합니다.")
-//    @PostMapping("/social")
-//    public ResponseEntity<Map<String, String>> socialRegistration(
-//            @RequestBody @ApiParam(required = true) UserSocialRegistParamDTO userDTO
-//    ) {
-//
-//        Map<String, String> resultMap = new HashMap<String, String>();
-//
-//        resultMap.put(RESULT, SUCCESS);
-//        return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.OK);
-//    }
-
-    @ApiOperation(value = "닉네임 중복 확인", notes = "닉네임이 중복되는 지 여부를 확인해줍니다.")
-    @GetMapping("/nickname")
-    public ResponseEntity<Map<String, String>> nicknameDuplicateCheck(
-            @RequestParam(value = "nickname") @ApiParam(required = true) String nickname
+    @ApiOperation(value = "홈 화면", notes = "로그인 후 연결 되는 첫 페이지")
+    @GetMapping("/home")
+    public ResponseEntity<Map<String, Object>> getMainPage(
+//            @RequestHeader(value = "Authorization") @ApiParam(required = true) String token
+            @RequestHeader(value = "Authorization") String token
     ) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        Map<String, String> resultMap = new HashMap<String, String>();
+        MemberMainPageResponseDTO member = new MemberMainPageResponseDTO();
+        member.of("bronze", "moongchi@ssafy.com", 1500, 32000, "/image/카피바라.jpg", "카피바라");
+        resultMap.put("member-info", member);
 
-        return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.OK);
+        ChallengeMainPageResponseDTO challenge;
+        GroupMainPageResponseDTO group;
+        RankMainPageResponseDTO rank;
+
+
+
+        resultMap.put(RESULT, SUCCESS);
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     }
 
     @ApiOperation(value = "회원 정보 조회", notes = "해당 유저의 정보를 조회합니다.")

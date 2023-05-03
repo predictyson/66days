@@ -1,4 +1,4 @@
-package com.ssafy.mock66days.model.dto;
+package com.ssafy.mock66days.member.model.dto;
 
 import lombok.Data;
 
