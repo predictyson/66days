@@ -15,18 +15,32 @@ export default function GroupItem() {
       <img src={GroupImg} style={{ height: "18.8rem" }} />
       <MaterialWrapper>
         <div className="title">알고리즘 파트원 구해요</div>
-        <div style={{ display: "flex", marginTop: "0.7rem" }}>
-          {DUMMY.map((v, idx) => {
-            const category = CATEGORY.find((c) => c.title === v); // 해당 title의 category를 찾음
-            const col = category ? category.color : "gray";
-            return (
-              <CategoryItem key={idx} color={col}>
-                {v}
-              </CategoryItem>
-            );
-          })}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginTop: "0.7rem",
+            alignItems: "center",
+          }}
+        >
+          <div style={{ display: "flex" }}>
+            {DUMMY.map((v, idx) => {
+              const category = CATEGORY.find((c) => c.title === v); // 해당 title의 category를 찾음
+              const col = category ? category.color : "gray";
+              return (
+                <CategoryItem key={idx} color={col}>
+                  {v}
+                </CategoryItem>
+              );
+            })}
+          </div>
+          <span>모집중</span>
         </div>
+        <div className="content">열심히 할 사람만 와주세요</div>
       </MaterialWrapper>
+      <ButtonWrapper>
+        66 / 66 <div className="button">Apply</div>
+      </ButtonWrapper>
     </Conatiner>
   );
 }
@@ -37,6 +51,7 @@ const Conatiner = styled.div`
   border-radius: 12px;
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
   box-shadow: 0 0 5px 2px ${theme.colors.gray200};
   cursor: pointer;
 `;
@@ -63,13 +78,71 @@ const TitleWrapper = styled.div`
 
 const MaterialWrapper = styled.div`
   padding: 1.7rem 1.6rem;
-  border: solid 1px red;
+  display: flex;
+  flex-direction: column;
   .title {
     font-size: 2rem;
     font-weight: ${theme.fontWeight.semibold};
   }
+  .content {
+    margin-top: 1.3rem;
+    font-size: 1.6rem;
+    color: ${theme.colors.gray500};
+  }
+  span {
+    font-size: 1.6rem;
+    color: red;
+    font-weight: ${theme.fontWeight.semibold};
+  }
 `;
+const ButtonWrapper = styled.div`
+  padding: 1.6rem;
+  height: 7.2rem;
+  display: flex;
+  margin-top: auto;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: ${theme.fontWeight.semibold};
+  font-size: 1.6rem;
+  color: ${theme.colors.gray500};
 
+  .disable-button {
+    width: 11rem;
+    height: 4rem;
+    border-radius: 155px;
+    color: white;
+    background-color: red;
+    text-align: center;
+    padding: 0.5rem 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    /* &:hover {
+      color: gray;
+      background-color: white;
+      border: solid 1px gray;
+    } */
+  }
+  .button {
+    width: 11rem;
+    height: 4rem;
+    border-radius: 155px;
+    color: white;
+    background-color: ${theme.colors.mint};
+    text-align: center;
+    padding: 0.5rem 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    &:hover {
+      color: gray;
+      background-color: white;
+      border: solid 1px gray;
+    }
+  }
+`;
 interface CategoryItemProps {
   color: string;
 }
