@@ -98,6 +98,10 @@ const ChallengeImg = styled(Content)<ChallengeImgStyled>`
   align-items: center;
   filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.3));
 
+  &:hover {
+    filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.5));
+  }
+
   .ending-logo {
     position: absolute;
     top: 0.8rem;
