@@ -10,6 +10,7 @@ import LandingPage from "./routes/LandingPage";
 import Group from "./routes/Group";
 import Challenge from "./routes/Challenge";
 import MainPage from "./routes/MainPage";
+import SearchPage from "./routes/SearchPage";
 
 export default createBrowserRouter(
   createRoutesFromElements(
@@ -23,6 +24,7 @@ export default createBrowserRouter(
           element={<Challenge />}
         />
         <Route path="/main" element={<MainPage />} />
+        <Route path="/search" element={<SearchPage />} />
       </Route>
     </Route>
   )
