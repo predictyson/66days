@@ -2,9 +2,25 @@ import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import Profile1 from "../../assets/main/Profile1.png";
 import GroupImg from "../../assets/search/group_image.png";
+// import ConfirmModal from "./ConfirmModal";
+import { useState } from "react";
+import { Modal } from "antd";
 export default function GroupItem() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   return (
-    <Conatiner>
+    <Container>
       <ProfileWrapper>
         <img src={Profile1} />
         <TitleWrapper>
@@ -39,13 +55,57 @@ export default function GroupItem() {
         <div className="content">열심히 할 사람만 와주세요</div>
       </MaterialWrapper>
       <ButtonWrapper>
-        66 / 66 <div className="button">Apply</div>
+        66 / 66{" "}
+        <div className="button" onClick={showModal}>
+          Apply
+        </div>
+        <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+          <ModalContainer>
+            <div className="title">뭉치뭉치똥뭉치네</div>
+            <div className="sub">그룹에 가입 신청을 요청하시겠습니까?</div>
+            <div className="warning">
+              그룹 가입 승인 이후 챌린지 참여가 가능합니다.
+            </div>
+            <ButtonWrapper>ss</ButtonWrapper>
+          </ModalContainer>
+        </Modal>
       </ButtonWrapper>
-    </Conatiner>
+    </Container>
   );
 }
 
-const Conatiner = styled.div`
+/* Modal  */
+const ModalContainer = styled.div`
+  width: 6.4rem;
+  height: 4.8rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  .title {
+    margin-top: 12.3rem;
+    font-size: 3.2rem;
+    font-weight: bold;
+  }
+
+  .sub {
+    margin-top: 3.2rem;
+    font-size: 2.4rem;
+    font-weight: ${theme.fontWeight.semibold};
+  }
+  .warning {
+    margin-top: 4.8rem;
+    font-size: 1.6rem;
+    color: ${theme.colors.lightred};
+  }
+`;
+
+const ModalButtonWrapper = styled.div`
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4.9rem;
+`;
+const Container = styled.div`
   width: 36rem;
   height: 48rem;
   border-radius: 12px;
