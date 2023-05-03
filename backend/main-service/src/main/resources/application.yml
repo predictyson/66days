@@ -1,0 +1,61 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: REST API 키
+            redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"
+            client-authentication-method: POST
+            authorization-grant-type: authorization_code
+            scope: profile_nickname, account_email #동의 항목
+            client-name: Kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+  profiles:
+    default: prod
+
+  datasource:
+    hikari:
+      idle-timeout: '600000'
+      connection-init-sql: SELECT 1
+      validation-timeout: '2000'
+      maximum-pool-size: '10'
+      auto-commit: 'true'
+      connection-timeout: '5000'
+      max-lifetime: '1800000'
+      minimum-idle: '10'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    open-in-view: 'false'
+  servlet:
+    multipart:
+      max-request-size: 50MB
+      max-file-size: 50MB
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  springdoc:
+    swagger-ui:
+      path: /swagger-ui.html
+      groups-order: DESC
+      operationsSorter: method
+      disable-swagger-default-url: true
+      display-request-duration: true
+    api-docs:
+      path: /api-docs
+    show-actuator: true
+    default-consumes-media-type: application/json
+    default-produces-media-type: application/json
+    paths-to-match:
+      - /v1/**
+
+logging:
+  root: info
+  com:
+    ssafy:
+      66days: debug
