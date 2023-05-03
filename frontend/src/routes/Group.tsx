@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Layout, Modal, Checkbox } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
+import { useEffect, useState } from "react";
+import { Button, Col, Divider, Layout, Modal, Row } from "antd";
 import styled from "styled-components";
 import { TeamOutlined, TrophyFilled, SendOutlined } from "@ant-design/icons";
 import { theme } from "../styles/theme";
@@ -11,8 +11,13 @@ import Lecture from "../assets/lecture_badge.png";
 import Book from "../assets/book_badge.jpeg";
 import ChallengeBox from "../components/ChallengeBox";
 import { BoardBox } from "../components/BoardBox";
-// import { Modal } from "../components/common/Modal";
 import SingleMemberListBox from "../components/SingleMemberListBox";
+import { mockChallengeList, mockMemberList } from "../mock/group";
+import CSCategory from "../assets/group/cs.svg";
+import BloggingCategory from "../assets/group/blogging.svg";
+import DocsCategory from "../assets/group/docs.svg";
+import CourseCategory from "../assets/group/course.svg";
+import AlgorithmCategory from "../assets/group/algorithm.svg";
 
 interface ButtonStyled {
   color?: string;
@@ -20,23 +25,6 @@ interface ButtonStyled {
   fontWeight?: number;
   margin?: string;
   cursor?: boolean;
-}
-
-interface Challenge {
-  bgImg: string;
-  notStarted: boolean;
-  title: string;
-  dueDate: number;
-  profile: string;
-  cnt: string;
-}
-
-interface Member {
-  profile: string;
-  nickname: string;
-  badge: number;
-  owner: boolean;
-  manager: boolean;
 }
 
 const { Content } = Layout;
@@ -49,113 +37,56 @@ const badges = [
   { name: "개발서적", img: Book, color: theme.colors.lightred },
 ];
 
+// FIXME: 타입이 아직 명확히 설정되지 않았습니다
+interface MemberType {
+  profile: string;
+  nickname: string;
+  owner: boolean;
+  manager: boolean;
+  badge: number;
+}
+
+interface ChallengeType {
+  bgImg: string;
+  notStarted: boolean;
+  title: string;
+  dueDate: number;
+  profile: string;
+  cnt: string;
+}
+
 export default function Group() {
-  const [memberListModal, setMemberListModal] = useState<boolean>(false);
   const [memberSettingModal, setMemberSettingModal] = useState<boolean>(false);
-  const [createChallengeModal, setCreateChallengeModal] =
-    useState<boolean>(false);
   const [boardModal, setBoardModal] = useState<boolean>(false);
   const [tab, setTab] = useState<number>(0);
 
-  // 챌린지 더미 데이터
-  const [challengeList, setChallengeList] = useState<Challenge[]>([
-    {
-      bgImg: Algorithms,
-      notStarted: true,
-      title: "1일 1백준을 풀어봅시다.",
-      dueDate: 3,
-      profile:
-        "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
-      cnt: "5 / 12",
-    },
-    {
-      bgImg: Book,
-      notStarted: true,
-      title: "모던자바스크립트 읽기",
-      dueDate: 3,
-      profile:
-        "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
-      cnt: "5 / 12",
-    },
-    {
-      bgImg: Blog,
-      notStarted: false,
-      title: "뭉치의 TIL 작성 챌린지",
-      dueDate: 3,
-      profile:
-        "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
-      cnt: "5 / 12",
-    },
-    {
-      bgImg: CS,
-      notStarted: false,
-      title: "김태원의 CS 스터디",
-      dueDate: 3,
-      profile:
-        "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
-      cnt: "5 / 12",
-    },
-  ]);
+  const [loading, setLoading] = useState(false);
+  const [isOpenNewChallgenModal, setOpenNewChallgenModal] = useState(false);
+  const [isOpenMemberModal, setOpenMemberModal] = useState(false);
+  const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
+  const [memberList, setMemberList] = useState<MemberType[]>([]);
 
-  // 그룹원 더미 데이터
-  const [memberList, setMemberList] = useState<Member[]>([
-    {
-      profile:
-        "https://user-images.githubusercontent.com/55757379/235518955-05b3f322-0590-45a5-9fdf-2e620666f34d.png",
-      nickname: "뭉치뭉치똥뭉치",
-      badge: 2,
-      owner: true,
-      manager: false,
-    },
-    {
-      profile:
-        "https://user-images.githubusercontent.com/55757379/235518955-05b3f322-0590-45a5-9fdf-2e620666f34d.png",
-      nickname: "초코만먹는초코",
-      badge: 3,
-      owner: false,
-      manager: true,
-    },
-    {
-      profile:
-        "https://user-images.githubusercontent.com/55757379/235518955-05b3f322-0590-45a5-9fdf-2e620666f34d.png",
-      nickname: "해피한해피",
-      badge: 5,
-      owner: false,
-      manager: false,
-    },
-    {
-      profile:
-        "https://user-images.githubusercontent.com/55757379/235518955-05b3f322-0590-45a5-9fdf-2e620666f34d.png",
-      nickname: "초코친구코코",
-      badge: 10,
-      owner: false,
-      manager: false,
-    },
-    {
-      profile:
-        "https://user-images.githubusercontent.com/55757379/235518955-05b3f322-0590-45a5-9fdf-2e620666f34d.png",
-      nickname: "졸린뽀삐",
-      badge: 6,
-      owner: false,
-      manager: false,
-    },
-    {
-      profile:
-        "https://user-images.githubusercontent.com/55757379/235518955-05b3f322-0590-45a5-9fdf-2e620666f34d.png",
-      nickname: "뭉치친구뭉뭉이",
-      badge: 7,
-      owner: false,
-      manager: false,
-    },
-    {
-      profile:
-        "https://user-images.githubusercontent.com/55757379/235518955-05b3f322-0590-45a5-9fdf-2e620666f34d.png",
-      nickname: "난누구게",
-      badge: 4,
-      owner: false,
-      manager: false,
-    },
-  ]);
+  useEffect(() => {
+    // TODO: fetch data
+    setChallengeList(mockChallengeList);
+    setMemberList(mockMemberList);
+  }, []);
+
+  function toggleMemberModal() {
+    setOpenMemberModal((prev) => !prev);
+  }
+
+  function toggleNewChallgenModal() {
+    setOpenNewChallgenModal((prev) => !prev);
+  }
+
+  function handleOk() {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      toggleNewChallgenModal();
+    }, 3000);
+  }
 
   const boardData = {
     title: "알고리즘 챌린지원을 모집합니다.",
@@ -241,11 +172,6 @@ export default function Group() {
     document.getElementById("second-tab")?.classList.add("active-tab");
     setTab(1);
   }
-
-  const onChange = (e: CheckboxChangeEvent) => {
-    // 자기 자신을 제외한 체크박스 모두 해제
-    console.log(`checked = ${e.target.checked}`);
-  };
 
   return (
     <>
@@ -339,43 +265,6 @@ export default function Group() {
           </BoardModalWrapper>
         </Modal>
       ) : null}
-      {createChallengeModal ? (
-        <Modal footer={null}>
-          <CreateChallengeModalWrapper>
-            <div className="modal-title">카테고리를 선택해주세요</div>
-            <div className="modal-info">
-              카테고리당 하나씩만 습관 형성이 가능합니다.
-            </div>
-            <CategoryBoxContainer>
-              <div className="category-box">
-                <Checkbox className="category-checkbox" onChange={onChange} />
-                <img className="category-img" src={Algorithms} />
-                <div className="category-info">알고리즘</div>
-              </div>
-              <div className="category-box">
-                <Checkbox className="category-checkbox" onChange={onChange} />
-                <img className="category-img" src={Lecture} />
-                <div className="category-info">강의 시청</div>
-              </div>
-              <div className="category-box">
-                <Checkbox className="category-checkbox" onChange={onChange} />
-                <img className="category-img" src={Blog} />
-                <div className="category-info">기술 블로그</div>
-              </div>
-              <div className="category-box">
-                <Checkbox className="category-checkbox" onChange={onChange} />
-                <img className="category-img" src={Book} />
-                <div className="category-info">개발 서적</div>
-              </div>
-              <div className="category-box">
-                <Checkbox className="category-checkbox" onChange={onChange} />
-                <img className="category-img" src={CS} />
-                <div className="category-info">CS 공부</div>
-              </div>
-            </CategoryBoxContainer>
-          </CreateChallengeModalWrapper>
-        </Modal>
-      ) : null}
       {memberSettingModal ? (
         <Modal footer={null}>
           <MemberSettingModalWrapper>
@@ -397,24 +286,6 @@ export default function Group() {
             </TabContainer>
             <TabContent tab={tab} />
           </MemberSettingModalWrapper>
-        </Modal>
-      ) : null}
-      {memberListModal ? (
-        <Modal footer={null}>
-          <MemberModalWrapper>
-            <div className="modal-title">그룹원 목록</div>
-            <MemberListContainer>
-              {memberList.map((member) => (
-                <SingleMemberListBox
-                  profile={member.profile}
-                  nickname={member.nickname}
-                  owner={member.owner}
-                  manager={member.manager}
-                  badge={member.badge}
-                />
-              ))}
-            </MemberListContainer>
-          </MemberModalWrapper>
         </Modal>
       ) : null}
       <GroupWrapper>
@@ -445,7 +316,7 @@ export default function Group() {
                 color={theme.colors.gray500}
                 font="Kanit-Regular"
                 cursor={true}
-                onClick={() => setMemberListModal(true)}
+                onClick={toggleMemberModal}
               >
                 그룹원 보기
               </CommonButton>
@@ -476,7 +347,7 @@ export default function Group() {
                 color={theme.colors.gray500}
                 font="Kanit-Regular"
                 cursor={true}
-                onClick={() => setCreateChallengeModal(true)}
+                onClick={toggleNewChallgenModal}
               >
                 챌린지 추가
               </CommonButton>
@@ -532,9 +403,121 @@ export default function Group() {
           </BoardList>
         </BoardContainer>
       </GroupWrapper>
+      <Modal
+        open={isOpenMemberModal}
+        onCancel={toggleMemberModal}
+        footer={null}
+      >
+        <MemberModalWrapper>
+          <div className="member__modal-title">그룹원 목록</div>
+          <MemberListContainer>
+            {memberList.map((member) => (
+              <SingleMemberListBox
+                profile={member.profile}
+                nickname={member.nickname}
+                owner={member.owner}
+                manager={member.manager}
+                badge={member.badge}
+              />
+            ))}
+          </MemberListContainer>
+        </MemberModalWrapper>
+      </Modal>
+      <Modal
+        open={isOpenNewChallgenModal}
+        onCancel={toggleNewChallgenModal}
+        footer={[
+          <Button key="back" onClick={toggleNewChallgenModal}>
+            cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            loading={loading}
+            onClick={handleOk}
+          >
+            continue
+          </Button>,
+        ]}
+      >
+        <StyledTitle>
+          <h1>카테고리를 선택해주세요</h1>
+          <div>카테고리당 하나씩만 습관 형성이 가능합니다</div>
+        </StyledTitle>
+        <Divider />
+        <StyledCategory gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 16]}>
+          <Col span={12}>
+            <div className="category active">
+              <img src={CSCategory} />
+              CS 공부
+            </div>
+          </Col>
+          <Col span={12}>
+            <div className="category">
+              <img src={DocsCategory} />
+              개발서적
+            </div>
+          </Col>
+          <Col span={12}>
+            <div className="category">
+              <img src={BloggingCategory} />
+              블로그 포스팅
+            </div>
+          </Col>
+          <Col span={12}>
+            <div className="category">
+              <img src={CourseCategory} />
+              강의 시청
+            </div>
+          </Col>
+          <Col span={12}>
+            <div className="category">
+              <img src={AlgorithmCategory} />
+              알고리즘
+            </div>
+          </Col>
+        </StyledCategory>
+      </Modal>
     </>
   );
 }
+
+const StyledCategory = styled(Row)`
+  row-gap: 24;
+
+  .category {
+    border-radius: 8px;
+    border: 1px solid #dddddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 17rem;
+    font-size: 2rem;
+
+    img {
+      width: 80;
+      height: 80;
+    }
+  }
+
+  .active {
+    border-color: #6cd3c0;
+  }
+`;
+
+const StyledTitle = styled.section`
+  margin-top: 4rem;
+  margin-bottom: 1.6rem;
+  h1 {
+    font-size: 3.2rem;
+    margin: 0;
+  }
+  div {
+    font-size: 1.6rem;
+    color: #b4b4b4;
+  }
+`;
 
 const GroupWrapper = styled(Content)`
   margin: 3.5rem 0;
@@ -662,10 +645,8 @@ const BoardList = styled(Content)`
 `;
 
 const MemberModalWrapper = styled(Content)`
-  height: fit-content;
-  max-height: 90vh;
+  max-height: 70vh;
   overflow-y: scroll;
-  background-color: ${theme.colors.white};
   padding: 4.8rem;
   border-radius: 1rem;
 
