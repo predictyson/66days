@@ -8,7 +8,7 @@ const { Content } = Layout;
 export function BoardBox({ ...props }) {
   return (
     <>
-      <BoardBoxWrapper>
+      <BoardBoxWrapper onClick={() => props.setBoardModal(true)}>
         {props.admin ? <NotificationFilled className="admin" /> : null}
         <div className="board-title">{props.title}</div>
         <div className="board-info">
@@ -48,10 +48,11 @@ const BoardBoxWrapper = styled(Content)`
     right: 2rem;
     font-size: 3rem;
     color: ${theme.colors.failure};
+    filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.2));
   }
 
   .admin:hover {
-    filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.2));
+    filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.3));
   }
 
   .board-title {

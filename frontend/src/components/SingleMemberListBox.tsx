@@ -47,6 +47,7 @@ export default function SingleMemberListBox({ ...props }: MemberListProps) {
 const SingleMemberWrapper = styled(Content)`
   width: 30vw;
   display: flex;
+  align-items: start;
   padding-bottom: 2.4rem;
 
   .member__profile-container {
