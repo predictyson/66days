@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import Capibara from "../../assets/main/Capibara.png";
 import Badge from "../../assets/main/Bronze.png";

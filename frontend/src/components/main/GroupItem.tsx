@@ -1,12 +1,8 @@
-import React from "react";
 import styled from "styled-components";
 import Moongchi from "../../assets/main/moongchi.png";
-import Group2 from "../../assets/main/group2.png";
-import Group3 from "../../assets/main/group3.png";
 import Algo from "../../assets/landing/algoBox.png";
 import Blog from "../../assets/landing/blogBox.png";
 import CS from "../../assets/landing/csBox.png";
-import Lecture from "../../assets/landing/lectureBox.png";
 interface ImageWrapperProps {
   imageUrl: string;
 }

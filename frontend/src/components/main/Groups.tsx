@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import { theme } from "../../styles/theme";
-import Algo from "../../assets/landing/algoBox.png";
-import Blog from "../../assets/landing/blogBox.png";
+// TODO: assets
+// import { theme } from "../../styles/theme";
+// import Algo from "../../assets/landing/algoBox.png";
+// import Blog from "../../assets/landing/blogBox.png";
 import PrevArrow from "../../assets/main/PrevArrow.png";
 import NextArrow from "../../assets/main/NextArrow.png";
 import GroupItem from "./GroupItem";
 // slider
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider, { CustomArrowProps } from "react-slick";
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
 // interface ArrowProps extends CustomArrowProps {
 //   onClick?: MouseEventHandler<HTMLDivElement>;
 // }
@@ -45,8 +45,6 @@ export default function GroupList() {
     // console.log(newStartIndex);
     setSliderData(Math.abs(sliderdata - 1));
   };
-
-  const visibleGroupItems = groupItems.slice();
 
   return (
     <Container>
