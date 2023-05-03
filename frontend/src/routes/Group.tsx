@@ -1,6 +1,5 @@
-import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import { useEffect, useState } from "react";
-import { Button, Col, Divider, Layout, Modal, Row } from "antd";
+import { Layout, Modal } from "antd";
 import styled from "styled-components";
 import { TeamOutlined, TrophyFilled, SendOutlined } from "@ant-design/icons";
 import { theme } from "../styles/theme";
@@ -11,13 +10,10 @@ import Lecture from "../assets/lecture_badge.png";
 import Book from "../assets/book_badge.jpeg";
 import ChallengeBox from "../components/ChallengeBox";
 import { BoardBox } from "../components/BoardBox";
-import SingleMemberListBox from "../components/SingleMemberListBox";
 import { mockChallengeList, mockMemberList } from "../mock/group";
-import CSCategory from "../assets/group/cs.svg";
-import BloggingCategory from "../assets/group/blogging.svg";
-import DocsCategory from "../assets/group/docs.svg";
-import CourseCategory from "../assets/group/course.svg";
-import AlgorithmCategory from "../assets/group/algorithm.svg";
+import ChallengeModal from "../components/group/ChallengeModal";
+import MemberModal from "../components/group/MemberModal";
+import SingleMemberListBox from "../components/SingleMemberListBox";
 
 interface ButtonStyled {
   color?: string;
@@ -60,8 +56,7 @@ export default function Group() {
   const [boardModal, setBoardModal] = useState<boolean>(false);
   const [tab, setTab] = useState<number>(0);
 
-  const [loading, setLoading] = useState(false);
-  const [isOpenNewChallgenModal, setOpenNewChallgenModal] = useState(false);
+  const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
   const [isOpenMemberModal, setOpenMemberModal] = useState(false);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
   const [memberList, setMemberList] = useState<MemberType[]>([]);
@@ -71,22 +66,6 @@ export default function Group() {
     setChallengeList(mockChallengeList);
     setMemberList(mockMemberList);
   }, []);
-
-  function toggleMemberModal() {
-    setOpenMemberModal((prev) => !prev);
-  }
-
-  function toggleNewChallgenModal() {
-    setOpenNewChallgenModal((prev) => !prev);
-  }
-
-  function handleOk() {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      toggleNewChallgenModal();
-    }, 3000);
-  }
 
   const boardData = {
     title: "알고리즘 챌린지원을 모집합니다.",
@@ -316,7 +295,7 @@ export default function Group() {
                 color={theme.colors.gray500}
                 font="Kanit-Regular"
                 cursor={true}
-                onClick={toggleMemberModal}
+                onClick={() => setOpenMemberModal((prev) => !prev)}
               >
                 그룹원 보기
               </CommonButton>
@@ -347,7 +326,7 @@ export default function Group() {
                 color={theme.colors.gray500}
                 font="Kanit-Regular"
                 cursor={true}
-                onClick={toggleNewChallgenModal}
+                onClick={() => setOpenNewChallgeModal((prev) => !prev)}
               >
                 챌린지 추가
               </CommonButton>
@@ -403,121 +382,18 @@ export default function Group() {
           </BoardList>
         </BoardContainer>
       </GroupWrapper>
-      <Modal
+      <MemberModal
         open={isOpenMemberModal}
-        onCancel={toggleMemberModal}
-        footer={null}
-      >
-        <MemberModalWrapper>
-          <div className="member__modal-title">그룹원 목록</div>
-          <MemberListContainer>
-            {memberList.map((member) => (
-              <SingleMemberListBox
-                profile={member.profile}
-                nickname={member.nickname}
-                owner={member.owner}
-                manager={member.manager}
-                badge={member.badge}
-              />
-            ))}
-          </MemberListContainer>
-        </MemberModalWrapper>
-      </Modal>
-      <Modal
-        open={isOpenNewChallgenModal}
-        onCancel={toggleNewChallgenModal}
-        footer={[
-          <Button key="back" onClick={toggleNewChallgenModal}>
-            cancel
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            loading={loading}
-            onClick={handleOk}
-          >
-            continue
-          </Button>,
-        ]}
-      >
-        <StyledTitle>
-          <h1>카테고리를 선택해주세요</h1>
-          <div>카테고리당 하나씩만 습관 형성이 가능합니다</div>
-        </StyledTitle>
-        <Divider />
-        <StyledCategory gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 16]}>
-          <Col span={12}>
-            <div className="category active">
-              <img src={CSCategory} />
-              CS 공부
-            </div>
-          </Col>
-          <Col span={12}>
-            <div className="category">
-              <img src={DocsCategory} />
-              개발서적
-            </div>
-          </Col>
-          <Col span={12}>
-            <div className="category">
-              <img src={BloggingCategory} />
-              블로그 포스팅
-            </div>
-          </Col>
-          <Col span={12}>
-            <div className="category">
-              <img src={CourseCategory} />
-              강의 시청
-            </div>
-          </Col>
-          <Col span={12}>
-            <div className="category">
-              <img src={AlgorithmCategory} />
-              알고리즘
-            </div>
-          </Col>
-        </StyledCategory>
-      </Modal>
+        toggleModal={() => setOpenMemberModal((prev) => !prev)}
+        members={memberList}
+      />
+      <ChallengeModal
+        open={isOpenNewChallgeModal}
+        toggleModal={() => setOpenNewChallgeModal((prev) => !prev)}
+      />
     </>
   );
 }
-
-const StyledCategory = styled(Row)`
-  row-gap: 24;
-
-  .category {
-    border-radius: 8px;
-    border: 1px solid #dddddd;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 17rem;
-    font-size: 2rem;
-
-    img {
-      width: 80;
-      height: 80;
-    }
-  }
-
-  .active {
-    border-color: #6cd3c0;
-  }
-`;
-
-const StyledTitle = styled.section`
-  margin-top: 4rem;
-  margin-bottom: 1.6rem;
-  h1 {
-    font-size: 3.2rem;
-    margin: 0;
-  }
-  div {
-    font-size: 1.6rem;
-    color: #b4b4b4;
-  }
-`;
 
 const GroupWrapper = styled(Content)`
   margin: 3.5rem 0;
