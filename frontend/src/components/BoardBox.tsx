@@ -8,7 +8,7 @@ const { Content } = Layout;
 export function BoardBox({ ...props }) {
   return (
     <>
-      <BoardBoxWrapper>
+      <BoardBoxWrapper onClick={() => props.setBoardModal(true)}>
         {props.admin ? <NotificationFilled className="admin" /> : null}
         <div className="board-title">{props.title}</div>
         <div className="board-info">

@@ -55,7 +55,7 @@ export default function Group() {
   const [memberSettingModal, setMemberSettingModal] = useState<boolean>(false);
   const [createChallengeModal, setCreateChallengeModal] =
     useState<boolean>(false);
-  const [boardModal, setBoardModal] = useState<boolean>(true);
+  const [boardModal, setBoardModal] = useState<boolean>(false);
   const [tab, setTab] = useState<number>(0);
 
   // 챌린지 더미 데이터
@@ -517,20 +517,20 @@ export default function Group() {
               title={"혹시 알고리즘 스터디 하실 분?"}
               date={"2023.04.20."}
               writer={"뽀삐"}
-              onClick={() => setBoardModal(true)}
+              setBoardModal={setBoardModal}
             />
             <BoardBox
               title={"혹시 알고리즘 스터디 하실 분?"}
               date={"2023.04.20."}
               writer={"뽀삐"}
               admin={true}
-              onClick={() => setBoardModal(true)}
+              setBoardModal={setBoardModal}
             />
             <BoardBox
               title={"혹시 알고리즘 스터디 하실 분?"}
               date={"2023.04.20."}
               writer={"뽀삐"}
-              onClick={() => setBoardModal(true)}
+              setBoardModal={setBoardModal}
             />
           </BoardList>
         </BoardContainer>
@@ -836,6 +836,7 @@ const BoardCommentContainer = styled(Content)`
   .comment-box-title {
     font-size: 2rem;
     font-weight: 700;
+    padding-bottom: 1rem;
   }
 `;
 
