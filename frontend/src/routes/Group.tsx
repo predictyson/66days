@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Layout, Checkbox } from "antd";
+import React, { useState } from "react";
+import { Layout, Modal, Checkbox } from "antd";
 import type { CheckboxChangeEvent } from "antd/es/checkbox";
 import styled from "styled-components";
 import { TeamOutlined, TrophyFilled, SendOutlined } from "@ant-design/icons";
@@ -11,7 +11,7 @@ import Lecture from "../assets/lecture_badge.png";
 import Book from "../assets/book_badge.jpeg";
 import ChallengeBox from "../components/ChallengeBox";
 import { BoardBox } from "../components/BoardBox";
-import { Modal } from "../components/common/Modal";
+// import { Modal } from "../components/common/Modal";
 import SingleMemberListBox from "../components/SingleMemberListBox";
 
 interface ButtonStyled {
@@ -29,7 +29,6 @@ interface Challenge {
   dueDate: number;
   profile: string;
   cnt: string;
-  ending?: boolean;
 }
 
 interface Member {
@@ -77,7 +76,6 @@ export default function Group() {
       profile:
         "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
       cnt: "5 / 12",
-      ending: true,
     },
     {
       bgImg: Blog,
@@ -252,7 +250,7 @@ export default function Group() {
   return (
     <>
       {boardModal ? (
-        <Modal closeModal={() => setBoardModal(false)}>
+        <Modal open={boardModal} width={800} footer={null}>
           <BoardModalWrapper>
             <div className="modal-title">{boardData.title}</div>
             <div className="board__modal-info">
@@ -342,7 +340,7 @@ export default function Group() {
         </Modal>
       ) : null}
       {createChallengeModal ? (
-        <Modal closeModal={() => setCreateChallengeModal(false)}>
+        <Modal footer={null}>
           <CreateChallengeModalWrapper>
             <div className="modal-title">카테고리를 선택해주세요</div>
             <div className="modal-info">
@@ -378,9 +376,8 @@ export default function Group() {
           </CreateChallengeModalWrapper>
         </Modal>
       ) : null}
-
       {memberSettingModal ? (
-        <Modal closeModal={() => setMemberSettingModal(false)}>
+        <Modal footer={null}>
           <MemberSettingModalWrapper>
             <div className="modal-title">그룹 관리</div>
             <TabContainer>
@@ -403,7 +400,7 @@ export default function Group() {
         </Modal>
       ) : null}
       {memberListModal ? (
-        <Modal closeModal={() => setMemberListModal(false)}>
+        <Modal footer={null}>
           <MemberModalWrapper>
             <div className="modal-title">그룹원 목록</div>
             <MemberListContainer>
@@ -671,6 +668,12 @@ const MemberModalWrapper = styled(Content)`
   background-color: ${theme.colors.white};
   padding: 4.8rem;
   border-radius: 1rem;
+
+  .modal-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    padding-bottom: 3.2rem;
+  }
 `;
 
 const MemberListContainer = styled(Content)`
@@ -685,6 +688,12 @@ const MemberSettingModalWrapper = styled(Content)`
   background-color: ${theme.colors.white};
   padding: 6.4rem 8rem;
   border-radius: 1rem;
+
+  .modal-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    padding-bottom: 3.2rem;
+  }
 `;
 
 const TabContainer = styled(Content)`
@@ -746,6 +755,12 @@ const CreateChallengeModalWrapper = styled(Content)`
   padding: 6.4rem 8rem;
   border-radius: 1rem;
 
+  .modal-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    padding-bottom: 3.2rem;
+  }
+
   .modal-info {
     margin-top: -3rem;
     color: ${theme.colors.gray500};
@@ -799,13 +814,17 @@ const BoardModalWrapper = styled(Content)`
   display: flex;
   flex-direction: column;
   height: fit-content;
-  width: 80vw;
-  max-width: 1000px;
   max-height: 90vh;
   overflow-y: scroll;
   background-color: ${theme.colors.white};
   padding: 6.4rem;
   border-radius: 1rem;
+
+  .modal-title {
+    font-size: 2.4rem;
+    font-weight: 700;
+    padding-bottom: 3.2rem;
+  }
 
   .board__modal-info {
     display: flex;
