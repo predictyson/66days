@@ -77,11 +77,6 @@ const Container = styled.div`
     width: 18rem;
     height: 18rem;
     margin-top: 4.8rem;
-  }
-  .badge-img {
-    position: absolute;
-    top: 20.8rem;
-    width: 3.6rem;
-    height: 3.6rem;
+    cursor: pointer;
   }
 `;

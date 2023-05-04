@@ -1,5 +1,5 @@
 import styled from "styled-components";
-// import Profile from "../components/mypage/Profile";
+import Profile from "../components/mypage/Profile";
 import Badge from "../components/mypage/Badge";
 import Streak from "../components/mypage/Streak";
 import Group from "../components/mypage/Groups";
@@ -14,8 +14,9 @@ export default function MyPage() {
   return (
     <Container>
       <div className="left">
-        <EditProfile />
-        {/* <Badge /> */}
+        <Profile />
+        {/* <EditProfile /> */}
+        <Badge />
       </div>
       <div className="right">
         <Streak commits={commits} length={length} />
