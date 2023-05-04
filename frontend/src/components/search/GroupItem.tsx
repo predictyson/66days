@@ -59,43 +59,62 @@ export default function GroupItem() {
         <div className="button" onClick={showModal}>
           Apply
         </div>
-        <Modal open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-          <ModalContainer>
-            <div className="title">뭉치뭉치똥뭉치네</div>
-            <div className="sub">그룹에 가입 신청을 요청하시겠습니까?</div>
-            <div className="warning">
-              그룹 가입 승인 이후 챌린지 참여가 가능합니다.
-            </div>
-            <ButtonWrapper>ss</ButtonWrapper>
-          </ModalContainer>
-        </Modal>
       </ButtonWrapper>
+      <CustomModal open={isModalOpen}>
+        <div className="modal-title">뭉치뭉치똥뭉치네</div>
+        <div className="modal-sub">그룹에 가입 신청을 요청하시겠습니까?</div>
+        <div className="modal-warning">
+          그룹 가입 승인 이후 챌린지 참여가 가능합니다.
+        </div>
+        <ModalButtonWrapper>
+          <button className="ok" onClick={handleOk}>
+            예
+          </button>
+          <button className="no" onClick={handleCancel}>
+            아니요
+          </button>
+        </ModalButtonWrapper>
+      </CustomModal>
     </Container>
   );
 }
 
 /* Modal  */
-const ModalContainer = styled.div`
-  width: 6.4rem;
-  height: 4.8rem;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  .title {
-    margin-top: 12.3rem;
+const CustomModal = styled(Modal)`
+  svg {
+    display: none;
+  }
+  .ant-modal-content {
+    width: 64rem;
+    height: 48rem;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+  }
+  .modal-title {
+    margin-top: 10.3rem;
     font-size: 3.2rem;
     font-weight: bold;
   }
 
-  .sub {
+  .modal-sub {
     margin-top: 3.2rem;
     font-size: 2.4rem;
     font-weight: ${theme.fontWeight.semibold};
   }
-  .warning {
+  .modal-warning {
     margin-top: 4.8rem;
     font-size: 1.6rem;
-    color: ${theme.colors.lightred};
+    color: #ff4a4a;
+    font-weight: ${theme.fontWeight.semibold};
+  }
+  .ant-modal-footer {
+    background-color: green;
+    width: 70%;
+    margin: 4.8rem auto;
+    button {
+      display: none;
+    }
   }
 `;
 
@@ -103,7 +122,37 @@ const ModalButtonWrapper = styled.div`
   width: 70%;
   display: flex;
   justify-content: space-between;
-  margin-top: 4.9rem;
+  margin: 4.9rem auto;
+  button {
+    width: 16rem;
+    height: 4.8rem;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 2rem;
+    color: white;
+    border: none;
+  }
+
+  .ok {
+    background-color: ${theme.colors.lightred};
+    &:hover {
+      border: solid 3px ${theme.colors.lightred};
+      color: ${theme.colors.lightred};
+      background-color: white;
+    }
+  }
+  .no {
+    background-color: ${theme.colors.lightblue};
+    &:hover {
+      border: solid 3px ${theme.colors.lightblue};
+      color: ${theme.colors.lightblue};
+      background-color: white;
+    }
+  }
 `;
 const Container = styled.div`
   width: 36rem;
@@ -114,6 +163,11 @@ const Container = styled.div`
   margin: 0 auto;
   box-shadow: 0 0 5px 2px ${theme.colors.gray200};
   cursor: pointer;
+  .ant-modal-content {
+    width: 30rem;
+    height: 30rem;
+    border: solid 2px red;
+  }
 `;
 
 const ProfileWrapper = styled.div`
