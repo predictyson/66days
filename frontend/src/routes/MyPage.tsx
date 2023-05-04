@@ -1,9 +1,12 @@
 import styled from "styled-components";
+import Profile from "../components/mypage/Profile";
 
 export default function MyPage() {
   return (
     <Container>
-      <div className="left">dd</div>
+      <div className="left">
+        <Profile />
+      </div>
       <div className="right">dd</div>
     </Container>
   );
@@ -13,7 +16,8 @@ const Container = styled.div`
   display: flex;
   .left {
     width: 30%;
-    background-color: yellow;
+    display: flex;
+    flex-direction: column;
   }
   .right {
     width: 70%;
