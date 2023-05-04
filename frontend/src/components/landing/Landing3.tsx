@@ -1,6 +1,4 @@
-import React from "react";
 import styled from "styled-components";
-import { theme } from "../../styles/theme";
 import Vector from "../../assets/landing/landing3_vector.png";
 import View from "../../assets/landing/landing3_view.png";
 import LandingGif3 from "../../assets/landing/landing 2.gif";
@@ -26,6 +24,7 @@ export default function Landing1() {
 const Container = styled.div`
   width: 100%;
   height: 68.8rem;
+  border: solid 1px black;
   display: flex;
   padding: 0 7.5rem;
   font-family: Pretendard;
@@ -34,7 +33,7 @@ const Container = styled.div`
 const Title = styled.div`
   margin-top: 15rem;
   font-size: 4rem;
-  font-weight: ${theme.fontWeight.bold};
+  font-weight: bold;
 `;
 const LeftWrapper = styled.div`
   width: 50%;

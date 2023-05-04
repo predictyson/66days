@@ -14,7 +14,6 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ x }) => {
       const ctx = canvasRef.current.getContext("2d");
       if (ctx) {
         chartInstance = Chart.getChart(ctx);
-        const percentage = (x / 66) * 100;
 
         const data = {
           datasets: [

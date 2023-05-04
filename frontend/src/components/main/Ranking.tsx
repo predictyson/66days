@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import Profile1 from "../../assets/main/Profile1.png";

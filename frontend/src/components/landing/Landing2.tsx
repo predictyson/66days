@@ -1,4 +1,3 @@
-import React from "react";
 import { theme } from "../../styles/theme";
 import algo from "../../assets/landing//algoBox.png";
 import cs from "../../assets/landing//csBox.png";

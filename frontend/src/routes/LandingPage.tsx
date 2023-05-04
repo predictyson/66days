@@ -1,4 +1,3 @@
-import React from "react";
 import Landing1 from "../components/landing/Landing1";
 import Landing2 from "../components/landing/Landing2";
 import Landing3 from "../components/landing/Landing3";
