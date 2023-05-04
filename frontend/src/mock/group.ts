@@ -110,4 +110,37 @@ const mockMemberList = [
   },
 ];
 
-export { mockChallengeList, mockMemberList, mockBoardData };
+const mockBoardDataList = [
+  {
+    title: "혹시?????",
+    date: "2023.04.28.",
+    writer: "뽀삐",
+  },
+  {
+    title: "혹시 알고리즘 스터디 하실 분?",
+    date: "2023.04.25.",
+    writer: "나는야뭉치",
+  },
+  {
+    title: "Spring 스터디팸 구합니다.",
+    date: "2023.04.20.",
+    writer: "빈지노",
+  },
+  {
+    title: "오늘도 출석체크!",
+    date: "2023.04.19.",
+    writer: "해피",
+  },
+  {
+    title: "뭉치야뭉치야뭐하니~",
+    date: "2023.04.18.",
+    writer: "뭉치",
+  },
+  {
+    title: "알고리즘 덕후들 구합니다",
+    date: "2023.04.17.",
+    writer: "초코",
+  },
+];
+
+export { mockChallengeList, mockMemberList, mockBoardDataList, mockBoardData };
