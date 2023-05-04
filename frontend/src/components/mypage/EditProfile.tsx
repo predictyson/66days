@@ -71,7 +71,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   position: relative;
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
   .profile-img {
     width: 18rem;
