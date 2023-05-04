@@ -38,7 +38,15 @@ const StyledContent = styled(Content)`
   line-height: 120px;
   background-color: #fff;
   padding-inline: 5rem;
+  width: 1200px;
+  margin-inline: auto;
   text-align: inherit;
   line-height: initial;
   font-family: Pretendard;
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (max-width: 1200px) {
+    width: 768px;
+  }
 `;
