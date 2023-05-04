@@ -158,9 +158,6 @@ export default function Group() {
   }
 
   function handlePageChange(page: number) {
-    // const { current } = pagination;
-
-    // setCurrent(pagination);
     const slicedBoardDataList = mockBoardDataList.slice(
       (page - 1) * 3,
       page * 3
