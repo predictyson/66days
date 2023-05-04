@@ -26,8 +26,8 @@ public class SwaggerConfiguration {
 //                .securityContexts(Arrays.asList(securityContext()))
 //                .securitySchemes(Arrays.asList(apiKey()))
                 .select()
-//                .apis(RequestHandlerSelectors.basePackage("com.ssafy.togetdog." + basePackage + ".controller"))
-                .apis(RequestHandlerSelectors.basePackage("com.ssafy." + basePackage + ".controller"))
+//                .apis(RequestHandlerSelectors.basePackage("com.ssafy." + basePackage + ".controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.ssafy.mock66days." + basePackage + ".controller"))
                 .paths(PathSelectors.any()) // 아무 경로나 가능
                 .build();
     }
@@ -37,8 +37,8 @@ public class SwaggerConfiguration {
     }
 
     @Bean
-    public Docket user() {
-        return getDocket("MOCK 66days", true, "mock66days");
+    public Docket page() {
+        return getDocket("Page", true, "page");
     }
 
 }

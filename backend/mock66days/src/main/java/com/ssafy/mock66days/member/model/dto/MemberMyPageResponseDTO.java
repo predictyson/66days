@@ -5,12 +5,12 @@ import lombok.Data;
 
 @Data
 @Builder
-public class MemberMainPageResponseDTO {
-
+public class MemberMyPageResponseDTO {
+    private String image;
+    private String nickname;
     private String tier;
     private String email;
-    private int exp;
+    private int currentExp;
+    private int nextTierExp;
     private int point;
-    private String image;
-    private String animal;
 }

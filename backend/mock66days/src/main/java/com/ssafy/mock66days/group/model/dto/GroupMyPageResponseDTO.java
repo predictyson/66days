@@ -7,10 +7,9 @@ import java.util.List;
 
 @Data
 @Builder
-public class GroupMainPageResponseDTO {
+public class GroupMyPageResponseDTO {
     private String image;
     private String name;
     private List<String> badges;
     private String type;
-
 }
