@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Button, Col, Divider, Modal, Row } from "antd";
 import styled from "styled-components";
-import Algorithms from "../assets/algorithm_badge.png";
-import CS from "../assets/cs_badge.png";
-import Blog from "../assets/blog_badge.png";
-import Lecture from "../assets/lecture_badge.png";
-import Book from "../assets/book_badge.jpeg";
+import Algorithms from "../../assets/algorithm_badge.png";
+import CS from "../../assets/cs_badge.png";
+import Blog from "../../assets/blog_badge.png";
+import Lecture from "../../assets/lecture_badge.png";
+import Book from "../../assets/book_badge.jpeg";
 
 interface PropsType {
   open: boolean;

@@ -3,6 +3,14 @@ import CS from "../assets/cs_badge.png";
 import Blog from "../assets/blog_badge.png";
 import Book from "../assets/book_badge.jpeg";
 
+const mockBoardData = {
+  title: "알고리즘 챌린지원을 모집합니다.",
+  date: "2023.04.20.",
+  writer: "뭉치",
+  content:
+    "안녕하세요! 그룹장 뭉치입니다. :D 현재 알고리즘 문제를 함께 풀 그룹원들을 모집하고 있습니다. 주변에 관심있는 분들이 있으시다면 알려주시기 바랍니다! 뭉치 올림",
+};
+
 const mockChallengeList = [
   {
     bgImg: Algorithms,
@@ -102,4 +110,4 @@ const mockMemberList = [
   },
 ];
 
-export { mockChallengeList, mockMemberList };
+export { mockChallengeList, mockMemberList, mockBoardData };
