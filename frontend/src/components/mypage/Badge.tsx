@@ -20,7 +20,7 @@ export default function Badge() {
 const Container = styled.div`
   width: 29rem;
   margin: 0 auto;
-  margin-top: 3rem;
+  margin-top: 2rem;
   .title {
     font-size: 2.4rem;
     font-weight: bold;
