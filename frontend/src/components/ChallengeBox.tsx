@@ -61,7 +61,7 @@ const ChallengeBoxWrapper = styled(Content)`
   .challenge__members-box {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: start;
   }
 
   .members-img-box {

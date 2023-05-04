@@ -19,6 +19,7 @@ import {
 import ChallengeModal from "../components/group/ChallengeModal";
 import MemberModal from "../components/group/MemberModal";
 import SingleMemberListBox from "../components/SingleMemberListBox";
+import BadgeModal from "../components/group/BadgeModal";
 
 interface ButtonStyled {
   color?: string;
@@ -47,6 +48,15 @@ interface MemberType {
   badge: number;
 }
 
+interface BadgeType {
+  category: string;
+  badgeImg: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  status: boolean; // 성공 실패 여부
+}
+
 interface ChallengeType {
   bgImg: string;
   notStarted: boolean;
@@ -67,10 +77,12 @@ export default function Group() {
   const [boardModal, setBoardModal] = useState(false);
   const [tab, setTab] = useState<number>(0);
 
-  const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
   const [isOpenMemberModal, setOpenMemberModal] = useState(false);
+  const [isOpenBadgeModal, setOpenBadgeModal] = useState(false);
+  const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
   const [memberList, setMemberList] = useState<MemberType[]>([]);
+  const [badgeList, setBadgeList] = useState<BadgeType[]>([]);
   const [boardDataList, setBoardDataList] = useState<BoardType[]>([]);
 
   useEffect(() => {
@@ -213,7 +225,11 @@ export default function Group() {
                 >
                   {badge.name}
                 </CommonButton>
-                <img className="badge-img" src={badge.img} />
+                <img
+                  className="badge-img"
+                  src={badge.img}
+                  onClick={() => setOpenBadgeModal((prev) => !prev)}
+                />
               </BadgeBox>
             ))}
           </BadgesContainer>
@@ -283,6 +299,11 @@ export default function Group() {
         open={isOpenMemberModal}
         toggleModal={() => setOpenMemberModal((prev) => !prev)}
         members={memberList}
+      />
+      <BadgeModal
+        open={isOpenBadgeModal}
+        toggleModal={() => setOpenBadgeModal((prev) => !prev)}
+        badges={badgeList}
       />
       <ChallengeModal
         open={isOpenNewChallgeModal}
@@ -383,6 +404,7 @@ export default function Group() {
       </Modal>
       <Modal
         open={memberSettingModal}
+        width={800}
         footer={null}
         onCancel={() => setMemberSettingModal(false)}
       >
