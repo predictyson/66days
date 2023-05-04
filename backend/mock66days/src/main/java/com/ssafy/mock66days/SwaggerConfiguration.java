@@ -40,5 +40,8 @@ public class SwaggerConfiguration {
     public Docket page() {
         return getDocket("Page", true, "page");
     }
+    public Docket group() {
+        return getDocket("Group", true, "group");
+    }
 
 }
