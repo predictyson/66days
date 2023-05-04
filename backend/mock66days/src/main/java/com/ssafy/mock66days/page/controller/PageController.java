@@ -222,8 +222,8 @@ public class PageController {
         return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "마이페이지", notes = "내 프로필 화면")
-    @GetMapping("/group/{group_id}")
+    @ApiOperation(value = "그룹 페이지", notes = "그룹페이지의 첫 화면")
+    @GetMapping("/groups/{group_id}")
     public ResponseEntity<Map<String, Object>> getGroupPage(
             @PathVariable("group_id") @ApiParam(required = true) int groupId
     ){
