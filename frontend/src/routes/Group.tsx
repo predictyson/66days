@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Layout, Modal } from "antd";
+import { Layout, Modal, Pagination } from "antd";
 import styled from "styled-components";
 import { TeamOutlined, TrophyFilled, SendOutlined } from "@ant-design/icons";
 import { theme } from "../styles/theme";
@@ -13,6 +13,7 @@ import { BoardBox } from "../components/BoardBox";
 import {
   mockChallengeList,
   mockMemberList,
+  mockBoardDataList,
   mockBoardData,
 } from "../mock/group";
 import ChallengeModal from "../components/group/ChallengeModal";
@@ -55,6 +56,12 @@ interface ChallengeType {
   cnt: string;
 }
 
+interface BoardType {
+  title: string;
+  date: string;
+  writer: string;
+}
+
 export default function Group() {
   const [memberSettingModal, setMemberSettingModal] = useState(false);
   const [boardModal, setBoardModal] = useState(false);
@@ -64,11 +71,13 @@ export default function Group() {
   const [isOpenMemberModal, setOpenMemberModal] = useState(false);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
   const [memberList, setMemberList] = useState<MemberType[]>([]);
+  const [boardDataList, setBoardDataList] = useState<BoardType[]>([]);
 
   useEffect(() => {
     // TODO: fetch data
     setChallengeList(mockChallengeList);
     setMemberList(mockMemberList);
+    setBoardDataList(mockBoardDataList.slice(0, 3));
   }, []);
 
   const TabContent = ({ ...props }) => {
@@ -146,6 +155,17 @@ export default function Group() {
     document.getElementById("first-tab")?.classList.remove("active-tab");
     document.getElementById("second-tab")?.classList.add("active-tab");
     setTab(1);
+  }
+
+  function handlePageChange(page: number) {
+    // const { current } = pagination;
+
+    // setCurrent(pagination);
+    const slicedBoardDataList = mockBoardDataList.slice(
+      (page - 1) * 3,
+      page * 3
+    );
+    setBoardDataList(slicedBoardDataList);
   }
 
   return (
@@ -243,26 +263,23 @@ export default function Group() {
             </div>
           </div>
           <BoardList>
-            <BoardBox
-              title={"혹시 알고리즘 스터디 하실 분?"}
-              date={"2023.04.20."}
-              writer={"뽀삐"}
-              setBoardModal={setBoardModal}
-            />
-            <BoardBox
-              title={"혹시 알고리즘 스터디 하실 분?"}
-              date={"2023.04.20."}
-              writer={"뽀삐"}
-              admin={true}
-              setBoardModal={setBoardModal}
-            />
-            <BoardBox
-              title={"혹시 알고리즘 스터디 하실 분?"}
-              date={"2023.04.20."}
-              writer={"뽀삐"}
-              setBoardModal={setBoardModal}
-            />
+            {boardDataList.map((boardData) => (
+              <BoardBox
+                title={boardData.title}
+                date={boardData.date}
+                writer={boardData.writer}
+                setBoardModal={setBoardModal}
+              />
+            ))}
           </BoardList>
+          <div className="pagination-bar-container">
+            <Pagination
+              total={mockBoardDataList.length}
+              pageSize={3}
+              showSizeChanger={false}
+              onChange={(page) => handlePageChange(page)}
+            ></Pagination>
+          </div>
         </BoardContainer>
       </GroupWrapper>
       <MemberModal
@@ -510,6 +527,13 @@ const ChallengesContainer = styled(Content)`
 
 const BoardContainer = styled(Content)`
   padding: 3rem 0;
+
+  .pagination-bar-container {
+    padding-top: 3rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
 `;
 
 const BoardList = styled(Content)`
