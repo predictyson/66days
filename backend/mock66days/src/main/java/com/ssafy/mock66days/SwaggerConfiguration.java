@@ -40,8 +40,22 @@ public class SwaggerConfiguration {
     public Docket page() {
         return getDocket("Page", true, "page");
     }
+    @Bean
     public Docket group() {
         return getDocket("Group", true, "group");
     }
+    @Bean
+    public Docket article() {
+        return getDocket("Article", true, "article");
+    }
+    @Bean
+    public Docket badge() {
+        return getDocket("Badge", true, "badge");
+    }
+    @Bean
+    public Docket challenge() {
+        return getDocket("Challenge", true, "challenge");
+    }
+
 
 }

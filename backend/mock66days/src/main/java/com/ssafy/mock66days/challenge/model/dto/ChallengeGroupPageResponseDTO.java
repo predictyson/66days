@@ -1,6 +1,6 @@
 package com.ssafy.mock66days.challenge.model.dto;
 
-import com.ssafy.mock66days.member.model.dto.Member;
+import com.ssafy.mock66days.member.model.dto.MemberDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class ChallengeGroupPageResponseDTO {
     private String image;
     private String name;
-    private List<Member> participants;
+    private List<MemberDTO> participants;
     private int maxParticipant;
     private LocalDateTime startDate;
 }

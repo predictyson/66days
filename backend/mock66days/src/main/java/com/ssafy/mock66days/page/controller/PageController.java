@@ -8,7 +8,7 @@ import com.ssafy.mock66days.challenge.model.dto.ChallengeMainPageResponseDTO;
 import com.ssafy.mock66days.challenge.model.dto.ChallengeMyPageResponseDTO;
 import com.ssafy.mock66days.group.model.dto.GroupMainPageResponseDTO;
 import com.ssafy.mock66days.group.model.dto.GroupMyPageResponseDTO;
-import com.ssafy.mock66days.member.model.dto.Member;
+import com.ssafy.mock66days.member.model.dto.MemberDTO;
 import com.ssafy.mock66days.member.model.dto.MemberMainPageResponseDTO;
 import com.ssafy.mock66days.member.model.dto.MemberMyPageResponseDTO;
 import com.ssafy.mock66days.rank.model.dto.RankMainPageResponseDTO;
@@ -92,7 +92,7 @@ public class PageController {
         gList.add(group2);
         resultMap.put("group", gList);
 
-        Member member1 = Member.builder()
+        MemberDTO member1 = MemberDTO.builder()
                 .image(IMAGE)
                 .name("뭉치")
                 .animal("카피바라")
@@ -101,7 +101,7 @@ public class PageController {
                 .badge(10)
                 .build();
 
-        Member member2 = Member.builder()
+        MemberDTO member2 = MemberDTO.builder()
                 .image(IMAGE)
                 .name("해피")
                 .animal("무너")
@@ -110,7 +110,7 @@ public class PageController {
                 .badge(13)
                 .build();
 
-        Member member3 = Member.builder()
+        MemberDTO member3 = MemberDTO.builder()
                 .image(IMAGE)
                 .name("뽀삐")
                 .animal("미니언즈")
@@ -119,11 +119,11 @@ public class PageController {
                 .badge(12)
                 .build();
 
-        List<Member> expList = new ArrayList<>();
+        List<MemberDTO> expList = new ArrayList<>();
         expList.add(member1);
         expList.add(member2);
         expList.add(member3);
-        List<Member> badgeList = new ArrayList<>();
+        List<MemberDTO> badgeList = new ArrayList<>();
         badgeList.add(member2);
         badgeList.add(member3);
         badgeList.add(member1);
@@ -264,7 +264,7 @@ public class PageController {
         bList.add(badge5);
         resultMap.put("badges", bList);
 
-        Member member1 = Member.builder()
+        MemberDTO member1 = MemberDTO.builder()
                 .image(IMAGE)
                 .name("뭉치")
                 .animal("카피바라")
@@ -273,7 +273,7 @@ public class PageController {
                 .badge(10)
                 .build();
 
-        Member member2 = Member.builder()
+        MemberDTO member2 = MemberDTO.builder()
                 .image(IMAGE)
                 .name("해피")
                 .animal("무너")
@@ -282,7 +282,7 @@ public class PageController {
                 .badge(13)
                 .build();
 
-        Member member3 = Member.builder()
+        MemberDTO member3 = MemberDTO.builder()
                 .image(IMAGE)
                 .name("뽀삐")
                 .animal("미니언즈")
@@ -291,7 +291,7 @@ public class PageController {
                 .badge(12)
                 .build();
 
-        List<Member> participants = new ArrayList<>();
+        List<MemberDTO> participants = new ArrayList<>();
         participants.add(member1);
         participants.add(member2);
         participants.add(member3);

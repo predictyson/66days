@@ -1,6 +1,5 @@
 package com.ssafy.mock66days.member.controller;
 
-import com.ssafy.mock66days.member.model.dto.UserUpdateParamDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -71,7 +70,8 @@ public class MemberController {
     @PatchMapping("/me")
     public ResponseEntity<Map<String, Object>> updateUser(
 //            @RequestHeader(value = "Authorization") @ApiParam(required = true) String token,
-            @RequestBody @ApiParam(required = true) UserUpdateParamDTO userDTO
+            @RequestParam("image") @ApiParam(required = true) String image,
+            @RequestParam("email") @ApiParam(required = true) String email
     ) {
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
