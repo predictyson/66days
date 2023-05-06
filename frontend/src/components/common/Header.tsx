@@ -27,7 +27,7 @@ const StyledHeader = styled(Header)`
   top: 0;
   border-bottom: 1px solid rgba(158, 158, 158, 0.2);
   text-align: center;
-  height: 64;
+  height: 8rem;
   padding-inline: 5rem;
   line-height: 64px;
   background-color: #fff;
