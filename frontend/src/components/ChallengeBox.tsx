@@ -40,6 +40,7 @@ const ChallengeBoxWrapper = styled(Content)`
   display: flex;
   flex: initial;
   flex-direction: column;
+  cursor: pointer;
 
   .challenge__box-title {
     display: flex;

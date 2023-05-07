@@ -15,6 +15,7 @@ import {
   mockMemberList,
   mockBoardDataList,
   mockBoardData,
+  mockBadgeList,
 } from "../mock/group";
 import ChallengeModal from "../components/group/ChallengeModal";
 import MemberModal from "../components/group/MemberModal";
@@ -90,6 +91,7 @@ export default function Group() {
     setChallengeList(mockChallengeList);
     setMemberList(mockMemberList);
     setBoardDataList(mockBoardDataList.slice(0, 3));
+    setBadgeList(mockBadgeList);
   }, []);
 
   const TabContent = ({ ...props }) => {
