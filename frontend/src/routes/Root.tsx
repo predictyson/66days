@@ -25,13 +25,7 @@ const StyledLayout = styled(Layout)`
 `;
 
 const StyledContent = styled(Content)`
-  font-size: 1rem;
-  /* line-height: 120px; */
   line-height: initial;
   width: 1200px;
   margin-inline: auto;
-
-  @media screen and (max-width: 1200px) {
-    width: 768px;
-  }
 `;
