@@ -1,5 +1,7 @@
 package com.ssafy._66days.group.model.dto;
 
+import com.ssafy._66days.group.model.entity.Group;
+import com.ssafy._66days.user.model.dto.UserGroupSearchPageResponseDTO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,5 +18,14 @@ public class GroupSearchPageResponseDTO {
     private String description;
     private int memberCounts;
     private int maxMemberCounts;
-    private String animal;
+
+    public static GroupSearchPageResponseDTO of(Group group) {
+        UserGroupSearchPageResponseDTO userDTO =
+        return GroupSearchPageResponseDTO.builder()
+                .image(group.getImage())
+                .name(group.getName())
+                .description(group.getDescription())
+                .maxMemberCounts(group.getMaxMember())
+                .build();
+    }
 }

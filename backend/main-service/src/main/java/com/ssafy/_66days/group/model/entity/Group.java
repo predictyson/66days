@@ -32,6 +32,9 @@ public class Group {
     private int maxMemberCount;
     @Column(name = "image_path", nullable = true)
     private String imagePath;
+    @Column(name = "description")
+    @NotNull
+    private String description;
     @NotNull
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

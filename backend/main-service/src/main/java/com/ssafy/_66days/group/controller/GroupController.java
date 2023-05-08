@@ -1,23 +1,30 @@
 package com.ssafy._66days.group.controller;
 
 import com.ssafy._66days.group.model.dto.GroupSearchPageResponseDTO;
+import com.ssafy._66days.group.model.service.GroupService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/group")
 @Api("GROUP API")
+@RequiredArgsConstructor
 public class GroupController {
 
     private static final String SUCCESS = "success";
     private static final String RESULT = "result";
     private static final String IMAGE = "/image/image.jpg";
+    private final GroupService groupService;
     @ApiOperation(value = "검색 API", notes = "search 누를 시 나오는 화면")
     @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> searchGroup(
@@ -26,22 +33,20 @@ public class GroupController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        GroupSearchPageResponseDTO group = GroupSearchPageResponseDTO.builder()
-                .ownerImage(IMAGE)
-                .ownerName("뭉치")
-                .name("뭉치뭉치똥뭉치네")
-                .categories(new ArrayList<>(Arrays.asList("알고리즘","강의")))
-                .description("같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요")
-                .memberCounts(33)
-                .maxMemberCounts(66)
-                .animal("카피바라")
-                .build();
+        List<GroupSearchPageResponseDTO> groupList = groupService.searchGroup(searchContent, filterBy);
 
-        List<GroupSearchPageResponseDTO> gList = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
-            gList.add(group);
-        }
-        resultMap.put("group-list", gList);
+//        GroupSearchPageResponseDTO group = GroupSearchPageResponseDTO.builder()
+//                .ownerImage(IMAGE)
+//                .ownerName("뭉치")
+//                .name("뭉치뭉치똥뭉치네")
+//                .categories(new ArrayList<>(Arrays.asList("알고리즘","강의")))
+//                .description("같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요")
+//                .memberCounts(33)
+//                .maxMemberCounts(66)
+//                .animal("카피바라")
+//                .build();
+
+        resultMap.put("group-list", groupList);
 
         resultMap.put(RESULT, SUCCESS);
 
@@ -55,29 +60,15 @@ public class GroupController {
     ){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        MemberManageDTO member1 = MemberManageDTO.builder()
-                .image(IMAGE)
-                .nickname("@moongchi")
-                .badge(1)
-                .role("owner")
-                .build();
-        MemberManageDTO member2 = MemberManageDTO.builder()
-                .image(IMAGE)
-                .nickname("@ppoppi")
-                .badge(1)
-                .role("manager")
-                .build();
-        MemberManageDTO member3 = MemberManageDTO.builder()
-                .image(IMAGE)
-                .nickname("@happy")
-                .badge(1)
-                .role("member")
-                .build();
+//        MemberManageDTO member1 = MemberManageDTO.builder()
+//                .image(IMAGE)
+//                .nickname("@moongchi")
+//                .badge(1)
+//                .role("owner")
+//                .build();
 
-        List<MemberManageDTO> members = new ArrayList<>();
-        members.add(member1);
-        members.add(member2);
-        members.add(member3);
+
+        List<MemberManageDTO> memberList = groupService.getGroupMembers(groupId);
         resultMap.put("member-list", members);
 
         resultMap.put(RESULT, SUCCESS);
@@ -92,26 +83,13 @@ public class GroupController {
     ){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        MemberManageDTO member1 = MemberManageDTO.builder()
-                .image(IMAGE)
-                .nickname("@moongchi")
-                .badge(1)
-                .build();
-        MemberManageDTO member2 = MemberManageDTO.builder()
-                .image(IMAGE)
-                .nickname("@ppoppi")
-                .badge(1)
-                .build();
-        MemberManageDTO member3 = MemberManageDTO.builder()
-                .image(IMAGE)
-                .nickname("@happy")
-                .badge(1)
-                .build();
+//        MemberManageDTO member1 = MemberManageDTO.builder()
+//                .image(IMAGE)
+//                .nickname("@moongchi")
+//                .badge(1)
+//                .build();
 
-        List<MemberManageDTO> members = new ArrayList<>();
-        members.add(member1);
-        members.add(member2);
-        members.add(member3);
+        List<MemberManageDTO> memberList = groupService.getGroupApplyList(groupId);
         resultMap.put("apply-list", members);
 
         resultMap.put(RESULT, SUCCESS);
