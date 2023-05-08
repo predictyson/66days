@@ -16,7 +16,7 @@ import styled from "styled-components";
 export default function GroupIntro() {
   return (
     <>
-      <Typography.Title>
+      <Typography.Title style={{ fontSize: "3.2rem" }}>
         Group
         <br /> Introduction
       </Typography.Title>
@@ -43,15 +43,15 @@ export default function GroupIntro() {
                 justifyContent: "space-around",
               }}
             >
-              <Typography.Text>
+              <Typography.Text style={{ fontSize: "2.4rem" }}>
                 그룹원
                 <br /> 80명
               </Typography.Text>
-              <Typography.Text>
+              <Typography.Text style={{ fontSize: "2.4rem" }}>
                 진행중
                 <br /> 3건
               </Typography.Text>
-              <Typography.Text>
+              <Typography.Text style={{ fontSize: "2.4rem" }}>
                 완료
                 <br /> 10건
               </Typography.Text>
@@ -60,13 +60,18 @@ export default function GroupIntro() {
               direction="vertical"
               style={{ width: "80%", margin: "auto" }}
             >
-              <Typography.Title>뭉치뭉치똥뭉치네</Typography.Title>
-              <Typography.Text>
+              <Typography.Title style={{ fontSize: "4.8rem" }}>
+                뭉치뭉치똥뭉치네
+              </Typography.Title>
+              <Typography.Text style={{ fontSize: "2.4rem" }}>
                 뭉치의 친구들로 이루어진 뭉치뭉치똥뭉치네 공간입니다.
               </Typography.Text>
               <Button
                 size="large"
-                style={{ backgroundColor: "black", color: "white" }}
+                style={{
+                  backgroundColor: "black",
+                  color: "white",
+                }}
               >
                 apply
               </Button>
@@ -76,7 +81,10 @@ export default function GroupIntro() {
       </StyledContainer>
       <StyledContainer>
         <StyledChallenge>
-          <Typography.Title level={3} style={{ textAlign: "center" }}>
+          <Typography.Title
+            level={3}
+            style={{ textAlign: "center", fontSize: "2.4rem" }}
+          >
             챌린지 리스트
           </Typography.Title>
           <Space
@@ -92,10 +100,12 @@ export default function GroupIntro() {
                   <Space
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <Typography.Text style={{}}>
+                    <Typography.Text style={{ fontSize: "2rem" }}>
                       1일 1백준 풀어봅시다.
                     </Typography.Text>
-                    <Typography.Text type="danger">D-3</Typography.Text>
+                    <Typography.Text type="danger" style={{ fontSize: "2rem" }}>
+                      D-3
+                    </Typography.Text>
                   </Space>
                 }
                 bodyStyle={{ display: "flex", flexDirection: "column" }}
@@ -137,12 +147,19 @@ export default function GroupIntro() {
                     paddingTop: "1rem",
                   }}
                 >
-                  <Tag color="#5F6F94"> 12 /30 명</Tag>
+                  <Tag
+                    color="#5F6F94"
+                    style={{ fontSize: "1.6rem", padding: "1rem 2rem" }}
+                  >
+                    12 /30 명
+                  </Tag>
                   <Tag
                     style={{
                       backgroundColor: "transparent",
                       color: "#6CD3C0",
                       border: "1px solid #6CD3C0",
+                      fontSize: "1.6rem",
+                      padding: "1rem 2rem",
                     }}
                     color="#6CD3C0"
                   >
@@ -176,7 +193,7 @@ export default function GroupIntro() {
                       tooltip:
                         "@barabara;alskdjflk;asfjsadl;fjasdkl;jflk;asjdklf;jaslk;djfdlks;aj",
                     }}
-                    style={{ width: 100 }}
+                    style={{ width: 100, fontSize: "2.4rem" }}
                   >
                     @barabara;alskdjflk;asfjsadl;fjasdkl;jflk;asjdklf;jaslk;djfdlks;aj
                   </Typography.Text>

@@ -93,13 +93,13 @@ export default function Challenge2() {
             <TeamOutlined style={{ fontSize: "2rem" }} />
             구성원(3인)
           </Typography.Title>
-          <Space style={{ width: "100%", justifyContent: "space-between" }}>
+          <Space style={{ justifyContent: "space-between" }}>
             <Typography.Text
               ellipsis={{
                 tooltip:
                   " 피그마마스터김태원 asldkj asl;kfdj ;askldjf ;laskdf j;aslkd f asdl;fkj as;dlfkj as;kldfj as;dklfj",
               }}
-              style={{ width: "10rem" }}
+              style={{ width: "100px" }}
             >
               <Avatar icon={<UserOutlined />} style={{ marginRight: "1rem" }} />
               피그마마스터김태원 asldkj asl;kfdj ;askldjf ;laskdf j;aslkd f
