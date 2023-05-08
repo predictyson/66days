@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import SingleMemberListBox from "../../components/SingleMemberListBox";
+import SingleMemberListBox from "./SingleMemberListBox";
 import styled from "styled-components";
 import { Content } from "antd/es/layout/layout";
 

@@ -107,14 +107,36 @@ const BadgeImage = styled.div<BadgeImgStyled>`
 const BadgeInfoContainer = styled.div`
   padding-left: 3.2rem;
 
+  svg {
+    width: 2rem;
+    height: 2rem;
+  }
+
   .badge-title {
     font-size: 2.5rem;
     font-weight: ${theme.fontWeight.bold};
     padding-bottom: 1rem;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 
   .badge-period {
-    padding: 1rem 0;
+    font-size: 1.6rem;
+    padding: 0.5rem 0 1rem;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 
   .badge-category-btn {
@@ -122,6 +144,7 @@ const BadgeInfoContainer = styled.div`
     width: fit-content;
     background-color: ${theme.colors.purple};
     color: ${theme.colors.white};
+    font-size: 1.2rem;
     font-weight: ${theme.fontWeight.bold};
     display: flex;
     align-items: center;

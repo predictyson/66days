@@ -72,7 +72,7 @@ const SingleMemberWrapper = styled(Content)`
   }
 
   .owner {
-    font-size: 1rem;
+    font-size: 1.3rem;
     padding-left: 1rem;
     font-weight: 400;
   }

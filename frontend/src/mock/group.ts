@@ -2,6 +2,7 @@ import Algorithms from "../assets/algorithm_badge.png";
 import CS from "../assets/cs_badge.png";
 import Blog from "../assets/blog_badge.png";
 import Book from "../assets/book_badge.jpeg";
+import Lecture from "../assets/lecture_badge.png";
 
 const mockBoardData = {
   title: "알고리즘 챌린지원을 모집합니다.",
@@ -26,7 +27,7 @@ const mockChallengeList = [
     notStarted: true,
     ending: true,
     title: "모던자바스크립트 읽기",
-    dueDate: 3,
+    dueDate: 1,
     profile:
       "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
     cnt: "5 / 12",
@@ -35,7 +36,7 @@ const mockChallengeList = [
     bgImg: Blog,
     notStarted: false,
     title: "뭉치의 TIL 작성 챌린지",
-    dueDate: 3,
+    dueDate: 13,
     profile:
       "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
     cnt: "5 / 12",
@@ -44,10 +45,19 @@ const mockChallengeList = [
     bgImg: CS,
     notStarted: false,
     title: "김태원의 CS 스터디",
-    dueDate: 3,
+    dueDate: 35,
     profile:
       "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
     cnt: "5 / 12",
+  },
+  {
+    bgImg: Lecture,
+    notStarted: false,
+    title: "TypeScript 마스터들",
+    dueDate: 50,
+    profile:
+      "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
+    cnt: "3 / 3",
   },
 ];
 

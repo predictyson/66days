@@ -110,6 +110,7 @@ const BadgeModalWrapper = styled(Content)`
 const TabContainer = styled(Content)`
   display: flex;
   flex-direction: column;
+  font-size: 1.6rem;
 
   .tab-list {
     padding-left: 0;

@@ -1,6 +1,6 @@
 import { Layout } from "antd";
 import styled from "styled-components";
-import { theme } from "../styles/theme";
+import { theme } from "../../styles/theme";
 import { NotificationFilled } from "@ant-design/icons";
 
 const { Content } = Layout;
@@ -33,6 +33,7 @@ const BoardBoxWrapper = styled(Content)`
   border-radius: 1rem;
   filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.3));
   cursor: pointer;
+  font-size: 1.6rem;
 
   &:last-child {
     margin-right: 0;
@@ -56,9 +57,17 @@ const BoardBoxWrapper = styled(Content)`
   }
 
   .board-title {
-    font-size: 1.8rem;
+    font-size: 2rem;
     font-weight: 600;
     padding-bottom: 0.5rem;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
   .board-info {
@@ -67,5 +76,13 @@ const BoardBoxWrapper = styled(Content)`
     justify-content: space-between;
     color: ${theme.colors.white};
     font-weight: 600;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 `;

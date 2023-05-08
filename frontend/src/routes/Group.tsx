@@ -8,8 +8,8 @@ import CS from "../assets/cs_badge.png";
 import Blog from "../assets/blog_badge.png";
 import Lecture from "../assets/lecture_badge.png";
 import Book from "../assets/book_badge.jpeg";
-import ChallengeBox from "../components/ChallengeBox";
-import { BoardBox } from "../components/BoardBox";
+import ChallengeBox from "../components/group/ChallengeBox";
+import { BoardBox } from "../components/group/BoardBox";
 import {
   mockChallengeList,
   mockMemberList,
@@ -19,7 +19,7 @@ import {
 } from "../mock/group";
 import ChallengeModal from "../components/group/ChallengeModal";
 import MemberModal from "../components/group/MemberModal";
-import SingleMemberListBox from "../components/SingleMemberListBox";
+import SingleMemberListBox from "../components/group/SingleMemberListBox";
 import BadgeModal from "../components/group/BadgeModal";
 import NewBoardModal from "../components/group/NewBoardModal";
 
@@ -200,7 +200,6 @@ export default function Group() {
             <div className="btn-wrapper">
               <CommonButton
                 color={theme.colors.black}
-                font="Kanit-Regular"
                 margin="0 1rem 0 0"
                 cursor={true}
                 onClick={() => setMemberSettingModal(true)}
@@ -209,7 +208,6 @@ export default function Group() {
               </CommonButton>
               <CommonButton
                 color={theme.colors.gray500}
-                font="Kanit-Regular"
                 cursor={true}
                 onClick={() => setOpenMemberModal((prev) => !prev)}
               >
@@ -292,6 +290,7 @@ export default function Group() {
           </BoardList>
           <div className="pagination-bar-container">
             <Pagination
+              className="pagination-bar"
               total={mockBoardDataList.length}
               pageSize={3}
               showSizeChanger={false}
@@ -542,6 +541,7 @@ const CommonButton = styled(Content)<ButtonStyled>`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 1.6rem;
 `;
 
 const GroupChallenges = styled(Content)`
@@ -561,6 +561,15 @@ const BoardContainer = styled(Content)`
     width: 100%;
     display: flex;
     justify-content: center;
+  }
+
+  .ant-pagination {
+    font-size: 1.6rem;
+  }
+
+  .ant-pagination svg {
+    width: 1rem;
+    height: 1rem;
   }
 `;
 
@@ -587,6 +596,7 @@ const MemberSettingModalWrapper = styled(Content)`
 const TabContainer = styled(Content)`
   display: flex;
   flex-direction: column;
+  font-size: 1.6rem;
 
   .tab-list {
     padding-left: 0;
@@ -641,6 +651,7 @@ const BoardModalWrapper = styled(Content)`
   max-height: 90vh;
   overflow-y: scroll;
   background-color: ${theme.colors.white};
+  font-size: 1.6rem;
   padding: 6.4rem;
   border-radius: 1rem;
 
@@ -694,6 +705,7 @@ const CommentBox = styled(Content)`
 
 const CommentInputBox = styled(Content)`
   display: flex;
+  font-size: 1.6rem;
 
   .comment-input {
     flex-grow: 1;
@@ -724,6 +736,7 @@ const SingleComment = styled(Content)`
   min-height: fit-content;
   padding-top: 1rem;
   border-bottom: 1px solid ${theme.colors.gray300};
+  font-size: 1.6rem;
 
   .comment-writer-profile {
     width: 4.8rem;

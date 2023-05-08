@@ -110,6 +110,7 @@ const CategorySelectionTitle = styled.div`
 
   .desc {
     color: ${theme.colors.gray400};
+    font-size: 1.6rem;
     font-weight: ${theme.fontWeight.semibold};
   }
 `;
