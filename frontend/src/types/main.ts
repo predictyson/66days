@@ -1,4 +1,4 @@
-export interface MainIData {
+export interface MainData {
   result: string;
   memberInfo: MemberInfoData;
   challenge: ChallengeData[];

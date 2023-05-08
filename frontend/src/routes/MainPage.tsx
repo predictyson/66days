@@ -2,12 +2,12 @@ import Banner from "../components/main/Banner";
 import Todo from "../components/main/Todo";
 import Groups from "../components/main/Groups";
 import Ranking from "../components/main/Ranking";
-import { MainIData } from "../types/main";
+import { MainData } from "../types/main";
 
 export default function MainPage() {
   return (
     <>
-      <Banner />
+      <Banner memberInfo={MAIN_DUMMY_DATA.memberInfo} />
       <Todo />
       <Groups />
       <Ranking />
@@ -15,13 +15,13 @@ export default function MainPage() {
   );
 }
 
-const DUMMYMAINDATA: MainIData = {
+const MAIN_DUMMY_DATA: MainData = {
   result: "success",
   memberInfo: {
     tier: "bronze",
     email: "moongchi@ssafy.com",
-    exp: 1500,
-    point: 32000,
+    exp: 15000,
+    point: 33000,
     image: "/image/카피바라.jpg",
     animal: "카피바라",
   },

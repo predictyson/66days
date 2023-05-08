@@ -3,25 +3,29 @@ import Capibara from "../../assets/main/Capibara.png";
 import Badge from "../../assets/main/Bronze.png";
 import CoinIcon from "../../assets/main/Coin.png";
 import { theme } from "../../styles/theme";
+import { MemberInfoData } from "../../types/main";
 
-export default function Banner() {
+interface IProps {
+  memberInfo: MemberInfoData;
+}
+export default function Banner({ memberInfo }: IProps) {
   return (
     <Container>
       <LeftWrapper>
         <Info>
           <img src={Badge} alt="badge" />
-          <div className="email">yllydev@gmail.com</div>
+          <div className="email">{memberInfo.email}</div>
         </Info>
         <Nickname>
-          게으른 <br /> 카피바라
+          게으른 <br /> {memberInfo.animal}
         </Nickname>
         <MoreInfo>
-          <div className="exp">1500 EXP</div>
+          <div className="exp">{memberInfo.exp} EXP</div>
           <div className="button">한눈에 보기</div>
         </MoreInfo>
         <Coin>
           <img src={CoinIcon} alt="icon" />{" "}
-          <span>{(32000 as number).toLocaleString()}</span>
+          <span>{memberInfo.point.toLocaleString()}</span>
         </Coin>
       </LeftWrapper>
       <ImageWrapper>
