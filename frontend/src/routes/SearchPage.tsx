@@ -40,7 +40,7 @@ export default function SearchPage() {
 const Container = styled.div`
   width: 100%;
   display: flex;
-  padding: 9.6rem 3.4rem;
+  padding: 9.6rem 0;
   font-family: Pretendard;
   flex-direction: column;
 `;
@@ -77,9 +77,8 @@ const SearchInput = styled.input`
 const ItemContainer = styled.div`
   margin-top: 2rem;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(33%, 1fr));
   justify-content: space-between;
-  grid-column-gap: 0;
 `;
 
 const GROUPS = [
