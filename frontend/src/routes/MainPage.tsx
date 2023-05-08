@@ -8,8 +8,8 @@ export default function MainPage() {
   return (
     <>
       <Banner memberInfo={MAIN_DUMMY_DATA.memberInfo} />
-      <Todo />
-      <Groups />
+      <Todo challenges={MAIN_DUMMY_DATA.challenge} />
+      <Groups groups={MAIN_DUMMY_DATA.group} />
       <Ranking />
     </>
   );
@@ -105,6 +105,18 @@ const MAIN_DUMMY_DATA: MainData = {
       name: "뭉치뭉치똥뭉치",
       badges: ["알고리즘", "CS"],
       type: "personal",
+    },
+    {
+      image: "/image/image.jpg",
+      name: "범블비식구들",
+      badges: ["알고리즘", "CS", "개발서적", "블로깅", "강의"],
+      type: "group",
+    },
+    {
+      image: "/image/image.jpg",
+      name: "뭉치뭉치똥뭉치",
+      badges: ["알고리즘", "CS"],
+      type: "group",
     },
     {
       image: "/image/image.jpg",

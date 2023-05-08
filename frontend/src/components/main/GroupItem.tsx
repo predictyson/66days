@@ -3,19 +3,33 @@ import Moongchi from "../../assets/main/moongchi.png";
 import Algo from "../../assets/landing/algoBox.png";
 import Blog from "../../assets/landing/blogBox.png";
 import CS from "../../assets/landing/csBox.png";
+import { GroupData } from "../../types/main";
 interface ImageWrapperProps {
   imageUrl: string;
 }
 
-export default function GroupItem() {
+interface IProps {
+  group: GroupData;
+}
+
+export default function GroupItem({ group }: IProps) {
   return (
     <BoxWrapper>
-      <ImageWrapper imageUrl={Moongchi}>
-        <span>
-          뭉치뭉치똥뭉치님의 <br />
-          개인 챌린지
-        </span>
-      </ImageWrapper>
+      {group.type === "personal" ? (
+        <ImageWrapper imageUrl={Moongchi}>
+          <span>
+            {group.name}님의 <br />
+            개인 챌린지
+          </span>
+        </ImageWrapper>
+      ) : (
+        <ImageWrapper imageUrl={Moongchi}>
+          <span>
+            {group.name}님의 <br />
+            그룹 챌린지
+          </span>
+        </ImageWrapper>
+      )}
       <ChallengeWrapper>
         <ChallengeBox src={Algo} />
         <ChallengeBox src={Blog} />

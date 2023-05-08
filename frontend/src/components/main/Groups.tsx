@@ -4,16 +4,15 @@ import styled from "styled-components";
 import PrevArrow from "../../assets/main/PrevArrow.png";
 import NextArrow from "../../assets/main/NextArrow.png";
 import GroupItem from "./GroupItem";
+import { GroupData } from "../../types/main";
 // slider
-
-export default function GroupList() {
-  const groupItems = [
-    <GroupItem />,
-    <GroupItem />,
-    <GroupItem />,
-    <GroupItem />,
-    <GroupItem />,
-  ];
+interface IProps {
+  groups: GroupData[];
+}
+export default function GroupList({ groups }: IProps) {
+  const groupItems = groups.map((group, idx) => {
+    return <GroupItem key={idx} group={group} />;
+  });
   let group: any = [];
   group[0] = groupItems.slice(0, 3);
   group[1] = groupItems.slice(3, groupItems.length);
