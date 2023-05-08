@@ -1,4 +1,4 @@
-import { Modal } from "antd";
+import { Button, Modal } from "antd";
 import { Content } from "antd/es/layout/layout";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
@@ -15,7 +15,33 @@ export default function NewBoardModal(props: PropsType) {
         open={props.open}
         onCancel={props.toggleModal}
         width={800}
-        footer={null}
+        footer={[
+          <Button
+            key="back"
+            type="primary"
+            onClick={props.toggleModal}
+            style={{
+              backgroundColor: "black",
+              fontFamily: "Kanit-SemiBold",
+              height: "inherit",
+              fontSize: "2rem",
+            }}
+          >
+            cancel
+          </Button>,
+          <Button
+            key="submit"
+            style={{
+              fontFamily: "Kanit-SemiBold",
+              height: "inherit",
+              fontSize: "2rem",
+              marginRight: "6rem",
+              marginBottom: "4rem",
+            }}
+          >
+            continue
+          </Button>,
+        ]}
       >
         <NewBoardModalWrapper>
           <div className="modal-title">게시판 글 작성</div>
@@ -29,10 +55,6 @@ export default function NewBoardModal(props: PropsType) {
               <textarea placeholder="게시판 내용을 입력해주세요." />
             </ContentBox>
           </NewBoardContentContainer>
-          <div className="new__board__btn-list">
-            <div className="cancel-btn btn">cancel</div>
-            <div className="upload-btn btn">upload</div>
-          </div>
         </NewBoardModalWrapper>
       </CustomModal>
     </>
@@ -46,53 +68,13 @@ const CustomModal = styled(Modal)`
 `;
 
 const NewBoardModalWrapper = styled(Content)`
-  padding: 6rem 8rem;
+  padding: 6rem 8rem 1rem;
 
   .modal-title {
     width: 100%;
     text-align: center;
     font-size: 2.4rem;
-    font-weight: 700;
-  }
-
-  .new__board__btn-list {
-    display: flex;
-    padding-top: 2rem;
-  }
-
-  .new__board__btn-list .btn {
-    font-family: "Kanit-Semibold";
-    width: 10rem;
-    height: 4rem;
-    line-height: 4rem;
-    font-size: 2rem;
-    text-align: center;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .cancel-btn {
-    background-color: ${theme.colors.black};
-    color: ${theme.colors.white};
-
-    &:hover {
-      border: 2px solid ${theme.colors.black};
-      box-sizing: border-box;
-      background-color: ${theme.colors.white};
-      color: ${theme.colors.black};
-    }
-  }
-
-  .upload-btn {
-    border: 2px solid ${theme.colors.black};
-    box-sizing: border-box;
-    margin-left: 2rem;
-
-    &:hover {
-      border: none;
-      background-color: ${theme.colors.black};
-      color: ${theme.colors.white};
-    }
+    font-weight: ${theme.fontWeight.bold};
   }
 `;
 
