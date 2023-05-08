@@ -1,43 +1,32 @@
 import ReactDOM from "react-dom/client";
 import React from "react";
 import { RouterProvider } from "react-router-dom";
-import "./index.css";
 import router from "./router";
-import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { normalize } from "styled-normalize";
+import { ThemeProvider } from "styled-components";
 import { theme } from "./styles/theme";
+import GlobalStyle from "./styles/GlobalStyle.tsx";
 import GlobalFont from "./styles/GlobalFont.tsx";
-
-const GlobalStyle = createGlobalStyle`
-  ${normalize}
-  html{
-    /* font-size: 62.5%;   // 1rem = 10px */
-    font-size: 10px;
-    box-sizing: border-box;
-    background-color: #3E2133;
-    /* color: white; */
-    /* overflow-y: hidden; */
-    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
-  }
-  body{
-    margin: 0;
-  } 
-  // 스크롤 스타일링 
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 6px;
-  }
-
-`;
+import { ConfigProvider } from "antd";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <GlobalFont />
-      <RouterProvider router={router} />
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: theme.colors.purple,
+            colorSuccess: theme.colors.success,
+            colorError: theme.colors.failure,
+            colorInfo: theme.colors.update,
+            fontFamily: "Kanit-Medium",
+            fontSize: 10,
+          },
+        }}
+      >
+        <RouterProvider router={router} />
+      </ConfigProvider>
     </ThemeProvider>
   </React.StrictMode>
 );
