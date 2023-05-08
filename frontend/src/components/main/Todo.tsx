@@ -1,59 +1,64 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import Algo from "../../assets/landing/algoBox.png";
-import Blog from "../../assets/landing/blogBox.png";
+// import Blog from "../../assets/landing/blogBox.png";
 import Chart from "./Chart";
 import { CheckCircleOutlined } from "@ant-design/icons";
-export default function Todo() {
-  const x = 20;
+import { ChallengeData } from "../../types/main";
+interface IProps {
+  challenges: ChallengeData[];
+}
+
+export default function Todo({ challenges }: IProps) {
+  function countDays(startDate: string): number {
+    const oneDay = 24 * 60 * 60 * 1000; // 1일을 밀리초로 계산
+    const startDateTime = new Date(startDate).getTime(); // 시작일을 밀리초로 변환
+    const todayDateTime = new Date().getTime(); // 현재 시간을 밀리초로 변환
+    const diffDays = Math.round(
+      Math.abs((todayDateTime - startDateTime) / oneDay)
+    ); // 날짜 차이 계산
+    return diffDays;
+  }
+
   return (
     <Container>
       <Title>Today's todo</Title>
       <TodoContianer>
-        <TodoBox>
-          <div className="left">
-            <img src={Algo} alt="algo" />
-            <div className="title">뽀삐의 알고리즘 뿌시기</div>
-          </div>
-          <div className="right">
-            <CheckCircleOutlined
-              style={{
-                fontSize: "4rem",
-                color: "#6CD3C0",
-                // padding: "1.8rem",
-                cursor: "pointer",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            />
-            <Chart x={x} />
-            <p>{x} / 66</p>
-          </div>
-        </TodoBox>
-        <TodoBox>
-          <div className="left">
-            <img src={Blog} alt="blog" />
-            <div className="title">해피의 CS 스터디</div>
-          </div>
-          <div className="right">
-            <CheckCircleOutlined
-              style={{
-                fontSize: "4rem",
-                color: "#D9D9D9",
-                cursor: "pointer",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            />
-            <Chart x={60} />
-            <p>60 / 66</p>
-          </div>
-        </TodoBox>
+        {challenges.map((challenge, idx) => {
+          return (
+            <TodoBox key={idx}>
+              <div className="left">
+                <img src={Algo} alt="algo" />
+                <div className="title">{challenge.name}</div>
+              </div>
+              <div className="right">
+                {challenge.status ? <CustomChecked /> : <CustomUnChecked />}
+                <Chart x={countDays(challenge.startDate)} />
+                <p>{countDays(challenge.startDate)} / 66</p>
+              </div>
+            </TodoBox>
+          );
+        })}
       </TodoContianer>
     </Container>
   );
 }
 
+const CustomChecked = styled(CheckCircleOutlined)`
+  font-size: 4rem;
+  color: ${theme.colors.mint};
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const CustomUnChecked = styled(CheckCircleOutlined)`
+  font-size: 4rem;
+  color: ${theme.colors.gray400};
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-end;
+`;
 const Container = styled.div`
   width: 100%;
   display: flex;
