@@ -102,7 +102,6 @@ const TodoBox = styled.div`
 
     white-space: nowrap;
     text-overflow: ellipsis;
-    border: solid 1px green;
   }
   .right {
     width: 45%;
