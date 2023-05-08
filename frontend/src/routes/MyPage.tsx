@@ -3,7 +3,8 @@ import Profile from "../components/mypage/Profile";
 import Badge from "../components/mypage/Badge";
 import Streak from "../components/mypage/Streak";
 import Group from "../components/mypage/Groups";
-import EditProfile from "../components/mypage/EditProfile";
+// 프로필 수정시
+// import EditProfile from "../components/mypage/EditProfile";
 export default function MyPage() {
   const commits = [
     1, 2, 0, 0, 0, 1, 3, 1, 2, 3, 3, 2, 2, 2, 1, 1, 3, 0, 0, 1, 0, 2, 3, 1, 2,
@@ -28,12 +29,13 @@ export default function MyPage() {
 
 const Container = styled.div`
   display: flex;
+  height: 70rem;
   .left {
-    width: 30%;
+    width: 27%;
     display: flex;
     flex-direction: column;
   }
   .right {
-    width: 70%;
+    width: 73%;
   }
 `;

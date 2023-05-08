@@ -36,7 +36,6 @@ export default function BreadCrumb() {
 
 const Container = styled.div`
   display: flex;
-  margin-top: 1.3rem;
   span {
     font-size: 1.6rem;
     color: ${theme.colors.gray300};
@@ -54,7 +53,7 @@ const CrumbItem = styled.div<CrumbItemProps>`
   color: ${(props) => (props.active ? "#333" : "#888")};
   cursor: pointer;
   margin-left: 1.6rem;
-  font-size: 2.4rem;
+  font-size: 2rem;
 
   &:hover {
     text-decoration: underline;

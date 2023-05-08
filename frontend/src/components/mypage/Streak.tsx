@@ -36,12 +36,19 @@ const StreakGraph = ({ commits, length }: IProps) => {
           현재 진행 중 습관 <span className="count">3</span>개
         </div>
         <StreakDescription>
-          <Streak count={0} color="#50B9C9" />
-          <span>4-5건</span>
-          <Streak count={0} color="#7EE3F2" />
-          <span>2-3건</span>
-          <Streak count={0} color="#BBE6EC" />
-          <span>1건</span>
+          <div className="wrap">
+            <Streak count={0} color="#50B9C9" />
+            <span>4-5건</span>
+          </div>
+          <div className="wrap">
+            <Streak count={0} color="#7EE3F2" />
+            <span>2-3건</span>
+          </div>
+
+          <div className="wrap">
+            <Streak count={0} color="#BBE6EC" />
+            <span>1건</span>
+          </div>
         </StreakDescription>
       </SubContent>
       <img src={Line} style={{ margin: "3.2rem auto", width: "80rem" }} />
@@ -67,10 +74,16 @@ const Title = styled.div`
   }
 `;
 const StreakWrapper = styled.div`
-  width: 80rem;
+  width: 100%;
   display: flex;
+  /* height: 2.5rem; */
   justify-content: space-between;
   margin-top: 1.6rem;
+  .wrap {
+    border: solid 1px red;
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const SubContent = styled.div`
@@ -88,15 +101,24 @@ const SubContent = styled.div`
 
 const StreakDescription = styled.div`
   display: flex;
-  width: 30%;
+  width: 40%;
   align-items: center;
   color: ${theme.colors.gray500};
   justify-content: space-between;
+  .wrap {
+    display: flex;
+    width: 30%;
+    align-items: center;
+    justify-content: space-between;
+    /* flex-direction: column; */
+  }
 `;
 
 const Streak = styled.div<{ count: number; color: string }>`
-  width: 2.8rem;
-  height: 2.8rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  /* height: 90%; */
+  margin: auto;
   margin: 0.125rem 0.5rem;
   border-radius: 5px;
   background-color: ${({ color }) => color};
