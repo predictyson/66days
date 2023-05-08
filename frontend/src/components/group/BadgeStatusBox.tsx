@@ -1,5 +1,7 @@
+import { Progress } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
+import { useState } from "react";
 
 interface BadgeType {
   category: string;
@@ -20,20 +22,42 @@ interface BadgeImgStyled {
 }
 
 export default function BadgeStatusBox(props: PropsType) {
+  function calcPeriod(oldDate: string, newDate: string) {
+    console.log(new Date(oldDate), new Date(newDate));
+
+    let diff = Math.abs(
+      new Date(newDate).getTime() - new Date(oldDate).getTime()
+    );
+    diff = Math.ceil(diff / (1000 * 60 * 60 * 24));
+    console.log((diff / 66) * 100);
+  }
+
   return (
     <>
       <BadgeStatusBoxWrapper>
-        <BadgeImg
-          bgImg={props.badge.badgeImg}
-          status={props.badge.status}
-          className="failed-badge-img"
-        >
-          FAIL
-        </BadgeImg>
+        {props.badge.status ? (
+          <BadgeImage
+            bgImg={props.badge.badgeImg}
+            status={props.badge.status}
+          ></BadgeImage>
+        ) : (
+          <FailedBadgeImg
+            bgImg={props.badge.badgeImg}
+            status={props.badge.status}
+          >
+            FAIL
+          </FailedBadgeImg>
+        )}
 
         <BadgeInfoContainer>
           <div className="badge-title">{props.badge.title}</div>
-          <div>상태 바</div>
+          <div>
+            {props.badge.status ? (
+              <Progress percent={100} />
+            ) : (
+              <Progress percent={60} status="exception" />
+            )}
+          </div>
           <div className="badge-period">
             챌린지 기간: {props.badge.startDate} ~ {props.badge.endDate}
           </div>
@@ -55,7 +79,7 @@ const BadgeStatusBoxWrapper = styled.div`
   }
 `;
 
-const BadgeImg = styled.div<BadgeImgStyled>`
+const FailedBadgeImg = styled.div<BadgeImgStyled>`
   width: 16rem;
   height: 16rem;
   border-radius: 10px;
@@ -70,6 +94,14 @@ const BadgeImg = styled.div<BadgeImgStyled>`
   color: ${theme.colors.white};
   font-size: 3.2rem;
   font-family: "Kanit-Bold";
+`;
+
+const BadgeImage = styled.div<BadgeImgStyled>`
+  width: 16rem;
+  height: 16rem;
+  border-radius: 10px;
+  background: url(${(props) => props.bgImg});
+  background-size: cover;
 `;
 
 const BadgeInfoContainer = styled.div`

@@ -21,6 +21,7 @@ import ChallengeModal from "../components/group/ChallengeModal";
 import MemberModal from "../components/group/MemberModal";
 import SingleMemberListBox from "../components/SingleMemberListBox";
 import BadgeModal from "../components/group/BadgeModal";
+import NewBoardModal from "../components/group/NewBoardModal";
 
 interface ButtonStyled {
   color?: string;
@@ -81,6 +82,7 @@ export default function Group() {
   const [isOpenMemberModal, setOpenMemberModal] = useState(false);
   const [isOpenBadgeModal, setOpenBadgeModal] = useState(false);
   const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
+  const [isOpenNewBoardModal, setOpenNewBoardModal] = useState(false);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
   const [memberList, setMemberList] = useState<MemberType[]>([]);
   const [badgeList, setBadgeList] = useState<BadgeType[]>([]);
@@ -272,6 +274,7 @@ export default function Group() {
                 color={theme.colors.gray500}
                 font="Kanit-Regular"
                 cursor={true}
+                onClick={() => setOpenNewBoardModal(true)}
               >
                 게시글 작성
               </CommonButton>
@@ -310,6 +313,10 @@ export default function Group() {
       <ChallengeModal
         open={isOpenNewChallgeModal}
         toggleModal={() => setOpenNewChallgeModal((prev) => !prev)}
+      />
+      <NewBoardModal
+        open={isOpenNewBoardModal}
+        toggleModal={() => setOpenNewBoardModal((prev) => !prev)}
       />
       <Modal
         open={boardModal}
