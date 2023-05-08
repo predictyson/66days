@@ -47,5 +47,4 @@ public class GroupMember {
     @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT(1)")
     @ColumnDefault("0")
     private boolean isDeleted;
-
 }
