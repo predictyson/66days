@@ -143,4 +143,37 @@ const mockBoardDataList = [
   },
 ];
 
-export { mockChallengeList, mockMemberList, mockBoardDataList, mockBoardData };
+const mockBadgeList = [
+  {
+    category: "알고리즘",
+    badgeImg: Algorithms,
+    title: "알고리즘 66일 챌린지",
+    startDate: "2023년 1월 2일",
+    endDate: "2023년 3월 8일",
+    status: false,
+  },
+  {
+    category: "알고리즘",
+    badgeImg: Algorithms,
+    title: "개발개발개발개발개발",
+    startDate: "2023년 1월 2일",
+    endDate: "2023년 3월 8일",
+    status: true,
+  },
+  // {
+  //   category: "알고리즘",
+  //   badgeImg: Algorithms,
+  //   title: "알고리즘 66일 챌린지",
+  //   startDate: "2023년 1월 2일",
+  //   endDate: "2023년 3월 8일",
+  //   status: true,
+  // },
+];
+
+export {
+  mockChallengeList,
+  mockMemberList,
+  mockBoardDataList,
+  mockBoardData,
+  mockBadgeList,
+};

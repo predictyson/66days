@@ -40,6 +40,7 @@ const ChallengeBoxWrapper = styled(Content)`
   display: flex;
   flex: initial;
   flex-direction: column;
+  cursor: pointer;
 
   .challenge__box-title {
     display: flex;
@@ -50,18 +51,27 @@ const ChallengeBoxWrapper = styled(Content)`
   .challenge-title {
     font-weight: 700;
     flex-grow: 1;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 
   .due-date {
     min-width: fit-content;
     font-family: "Kanit-Bold";
     color: ${theme.colors.failure};
+    padding-left: 0.5rem;
   }
 
   .challenge__members-box {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: start;
   }
 
   .members-img-box {
@@ -70,8 +80,8 @@ const ChallengeBoxWrapper = styled(Content)`
   }
 
   .member-profile {
-    width: 3.2rem;
-    height: 3.2rem;
+    width: 3vw;
+    height: 3vw;
     border-radius: 50%;
     margin-right: 0.5rem;
   }
@@ -92,6 +102,7 @@ const ChallengeImg = styled(Content)<ChallengeImgStyled>`
   position: relative;
   width: 20vw;
   height: 20vw;
+  max-height: 20vw;
   border-radius: 1rem;
   display: flex;
   justify-content: center;
@@ -116,10 +127,12 @@ const ChallengeImg = styled(Content)<ChallengeImgStyled>`
 
   .not-started-logo {
     width: fit-content;
+    max-width: 70%;
     border: 2px solid ${theme.colors.white};
     padding: 0.8rem 1.6rem;
     color: ${theme.colors.white};
     border-radius: 0.4rem;
     font-family: "Kanit-SemiBold";
+    text-align: center;
   }
 `;

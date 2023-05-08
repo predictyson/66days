@@ -15,10 +15,13 @@ import {
   mockMemberList,
   mockBoardDataList,
   mockBoardData,
+  mockBadgeList,
 } from "../mock/group";
 import ChallengeModal from "../components/group/ChallengeModal";
 import MemberModal from "../components/group/MemberModal";
 import SingleMemberListBox from "../components/SingleMemberListBox";
+import BadgeModal from "../components/group/BadgeModal";
+import NewBoardModal from "../components/group/NewBoardModal";
 
 interface ButtonStyled {
   color?: string;
@@ -47,6 +50,15 @@ interface MemberType {
   badge: number;
 }
 
+interface BadgeType {
+  category: string;
+  badgeImg: string;
+  title: string;
+  startDate: string;
+  endDate: string;
+  status: boolean; // 성공 실패 여부
+}
+
 interface ChallengeType {
   bgImg: string;
   notStarted: boolean;
@@ -67,10 +79,13 @@ export default function Group() {
   const [boardModal, setBoardModal] = useState(false);
   const [tab, setTab] = useState<number>(0);
 
-  const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
   const [isOpenMemberModal, setOpenMemberModal] = useState(false);
+  const [isOpenBadgeModal, setOpenBadgeModal] = useState(false);
+  const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
+  const [isOpenNewBoardModal, setOpenNewBoardModal] = useState(false);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
   const [memberList, setMemberList] = useState<MemberType[]>([]);
+  const [badgeList, setBadgeList] = useState<BadgeType[]>([]);
   const [boardDataList, setBoardDataList] = useState<BoardType[]>([]);
 
   useEffect(() => {
@@ -78,6 +93,7 @@ export default function Group() {
     setChallengeList(mockChallengeList);
     setMemberList(mockMemberList);
     setBoardDataList(mockBoardDataList.slice(0, 3));
+    setBadgeList(mockBadgeList);
   }, []);
 
   const TabContent = ({ ...props }) => {
@@ -158,9 +174,6 @@ export default function Group() {
   }
 
   function handlePageChange(page: number) {
-    // const { current } = pagination;
-
-    // setCurrent(pagination);
     const slicedBoardDataList = mockBoardDataList.slice(
       (page - 1) * 3,
       page * 3
@@ -216,7 +229,11 @@ export default function Group() {
                 >
                   {badge.name}
                 </CommonButton>
-                <img className="badge-img" src={badge.img} />
+                <img
+                  className="badge-img"
+                  src={badge.img}
+                  onClick={() => setOpenBadgeModal((prev) => !prev)}
+                />
               </BadgeBox>
             ))}
           </BadgesContainer>
@@ -257,6 +274,7 @@ export default function Group() {
                 color={theme.colors.gray500}
                 font="Kanit-Regular"
                 cursor={true}
+                onClick={() => setOpenNewBoardModal(true)}
               >
                 게시글 작성
               </CommonButton>
@@ -287,9 +305,18 @@ export default function Group() {
         toggleModal={() => setOpenMemberModal((prev) => !prev)}
         members={memberList}
       />
+      <BadgeModal
+        open={isOpenBadgeModal}
+        toggleModal={() => setOpenBadgeModal((prev) => !prev)}
+        badges={badgeList}
+      />
       <ChallengeModal
         open={isOpenNewChallgeModal}
         toggleModal={() => setOpenNewChallgeModal((prev) => !prev)}
+      />
+      <NewBoardModal
+        open={isOpenNewBoardModal}
+        toggleModal={() => setOpenNewBoardModal((prev) => !prev)}
       />
       <Modal
         open={boardModal}
@@ -386,6 +413,7 @@ export default function Group() {
       </Modal>
       <Modal
         open={memberSettingModal}
+        width={800}
         footer={null}
         onCancel={() => setMemberSettingModal(false)}
       >

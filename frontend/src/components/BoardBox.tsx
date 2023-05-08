@@ -23,11 +23,11 @@ export function BoardBox({ ...props }) {
 const BoardBoxWrapper = styled(Content)`
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: space-between;
   position: relative;
   width: 10px;
   height: 16rem;
-  padding: 1rem 2rem;
+  padding: 2rem 2rem 1rem;
   background-color: ${theme.colors.mint};
   margin-right: 1.6rem;
   border-radius: 1rem;
@@ -57,12 +57,13 @@ const BoardBoxWrapper = styled(Content)`
 
   .board-title {
     font-size: 1.8rem;
-    font-weight: 700;
+    font-weight: 600;
     padding-bottom: 0.5rem;
   }
 
   .board-info {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     color: ${theme.colors.white};
     font-weight: 600;

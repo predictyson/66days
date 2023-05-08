@@ -6,6 +6,7 @@ import CS from "../../assets/cs_badge.png";
 import Blog from "../../assets/blog_badge.png";
 import Lecture from "../../assets/lecture_badge.png";
 import Book from "../../assets/book_badge.jpeg";
+import { theme } from "../../styles/theme";
 
 interface PropsType {
   open: boolean;
@@ -37,9 +38,9 @@ export default function ChallengeModal(props: PropsType) {
           onClick={props.toggleModal}
           style={{
             backgroundColor: "black",
-            fontFamily: "Kanit-Regular",
+            fontFamily: "Kanit-SemiBold",
             height: "inherit",
-            fontSize: "2.4rem",
+            fontSize: "2rem",
           }}
         >
           cancel
@@ -49,19 +50,19 @@ export default function ChallengeModal(props: PropsType) {
           onClick={handleOk}
           loading={loading}
           style={{
-            fontFamily: "Kanit-Regular",
+            fontFamily: "Kanit-SemiBold",
             height: "inherit",
-            fontSize: "2.4rem",
+            fontSize: "2rem",
           }}
         >
           continue
         </Button>,
       ]}
     >
-      <StyledTitle>
-        <h1>카테고리를 선택해주세요</h1>
-        <div>카테고리당 하나씩만 습관 형성이 가능합니다</div>
-      </StyledTitle>
+      <CategorySelectionTitle>
+        <div className="title">카테고리를 선택해주세요</div>
+        <div className="desc">카테고리당 하나씩만 습관 형성이 가능합니다</div>
+      </CategorySelectionTitle>
       <Divider />
       <StyledCategory gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 16]}>
         <Col span={12}>
@@ -99,16 +100,17 @@ export default function ChallengeModal(props: PropsType) {
   );
 }
 
-const StyledTitle = styled.section`
-  margin-top: 4rem;
-  margin-bottom: 1.6rem;
-  h1 {
-    font-size: 3.2rem;
-    margin: 0;
+const CategorySelectionTitle = styled.div`
+  padding-top: 3rem;
+
+  .title {
+    font-size: 2.4rem;
+    font-weight: ${theme.fontWeight.bold};
   }
-  div {
-    font-size: 1.6rem;
-    color: #b4b4b4;
+
+  .desc {
+    color: ${theme.colors.gray400};
+    font-weight: ${theme.fontWeight.semibold};
   }
 `;
 
@@ -122,15 +124,18 @@ const StyledCategory = styled(Row)`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: bold;
     padding: 1rem;
 
     img {
-      width: 80;
-      height: 80;
-      width: 10vw;
-      height: 10vw;
+      width: 6vw;
+      height: 6vw;
+      min-width: 8rem;
+      min-height: 8rem;
+
+      margin-bottom: 0.5rem;
+
       border-radius: 1rem;
       object-fit: cover;
       cursor: pointer;
