@@ -10,4 +10,5 @@ const StyledFooter = styled(Footer)`
   color: #fff;
   background-color: #6d6d6d;
   padding-inline: 5rem;
+  font-size: 1.6rem;
 `;

@@ -21,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             colorError: theme.colors.failure,
             colorInfo: theme.colors.update,
             fontFamily: "Kanit-Medium",
+            fontSize: 10,
           },
         }}
       >

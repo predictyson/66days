@@ -3,26 +3,31 @@ import styled from "styled-components";
 import LogoTitle from "../../assets/logo-title.svg";
 import Logo from "../../assets/logo.svg";
 import avartar from "../../assets/avatar.svg";
+import { Space } from "antd";
 
 export default function CustomHeader() {
   return (
     <StyledHeader>
-      <div className="logo">
-        <img src={Logo} />
-        <img src={LogoTitle} />
-      </div>
-      <div className="link">
-        <a href="/search">search</a>
+      <Space className="logo">
+        <a href="/">
+          <img src={Logo} />
+        </a>
+        <a href="/">
+          <img src={LogoTitle} />
+        </a>
+      </Space>
+      <Space className="link">
+        <a href="/groups">search</a>
         <a href="/create">create group</a>
         <img src={avartar} />
-      </div>
+      </Space>
     </StyledHeader>
   );
 }
 
 const StyledHeader = styled(Header)`
   position: fixed;
-  width: 100vw;
+  width: 100%;
   z-index: 1;
   top: 0;
   border-bottom: 1px solid rgba(158, 158, 158, 0.2);
@@ -34,9 +39,13 @@ const StyledHeader = styled(Header)`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 1.6rem;
+  /* font-size: 1.6rem; */
   .logo {
     display: flex;
+
+    img {
+      display: block;
+    }
   }
 
   .link {
@@ -44,7 +53,13 @@ const StyledHeader = styled(Header)`
     align-items: center;
 
     a {
-      margin-right: 1rem;
+      margin-right: 2rem;
+      font-size: 1.6rem;
+      color: black;
+    }
+
+    img {
+      display: block;
     }
   }
 `;

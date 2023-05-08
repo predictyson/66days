@@ -5,8 +5,7 @@ export default createGlobalStyle`
   ${normalize}
   html{
     /* font-size: 62.5%;   // 1rem = 10px */
-    /* font-size: 10px; */
-    font-size: 14px;
+    font-size: 10px;
     box-sizing: border-box;
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
   }
