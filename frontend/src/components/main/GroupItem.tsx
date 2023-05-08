@@ -28,9 +28,10 @@ export default function GroupItem() {
 const ImageWrapper = styled.div<ImageWrapperProps>`
   position: relative;
   width: 100%;
-  height: 33.2rem;
+  height: 0;
+  padding-bottom: 100%; /* 이미지 비율을 1:1로 유지 */
   background-image: url(${(props) => props.imageUrl});
-  background-size: 100% 100%;
+  background-size: cover; /* 이미지를 부모 요소 크기에 맞춤 */
   background-repeat: no-repeat;
 
   span {
@@ -38,6 +39,7 @@ const ImageWrapper = styled.div<ImageWrapperProps>`
     bottom: 0;
     left: 0;
     right: 0;
+    margin-bottom: 2rem;
     font-size: 2.4rem;
     font-weight: bold;
     padding: 1rem 2rem;
@@ -45,8 +47,7 @@ const ImageWrapper = styled.div<ImageWrapperProps>`
   }
 `;
 const BoxWrapper = styled.div`
-  width: 33.2rem;
-  height: 43.8rem;
+  width: 27%;
   border-radius: 15px;
 `;
 
@@ -56,6 +57,6 @@ const ChallengeWrapper = styled.div`
   justify-content: space-between;
 `;
 const ChallengeBox = styled.img`
-  width: 10rem;
-  height: 10rem;
+  width: 30%;
+  cursor: pointer;
 `;

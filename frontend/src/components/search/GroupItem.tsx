@@ -155,7 +155,7 @@ const ModalButtonWrapper = styled.div`
   }
 `;
 const Container = styled.div`
-  width: 36rem;
+  width: 80%;
   height: 48rem;
   border-radius: 12px;
   display: flex;

@@ -12,21 +12,13 @@ export default function Todo() {
       <TodoContianer>
         <TodoBox>
           <div className="left">
-            <img
-              src={Algo}
-              alt="algo"
-              style={{
-                width: "24rem",
-                height: "24rem",
-                marginTop: "4.2rem",
-              }}
-            />
-            <p>뽀삐의 알고리즘 뿌시기</p>
+            <img src={Algo} alt="algo" />
+            <div className="title">뽀삐의 알고리즘 뿌시기</div>
           </div>
           <div className="right">
             <CheckCircleOutlined
               style={{
-                fontSize: "4.8rem",
+                fontSize: "4rem",
                 color: "#6CD3C0",
                 // padding: "1.8rem",
                 cursor: "pointer",
@@ -40,23 +32,14 @@ export default function Todo() {
         </TodoBox>
         <TodoBox>
           <div className="left">
-            <img
-              src={Blog}
-              alt="blog"
-              style={{
-                width: "24rem",
-                height: "24rem",
-                marginTop: "4.2rem",
-              }}
-            />
-            <p>해피의 CS 스터디</p>
+            <img src={Blog} alt="blog" />
+            <div className="title">해피의 CS 스터디</div>
           </div>
           <div className="right">
             <CheckCircleOutlined
               style={{
-                fontSize: "4.8rem",
+                fontSize: "4rem",
                 color: "#D9D9D9",
-                // padding: "1.8rem",
                 cursor: "pointer",
                 display: "flex",
                 justifyContent: "flex-end",
@@ -75,8 +58,7 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   font-family: Pretendard;
-  padding: 5.6rem 8rem;
-  height: 70rem;
+  padding: 3% 2%;
   display: flex;
   flex-direction: column;
 `;
@@ -92,11 +74,16 @@ const TodoContianer = styled.div`
 `;
 
 const TodoBox = styled.div`
-  width: 55.7rem;
-  height: 38.3rem;
+  width: 45%;
+  height: 100%;
   border: solid 1px ${theme.colors.gray400};
   border-radius: 15px;
   display: flex;
+  img {
+    width: 70%;
+    display: flex;
+    margin: auto 0;
+  }
   .left {
     width: 55%;
     display: flex;
@@ -105,13 +92,23 @@ const TodoBox = styled.div`
     font-size: 2.4rem;
     font-weight: ${theme.fontWeight.semibold};
   }
+  .title {
+    font-size: 90%;
+    text-align: center;
+    display: flex;
+    margin: 0 auto;
+    margin-bottom: auto;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
   .right {
     width: 45%;
     padding: 3rem;
     p {
       font-size: 2rem;
       text-align: center;
-      font-weight: 800;
+      font-weight: bold;
     }
   }
 `;

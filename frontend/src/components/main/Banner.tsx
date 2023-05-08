@@ -33,7 +33,7 @@ export default function Banner() {
 
 const Container = styled.div`
   width: 100%;
-  height: 67.2rem;
+  height: 60rem;
   display: flex;
   font-family: Pretendard;
   background-color: black;
@@ -49,15 +49,15 @@ const LeftWrapper = styled.div`
 const Info = styled.div`
   height: 4.8rem;
   margin: 0 auto;
-  margin-top: 14.8rem;
+  margin-top: 12rem;
   width: 80%;
   display: flex;
   align-items: center;
   .email {
-    width: 23rem;
+    width: 25rem;
     background-color: #444444;
     opacity: 0.5;
-    margin-left: 3.2rem;
+    margin-left: 5%;
     color: #ffffff;
     display: flex;
     justify-content: center;
@@ -73,7 +73,7 @@ const Nickname = styled.div`
   width: 80%;
   margin: 0 auto;
   margin-top: 3.1rem;
-  font-size: 5rem;
+  font-size: 6rem;
   font-weight: 700;
 `;
 const ImageWrapper = styled.div`
@@ -81,6 +81,10 @@ const ImageWrapper = styled.div`
   width: 50%;
   justify-content: center;
   align-items: center;
+  img {
+    display: flex;
+    margin-top: 3rem;
+  }
 `;
 
 const MoreInfo = styled.div`
@@ -91,14 +95,14 @@ const MoreInfo = styled.div`
   .button {
     border-radius: 5px;
     background-color: white;
-    width: 11rem;
-    height: 3.5rem;
+    width: 15rem;
+    height: 4.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.6rem;
+    font-size: 2rem;
     cursor: pointer;
-    margin-left: 5rem;
+    margin-left: 5%;
     font-weight: ${theme.fontWeight.semibold};
     &:hover {
       background-color: #444444;
@@ -108,21 +112,25 @@ const MoreInfo = styled.div`
 
   .exp {
     color: white;
-    font-size: 2.4rem;
+    font-size: 3rem;
     font-weight: bold;
+    margin: auto 0;
   }
 `;
 
 const Coin = styled.div`
-  font-size: 1.6rem;
+  font-size: 2.5rem;
   margin: 0 auto;
   width: 80%;
   margin-top: 3.4rem;
-  color: white;
+  color: wheat;
   display: flex;
   align-items: center;
   font-weight: ${theme.fontWeight.semibold};
   span {
     margin-left: 1rem;
+  }
+  img {
+    width: 2.5rem;
   }
 `;

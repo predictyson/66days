@@ -1,18 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
 // TODO: assets
-// import { theme } from "../../styles/theme";
-// import Algo from "../../assets/landing/algoBox.png";
-// import Blog from "../../assets/landing/blogBox.png";
 import PrevArrow from "../../assets/main/PrevArrow.png";
 import NextArrow from "../../assets/main/NextArrow.png";
 import GroupItem from "./GroupItem";
 // slider
-// import "slick-carousel/slick/slick.css";
-// import "slick-carousel/slick/slick-theme.css";
-// interface ArrowProps extends CustomArrowProps {
-//   onClick?: MouseEventHandler<HTMLDivElement>;
-// }
 
 export default function GroupList() {
   const groupItems = [
@@ -30,19 +22,10 @@ export default function GroupList() {
   }
   const [sliderdata, setSliderData] = useState(0);
   const handlePrevClick = () => {
-    // const newStartIndex = Math.max(startIndex - groupCount, 0);
-    // setStartIndex(newStartIndex);
-    // console.log(newStartIndex);
     setSliderData(Math.abs(sliderdata - 1));
   };
 
   const handleNextClick = () => {
-    // const newStartIndex = Math.min(
-    //   startIndex + groupCount,
-    //   groupItems.length - groupCount
-    // );
-    // setStartIndex(newStartIndex);
-    // console.log(newStartIndex);
     setSliderData(Math.abs(sliderdata - 1));
   };
 
@@ -64,8 +47,7 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   font-family: Pretendard;
-  padding: 4.6rem 8rem;
-  height: 70rem;
+  padding: 2% 2%;
   display: flex;
   flex-direction: column;
 `;
@@ -79,7 +61,7 @@ const Title = styled.div`
 const GroupContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 3.2rem;
+  margin-top: 2rem;
 `;
 
 const ArrowWrapper = styled.div`
@@ -90,9 +72,9 @@ const ArrowWrapper = styled.div`
     cursor: pointer;
   }
 `;
-
+// dummy
 const BoxWrapper = styled.div`
-  width: 33.2rem;
+  width: 27%;
   height: 43.8rem;
   border-radius: 15px;
 `;

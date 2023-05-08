@@ -11,6 +11,7 @@ import GroupIntro from "./routes/GroupIntro";
 import Challenge from "./routes/Challenge";
 import MainPage from "./routes/MainPage";
 import SearchPage from "./routes/SearchPage";
+import MyPage from "./routes/MyPage";
 
 // TODO: add my-page by YeG
 export default createBrowserRouter(
@@ -23,6 +24,14 @@ export default createBrowserRouter(
         <Route path="/groups/me" index element={<Group />} />
         <Route path="/groups/:groupId" index element={<GroupIntro />} />
         <Route path="/groups/:groupId/c/:challengeId" element={<Challenge />} />
+        <Route path="/group" index element={<Group />} />
+        <Route
+          path="/groups/:groupId/challenges/:challengeId"
+          element={<Challenge />}
+        />
+        <Route path="/main" element={<MainPage />} />
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/mypage" element={<MyPage />} />
       </Route>
     </Route>
   )
