@@ -58,8 +58,7 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   font-family: Pretendard;
-  padding: 5% 2%;
-  height: 55rem;
+  padding: 3% 2%;
   display: flex;
   flex-direction: column;
 `;

@@ -12,13 +12,13 @@ export default function Ranking() {
       style={{
         display: "flex",
         justifyContent: "space-between",
-        padding: "0 8rem",
+        padding: "2%",
       }}
     >
       <LeftConainer>
         <div className="title">Ranking</div>
         <ImgConatiner>
-          <img src={Vector1} />
+          <img className="right" src={Vector1} />
         </ImgConatiner>
         <ImgConatiner>
           <img src={Vector2} />
@@ -113,9 +113,9 @@ export default function Ranking() {
 }
 
 const LeftConainer = styled.div`
-  margin-top: 3.2rem;
   width: 50%;
-  height: 140rem;
+  margin-top: 3rem;
+  height: 125rem;
   background-color: ${theme.colors.purple};
   padding: 2rem;
   .title {
@@ -131,64 +131,68 @@ const LeftConainer = styled.div`
 const ImgConatiner = styled.div`
   width: 100%;
   height: 45%;
-  /* border: solid 2px red; */
   margin-top: 4rem;
+  img {
+    width: 70%;
+  }
+  .right {
+    display: flex;
+    margin-left: auto;
+  }
 `;
 
 const RightContainer = styled.div`
   width: 50%;
   display: flex;
-  /* align-items: flex-end; */
   flex-direction: column;
-  align-items: center;
-  /* justify-content: center; 
-  */
+  align-items: flex-end;
 `;
 
 const RankingBox = styled.div`
   margin-top: 3.2rem;
-  width: 62.5rem;
-  height: 67.1rem;
+  width: 90%;
+  height: 60rem;
   border: solid 1px ${theme.colors.gray400};
   border-radius: 20px;
   padding: 3.2rem 2.4rem;
   display: flex;
   flex-direction: column;
   .title {
-    font-size: 3.2rem;
+    font-size: 3rem;
     font-weight: ${theme.fontWeight.extrabold};
     text-align: center;
   }
 `;
 
 const RankingWrapper = styled.div`
-  margin-top: 3.2rem;
-  width: 58.1rem;
-  height: 34.4rem;
+  margin-top: 2.5rem;
+  height: 30rem;
   display: flex;
   justify-content: space-between;
 `;
 
 const MyRankingBox = styled.div`
   width: 100%;
-  height: 15.1rem;
+  height: 13rem;
   border-radius: 20px;
   background-color: black;
   margin-top: 3.2rem;
   padding: 2.4rem 4.8rem;
   color: white;
-  font-size: 3.2rem;
+  font-size: 2.4rem;
   font-weight: bold;
   display: flex;
   flex-direction: column;
   .exp {
     align-self: flex-end;
+    display: flex;
+    margin-top: auto;
     color: #dbff73;
   }
 `;
 
 const RankingItem = styled.div`
-  width: 18.9rem;
+  width: 31%;
   align-self: flex-end;
   flex-direction: column;
   justify-content: center;
@@ -213,16 +217,17 @@ const EXPBox = styled.div<{ type: string }>`
   font-size: 2.4rem;
   /* flex-direction: column-reverse; */
   font-weight: bold;
+  /* width: 100%; */
   width: 100%;
   margin-top: 0.8rem;
   justify-content: center;
   align-items: flex-end;
   &.gold {
-    height: 19.2rem;
+    height: 16rem;
     background-color: #ffebc2;
   }
   &.silver {
-    height: 11.2rem;
+    height: 10rem;
     background-color: #eeeeee;
   }
   &.bronze {

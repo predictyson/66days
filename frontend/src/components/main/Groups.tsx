@@ -48,7 +48,6 @@ const Container = styled.div`
   display: flex;
   font-family: Pretendard;
   padding: 2% 2%;
-  height: 65rem;
   display: flex;
   flex-direction: column;
 `;
@@ -62,7 +61,7 @@ const Title = styled.div`
 const GroupContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 3.2rem;
+  margin-top: 2rem;
 `;
 
 const ArrowWrapper = styled.div`
