@@ -5,8 +5,12 @@ import Profile2 from "../../assets/main/Profile2.png";
 import Profile3 from "../../assets/main/Profile3.png";
 import Vector1 from "../../assets/main/VectorMain.svg";
 import Vector2 from "../../assets/main/VectorMain2.svg";
+import { RankData } from "../../types/main";
 
-export default function Ranking() {
+interface IProps {
+  ranking: RankData;
+}
+export default function Ranking({ ranking }: IProps) {
   return (
     <div
       style={{
@@ -31,39 +35,40 @@ export default function Ranking() {
             <RankingItem>
               <img src={Profile1} />
               <div className="content">
-                @moongchi
-                <br /> 게으른 카피바라
+                @{ranking.expRank[1].name}
+                <br />
+                {ranking.expRank[1].animal}
               </div>
               <EXPBox className="silver" type="silver">
-                64
+                {ranking.expRank[1].exp}
               </EXPBox>
             </RankingItem>
             <RankingItem>
               <img src={Profile2} />
               <div className="content">
-                @happy
+                @{ranking.expRank[0].name}
                 <br />
-                성실한 문어
+                성실한 {ranking.expRank[0].animal}
               </div>
               <EXPBox className="gold" type="gold">
-                128
+                {ranking.expRank[0].exp}
               </EXPBox>
             </RankingItem>
             <RankingItem>
               <img src={Profile3} />
               <div className="content">
-                @ppoppi
+                @{ranking.expRank[2].name}
                 <br />
-                귀찮은 멍멍이
+                귀찮은 {ranking.expRank[2].animal}
               </div>
               <EXPBox className="bronze" type="bronze">
-                32
+                {ranking.expRank[2].exp}
               </EXPBox>
             </RankingItem>
           </RankingWrapper>
           <MyRankingBox>
-            My Rank #2
-            <div className="exp"> 1000 EXP</div>
+            My Rank #{ranking.myExpRank}
+            <div className="exp">{ranking.myExp} EXP</div>
           </MyRankingBox>
         </RankingBox>
         <RankingBox>
@@ -72,39 +77,39 @@ export default function Ranking() {
             <RankingItem>
               <img src={Profile1} />
               <div className="content">
-                @moongchi
-                <br /> 게으른 카피바라
+                {ranking.badgeRank[1].name}
+                <br /> 게으른 {ranking.badgeRank[1].animal}
               </div>
               <EXPBox className="silver" type="silver">
-                64
+                {ranking.badgeRank[1].badge}
               </EXPBox>
             </RankingItem>
             <RankingItem>
               <img src={Profile2} />
               <div className="content">
-                @happy
+                @{ranking.badgeRank[0].name}
                 <br />
-                성실한 문어
+                성실한 {ranking.badgeRank[0].animal}
               </div>
               <EXPBox className="gold" type="gold">
-                128
+                {ranking.badgeRank[0].badge}
               </EXPBox>
             </RankingItem>
             <RankingItem>
               <img src={Profile3} />
               <div className="content">
-                @ppoppi
+                {ranking.badgeRank[2].name}
                 <br />
-                귀찮은 멍멍이
+                귀찮은 {ranking.badgeRank[2].animal}
               </div>
               <EXPBox className="bronze" type="bronze">
-                32
+                {ranking.badgeRank[2].badge}
               </EXPBox>
             </RankingItem>
           </RankingWrapper>
           <MyRankingBox>
-            My Rank #2
-            <div className="exp"> 34개</div>
+            My Rank #{ranking.myBadgeRank}
+            <div className="exp"> {ranking.myBadge}개</div>
           </MyRankingBox>
         </RankingBox>
       </RightContainer>
