@@ -72,13 +72,12 @@ public class ArticleController {
     @ApiOperation(value = "게시글 조회 API", notes = "속한 그룹의 게시글 3개씩 조회")
     public ResponseEntity<Map<String, Object>> getArticles(
             @PathVariable("group_id") Long groupId,
-            @RequestParam("offset") Long offset
+            @RequestParam("offset") int offset
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-
         try {
             // groupId, userId, offset 값으로 게시글을 받아온다
-            List<ArticleResponseDTO> articles = articleService.getThreeArticles(groupId, offset);
+            List<ArticleResponseDTO> articles = articleService.getArticleList(groupId, offset);
             resultMap.put("articles", articles);
             return ResponseEntity.ok(resultMap);
         } catch (Exception e) {
@@ -115,12 +114,12 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
-            int isDeleted = articleService.deleteArticle(groupId, articleId);
+            boolean isDeleted = articleService.deleteArticle(groupId, articleId);
             resultMap.put("isDeleted", isDeleted);
             return ResponseEntity.ok(resultMap);
         } catch (Exception e) {
             e.printStackTrace();
-            resultMap.put("isDeleted", 0);
+            resultMap.put("isDeleted", false);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
     }
@@ -148,11 +147,11 @@ public class ArticleController {
     @ApiOperation(value = "댓글 조회 API", notes = "댓글 10개씩 조회")
     public ResponseEntity<Map<String, Object>> getComments(
             @PathVariable("article_id") Long articleId,
-            @RequestParam("offset") Long offset
+            @RequestParam("offset") int offset
     ) {
         Map<String, Object> resultMap = new HashMap<>();
         try {
-            List<CommentResponseDTO> commentsList = articleService.getCommentsList(articleId, offset);
+            List<CommentResponseDTO> commentsList = articleService.getCommentList(articleId, offset);
             resultMap.put("commentsList", commentsList); // 빈 리스트가 반환됟 수 있음
             return ResponseEntity.ok(resultMap);
         } catch (Exception e) {
@@ -169,7 +168,7 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<>();
         try {
-            int isDeleted = articleService.deleteComment(articleId, commentId);
+            boolean isDeleted = articleService.deleteComment(articleId, commentId);
             resultMap.put("isDeleted", isDeleted);
             return ResponseEntity.ok(resultMap);
         } catch (Exception e) {

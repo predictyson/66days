@@ -40,6 +40,6 @@ public class Group {
     private LocalDateTime updatedAt;
     @NotNull
     @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT(1)")
-    @ColumnDefault("0")
-    private int isDeleted;
+    @ColumnDefault("false")
+    private boolean isDeleted;
 }

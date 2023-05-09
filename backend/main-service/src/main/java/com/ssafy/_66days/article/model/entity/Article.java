@@ -49,8 +49,8 @@ public class Article {
     private LocalDateTime updatedAt;
 
     @NotNull
-    @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT")
-    @ColumnDefault("0")
-    private int isDeleted;
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT(1)")
+    @ColumnDefault("false")
+    private boolean isDeleted;
 
 }

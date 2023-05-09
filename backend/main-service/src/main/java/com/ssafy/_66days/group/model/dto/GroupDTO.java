@@ -18,7 +18,7 @@ public class GroupDTO {
     private String imagePath;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private int isDeleted;
+    private boolean isDeleted;
 
     public GroupDTO(Group group) {
         this.groupId = group.getGroupId();
@@ -27,7 +27,7 @@ public class GroupDTO {
         this.imagePath = group.getImagePath();
         this.createdAt = group.getCreatedAt();
         this.updatedAt = group.getUpdatedAt();
-        this.isDeleted = group.getIsDeleted();
+        this.isDeleted = group.isDeleted();
 
     }
 
