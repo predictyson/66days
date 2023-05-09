@@ -13,7 +13,6 @@ import MainPage from "./routes/MainPage";
 import SearchPage from "./routes/SearchPage";
 import MyPage from "./routes/MyPage";
 
-// TODO: add my-page by YeG
 export default createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>

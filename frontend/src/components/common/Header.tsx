@@ -6,9 +6,23 @@ import avartar from "../../assets/avatar.svg";
 import { Space } from "antd";
 import { useState } from "react";
 import { CreateGroupModal } from "../group/CreateGroupModal";
+// import { kakaoLogin } from "../../api/auth";
+// import { useAuthStore } from "../../stores/useAuthStore";
 
 export default function CustomHeader() {
   const [isOpenCreateGroupModal, setOpenCreateGroupModal] = useState(false);
+
+  // TODO: login function and require kakao modal
+  // async function login() {
+  //   const login = useAuthStore((state) => state.login);
+  //   login(await kakaoLogin("some code"));
+  // }
+
+  // function logout() {
+  //   const logout = useAuthStore((state) => state.logout);
+  //   logout();
+  // }
+
   return (
     <>
       <StyledHeader>
