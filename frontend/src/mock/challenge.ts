@@ -1,4 +1,4 @@
-const users = [
+const mockUsers = [
   {
     name: "dfl;kajsdflk;sjladkfjl;asdkfjl;a",
     profile: "https://xsgames.co/randomusers/avatar.php?g=pixel&key=3",
@@ -13,7 +13,7 @@ const users = [
   },
 ];
 
-const messages = [
+const mockMessages = [
   {
     nickname: "뭉치",
     profile: "",
@@ -106,4 +106,4 @@ const mockGraph = [
   { checked: false, freeze: true },
 ];
 
-export { users, messages, mockGraph };
+export { mockUsers, mockMessages, mockGraph };

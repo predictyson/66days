@@ -1,20 +1,28 @@
 import { SendOutlined } from "@ant-design/icons";
 import { Button, Input, Space } from "antd";
 import styled from "styled-components";
-import { messages } from "../../mock/challenge";
+import { mockMessages } from "../../mock/challenge";
 import Message from "./Message";
+import useChat from "../../hooks/useChat";
 
-export default function Chat() {
+interface PropsType {
+  messages: Array<(typeof mockMessages)[0]>;
+}
+
+export default function Chat(props: PropsType) {
+  // TODO: const [messages, setMessages] = useState();
+  const { sendMessage } = useChat();
+
   return (
     <StyledChat>
       <div className="chat">
-        {messages.map((msg) => (
-          <Message message={msg} />
+        {props.messages.map((msg, idx) => (
+          <Message key={idx} message={msg} />
         ))}
       </div>
       <Space.Compact>
         <Input placeholder="메시지를 입력해주세요..." />
-        <Button type="primary" icon={<SendOutlined />}>
+        <Button type="primary" icon={<SendOutlined />} onClick={sendMessage}>
           Send
         </Button>
       </Space.Compact>

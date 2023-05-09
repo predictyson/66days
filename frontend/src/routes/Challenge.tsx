@@ -1,13 +1,26 @@
 import { Space, Typography } from "antd";
 import styled from "styled-components";
 import FreezeIcon from "../assets/freeze.svg";
-import { mockGraph, users } from "../mock/challenge";
+import { mockGraph, mockUsers } from "../mock/challenge";
 import Title from "../components/challenge/Title";
 import Chat from "../components/challenge/Chat";
 import Member from "../components/challenge/Member";
 import Graph from "../components/challenge/Graph";
+import { mockMessages } from "../mock/challenge";
+// import useChat from "../hooks/useChat";
+import { useEffect, useState } from "react";
 
 export default function Challenge() {
+  const [messages] = useState(mockMessages);
+  const [members] = useState(mockUsers);
+  // TODO: const { sendMessage } = useChat("123", "tw", setMessage);
+
+  useEffect(() => {
+    // TODO: fetch data from backend
+    // setMessages(mockMessages);
+    // setMembers(mockUsers);
+  });
+
   return (
     <>
       <Title
@@ -15,8 +28,8 @@ export default function Challenge() {
         subtitle="김태원과 아이들의 피그마 정복기"
       />
       <StyledContainer>
-        <Chat />
-        <Member users={users} />
+        <Chat messages={messages} />
+        <Member users={members} />
       </StyledContainer>
       <Space style={{ alignItems: "baseline" }}>
         <Typography.Title level={2}>챌린지 그래프</Typography.Title>

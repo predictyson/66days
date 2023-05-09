@@ -16,8 +16,8 @@ export default function Member(props: PropsType) {
         <TeamOutlined style={{ fontSize: "2rem" }} />
         구성원({props.users.length}인)
       </Typography.Title>
-      {props.users.map((user) => (
-        <Space style={{ justifyContent: "space-between" }}>
+      {props.users.map((user, idx) => (
+        <Space key={idx} style={{ justifyContent: "space-between" }}>
           <Typography.Text
             ellipsis={{
               tooltip: `${user.name}`,
