@@ -1,28 +1,28 @@
 package com.ssafy._66days.animal.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import lombok.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "animal")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Animal {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "animal_id")
+    private Long animalId;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@NotNull
-	@Column
-	private Long animalId;
+    @NotBlank
+    @Column(name = "name")
+    private String animalName;
 
-	@NotNull
-	@Column
-	private String name;
-
-	@NotNull
-	@Column
-	private String imagePath;
+    @NotBlank
+    @Column(name = "image_path")
+    private String imagePath;
 }
