@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Layout, Modal, Pagination } from "antd";
+import { Layout, Modal } from "antd";
 import styled from "styled-components";
 import {
   TeamOutlined,
@@ -17,21 +17,18 @@ import Lecture from "../assets/lecture_badge.png";
 import Book from "../assets/book_badge.jpeg";
 import ChallengeBox from "../components/group/ChallengeBox";
 import { BoardBox } from "../components/group/BoardBox";
-import {
-  mockChallengeList,
-  mockMemberList,
-  mockBoardDataList,
-  mockBoardData,
-  mockBadgeList,
-} from "../mock/group";
+import { mockMemberList, mockBoardData, mockBadgeList } from "../mock/group";
 import ChallengeModal from "../components/group/ChallengeModal";
 import MemberModal from "../components/group/MemberModal";
-import SingleMemberListBox from "../components/group/SingleMemberListBox";
 import BadgeModal from "../components/group/BadgeModal";
 import NewBoardModal from "../components/group/NewBoardModal";
 import { fetchGroupPageData } from "../api/group";
 import NoChallengeBox from "../components/group/NoChallengeBox";
+import { GroupSettingModal } from "../components/group/GroupSettingModal";
 
+const { Content } = Layout;
+
+// FIXME: 타입이 아직 명확히 설정되지 않았습니다
 interface ButtonStyled {
   color?: string;
   font?: string;
@@ -40,17 +37,6 @@ interface ButtonStyled {
   cursor?: string;
 }
 
-const { Content } = Layout;
-
-// const badges = [
-//   { name: "알고리즘", img: Algorithms, color: theme.colors.purple },
-//   { name: "CS", img: CS, color: theme.colors.pink },
-//   { name: "블로깅", img: Blog, color: theme.colors.orange },
-//   { name: "강의", img: Lecture, color: theme.colors.mint },
-//   { name: "개발서적", img: Book, color: theme.colors.lightred },
-// ];
-
-// FIXME: 타입이 아직 명확히 설정되지 않았습니다
 interface MemberType {
   profile: string;
   nickname: string;
@@ -92,17 +78,13 @@ interface BoardType {
     time: Date;
   }[];
   pageNo: number;
-  // title: string;
-  // date: string;
-  // writer: string;
 }
 
 export default function Group() {
-  const [memberSettingModal, setMemberSettingModal] = useState(false);
   const [boardModal, setBoardModal] = useState(false);
-  const [tab, setTab] = useState<number>(0);
 
   const [isOpenMemberModal, setOpenMemberModal] = useState(false);
+  const [isOpenMemberSettingModal, setOpenMemberSettingModal] = useState(false);
   const [isOpenBadgeModal, setOpenBadgeModal] = useState(false);
   const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
   const [isOpenNewBoardModal, setOpenNewBoardModal] = useState(false);
@@ -167,83 +149,6 @@ export default function Group() {
     setBadgeList(mockBadgeList);
   }, []);
 
-  const TabContent = ({ ...props }) => {
-    if (props.tab === 0) {
-      return (
-        <TabContentWrapper>
-          {memberList.map((member, index) => (
-            <div className="member-setting-container">
-              <SingleMemberListBox
-                key={index}
-                profile={member.profile}
-                nickname={member.nickname}
-                owner={member.owner}
-                manager={member.manager}
-                badge={member.badge}
-              />
-              <div className="setting-btn-box">
-                <CommonButton
-                  className="setting-btn"
-                  color={theme.colors.lightblue}
-                >
-                  매니저 지정
-                </CommonButton>
-                <CommonButton
-                  className="setting-btn"
-                  color={theme.colors.failure}
-                >
-                  강퇴하기
-                </CommonButton>
-              </div>
-            </div>
-          ))}
-        </TabContentWrapper>
-      );
-    } else {
-      return (
-        <TabContentWrapper>
-          {memberList.map((member) => (
-            <div className="member-setting-container">
-              <SingleMemberListBox
-                profile={member.profile}
-                nickname={member.nickname}
-                // owner={member.owner}
-                // manager={member.manager}
-                badge={member.badge}
-              />
-              <div className="setting-btn-box">
-                <CommonButton
-                  className="setting-btn"
-                  color={theme.colors.lightblue}
-                >
-                  수락
-                </CommonButton>
-                <CommonButton
-                  className="setting-btn"
-                  color={theme.colors.failure}
-                >
-                  거절
-                </CommonButton>
-              </div>
-            </div>
-          ))}
-        </TabContentWrapper>
-      );
-    }
-  };
-
-  function clickFirstTab() {
-    document.getElementById("second-tab")?.classList.remove("active-tab");
-    document.getElementById("first-tab")?.classList.add("active-tab");
-    setTab(0);
-  }
-
-  function clickSecondTab() {
-    document.getElementById("first-tab")?.classList.remove("active-tab");
-    document.getElementById("second-tab")?.classList.add("active-tab");
-    setTab(1);
-  }
-
   function handlePageChange(page: number) {
     // 해당 pgNo board data 호출
   }
@@ -269,7 +174,7 @@ export default function Group() {
                 color={theme.colors.black}
                 margin="0 1rem 0 0"
                 cursor="true"
-                onClick={() => setMemberSettingModal(true)}
+                onClick={() => setOpenMemberSettingModal((prev) => !prev)}
               >
                 그룹 관리
               </CommonButton>
@@ -370,6 +275,12 @@ export default function Group() {
         toggleModal={() => setOpenMemberModal((prev) => !prev)}
         members={memberList}
       />
+      <GroupSettingModal
+        open={isOpenMemberSettingModal}
+        toggleModal={() => setOpenMemberSettingModal((prev) => !prev)}
+        memberList={memberList}
+      />
+
       <BadgeModal
         open={isOpenBadgeModal}
         toggleModal={() => setOpenBadgeModal((prev) => !prev)}
@@ -475,28 +386,6 @@ export default function Group() {
             </CommentInputBox>
           </BoardCommentContainer>
         </BoardModalWrapper>
-      </Modal>
-      <Modal
-        open={memberSettingModal}
-        width={800}
-        footer={null}
-        onCancel={() => setMemberSettingModal(false)}
-      >
-        <MemberSettingModalWrapper>
-          <div className="modal-title">그룹 관리</div>
-          <TabContainer>
-            <ul className="tab-list">
-              <li id="first-tab" className="active-tab" onClick={clickFirstTab}>
-                그룹원 관리
-              </li>
-              |
-              <li id="second-tab" onClick={clickSecondTab}>
-                대기 중인 요청
-              </li>
-            </ul>
-          </TabContainer>
-          <TabContent tab={tab} />
-        </MemberSettingModalWrapper>
       </Modal>
     </>
   );
@@ -647,72 +536,6 @@ const BoardContainer = styled(Content)`
 const BoardList = styled(Content)`
   display: flex;
   justify-content: space-between;
-`;
-
-const MemberSettingModalWrapper = styled(Content)`
-  height: fit-content;
-  max-height: 90vh;
-  overflow-y: scroll;
-  background-color: ${theme.colors.white};
-  padding: 6.4rem 8rem;
-  border-radius: 1rem;
-
-  .modal-title {
-    font-size: 2.4rem;
-    font-weight: 700;
-    padding-bottom: 3.2rem;
-  }
-`;
-
-const TabContainer = styled(Content)`
-  display: flex;
-  flex-direction: column;
-  font-size: 1.6rem;
-
-  .tab-list {
-    padding-left: 0;
-    display: flex;
-  }
-
-  .tab-list li {
-    list-style: none;
-    padding-right: 1rem;
-    color: ${theme.colors.gray400};
-    cursor: pointer;
-
-    &:hover {
-      color: ${theme.colors.black};
-    }
-  }
-
-  .tab-list li:last-child {
-    padding-left: 1rem;
-    padding-right: 0;
-  }
-
-  .active-tab {
-    color: ${theme.colors.black} !important;
-    font-weight: 700;
-  }
-`;
-
-const TabContentWrapper = styled(Content)`
-  padding-top: 5rem;
-
-  .member-setting-container {
-    display: flex;
-    align-items: center;
-  }
-
-  .setting-btn-box {
-    display: flex;
-    padding-left: 1rem;
-  }
-
-  .setting-btn {
-    margin-left: 1rem;
-    cursor: pointer;
-  }
 `;
 
 const BoardModalWrapper = styled(Content)`
