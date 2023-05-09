@@ -22,7 +22,7 @@ import ChallengeModal from "../components/group/ChallengeModal";
 import MemberModal from "../components/group/MemberModal";
 import BadgeModal from "../components/group/BadgeModal";
 import NewBoardModal from "../components/group/NewBoardModal";
-import { fetchGroupPageData } from "../api/group";
+import { fetchGroupMembers, fetchGroupPageData } from "../api/group";
 import NoChallengeBox from "../components/group/NoChallengeBox";
 import { GroupSettingModal } from "../components/group/GroupSettingModal";
 
@@ -38,11 +38,10 @@ interface ButtonStyled {
 }
 
 interface MemberType {
-  profile: string;
+  image: string;
   nickname: string;
-  owner: boolean;
-  manager: boolean;
   badge: number;
+  role: string;
 }
 
 interface BadgePreviewType {
@@ -144,8 +143,14 @@ export default function Group() {
       setBoardDataList(data.board);
       console.log(data.board);
     }
+
+    async function fetchAndSetGroupMembers() {
+      const data = await fetchGroupMembers();
+      setMemberList(data["member-list"]);
+    }
+
     fetchAndSetGroupPageData();
-    setMemberList(mockMemberList);
+    fetchAndSetGroupMembers();
     setBadgeList(mockBadgeList);
   }, []);
 

@@ -13,11 +13,10 @@ interface ButtonStyled {
 }
 
 interface MemberType {
-  profile: string;
+  image: string;
   nickname: string;
-  owner: boolean;
-  manager: boolean;
   badge: number;
+  role: string;
 }
 
 interface PropsType {
@@ -40,10 +39,10 @@ export function GroupSettingModal(props: PropsType) {
             <div className="member-setting-container">
               <SingleMemberListBox
                 key={index}
-                profile={member.profile}
+                profile={member.image}
                 nickname={member.nickname}
-                owner={member.owner}
-                manager={member.manager}
+                owner={member.role === "owner" ? true : false}
+                manager={member.role === "manager" ? true : false}
                 badge={member.badge}
               />
               <div className="setting-btn-box">
@@ -70,10 +69,8 @@ export function GroupSettingModal(props: PropsType) {
           {props.memberList.map((member: MemberType) => (
             <div className="member-setting-container">
               <SingleMemberListBox
-                profile={member.profile}
+                profile={member.image}
                 nickname={member.nickname}
-                // owner={member.owner}
-                // manager={member.manager}
                 badge={member.badge}
               />
               <div className="setting-btn-box">

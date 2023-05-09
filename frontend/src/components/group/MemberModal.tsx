@@ -4,11 +4,10 @@ import styled from "styled-components";
 import { Content } from "antd/es/layout/layout";
 
 interface MemberType {
-  profile: string;
+  image: string;
   nickname: string;
-  owner: boolean;
-  manager: boolean;
   badge: number;
+  role: string;
 }
 
 interface PropsType {
@@ -26,10 +25,10 @@ export default function MemberModal(props: PropsType) {
           {props.members.map((member, index) => (
             <SingleMemberListBox
               key={index}
-              profile={member.profile}
+              profile={member.image}
               nickname={member.nickname}
-              owner={member.owner}
-              manager={member.manager}
+              owner={member.role === "owner" ? true : false}
+              manager={member.role === "manager" ? true : false}
               badge={member.badge}
             />
           ))}
