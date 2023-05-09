@@ -1,22 +1,27 @@
 package com.ssafy._66days.user.model.entity;
 
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.UUID;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "user")
+@Builder
 public class User {
 	@Id
 	@GeneratedValue
-	@GenericGenerator(name="uuid", strategy="uuid4")
-	@Column(name = "user_id")
+	@GenericGenerator(name="uuid", strategy="uuid2")
+	@Column(name = "user_id", columnDefinition = "BINARY(16)")
 	private UUID userId;
 
 	@NotNull
@@ -27,14 +32,14 @@ public class User {
 	@Column(name = "tier_id")
 	private Long tierId;
 
-	@NotNull
+	@NotBlank
 	@Column(name = "email")
 	private String email;
 
 	@Column(name = "profile_image_path")
 	private String profileImagePath;
 
-	@NotNull
+	@NotBlank
 	@Column(name = "nickname")
 	private String nickname;
 

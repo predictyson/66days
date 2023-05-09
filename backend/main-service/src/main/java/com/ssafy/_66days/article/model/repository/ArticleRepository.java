@@ -12,14 +12,16 @@ import java.util.UUID;
 
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
+//    Optional<Article> findById(Long articleId);
     // 작성한 게시글 저장 함수
     Article save(Article article);
 
     // 최근 게시글 3개를 가져오는 메소드
-    @Query(value = "SELECT * FROM article WHERE is_deleted = 0 AND group_id = :groupId ORDER BY created_at DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
-    List<Article> findRecentArticlesByGroup(@Param("groupId") Long groupId, @Param("offset") Long offset, @Param("limit") int limit);
+    // 이상함 수정 필요
+    @Query(value = "SELECT * FROM article WHERE  group_id = :groupId AND is_deleted = 0 ORDER BY created_at DESC LIMIT :limit OFFSET :offset", nativeQuery = true)
+    List<Article> findRecentArticlesByGroupId(@Param("groupId") Long groupId, @Param("offset") Long offset, @Param("limit") int limit);
 
-    Optional<Article> findByArticleIdAndUserId(Long groupId, UUID userId);
+    Optional<Article> findByArticleIdAndUser(Long groupId, UUID userId);
 
 
 }
