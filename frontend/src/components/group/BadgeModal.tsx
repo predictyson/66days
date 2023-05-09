@@ -7,7 +7,7 @@ import BadgeStatusBox from "./BadgeStatusBox";
 
 interface BadgeType {
   category: string;
-  badgeImg: string;
+  image: string;
   title: string;
   startDate: string;
   endDate: string;
@@ -86,8 +86,8 @@ export default function BadgeModal(props: PropsType) {
         <BadgeContainer>
           <Carousel afterChange={onSlideChange}>
             <div className="badge__status__box-container">
-              {props.badges.map((badge) => (
-                <BadgeStatusBox badge={badge} />
+              {props.badges.map((badge, index) => (
+                <BadgeStatusBox key={index} badge={badge} />
               ))}
             </div>
           </Carousel>

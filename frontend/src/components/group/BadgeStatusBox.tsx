@@ -5,7 +5,7 @@ import { useState } from "react";
 
 interface BadgeType {
   category: string;
-  badgeImg: string;
+  image: string;
   title: string;
   startDate: string;
   endDate: string;
@@ -37,14 +37,11 @@ export default function BadgeStatusBox(props: PropsType) {
       <BadgeStatusBoxWrapper>
         {props.badge.status ? (
           <BadgeImage
-            bgImg={props.badge.badgeImg}
+            bgImg={props.badge.image}
             status={props.badge.status}
           ></BadgeImage>
         ) : (
-          <FailedBadgeImg
-            bgImg={props.badge.badgeImg}
-            status={props.badge.status}
-          >
+          <FailedBadgeImg bgImg={props.badge.image} status={props.badge.status}>
             FAIL
           </FailedBadgeImg>
         )}

@@ -23,8 +23,9 @@ export default function MemberModal(props: PropsType) {
       <MemberModalWrapper>
         <div className="member__modal-title">그룹원 목록</div>
         <MemberListContainer>
-          {props.members.map((member) => (
+          {props.members.map((member, index) => (
             <SingleMemberListBox
+              key={index}
               profile={member.profile}
               nickname={member.nickname}
               owner={member.owner}
