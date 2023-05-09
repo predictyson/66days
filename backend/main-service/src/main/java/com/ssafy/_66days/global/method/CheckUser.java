@@ -31,10 +31,10 @@ public class CheckUser {
     }
 
     public boolean isUserInGroup(
-            Group groupId,
-            User userId
+            Group group,
+            User user
     ) {
-        Optional<GroupMember> groupMember = groupMemberRepository.findByGroupAndUser(groupId, userId);
+        Optional<GroupMember> groupMember = groupMemberRepository.findByGroupAndUser(group, user);
         if (groupMember.isPresent() && !groupMember.get().isDeleted()) {
             return true;
         }
