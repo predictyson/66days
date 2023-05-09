@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
+
 import { Layout, Modal, Pagination } from "antd";
 import styled from "styled-components";
-import { TeamOutlined, TrophyFilled, SendOutlined } from "@ant-design/icons";
+import {
+  TeamOutlined,
+  TrophyFilled,
+  SendOutlined,
+  RightCircleFilled,
+  LeftCircleFilled,
+} from "@ant-design/icons";
 import { theme } from "../styles/theme";
 import Algorithms from "../assets/algorithm_badge.png";
 import CS from "../assets/cs_badge.png";
@@ -22,24 +29,26 @@ import MemberModal from "../components/group/MemberModal";
 import SingleMemberListBox from "../components/group/SingleMemberListBox";
 import BadgeModal from "../components/group/BadgeModal";
 import NewBoardModal from "../components/group/NewBoardModal";
+import { fetchGroupPageData } from "../api/group";
+import NoChallengeBox from "../components/group/NoChallengeBox";
 
 interface ButtonStyled {
   color?: string;
   font?: string;
   fontWeight?: number;
   margin?: string;
-  cursor?: boolean;
+  cursor?: string;
 }
 
 const { Content } = Layout;
 
-const badges = [
-  { name: "알고리즘", img: Algorithms, color: theme.colors.purple },
-  { name: "CS", img: CS, color: theme.colors.pink },
-  { name: "블로깅", img: Blog, color: theme.colors.orange },
-  { name: "강의", img: Lecture, color: theme.colors.mint },
-  { name: "개발서적", img: Book, color: theme.colors.lightred },
-];
+// const badges = [
+//   { name: "알고리즘", img: Algorithms, color: theme.colors.purple },
+//   { name: "CS", img: CS, color: theme.colors.pink },
+//   { name: "블로깅", img: Blog, color: theme.colors.orange },
+//   { name: "강의", img: Lecture, color: theme.colors.mint },
+//   { name: "개발서적", img: Book, color: theme.colors.lightred },
+// ];
 
 // FIXME: 타입이 아직 명확히 설정되지 않았습니다
 interface MemberType {
@@ -50,9 +59,15 @@ interface MemberType {
   badge: number;
 }
 
+interface BadgePreviewType {
+  image: string;
+  category: string;
+  count: number;
+}
+
 interface BadgeType {
   category: string;
-  badgeImg: string;
+  image: string;
   title: string;
   startDate: string;
   endDate: string;
@@ -60,18 +75,26 @@ interface BadgeType {
 }
 
 interface ChallengeType {
-  bgImg: string;
-  notStarted: boolean;
-  title: string;
-  dueDate: number;
-  profile: string;
-  cnt: string;
+  image: string; // challenge badge image
+  name: string; // challenge name
+  participants: {
+    image: string;
+  }[];
+  maxParticipant: number;
+  startDate: Date;
 }
 
 interface BoardType {
-  title: string;
-  date: string;
-  writer: string;
+  articles: {
+    title: string;
+    author: string;
+    author_role: string;
+    time: Date;
+  }[];
+  pageNo: number;
+  // title: string;
+  // date: string;
+  // writer: string;
 }
 
 export default function Group() {
@@ -83,16 +106,64 @@ export default function Group() {
   const [isOpenBadgeModal, setOpenBadgeModal] = useState(false);
   const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
   const [isOpenNewBoardModal, setOpenNewBoardModal] = useState(false);
+
+  const [badgePreview, setBadgePreview] = useState<BadgePreviewType[]>([]);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
   const [memberList, setMemberList] = useState<MemberType[]>([]);
   const [badgeList, setBadgeList] = useState<BadgeType[]>([]);
-  const [boardDataList, setBoardDataList] = useState<BoardType[]>([]);
+  const [boardDataList, setBoardDataList] = useState<BoardType>();
+
+  function getCategoryColor(category: string) {
+    if (category === "알고리즘") {
+      return theme.colors.purple;
+    } else if (category === "CS") {
+      return theme.colors.pink;
+    } else if (category === "블로깅") {
+      return theme.colors.orange;
+    } else if (category === "강의") {
+      return theme.colors.purple;
+    } else if (category === "개발서적") {
+      return theme.colors.lightred;
+    }
+  }
+
+  // dummy 연결 해제 후 삭제 예정
+  function getCategoryImage(category: string) {
+    if (category === "알고리즘") {
+      return Algorithms;
+    } else if (category === "CS") {
+      return CS;
+    } else if (category === "블로깅") {
+      return Blog;
+    } else if (category === "강의") {
+      return Lecture;
+    } else if (category === "개발서적") {
+      return Book;
+    }
+  }
+
+  function calcDueDate(dueDate: Date) {
+    const today = new Date();
+    const startDate = new Date(dueDate);
+
+    const diffDate = today.getTime() - startDate.getTime();
+    console.log(Math.round(diffDate / (1000 * 60 * 60 * 24)));
+
+    return Math.round(diffDate / (1000 * 60 * 60 * 24));
+  }
 
   useEffect(() => {
     // TODO: fetch data
-    setChallengeList(mockChallengeList);
+    async function fetchAndSetGroupPageData() {
+      const data = await fetchGroupPageData();
+      console.log(data);
+      setBadgePreview(data.badges);
+      setChallengeList(data.challenge);
+      setBoardDataList(data.board);
+      console.log(data.board);
+    }
+    fetchAndSetGroupPageData();
     setMemberList(mockMemberList);
-    setBoardDataList(mockBoardDataList.slice(0, 3));
     setBadgeList(mockBadgeList);
   }, []);
 
@@ -174,11 +245,7 @@ export default function Group() {
   }
 
   function handlePageChange(page: number) {
-    const slicedBoardDataList = mockBoardDataList.slice(
-      (page - 1) * 3,
-      page * 3
-    );
-    setBoardDataList(slicedBoardDataList);
+    // 해당 pgNo board data 호출
   }
 
   return (
@@ -201,14 +268,14 @@ export default function Group() {
               <CommonButton
                 color={theme.colors.black}
                 margin="0 1rem 0 0"
-                cursor={true}
+                cursor="true"
                 onClick={() => setMemberSettingModal(true)}
               >
                 그룹 관리
               </CommonButton>
               <CommonButton
                 color={theme.colors.gray500}
-                cursor={true}
+                cursor="true"
                 onClick={() => setOpenMemberModal((prev) => !prev)}
               >
                 그룹원 보기
@@ -216,20 +283,20 @@ export default function Group() {
             </div>
           </div>
           <BadgesContainer>
-            {badges.map((badge, index) => (
+            {badgePreview.map((badge, index) => (
               <BadgeBox key={index}>
-                <div className="badge-cnt">x3</div>
+                <div className="badge-cnt">x{badge.count}</div>
                 <CommonButton
-                  color={badge.color}
+                  color={getCategoryColor(badge.category)}
                   font="Kanit-Bold"
                   fontWeight={700}
                   margin="0 0 1rem 0"
                 >
-                  {badge.name}
+                  {badge.category}
                 </CommonButton>
                 <img
                   className="badge-img"
-                  src={badge.img}
+                  src={getCategoryImage(badge.category)}
                   onClick={() => setOpenBadgeModal((prev) => !prev)}
                 />
               </BadgeBox>
@@ -243,7 +310,7 @@ export default function Group() {
               <CommonButton
                 color={theme.colors.gray500}
                 font="Kanit-Regular"
-                cursor={true}
+                cursor="true"
                 onClick={() => setOpenNewChallgeModal((prev) => !prev)}
               >
                 챌린지 추가
@@ -254,14 +321,17 @@ export default function Group() {
             {challengeList.map((challenge, index) => (
               <ChallengeBox
                 key={index}
-                bgImg={challenge.bgImg}
-                notStarted={challenge.notStarted}
-                title={challenge.title}
-                dueDate={challenge.dueDate}
-                profile={challenge.profile}
-                cnt={challenge.cnt}
+                bgImg={Algorithms}
+                notStarted={calcDueDate(challenge.startDate) < 0 ? true : false}
+                title={challenge.name}
+                dueDate={calcDueDate(challenge.startDate)}
+                participants={challenge.participants}
+                maxCnt={challenge.maxParticipant}
               />
             ))}
+            {[...Array(5 - challengeList.length)].map((index) => {
+              return <NoChallengeBox key={index} />;
+            })}
           </ChallengesContainer>
         </GroupChallenges>
         <BoardContainer>
@@ -271,7 +341,7 @@ export default function Group() {
               <CommonButton
                 color={theme.colors.gray500}
                 font="Kanit-Regular"
-                cursor={true}
+                cursor="true"
                 onClick={() => setOpenNewBoardModal(true)}
               >
                 게시글 작성
@@ -279,23 +349,19 @@ export default function Group() {
             </div>
           </div>
           <BoardList>
-            {boardDataList.map((boardData) => (
+            {boardDataList?.articles.map((boardData, index) => (
               <BoardBox
+                key={index}
                 title={boardData.title}
-                date={boardData.date}
-                writer={boardData.writer}
+                date={boardData.time}
+                writer={boardData.author}
                 setBoardModal={setBoardModal}
               />
             ))}
           </BoardList>
           <div className="pagination-bar-container">
-            <Pagination
-              className="pagination-bar"
-              total={mockBoardDataList.length}
-              pageSize={3}
-              showSizeChanger={false}
-              onChange={(page) => handlePageChange(page)}
-            ></Pagination>
+            <LeftCircleFilled className="pagination-icon" />
+            <RightCircleFilled className="pagination-icon" />
           </div>
         </BoardContainer>
       </GroupWrapper>
@@ -535,7 +601,7 @@ const CommonButton = styled(Content)<ButtonStyled>`
   background-color: ${(props) => props.color};
   font-family: ${(props) => props.font};
   font-weight: ${(props) => props.fontWeight};
-  cursor: ${(props) => (props.cursor ? "pointer" : null)};
+  cursor: ${(props) => (props.cursor === "true" ? "pointer" : null)};
   color: ${theme.colors.white};
   border-radius: 0.5rem;
   display: flex;
@@ -563,13 +629,18 @@ const BoardContainer = styled(Content)`
     justify-content: center;
   }
 
-  .ant-pagination {
-    font-size: 1.6rem;
+  .pagination-icon {
+    font-size: 3.2rem;
+    color: ${theme.colors.gray500};
+    cursor: pointer;
+
+    &:hover {
+      color: #777;
+    }
   }
 
-  .ant-pagination svg {
-    width: 1rem;
-    height: 1rem;
+  .pagination-icon:first-child {
+    margin-right: 5rem;
   }
 `;
 

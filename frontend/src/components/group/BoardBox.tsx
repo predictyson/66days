@@ -12,7 +12,7 @@ export function BoardBox({ ...props }) {
         {props.admin ? <NotificationFilled className="admin" /> : null}
         <div className="board-title">{props.title}</div>
         <div className="board-info">
-          <div>{props.date}</div>
+          <div className="board-date">{props.date}</div>
           <div>작성자: {props.writer}</div>
         </div>
       </BoardBoxWrapper>
@@ -84,5 +84,9 @@ const BoardBoxWrapper = styled(Content)`
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+  }
+
+  .board-date {
+    font-weight: ${theme.fontWeight.medium};
   }
 `;

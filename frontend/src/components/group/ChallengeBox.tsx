@@ -11,7 +11,7 @@ interface ChallengeImgStyled {
 }
 
 export default function ChallengeBox({ ...props }) {
-  console.log(props);
+  console.log(props.participants);
   return (
     <>
       <ChallengeBoxWrapper>
@@ -41,10 +41,16 @@ export default function ChallengeBox({ ...props }) {
         <div className="challenge__members-box">
           <Avatar.Group
             maxCount={2}
-            maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+            maxStyle={{
+              color: theme.colors.black,
+              backgroundColor: "#fde3cf",
+            }}
           >
-            <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=2" />
-            <Avatar style={{ backgroundColor: "#f56a00" }}>K</Avatar>
+            {props.participants.map(() => (
+              // 추후 participant.image로 수정 예성
+              <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=2" />
+            ))}
+            {/* <Avatar style={{ backgroundColor: theme.colors.purple }}>K</Avatar>
             <Tooltip title="Ant User" placement="top">
               <Avatar
                 style={{ backgroundColor: "#87d068" }}
@@ -54,9 +60,11 @@ export default function ChallengeBox({ ...props }) {
             <Avatar
               style={{ backgroundColor: "#1890ff" }}
               icon={<AntDesignOutlined />}
-            />
+            /> */}
           </Avatar.Group>
-          <div className="members__cnt-info">{props.cnt} 명</div>
+          <div className="members__cnt-info">
+            {props.participants.length} / {props.maxCnt} 명
+          </div>
         </div>
       </ChallengeBoxWrapper>
     </>

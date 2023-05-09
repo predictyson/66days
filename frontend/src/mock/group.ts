@@ -12,18 +12,44 @@ const mockBoardData = {
     "안녕하세요! 그룹장 뭉치입니다. :D 현재 알고리즘 문제를 함께 풀 그룹원들을 모집하고 있습니다. 주변에 관심있는 분들이 있으시다면 알려주시기 바랍니다! 뭉치 올림",
 };
 
+interface ChallengeType {
+  image: string; // challenge badge image
+  title: string; // challenge name
+  participants: {
+    image: string;
+  }[];
+  maxParticipants: number;
+  startDate: Date;
+  // notStarted: boolean;
+  // dueDate: number;
+  // profile: string;
+  // cnt: string;
+}
+
 const mockChallengeList = [
   {
-    bgImg: Algorithms,
-    notStarted: true,
+    image: Algorithms,
     title: "1일 1백준을 풀어봅시다.",
-    dueDate: 3,
-    profile:
-      "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
-    cnt: "5 / 12",
+    participants: [
+      {
+        image:
+          "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
+      },
+      {
+        image:
+          "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
+      },
+      {
+        image:
+          "https://www.urbanbrush.net/web/wp-content/uploads/edd/2023/03/urban-20230310154400454301.jpg",
+      },
+    ],
+    // maxParticipants:
+
+    // cnt: "5 / 12",
   },
   {
-    bgImg: Book,
+    image: Book,
     notStarted: true,
     ending: true,
     title: "모던자바스크립트 읽기",
@@ -33,7 +59,7 @@ const mockChallengeList = [
     cnt: "5 / 12",
   },
   {
-    bgImg: Blog,
+    image: Blog,
     notStarted: false,
     title: "뭉치의 TIL 작성 챌린지",
     dueDate: 13,
@@ -42,7 +68,7 @@ const mockChallengeList = [
     cnt: "5 / 12",
   },
   {
-    bgImg: CS,
+    image: CS,
     notStarted: false,
     title: "김태원의 CS 스터디",
     dueDate: 35,
@@ -51,7 +77,7 @@ const mockChallengeList = [
     cnt: "5 / 12",
   },
   {
-    bgImg: Lecture,
+    image: Lecture,
     notStarted: false,
     title: "TypeScript 마스터들",
     dueDate: 50,
@@ -156,7 +182,7 @@ const mockBoardDataList = [
 const mockBadgeList = [
   {
     category: "알고리즘",
-    badgeImg: Algorithms,
+    image: Algorithms,
     title: "알고리즘 66일 챌린지",
     startDate: "2023년 1월 2일",
     endDate: "2023년 3월 8일",
@@ -164,7 +190,7 @@ const mockBadgeList = [
   },
   {
     category: "알고리즘",
-    badgeImg: Algorithms,
+    image: Algorithms,
     title: "개발개발개발개발개발",
     startDate: "2023년 1월 2일",
     endDate: "2023년 3월 8일",
