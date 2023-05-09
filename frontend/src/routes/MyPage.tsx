@@ -60,7 +60,7 @@ export default function MyPage() {
       <div className="right">
         <Title>
           My 챌린지 그래프
-          <div className="accum">누적 2일</div>
+          <div className="accum">누적 {DUMMY_DATA_MYPAGE.streak.length}일</div>
         </Title>
         <StreakGraph commits={commits} length={length} />
         <SubContent>

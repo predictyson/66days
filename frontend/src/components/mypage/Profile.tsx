@@ -89,7 +89,7 @@ const Email = styled.div`
 `;
 
 const EditButton = styled.div`
-  width: 18rem;
+  width: 50%;
   height: 3.2rem;
   border-radius: 5px;
   font-size: 1.6rem;

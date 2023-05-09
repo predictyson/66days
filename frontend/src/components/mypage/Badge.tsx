@@ -34,5 +34,6 @@ const BadgeWrapper = styled.div`
   margin-top: 1rem;
   img {
     width: 23%;
+    cursor: pointer;
   }
 `;
