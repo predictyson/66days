@@ -1,5 +1,6 @@
 package com.ssafy._66days.group.model.entity;
 
+import com.ssafy._66days.user.model.entity.User;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -17,16 +18,18 @@ public class GroupApply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_application_id")
     private Long groupApplyId;
-    @Column(name = "user_id")
+    @ManyToOne
     @NotNull
-    private UUID userId;
-    @Column(name = "group_id")
+    @JoinColumn(name = "user_id")
+    private User user;
+    @ManyToOne
     @NotNull
-    private Long groupId;
-    @Column(name = "application_datetime")
+    @JoinColumn(name = "group_id")
+    private Group group;
+    @Column(name = "applied_at")
     @NotNull
     private LocalDateTime applyTime;
     @Column(name = "state")
     @NotNull
-    private boolean state;
+    private String state;
 }

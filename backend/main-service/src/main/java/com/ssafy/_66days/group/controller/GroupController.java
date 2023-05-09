@@ -56,7 +56,7 @@ public class GroupController {
     @ApiOperation(value = "그룹관리 API", notes = "그룹원 관리")
     @GetMapping("/{group_id}/manage/members")
     public ResponseEntity<Map<String, Object>> getGroupManage(
-            @PathVariable("group_id") @ApiParam(required = true) int groupId
+            @PathVariable("group_id") @ApiParam(required = true) Long groupId
     ){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -79,7 +79,7 @@ public class GroupController {
     @ApiOperation(value = "그룹관리 API", notes = "대기중인 요청")
     @GetMapping("/{group_id}/manage/apply")
     public ResponseEntity<Map<String, Object>> getGroupApply(
-            @PathVariable("group_id") @ApiParam(required = true) int groupId
+            @PathVariable("group_id") @ApiParam(required = true) Long groupId
     ){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -100,7 +100,7 @@ public class GroupController {
     @ApiOperation(value = "대기중인 요청 API", notes = "대기중인 요청에서 수락/거절 누를 시")
     @PostMapping("/{group_id}/manage/apply/{status}")
     public ResponseEntity<Map<String, Object>> permitApply(
-            @PathVariable("group_id") @ApiParam(required = true) int groupId,
+            @PathVariable("group_id") @ApiParam(required = true) Long groupId,
             @PathVariable("status") @ApiParam(required = true) String state,
             @RequestParam("user_name") @ApiParam(required = true) String userName
     ){
@@ -116,7 +116,7 @@ public class GroupController {
     @ApiOperation(value = "그룹관리 요청 API", notes = "그룹원 관리에서 매니저 지정/해임, 강퇴")
     @PatchMapping("/{group_id}/manage/members/{status}")
     public ResponseEntity<Map<String, Object>> memberManage(
-            @PathVariable("group_id") @ApiParam(required = true) int groupId,
+            @PathVariable("group_id") @ApiParam(required = true) Long groupId,
             @PathVariable("status") @ApiParam(required = true) String state,
             @RequestParam("user_name") @ApiParam(required = true) String userName
     ){
@@ -131,7 +131,7 @@ public class GroupController {
     @ApiOperation(value = "그룹신청/신청취소 API", notes = "유저가 그룹에 신청/신청취소")
     @PutMapping("/{group_id}/apply/{status}")
     public ResponseEntity<Map<String, Object>> groupApply(
-            @PathVariable("group_id") @ApiParam(required = true) int groupId,
+            @PathVariable("group_id") @ApiParam(required = true) Long groupId,
             @PathVariable("status") @ApiParam(required = true) String state
     ){
         Map<String, Object> resultMap = new HashMap<String, Object>();
