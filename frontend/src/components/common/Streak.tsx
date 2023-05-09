@@ -1,6 +1,9 @@
 import styled from "styled-components";
+<<<<<<< HEAD
 import { theme } from "../../styles/theme";
 import Line from "../../assets/mypage/Line.png";
+=======
+>>>>>>> b077406 (fe/feat: mypage 반응형 수정)
 interface IProps {
   commits: number[];
   length: number;

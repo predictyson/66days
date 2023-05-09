@@ -50,7 +50,10 @@ export default function MyPage() {
   return (
     <Container>
       <div className="left">
-        <Profile />
+        <Profile
+          myInfo={DUMMY_DATA_MYPAGE.memberInfo}
+          date={DUMMY_DATA_MYPAGE.streak.length}
+        />
         {/* <EditProfile /> */}
         <Badge />
       </div>
@@ -80,7 +83,10 @@ export default function MyPage() {
             </div>
           </StreakDescription>
         </SubContent>
-        <img src={Line} style={{ margin: "3.2rem auto", width: "80rem" }} />
+        <img
+          src={Line}
+          style={{ margin: "3.2rem auto 2rem auto", width: "100%" }}
+        />
         <Group />
       </div>
     </Container>
@@ -138,12 +144,12 @@ const Container = styled.div`
   display: flex;
   height: 70rem;
   .left {
-    width: 27%;
+    width: 30%;
     display: flex;
     flex-direction: column;
   }
   .right {
-    width: 73%;
+    width: 70%;
     padding: 2%;
     margin: 0 auto;
   }

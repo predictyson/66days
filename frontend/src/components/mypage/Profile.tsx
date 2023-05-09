@@ -3,31 +3,41 @@ import ProfileImg from "../../assets/main/Profile3.png";
 import Bronze from "../../assets/main/Bronze.png";
 import Coin from "../../assets/main/Coin.png";
 import { Progress } from "antd";
-
 import { theme } from "../../styles/theme";
+import { MyPageMemberData } from "../../types/mypage";
 
-export default function Profile() {
+interface IProps {
+  myInfo: MyPageMemberData;
+  date: number;
+}
+export default function Profile({ myInfo, date }: IProps) {
+  console.log(date);
   return (
     <Container>
       <img className="profile-img" src={ProfileImg} alt="profile-img" />
       <img className="badge-img" src={Bronze} alt="badge" />
-      <Nickname>뭉치뭉치똥뭉치</Nickname>
-      <Email>moonchi@naver.com</Email>
+      <Nickname>{myInfo.nickname}</Nickname>
+      <Email>{myInfo.email}</Email>
       <EditButton>edit</EditButton>
       <ProgressWrapper>
         <ImageWrapper>
           <img src={Bronze} alt="current-badge" />
           <img src={Bronze} alt="next-badge" />
         </ImageWrapper>
-        <Progress percent={30} />
+        <CustomProgress percent={(date / 66) * 100} />
       </ProgressWrapper>
       <CoinWrapper>
         <img src={Coin} alt="" />
-        <span>32000</span>
+        <span>{myInfo.point}</span>
       </CoinWrapper>
     </Container>
   );
 }
+
+const CustomProgress = styled(Progress)`
+  width: 80%;
+  margin: 0 auto;
+`;
 const CoinWrapper = styled.div`
   margin: auto;
   margin-top: 1rem;
@@ -35,7 +45,7 @@ const CoinWrapper = styled.div`
   align-items: center;
   font-size: 1.6rem;
   margin-right: auto;
-  width: 29rem;
+  width: 70%;
   font-weight: ${theme.fontWeight.semibold};
   span {
     margin-left: 1rem;
@@ -48,20 +58,22 @@ const Container = styled.div`
   flex-direction: column;
   position: relative;
   .profile-img {
-    width: 18rem;
+    width: 50%;
     height: 18rem;
     margin-top: 4.8rem;
   }
   .badge-img {
     position: absolute;
     top: 20.8rem;
-    width: 3.6rem;
-    height: 3.6rem;
+    width: 10%;
+    /* height: 3.6rem; */
   }
 `;
 
 const ImageWrapper = styled.div`
   display: flex;
+  width: 80%;
+  margin: 0 auto;
   justify-content: space-between;
 `;
 const Nickname = styled.div`

@@ -11,6 +11,5 @@ export default function Group() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 83%;
   margin: 0 auto;
 `;
