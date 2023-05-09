@@ -1,7 +1,9 @@
 package com.ssafy._66days.group.controller;
 
+import com.ssafy._66days.group.model.dto.GroupCreateDTO;
 import com.ssafy._66days.group.model.dto.GroupSearchPageResponseDTO;
 import com.ssafy._66days.group.model.service.GroupService;
+import com.ssafy._66days.user.model.dto.UserManageDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -9,11 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/group")
@@ -68,8 +68,8 @@ public class GroupController {
 //                .build();
 
 
-        List<MemberManageDTO> memberList = groupService.getGroupMembers(groupId);
-        resultMap.put("member-list", members);
+        List<UserManageDTO> memberList = groupService.getGroupMembers(groupId);
+        resultMap.put("member-list", memberList);
 
         resultMap.put(RESULT, SUCCESS);
 
@@ -89,8 +89,8 @@ public class GroupController {
 //                .badge(1)
 //                .build();
 
-        List<MemberManageDTO> memberList = groupService.getGroupApplyList(groupId);
-        resultMap.put("apply-list", members);
+        List<UserManageDTO> memberList = groupService.getGroupApplyList(groupId);
+        resultMap.put("apply-list", memberList);
 
         resultMap.put(RESULT, SUCCESS);
 
@@ -101,10 +101,12 @@ public class GroupController {
     @PostMapping("/{group_id}/manage/apply/{status}")
     public ResponseEntity<Map<String, Object>> permitApply(
             @PathVariable("group_id") @ApiParam(required = true) int groupId,
-            @PathVariable("status") @ApiParam(required = true) String status,
+            @PathVariable("status") @ApiParam(required = true) String state,
             @RequestParam("user_name") @ApiParam(required = true) String userName
     ){
         Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        groupService.setGroupApplyState(groupId,state, userName);
 
         resultMap.put(RESULT, SUCCESS);
 
@@ -115,14 +117,42 @@ public class GroupController {
     @PatchMapping("/{group_id}/manage/members/{status}")
     public ResponseEntity<Map<String, Object>> memberManage(
             @PathVariable("group_id") @ApiParam(required = true) int groupId,
-            @PathVariable("status") @ApiParam(required = true) String status,
+            @PathVariable("status") @ApiParam(required = true) String state,
             @RequestParam("user_name") @ApiParam(required = true) String userName
     ){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
+        groupService.setGroupMemberState(groupId, state, userName);
         resultMap.put(RESULT, SUCCESS);
 
         return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "그룹신청/신청취소 API", notes = "유저가 그룹에 신청/신청취소")
+    @PutMapping("/{group_id}/apply/{status}")
+    public ResponseEntity<Map<String, Object>> groupApply(
+            @PathVariable("group_id") @ApiParam(required = true) int groupId,
+            @PathVariable("status") @ApiParam(required = true) String state
+    ){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        UUID userId = UUID.randomUUID();
+        groupService.applyGroup(groupId, state, userId);
+        resultMap.put(RESULT, SUCCESS);
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "그룹 생성 API", notes = "유저가 그룹을 생성")
+    @PostMapping("/create")
+    public ResponseEntity<Map<String, Object>> createGroup(
+            @RequestPart(value="groupContent") GroupCreateDTO groupCreateDTO, @RequestPart(value="image") @ApiParam(required = true) MultipartFile groupImage
+            ){
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        groupService.createGroup(groupCreateDTO, groupImage);
+        resultMap.put(RESULT, SUCCESS);
+
+        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+    }
 }
