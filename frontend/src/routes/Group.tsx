@@ -17,12 +17,16 @@ import Lecture from "../assets/lecture_badge.png";
 import Book from "../assets/book_badge.jpeg";
 import ChallengeBox from "../components/group/ChallengeBox";
 import { BoardBox } from "../components/group/BoardBox";
-import { mockMemberList, mockBoardData, mockBadgeList } from "../mock/group";
+import { mockBoardData, mockBadgeList } from "../mock/group";
 import ChallengeModal from "../components/group/ChallengeModal";
 import MemberModal from "../components/group/MemberModal";
 import BadgeModal from "../components/group/BadgeModal";
 import NewBoardModal from "../components/group/NewBoardModal";
-import { fetchGroupMembers, fetchGroupPageData } from "../api/group";
+import {
+  fetchAppliedMembers,
+  fetchGroupMembers,
+  fetchGroupPageData,
+} from "../api/group";
 import NoChallengeBox from "../components/group/NoChallengeBox";
 import { GroupSettingModal } from "../components/group/GroupSettingModal";
 
@@ -91,6 +95,7 @@ export default function Group() {
   const [badgePreview, setBadgePreview] = useState<BadgePreviewType[]>([]);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
   const [memberList, setMemberList] = useState<MemberType[]>([]);
+  const [appliedList, setAppliedList] = useState<MemberType[]>([]);
   const [badgeList, setBadgeList] = useState<BadgeType[]>([]);
   const [boardDataList, setBoardDataList] = useState<BoardType>();
 
@@ -144,19 +149,21 @@ export default function Group() {
       console.log(data.board);
     }
 
-    async function fetchAndSetGroupMembers() {
-      const data = await fetchGroupMembers();
-      setMemberList(data["member-list"]);
+    async function fetchAndSetGroupSettingData() {
+      const membersData = await fetchGroupMembers();
+      setMemberList(membersData["member-list"]);
+      const appliedData = await fetchAppliedMembers();
+      setAppliedList(appliedData["apply-list"]);
     }
 
     fetchAndSetGroupPageData();
-    fetchAndSetGroupMembers();
+    fetchAndSetGroupSettingData();
     setBadgeList(mockBadgeList);
   }, []);
 
-  function handlePageChange(page: number) {
-    // 해당 pgNo board data 호출
-  }
+  // function handlePageChange(page: number) {
+  //   // 해당 pgNo board data 호출
+  // }
 
   return (
     <>
@@ -284,6 +291,7 @@ export default function Group() {
         open={isOpenMemberSettingModal}
         toggleModal={() => setOpenMemberSettingModal((prev) => !prev)}
         memberList={memberList}
+        appliedList={appliedList}
       />
 
       <BadgeModal

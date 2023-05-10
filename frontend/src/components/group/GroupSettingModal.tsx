@@ -23,6 +23,7 @@ interface PropsType {
   open: boolean;
   toggleModal: () => void;
   memberList: MemberType[];
+  appliedList: MemberType[];
 }
 
 const { Content } = Layout;
@@ -66,7 +67,7 @@ export function GroupSettingModal(props: PropsType) {
     } else {
       return (
         <TabContentWrapper>
-          {props.memberList.map((member: MemberType) => (
+          {props.appliedList.map((member: MemberType) => (
             <div className="member-setting-container">
               <SingleMemberListBox
                 profile={member.image}

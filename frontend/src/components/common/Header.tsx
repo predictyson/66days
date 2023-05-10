@@ -4,24 +4,35 @@ import LogoTitle from "../../assets/logo-title.svg";
 import Logo from "../../assets/logo.svg";
 import avartar from "../../assets/avatar.svg";
 import { Space } from "antd";
+import { useState } from "react";
+import { CreateGroupModal } from "../group/CreateGroupModal";
 
 export default function CustomHeader() {
+  const [isOpenCreateGroupModal, setOpenCreateGroupModal] = useState(false);
   return (
-    <StyledHeader>
-      <Space className="logo">
-        <a href="/">
-          <img src={Logo} />
-        </a>
-        <a href="/">
-          <img src={LogoTitle} />
-        </a>
-      </Space>
-      <Space className="link">
-        <a href="/groups">search</a>
-        <a href="/create">create group</a>
-        <img src={avartar} />
-      </Space>
-    </StyledHeader>
+    <>
+      <StyledHeader>
+        <Space className="logo">
+          <a href="/">
+            <img src={Logo} />
+          </a>
+          <a href="/">
+            <img src={LogoTitle} />
+          </a>
+        </Space>
+        <Space className="link">
+          <a href="/groups">search</a>
+          <a onClick={() => setOpenCreateGroupModal((prev) => !prev)}>
+            create group
+          </a>
+          <img src={avartar} />
+        </Space>
+      </StyledHeader>
+      <CreateGroupModal
+        open={isOpenCreateGroupModal}
+        toggleModal={() => setOpenCreateGroupModal((prev) => !prev)}
+      />
+    </>
   );
 }
 
