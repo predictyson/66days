@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service("userService")
+@Service
 @Transactional
 public class UserService {
     private final UserRepository userRepository;

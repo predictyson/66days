@@ -6,10 +6,6 @@ import com.ssafy._66days.group.model.repository.GroupMemberRepository;
 import com.ssafy._66days.user.model.entity.User;
 import com.ssafy._66days.user.model.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 public class CheckUser {
@@ -34,8 +30,9 @@ public class CheckUser {
             Group group,
             User user
     ) {
-        Optional<GroupMember> groupMember = groupMemberRepository.findByGroupAndUser(group, user);
-        if (groupMember.isPresent() && !groupMember.get().isDeleted()) {
+        GroupMember groupMember = groupMemberRepository.findByGroupAndUser(group, user)
+                .orElseThrow(() -> new IllegalArgumentException("그룹에 속하지 않은 유저입니다"));
+        if (!groupMember.isDeleted()) {
             return true;
         }
         return false;

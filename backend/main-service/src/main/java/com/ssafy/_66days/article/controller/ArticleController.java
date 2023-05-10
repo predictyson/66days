@@ -95,7 +95,6 @@ public class ArticleController {
 
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        System.out.println(articleRequestDTO.getContent());
         try {
             ArticleResponseDTO updatedArticle = articleService.updateArticle(groupId, articleId, articleRequestDTO);
             resultMap.put("updatedArticle", updatedArticle);

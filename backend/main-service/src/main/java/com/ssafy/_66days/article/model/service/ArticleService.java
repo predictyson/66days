@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Service("articleService")
+@Service
 @Transactional
 public class ArticleService {
     private final UserRepository userRepository;
@@ -69,7 +69,7 @@ public class ArticleService {
 
         boolean isUserInGroup = checkUser.isUserInGroup(group, user);
         if (!isUserInGroup) {
-            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+            throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
         }
 
         // 유저에게 받은 게시글 정보, 작성일자, user, group 정보등을 담아 객체를 생성한다
@@ -99,7 +99,7 @@ public class ArticleService {
 
         boolean isUserInGroup = checkUser.isUserInGroup(group, user);
         if (!isUserInGroup) {
-            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+            throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
         }
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다"));
@@ -120,14 +120,14 @@ public class ArticleService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
         boolean isUserInGroup = checkUser.isUserInGroup(group, user);
         if (!isUserInGroup) {
-            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+            throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
         }
         Pageable pageable = PageRequest.of(offset, 3);
         // offset 값과 limit 값을 이용해 최근 게시글 3개를 가져온다
         List<Article> articleList = articleRepository.findByGroupAndIsDeleted(group, false, pageable);
         // 가져온 게시글을 ArticleDTO 리스트로 변환한다
         List<ArticleResponseDTO> articleResponseDTOs = articleList.stream()
-                .map(ArticleResponseDTO::from)
+                .map(article -> ArticleResponseDTO.from(article))
                 .collect(Collectors.toList());
         return articleResponseDTOs;
     }
@@ -146,21 +146,28 @@ public class ArticleService {
         boolean isUserInGroup = checkUser.isUserInGroup(group, user);
 
         if (!isUserInGroup) {
-            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+            throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
         }
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
         if (!article.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("본인이 작성한 게시글이 아닙니다");
+        }
+        if (article.isDeleted()) {
+            throw new IllegalArgumentException("삭제된 글입니다");
+        }
+        if (articleUpdateRequestDTO.getTitle() != null) {
+            throw new IllegalArgumentException("제목은 수정할 수 없습니다");
         }
         if (articleUpdateRequestDTO.getContent() == null) {
             throw new IllegalArgumentException("수정할 내용을 작성해 주세요");
         }
+        article.ModifyArticle(articleUpdateRequestDTO.getContent());
+//        article.setContent(articleUpdateRequestDTO.getContent());   // 기존글에 수정할 내용을 넣어준다
+//        Article updatedArticle = articleRepository.save(article);   // DB에 저장
 
-        article.setContent(articleUpdateRequestDTO.getContent());   // 기존글에 수정할 내용을 넣어준다
-        Article updatedArticle = articleRepository.save(article);   // DB에 저장
-
-        return ArticleResponseDTO.of(updatedArticle);
+        return ArticleResponseDTO.of(article);
     }
 
     public boolean deleteArticle(
@@ -176,7 +183,7 @@ public class ArticleService {
         boolean isUserInGroup = checkUser.isUserInGroup(group, user);
 
         if (!isUserInGroup) {
-            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+            throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
         }
 
         // 게시글을 조회하여 삭제한다
@@ -204,7 +211,7 @@ public class ArticleService {
         boolean isUserInGroup = checkUser.isUserInGroup(group, user);
 
         if (!isUserInGroup) {
-            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+            throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
         }
 
         Article article = articleRepository.findById(articleId)
@@ -216,12 +223,13 @@ public class ArticleService {
                 .content(commentRequestDTO.getContent())
                 .group(Group.builder().groupId(groupId).build())
                 .article(article)
-                .user(User.builder().userId(userId).build())
+                .user(user)
                 .createdAt(LocalDateTime.now())
                 .isDeleted(false)
                 .build();
 
         Comment savedComment = commentRepository.save(comment);
+
         return CommentResponseDTO.of(savedComment);
     }
 
@@ -237,9 +245,8 @@ public class ArticleService {
         // offset 값과 limit 값을 이용해 최근 댓글 10개를 가져온다
         List<Comment> commentList = commentRepository.findByArticleAndIsDeleted(article, false, pageable);
         List<CommentResponseDTO> commentResponseDTOs = commentList.stream()
-                .map(CommentResponseDTO::from)
+                .map(comment -> CommentResponseDTO.from(comment))
                 .collect(Collectors.toList());
-
         return commentResponseDTOs;
     }
 

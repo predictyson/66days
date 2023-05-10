@@ -53,4 +53,9 @@ public class Article {
     @ColumnDefault("false")
     private boolean isDeleted;
 
+    public void ModifyArticle(String content) {
+        this.content = content;
+        this.updatedAt = LocalDateTime.now();
+    }
+
 }
