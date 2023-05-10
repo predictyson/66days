@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -35,17 +36,6 @@ public class GroupController {
 
         List<GroupSearchPageResponseDTO> groupList = groupService.searchGroup(searchContent, filterBy);
 
-//        GroupSearchPageResponseDTO group = GroupSearchPageResponseDTO.builder()
-//                .ownerImage(IMAGE)
-//                .ownerName("뭉치")
-//                .name("뭉치뭉치똥뭉치네")
-//                .categories(new ArrayList<>(Arrays.asList("알고리즘","강의")))
-//                .description("같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요")
-//                .memberCounts(33)
-//                .maxMemberCounts(66)
-//                .animal("카피바라")
-//                .build();
-
         resultMap.put("group-list", groupList);
 
         resultMap.put(RESULT, SUCCESS);
@@ -59,14 +49,6 @@ public class GroupController {
             @PathVariable("group_id") @ApiParam(required = true) Long groupId
     ){
         Map<String, Object> resultMap = new HashMap<String, Object>();
-
-//        MemberManageDTO member1 = MemberManageDTO.builder()
-//                .image(IMAGE)
-//                .nickname("@moongchi")
-//                .badge(1)
-//                .role("owner")
-//                .build();
-
 
         List<UserManageDTO> memberList = groupService.getGroupMembers(groupId);
         resultMap.put("member-list", memberList);
@@ -82,12 +64,6 @@ public class GroupController {
             @PathVariable("group_id") @ApiParam(required = true) Long groupId
     ){
         Map<String, Object> resultMap = new HashMap<String, Object>();
-
-//        MemberManageDTO member1 = MemberManageDTO.builder()
-//                .image(IMAGE)
-//                .nickname("@moongchi")
-//                .badge(1)
-//                .build();
 
         List<UserManageDTO> memberList = groupService.getGroupApplyList(groupId);
         resultMap.put("apply-list", memberList);
@@ -150,7 +126,11 @@ public class GroupController {
             ){
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        groupService.createGroup(groupCreateDTO, groupImage);
+        try {
+            groupService.createGroup(groupCreateDTO, groupImage);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         resultMap.put(RESULT, SUCCESS);
 
         return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);

@@ -60,6 +60,10 @@ spring:
     paths-to-match:
       - /v1/**
 
+  file:
+    path:
+      - upload-images-groups=/home/ubuntu/image/group
+
 logging:
   root: info
   com:

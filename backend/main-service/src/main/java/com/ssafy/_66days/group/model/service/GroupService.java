@@ -1,6 +1,5 @@
 package com.ssafy._66days.group.model.service;
 
-import com.ssafy._66days.global.config.S3Upload;
 import com.ssafy._66days.group.model.dto.GroupCreateDTO;
 import com.ssafy._66days.group.model.dto.GroupSearchPageResponseDTO;
 import com.ssafy._66days.group.model.entity.Group;
@@ -12,16 +11,16 @@ import com.ssafy._66days.group.model.repository.GroupRepository;
 import com.ssafy._66days.user.model.dto.UserManageDTO;
 import com.ssafy._66days.user.model.entity.User;
 import com.ssafy._66days.user.model.repository.UserRepository;
+import com.ssafy._66days.global.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,21 +31,29 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final GroupApplyRepository groupApplyRepository;
     private final GroupMemberRepository groupMemberRepository;
-    private final S3Upload s3Upload;
+    private final FileUtil fileUtil;
+
+    @Value("${file.path.upload-images-groups}")
+    private String groupImageFilePath;
+
+    private final String ACCEPTED = "ACCEPTED";
+    private final String REJECTED = "REJECTED";
+    private final String WAITING = "WAITING";
+    private final String MANAGER = "MANAGER";
+    private final String MEMBER = "MEMBER";
 
     @Autowired
     public GroupService(UserRepository userRepository,
                         GroupRepository groupRepository, GroupApplyRepository groupApplyRepository,
-                        GroupMemberRepository groupMemberRepository, S3Upload s3Upload) {
+                        GroupMemberRepository groupMemberRepository, FileUtil fileUtil) {
         this.userRepository = userRepository;
         this.groupRepository = groupRepository;
         this.groupApplyRepository = groupApplyRepository;
         this.groupMemberRepository = groupMemberRepository;
-        this.s3Upload = s3Upload;
+        this.fileUtil = fileUtil;
     }
 
     public List<GroupSearchPageResponseDTO> searchGroup(String searchContent, String filterBy) {
-//        Group group = groupRepository.findByOwnerId(searchContent);
         User user = userRepository.findByNickname(searchContent).orElse(null);
         List<Group> groups = null;
         if(user == null) {
@@ -54,9 +61,18 @@ public class GroupService {
         } else {
             groups = groupRepository.findAllByGroupNameContainsOrOwnerId(searchContent, user.getUserId());
         }
-        // TODO: categories 리스트 추후, 챌린지 구현 후 추가, 람다식으로 구현 불가 포문 돌려서 memberCount도 추가해야함
-        List<GroupSearchPageResponseDTO> groupDTOList = groups.stream()
-                .map(g -> GroupSearchPageResponseDTO.of(g,user)).collect(Collectors.toList());
+        // TODO: categories 리스트 추후, 챌린지 구현 후 추가
+        // TODO: categories 릿스트는 filterBy로 찾기
+        List<GroupSearchPageResponseDTO> groupDTOList = new ArrayList<>();
+        for (Group group:groups) {
+            GroupSearchPageResponseDTO pageResponseDTO = GroupSearchPageResponseDTO.of(group, user);
+            Long memberCount = groupMemberRepository.countByGroupAndIsDeleted(group, false);
+            pageResponseDTO.setMemberCounts(memberCount);
+
+
+            groupDTOList.add(pageResponseDTO);
+        }
+
         return groupDTOList;
     }
 
@@ -74,8 +90,9 @@ public class GroupService {
     }
 
     public List<UserManageDTO> getGroupApplyList(Long groupId) {
+        // TODO:       if(현재유저가 현재그룹의 그룹장이나 매니저가 아닌 경우 return)
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("group doesn't exist"));
-        List<GroupApply> applyList = groupApplyRepository.findAllByStateAndGroup("WAITING", group);
+        List<GroupApply> applyList = groupApplyRepository.findAllByStateAndGroup(WAITING, group);
 
         // 대기열 중에 'WAITING'인 상태인 유저를 'authority=NULL' 채워서 반환
         List<UserManageDTO> userManageDTOList = applyList.stream().map(apply ->
@@ -87,10 +104,15 @@ public class GroupService {
 
     public void setGroupMemberState(Long groupId, String state, String userName) throws InputMismatchException {
         state = state.toUpperCase();
-        if (!(state.equals("MANAGER") || state.equals("MEMBER"))) throw new InputMismatchException("권한 설정이 잘못 입력되었습니다");
+        if (!(state.equals(MANAGER) || state.equals(MEMBER))) throw new InputMismatchException("권한 설정이 잘못 입력되었습니다");
         User user = userRepository.findByNickname(userName).orElseThrow(() -> new NoSuchElementException("user doesn't exist"));
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("group doesn't exist"));
         GroupMember groupMember = groupMemberRepository.findByGroupAndUser(group,user).orElseThrow(() -> new NoSuchElementException("user is not in a group"));
+        if(state.equals(MANAGER)){
+            // 매니저 인원 수: 최대 3명
+            Long managerSize = groupMemberRepository.countByGroupAndAuthorityAndIsDeleted(group, MANAGER, false);
+            if(managerSize >= 3L) throw new InputMismatchException("설정 가능한 매니저 수가 초과했습니다");
+        }
         log.info("group member state BEFORE: {}", groupMember.getAuthority());
         groupMember.updateAuthority(state);
 
@@ -98,20 +120,32 @@ public class GroupService {
     }
 
     public void setGroupApplyState(Long groupId, String state, String userName) {
+        // TODO: 현재 사용자가 그룹장인 경우, 추방 기능 추가
+        // TODO:       if(현재유저가 현재그룹의 그룹장이나 매니저가 아닌 경우 return)
+
         state = state.toUpperCase();
-        if (!(state.equals("ACCEPTED") || state.equals("REJECTED"))) throw new InputMismatchException("그룹 가입승인 설정이 잘못 입력되었습니다");
+        if (!(state.equals(ACCEPTED) || state.equals(REJECTED))) throw new InputMismatchException("그룹 가입승인 설정이 잘못 입력되었습니다");
         User user = userRepository.findByNickname(userName).orElseThrow(() -> new NoSuchElementException("user doesn't exist"));
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("group doesn't exist"));
         GroupApply groupApply = groupApplyRepository.findByUserAndGroup(user, group);
+        if(state.equals(ACCEPTED)){
+            // 가입한 그룹 수가 5개 이하인지 확인
+            Long groupSize = groupMemberRepository.countByUserAndIsDeleted(user, false);
+            if(groupSize > 5L) throw new InputMismatchException("사용자의 가입한 그룹 수가 한도 초과했습니다");
+        }
         log.info("group apply state BEFORE: {}", groupApply.getState());
 //        groupApply.setState(state);
         groupApply.updateGroupApply(state);
 
-
-//        groupMember = groupMemberRepository.findByGroupAndUser(group,user).orElseThrow(() -> new NoSuchElementException("user is not in a group"));
         log.info("group apply state AFTER: {}", groupApply.getState());
     }
 
+    /**
+     * @param groupId
+     * @param state
+     * @param userId
+     * 가입 신청은 어떤 상황에도 가능, 승인 여부를 확인할 때 조건확인
+     */
     public void applyGroup(Long groupId, String state, UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user doesn't exist"));
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("group doesn't exist"));
@@ -120,8 +154,12 @@ public class GroupService {
         groupApplyRepository.save(groupApply);
     }
 
-    public void createGroup(GroupCreateDTO groupCreateDTO, MultipartFile image) {
+    public void createGroup(GroupCreateDTO groupCreateDTO, MultipartFile image) throws IOException {
+        if (groupCreateDTO == null || image.isEmpty()) {
+            throw new InputMismatchException("필요한 값이 들어오지 않았습니다.");
+        }
+        String savePath = fileUtil.fileUpload(image, groupImageFilePath);
+
         groupRepository.save(groupCreateDTO.toEntity(groupCreateDTO));
-        //TODO: EC2 이미지 저장
     }
 }

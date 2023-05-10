@@ -19,7 +19,7 @@ public class GroupSearchPageResponseDTO {
     private String name;
     private List<String> categories;
     private String description;
-    private int memberCounts;
+    private Long memberCounts;
     private int maxMemberCounts;
 
     public static GroupSearchPageResponseDTO of(Group group, User user) {
