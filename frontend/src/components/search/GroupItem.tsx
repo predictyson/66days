@@ -113,7 +113,6 @@ const CustomModal = styled(Modal)`
     display: none;
   }
   .ant-modal-content {
-    width: 64rem;
     height: 48rem;
     display: flex;
     text-align: center;
@@ -126,12 +125,12 @@ const CustomModal = styled(Modal)`
   }
 
   .modal-sub {
-    margin-top: 3.2rem;
+    margin-top: 3rem;
     font-size: 2.4rem;
     font-weight: ${theme.fontWeight.semibold};
   }
   .modal-warning {
-    margin-top: 4.8rem;
+    margin-top: 2rem;
     font-size: 1.6rem;
     color: #ff4a4a;
     font-weight: ${theme.fontWeight.semibold};
@@ -147,7 +146,7 @@ const CustomModal = styled(Modal)`
 `;
 
 const ModalButtonWrapper = styled.div`
-  width: 70%;
+  width: 75%;
   display: flex;
   justify-content: space-between;
   margin: 4.9rem auto;
