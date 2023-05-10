@@ -11,7 +11,6 @@ interface ChallengeImgStyled {
 }
 
 export default function ChallengeBox({ ...props }) {
-  console.log(props.participants);
   return (
     <>
       <ChallengeBoxWrapper>

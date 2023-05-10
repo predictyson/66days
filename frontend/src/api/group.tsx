@@ -32,7 +32,7 @@ async function fetchGroupMembers(id = 1) {
 // 그룹 가입 신청원 리스트 데이터 fetch
 async function fetchAppliedMembers(id = 1) {
   try {
-    const res = await api.get(`/group/${id}/manage/apply`);
+    const res = await api.get(`/api/v1/group/${id}/manage/apply`);
     if (res.status === 200) {
       return res.data;
     }

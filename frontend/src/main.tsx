@@ -17,6 +17,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         theme={{
           token: {
             colorPrimary: theme.colors.purple,
+            colorPrimaryHover: "#9989DF",
             colorSuccess: theme.colors.success,
             colorError: theme.colors.failure,
             colorInfo: theme.colors.update,
