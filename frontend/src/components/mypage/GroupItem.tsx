@@ -1,10 +1,13 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
-
-export default function Challenge() {
+import { GroupData } from "../../types/main";
+interface IProps {
+  groups: GroupData[];
+}
+export default function Challenge({ groups }: IProps) {
   return (
     <Container>
-      <div className="left"></div>
+      <div className="left-box"></div>
       <div className="right">
         <TagWrapper>
           <Tag color="#B8A9FB">알고리즘</Tag>
@@ -39,7 +42,7 @@ const Container = styled.div`
   width: 38rem;
   height: 22rem;
   display: flex;
-  .left {
+  .left-box {
     width: 5rem;
     background-color: ${theme.colors.gray400};
   }

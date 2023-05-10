@@ -6,24 +6,19 @@ import Group from "../components/mypage/Groups";
 import { MyPageData } from "../types/mypage";
 import { theme } from "../styles/theme";
 import Line from "../assets/mypage/Line.png";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getMyPageInfo } from "../api/mypage";
 import EditProfile from "../components/mypage/EditProfile";
 // // 프로필 수정시
 export default function MyPage() {
-<<<<<<< HEAD
-  // const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
-
-=======
   const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
   const [isEdit, setIsEdit] = useState<boolean>(false);
->>>>>>> c3bc3b3 (fe/chore: category style global로 빼기)
+
   useEffect(() => {
     getMyPageInfo();
   }, []);
   const handleEdit = (state: boolean) => {
     setIsEdit(state);
-    console.log(isEdit);
   };
   const commits = [
     1, 2, 0, 0, 0, 1, 3, 1, 2, 3, 3, 2, 2, 2, 1, 1, 3, 0, 0, 1, 0, 2, 3, 1, 2,
@@ -50,7 +45,10 @@ export default function MyPage() {
           My 챌린지 그래프
           <div className="accum">누적 {DUMMY_DATA_MYPAGE.streak.length}일</div>
         </Title>
-        <StreakGraph commits={commits} length={length} />
+        <StreakGraph
+          commits={DUMMY_DATA_MYPAGE.streak.map((item) => item.count)}
+          length={length}
+        />
         <SubContent>
           <div>
             현재 진행 중 습관 <span className="count">3</span>개
@@ -75,7 +73,10 @@ export default function MyPage() {
           src={Line}
           style={{ margin: "3.2rem auto 2rem auto", width: "100%" }}
         />
-        <Group />
+        <Group
+          groups={DUMMY_DATA_MYPAGE.group}
+          challenges={DUMMY_DATA_MYPAGE.challenge}
+        />
       </div>
     </Container>
   );
@@ -204,7 +205,15 @@ const DUMMY_DATA_MYPAGE: MyPageData = {
     },
     {
       date: "2023-05-09",
+      count: 2,
+    },
+    {
+      date: "2023-05-09",
       count: 3,
+    },
+    {
+      date: "2023-05-09",
+      count: 2,
     },
     {
       date: "2023-05-09",
@@ -216,7 +225,15 @@ const DUMMY_DATA_MYPAGE: MyPageData = {
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 2,
+    },
+    {
+      date: "2023-05-09",
+      count: 1,
+    },
+    {
+      date: "2023-05-09",
+      count: 1,
     },
     {
       date: "2023-05-09",
@@ -228,23 +245,7 @@ const DUMMY_DATA_MYPAGE: MyPageData = {
     },
     {
       date: "2023-05-09",
-      count: 3,
-    },
-    {
-      date: "2023-05-09",
-      count: 3,
-    },
-    {
-      date: "2023-05-09",
-      count: 3,
-    },
-    {
-      date: "2023-05-09",
-      count: 3,
-    },
-    {
-      date: "2023-05-09",
-      count: 3,
+      count: 1,
     },
     {
       date: "2023-05-09",

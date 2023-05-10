@@ -1,10 +1,14 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
+import { MyChallengeData } from "../../types/mypage";
 
-export default function Challenge() {
+interface IProps {
+  challenges: MyChallengeData[];
+}
+export default function Challenge({ challenges }: IProps) {
   return (
     <Container>
-      <div className="left"></div>
+      <div className="left-box"></div>
       <div className="right">
         <TagWrapper>
           <DateTag>44일째</DateTag>
@@ -28,7 +32,7 @@ const Container = styled.div`
   width: 38rem;
   height: 22rem;
   display: flex;
-  .left {
+  .left-box {
     width: 2rem;
     background-color: ${theme.colors.purple};
   }
