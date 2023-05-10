@@ -1,4 +1,4 @@
-package com.ssafy.toonbti.global.config;
+package com.ssafy.mock66days;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
