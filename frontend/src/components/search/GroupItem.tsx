@@ -5,7 +5,13 @@ import GroupImg from "../../assets/search/group_image.png";
 // import ConfirmModal from "./ConfirmModal";
 import { useState } from "react";
 import { Modal } from "antd";
-export default function GroupItem() {
+import { SearchGroupData } from "../../types/search";
+import Category from "../../styles/CategoryTheme";
+
+interface IProps {
+  group: SearchGroupData;
+}
+export default function GroupItem({ group }: IProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -24,13 +30,13 @@ export default function GroupItem() {
       <ProfileWrapper>
         <img src={Profile1} />
         <TitleWrapper>
-          뭉치
-          <div className="sub">게으른 카피바라</div>
+          {group.ownerName}
+          <div className="sub">게으른 {group.animal}</div>
         </TitleWrapper>
       </ProfileWrapper>
       <img src={GroupImg} style={{ height: "18.8rem" }} />
       <MaterialWrapper>
-        <div className="title">알고리즘 파트원 구해요</div>
+        <div className="title">{group.name}</div>
         <div
           style={{
             display: "flex",
@@ -40,8 +46,8 @@ export default function GroupItem() {
           }}
         >
           <div style={{ display: "flex" }}>
-            {DUMMY.map((v, idx) => {
-              const category = CATEGORY.find((c) => c.title === v); // 해당 title의 category를 찾음
+            {group.categories.map((v, idx) => {
+              const category = Category.find((c) => c.title === v); // 해당 title의 category를 찾음
               const col = category ? category.color : "gray";
               return (
                 <CategoryItem key={idx} color={col}>
@@ -50,18 +56,40 @@ export default function GroupItem() {
               );
             })}
           </div>
-          <span>모집중</span>
+
+          {group.memberCounts === group.maxMemberCounts ? (
+            <span style={{ color: "red" }}>모집 마감</span>
+          ) : (
+            <span>모집중 </span>
+          )}
         </div>
-        <div className="content">열심히 할 사람만 와주세요</div>
+        <div className="content">{group.description}</div>
       </MaterialWrapper>
       <ButtonWrapper>
-        66 / 66{" "}
-        <div className="button" onClick={showModal}>
-          Apply
-        </div>
+        {group.memberCounts} / {group.maxMemberCounts}
+        {group.memberCounts === group.maxMemberCounts ? (
+          <div
+            className="button"
+            style={{
+              backgroundColor: "gray",
+              cursor: "default",
+              pointerEvents: "none",
+            }}
+          >
+            Full
+          </div>
+        ) : (
+          <div
+            className="button"
+            style={{ cursor: "pointer" }}
+            onClick={showModal}
+          >
+            Apply
+          </div>
+        )}
       </ButtonWrapper>
       <CustomModal open={isModalOpen}>
-        <div className="modal-title">뭉치뭉치똥뭉치네</div>
+        <div className="modal-title">{group.name}</div>
         <div className="modal-sub">그룹에 가입 신청을 요청하시겠습니까?</div>
         <div className="modal-warning">
           그룹 가입 승인 이후 챌린지 참여가 가능합니다.
@@ -205,7 +233,7 @@ const MaterialWrapper = styled.div`
   }
   span {
     font-size: 1.6rem;
-    color: red;
+    color: ${theme.colors.mint};
     font-weight: ${theme.fontWeight.semibold};
   }
 `;
@@ -231,7 +259,6 @@ const ButtonWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
     /* &:hover {
       color: gray;
       background-color: white;
@@ -249,7 +276,6 @@ const ButtonWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
     &:hover {
       color: gray;
       background-color: white;

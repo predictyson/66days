@@ -29,13 +29,20 @@ export default function SearchPage() {
       </div>
 
       <ItemContainer>
-        {GROUPS.map((v, idx) => {
+        {DUMMY_DATA_SEARCH.groupList.map((data, idx) => {
+          return (
+            <div key={idx} style={{ marginTop: idx >= 3 ? "6rem" : "0" }}>
+              <GroupItem key={idx} group={data} />
+            </div>
+          );
+        })}
+        {/* {GROUPS.map((v, idx) => {
           return (
             <div key={idx} style={{ marginTop: idx >= 3 ? "6rem" : "0" }}>
               {v}
             </div>
           );
-        })}
+        })} */}
       </ItemContainer>
     </Container>
   );
@@ -84,15 +91,6 @@ const ItemContainer = styled.div`
   justify-content: space-between;
 `;
 
-const GROUPS = [
-  <GroupItem />,
-  <GroupItem />,
-  <GroupItem />,
-  <GroupItem />,
-  <GroupItem />,
-  <GroupItem />,
-];
-
 const DUMMY_DATA_SEARCH: SearchData = {
   result: "success",
   groupList: [
@@ -114,7 +112,7 @@ const DUMMY_DATA_SEARCH: SearchData = {
       name: "뭉치뭉치똥뭉치네",
       categories: ["알고리즘", "강의"],
       description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
+      memberCounts: 66,
       maxMemberCounts: 66,
       animal: "카피바라",
     },
