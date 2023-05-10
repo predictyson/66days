@@ -6,11 +6,11 @@ import Group from "../components/mypage/Groups";
 import { MyPageData } from "../types/mypage";
 import { theme } from "../styles/theme";
 import Line from "../assets/mypage/Line.png";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getMyPageInfo } from "../api/mypage";
 // // 프로필 수정시
 export default function MyPage() {
-  const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
+  // const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
 
   useEffect(() => {
     getMyPageInfo();

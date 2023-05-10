@@ -1,7 +1,6 @@
 import { Progress } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
-import { useState } from "react";
 
 interface BadgeType {
   category: string;
@@ -22,15 +21,15 @@ interface BadgeImgStyled {
 }
 
 export default function BadgeStatusBox(props: PropsType) {
-  function calcPeriod(oldDate: string, newDate: string) {
-    console.log(new Date(oldDate), new Date(newDate));
+  // function calcPeriod(oldDate: string, newDate: string) {
+  //   console.log(new Date(oldDate), new Date(newDate));
 
-    let diff = Math.abs(
-      new Date(newDate).getTime() - new Date(oldDate).getTime()
-    );
-    diff = Math.ceil(diff / (1000 * 60 * 60 * 24));
-    console.log((diff / 66) * 100);
-  }
+  //   let diff = Math.abs(
+  //     new Date(newDate).getTime() - new Date(oldDate).getTime()
+  //   );
+  //   diff = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  //   console.log((diff / 66) * 100);
+  // }
 
   return (
     <>

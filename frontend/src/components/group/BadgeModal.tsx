@@ -2,7 +2,6 @@ import { Modal, Carousel } from "antd";
 import styled from "styled-components";
 import { Content } from "antd/es/layout/layout";
 import { theme } from "../../styles/theme";
-import { useEffect, useState } from "react";
 import BadgeStatusBox from "./BadgeStatusBox";
 
 interface BadgeType {
@@ -21,28 +20,28 @@ interface PropsType {
 }
 
 export default function BadgeModal(props: PropsType) {
-  const [tab, setTab] = useState<number>(0);
+  // const [tab, setTab] = useState<number>(0);
   // const [badgeDataList, setBadgeDataList] = useState<BadgeType[]>([]);
 
   function clickAllTab() {
     document.getElementById("success-tab")?.classList.remove("active-tab");
     document.getElementById("fail-tab")?.classList.remove("active-tab");
     document.getElementById("all-tab")?.classList.add("active-tab");
-    setTab(0);
+    // setTab(0);
   }
 
   function clickSuccessTab() {
     document.getElementById("all-tab")?.classList.remove("active-tab");
     document.getElementById("fail-tab")?.classList.remove("active-tab");
     document.getElementById("success-tab")?.classList.add("active-tab");
-    setTab(1);
+    // setTab(1);
   }
 
   function clickFailTab() {
     document.getElementById("all-tab")?.classList.remove("active-tab");
     document.getElementById("success-tab")?.classList.remove("active-tab");
     document.getElementById("fail-tab")?.classList.add("active-tab");
-    setTab(2);
+    // setTab(2);
   }
 
   function onSlideChange(currentSlide: number) {

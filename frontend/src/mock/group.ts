@@ -12,19 +12,19 @@ const mockBoardData = {
     "안녕하세요! 그룹장 뭉치입니다. :D 현재 알고리즘 문제를 함께 풀 그룹원들을 모집하고 있습니다. 주변에 관심있는 분들이 있으시다면 알려주시기 바랍니다! 뭉치 올림",
 };
 
-interface ChallengeType {
-  image: string; // challenge badge image
-  title: string; // challenge name
-  participants: {
-    image: string;
-  }[];
-  maxParticipants: number;
-  startDate: Date;
-  // notStarted: boolean;
-  // dueDate: number;
-  // profile: string;
-  // cnt: string;
-}
+// interface ChallengeType {
+//   image: string; // challenge badge image
+//   title: string; // challenge name
+//   participants: {
+//     image: string;
+//   }[];
+//   maxParticipants: number;
+//   startDate: Date;
+//   // notStarted: boolean;
+//   // dueDate: number;
+//   // profile: string;
+//   // cnt: string;
+// }
 
 const mockChallengeList = [
   {

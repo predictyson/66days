@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import BreadCrumb from "./BreadCrumb";
-import Challenge from "./Challenge";
+// import Challenge from "./Challenge";
 import GroupItem from "../../components/mypage/GroupItem";
 export default function Group() {
   return (
