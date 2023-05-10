@@ -119,12 +119,12 @@ const Container = styled.div`
   display: flex;
   height: 70rem;
   .left {
-    width: 30%;
+    width: 27%;
     display: flex;
     flex-direction: column;
   }
   .right {
-    width: 70%;
+    width: 73%;
     padding: 2%;
     margin: 0 auto;
   }
