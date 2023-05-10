@@ -1,19 +1,33 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
-
-export default function Challenge() {
+import { GroupData } from "../../types/main";
+import Category from "../../styles/CategoryTheme";
+interface IProps {
+  group: GroupData;
+}
+export default function GroupITem({ group }: IProps) {
   return (
     <Container>
-      <div className="left"></div>
+      <div className="left-box"></div>
       <div className="right">
         <TagWrapper>
-          <Tag color="#B8A9FB">알고리즘</Tag>
-          <Tag color="#B8A9FB">알고리즘</Tag>
-          <Tag color="#B8A9FB">알고리즘</Tag>
-          <Tag color="#B8A9FB">알고리즘</Tag>
+          {group.badges.map((data, idx) => {
+            return (
+              <Tag
+                key={idx}
+                color={
+                  Category.find((category) => category.title === data)?.color
+                }
+              >
+                {data}
+              </Tag>
+            );
+          })}
         </TagWrapper>
-        <TitleWrapper>백준 1일 1알고를 풀어봅시다. </TitleWrapper>
-        <div className="group-type">개인 그룹</div>
+        <TitleWrapper>{group.name} </TitleWrapper>
+        <div className="group-type">
+          <span>{group.type === "personal" ? "개인 그룹" : "그룹"}</span>
+        </div>
       </div>
     </Container>
   );
@@ -31,7 +45,7 @@ const Container = styled.div`
     display: flex;
     margin-top: auto;
     margin-left: auto;
-    color: ${theme.colors.gray400};
+    color: ${theme.colors.gray300};
   }
   &:hover {
     transform: scale(1.05);
@@ -39,8 +53,8 @@ const Container = styled.div`
   width: 38rem;
   height: 22rem;
   display: flex;
-  .left {
-    width: 5rem;
+  .left-box {
+    width: 5%;
     background-color: ${theme.colors.gray400};
   }
   .right {
@@ -70,9 +84,6 @@ const Tag = styled.div`
   margin-right: 2%;
   background-color: ${(props) => props.color || "gray"};
 `;
-// const DateTag = styled(Tag)`
-//   background-color: ${theme.colors.gray400};
-// `;
 
 const TitleWrapper = styled.div`
   font-size: 2rem;

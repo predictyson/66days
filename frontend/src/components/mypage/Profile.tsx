@@ -9,16 +9,16 @@ import { MyPageMemberData } from "../../types/mypage";
 interface IProps {
   myInfo: MyPageMemberData;
   date: number;
+  handleEdit: (state: boolean) => void;
 }
-export default function Profile({ myInfo, date }: IProps) {
-  console.log(date);
+export default function Profile({ myInfo, date, handleEdit }: IProps) {
   return (
     <Container>
       <img className="profile-img" src={ProfileImg} alt="profile-img" />
       <img className="badge-img" src={Bronze} alt="badge" />
       <Nickname>{myInfo.nickname}</Nickname>
       <Email>{myInfo.email}</Email>
-      <EditButton>edit</EditButton>
+      <EditButton onClick={() => handleEdit(true)}>edit</EditButton>
       <ProgressWrapper>
         <ImageWrapper>
           <img src={Bronze} alt="current-badge" />
@@ -58,7 +58,7 @@ const Container = styled.div`
   flex-direction: column;
   position: relative;
   .profile-img {
-    width: 50%;
+    width: 18rem;
     height: 18rem;
     margin-top: 4.8rem;
   }

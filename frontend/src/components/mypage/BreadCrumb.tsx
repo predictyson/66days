@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useState } from "react";
 import { theme } from "../../styles/theme";
 
 const items = [
@@ -10,8 +9,11 @@ const items = [
     title: "진행중인 챌린지",
   },
 ];
-export default function BreadCrumb() {
-  const [activeItem, setActiveItem] = useState(0);
+interface IProps {
+  activeItem: number;
+  handleBread: (idx: number) => void;
+}
+export default function BreadCrumb({ activeItem, handleBread }: IProps) {
   return (
     <Container>
       {items.map((item, idx) => {
@@ -19,11 +21,11 @@ export default function BreadCrumb() {
           <CrumbItem
             key={idx}
             active={idx === activeItem}
-            onClick={() => setActiveItem(idx)}
+            onClick={() => handleBread(idx)}
           >
             {item.title}
             {idx !== items.length - 1 && (
-              <span style={{ marginRight: "1.2%" }}>|</span>
+              <span style={{ marginLeft: "auto" }}>|</span>
             )}
           </CrumbItem>
         );
@@ -46,11 +48,12 @@ interface CrumbItemProps {
 
 const CrumbItem = styled.div<CrumbItemProps>`
   display: flex;
+  width: 17%;
   align-items: center;
   font-weight: ${(props) => (props.active ? "bold" : "normal")};
   color: ${(props) => (props.active ? "#333" : "#888")};
   cursor: pointer;
-  margin-right: 1.2%;
+  margin-right: 1.6%;
   font-size: 2rem;
 
   &:hover {
