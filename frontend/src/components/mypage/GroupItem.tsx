@@ -1,22 +1,38 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { GroupData } from "../../types/main";
+import Category from "../../styles/CategoryTheme";
 interface IProps {
-  groups: GroupData[];
+  group: GroupData;
 }
-export default function Challenge({ groups }: IProps) {
+export default function Challenge({ group }: IProps) {
+  console.log(group);
   return (
     <Container>
       <div className="left-box"></div>
       <div className="right">
         <TagWrapper>
-          <Tag color="#B8A9FB">알고리즘</Tag>
-          <Tag color="#B8A9FB">알고리즘</Tag>
-          <Tag color="#B8A9FB">알고리즘</Tag>
-          <Tag color="#B8A9FB">알고리즘</Tag>
+          {group.badges.map((data, idx) => {
+            return (
+              <Tag
+                key={idx}
+                color={
+                  Category.find((category) => category.title === data)?.color
+                }
+              >
+                {data}
+              </Tag>
+            );
+          })}
         </TagWrapper>
-        <TitleWrapper>백준 1일 1알고를 풀어봅시다. </TitleWrapper>
-        <div className="group-type">개인 그룹</div>
+        <TitleWrapper>{group.name} </TitleWrapper>
+        <div className="group-type">
+          {group.type === "personal" ? (
+            <span>개인 그룹 </span>
+          ) : (
+            <span>그룹 </span>
+          )}
+        </div>
       </div>
     </Container>
   );
@@ -34,7 +50,7 @@ const Container = styled.div`
     display: flex;
     margin-top: auto;
     margin-left: auto;
-    color: ${theme.colors.gray400};
+    color: ${theme.colors.gray300};
   }
   &:hover {
     transform: scale(1.05);
@@ -43,7 +59,7 @@ const Container = styled.div`
   height: 22rem;
   display: flex;
   .left-box {
-    width: 5rem;
+    width: 2rem;
     background-color: ${theme.colors.gray400};
   }
   .right {

@@ -19,7 +19,9 @@ export default function Group({ groups, challenges }: IProps) {
       <BreadCrumb activeItem={activeItem} handleBread={handleBread} />
       <ContentWrapper>
         {activeItem === 0 ? (
-          <GroupItem groups={groups} />
+          groups.map((data, idx) => {
+            return <GroupItem key={idx} group={data} />;
+          })
         ) : (
           <Challenge challenges={challenges} />
         )}
