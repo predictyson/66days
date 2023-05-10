@@ -4,8 +4,27 @@ import BreadCrumb from "../components/search/BreadCrumb";
 import GroupItem from "../components/search/GroupItem";
 // import { getSearchData } from "../api/search";
 import { SearchData } from "../types/search";
+import { useEffect, useState } from "react";
 
 export default function SearchPage() {
+  const [breakpoint, setBreakPoint] = useState<number>(3);
+  // margin위해 breakpoint 설정하는 코드
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 1200) {
+        setBreakPoint(2);
+      } else if (window.innerWidth <= 890) {
+        setBreakPoint(0);
+      } else {
+        setBreakPoint(3);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <Container>
       <TitleWrapprer>
@@ -31,7 +50,10 @@ export default function SearchPage() {
       <ItemContainer>
         {DUMMY_DATA_SEARCH.groupList.map((data, idx) => {
           return (
-            <div key={idx} style={{ marginTop: idx >= 3 ? "6rem" : "0" }}>
+            <div
+              key={idx}
+              style={{ marginTop: idx >= breakpoint ? "6rem" : "0" }}
+            >
               <GroupItem key={idx} group={data} />
             </div>
           );
@@ -80,6 +102,12 @@ const SearchInput = styled.input`
 const ItemContainer = styled.div`
   margin-top: 2rem;
   display: grid;
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
+  }
+  @media (max-width: 890px) {
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+  }
   grid-template-columns: repeat(auto-fit, minmax(33%, 1fr));
   justify-content: space-between;
 `;
