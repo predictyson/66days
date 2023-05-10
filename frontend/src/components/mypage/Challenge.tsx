@@ -7,13 +7,10 @@ export default function Challenge() {
       <div className="left"></div>
       <div className="right">
         <TagWrapper>
-          <Tag color="#B8A9FB">알고리즘</Tag>
-          <Tag color="#B8A9FB">알고리즘</Tag>
-          <Tag color="#B8A9FB">알고리즘</Tag>
+          <DateTag>44일째</DateTag>
           <Tag color="#B8A9FB">알고리즘</Tag>
         </TagWrapper>
         <TitleWrapper>백준 1일 1알고를 풀어봅시다. </TitleWrapper>
-        <div className="group-type">개인 그룹</div>
       </div>
     </Container>
   );
@@ -25,14 +22,6 @@ const Container = styled.div`
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
   cursor: pointer;
-  .group-type {
-    font-size: 1.6rem;
-    font-weight: bold;
-    display: flex;
-    margin-top: auto;
-    margin-left: auto;
-    color: ${theme.colors.gray400};
-  }
   &:hover {
     transform: scale(1.05);
   }
@@ -41,7 +30,7 @@ const Container = styled.div`
   display: flex;
   .left {
     width: 5%;
-    background-color: ${theme.colors.gray400};
+    background-color: ${theme.colors.purple};
   }
   .right {
     width: 95%;
