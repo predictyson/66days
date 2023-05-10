@@ -14,7 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupMemberId implements Serializable {
-
     private UUID user;
     private Long group;
 }

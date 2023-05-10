@@ -1,6 +1,7 @@
 package com.ssafy._66days.group.model.dto;
 
 import com.ssafy._66days.group.model.entity.Group;
+import com.ssafy._66days.group.model.entity.GroupMember;
 import com.ssafy._66days.user.model.dto.UserGroupSearchPageResponseDTO;
 import com.ssafy._66days.user.model.entity.User;
 import com.ssafy._66days.user.model.repository.UserRepository;

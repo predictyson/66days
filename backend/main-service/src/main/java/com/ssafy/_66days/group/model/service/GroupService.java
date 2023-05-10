@@ -46,9 +46,18 @@ public class GroupService {
     }
 
     public List<GroupSearchPageResponseDTO> searchGroup(String searchContent, String filterBy) {
-        List<Group> groups = groupRepository.findAllByGroupNameContains(searchContent);
-        // TODO: 카테고리 모집중 이해가 잘 안되고 그룹장, 그룹명 같이 찾는거 좀 더 논의 해봐야함
-        return null;
+//        Group group = groupRepository.findByOwnerId(searchContent);
+        User user = userRepository.findByNickname(searchContent).orElse(null);
+        List<Group> groups = null;
+        if(user == null) {
+           groups  = groupRepository.findAllByGroupNameContains(searchContent);
+        } else {
+            groups = groupRepository.findAllByGroupNameContainsOrOwnerId(searchContent, user.getUserId());
+        }
+        // TODO: categories 리스트 추후, 챌린지 구현 후 추가, 람다식으로 구현 불가 포문 돌려서 memberCount도 추가해야함
+        List<GroupSearchPageResponseDTO> groupDTOList = groups.stream()
+                .map(g -> GroupSearchPageResponseDTO.of(g,user)).collect(Collectors.toList());
+        return groupDTOList;
     }
 
     public List<UserManageDTO> getGroupMembers(Long groupId) {
@@ -58,7 +67,7 @@ public class GroupService {
                         ,groupMember)).collect(Collectors.toList());
 
         // 유저 권한 체크 하지 않고 그룹에 속한 사람 모두 반환 중, 23-05-10 기준
-        // TODO: 필요시, 자신보다 권한이 높은 사람 반환 안하는 부분 필요하면 추가해야함
+        // TODO: 필요시, 자신보다 권한이 높은 사람 반환 안하는 부분 추가해야함
         log.info("userManageDtoList: {}", userManageDTOList);
 
         return userManageDTOList;
@@ -83,21 +92,36 @@ public class GroupService {
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("group doesn't exist"));
         GroupMember groupMember = groupMemberRepository.findByGroupAndUser(group,user).orElseThrow(() -> new NoSuchElementException("user is not in a group"));
         log.info("group member state BEFORE: {}", groupMember.getAuthority());
-        groupMember.setAuthority(state);
+        groupMember.updateAuthority(state);
 
-//        groupMember = groupMemberRepository.findByGroupAndUser(group,user).orElseThrow(() -> new NoSuchElementException("user is not in a group"));
         log.info("group member state AFTER: {}", groupMember.getAuthority());
-
     }
 
     public void setGroupApplyState(Long groupId, String state, String userName) {
+        state = state.toUpperCase();
+        if (!(state.equals("ACCEPTED") || state.equals("REJECTED"))) throw new InputMismatchException("그룹 가입승인 설정이 잘못 입력되었습니다");
+        User user = userRepository.findByNickname(userName).orElseThrow(() -> new NoSuchElementException("user doesn't exist"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("group doesn't exist"));
+        GroupApply groupApply = groupApplyRepository.findByUserAndGroup(user, group);
+        log.info("group apply state BEFORE: {}", groupApply.getState());
+//        groupApply.setState(state);
+        groupApply.updateGroupApply(state);
+
+
+//        groupMember = groupMemberRepository.findByGroupAndUser(group,user).orElseThrow(() -> new NoSuchElementException("user is not in a group"));
+        log.info("group apply state AFTER: {}", groupApply.getState());
     }
 
     public void applyGroup(Long groupId, String state, UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user doesn't exist"));
+        Group group = groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("group doesn't exist"));
+        GroupApply groupApply = new GroupApply(user, group, state);
+
+        groupApplyRepository.save(groupApply);
     }
 
     public void createGroup(GroupCreateDTO groupCreateDTO, MultipartFile image) {
         groupRepository.save(groupCreateDTO.toEntity(groupCreateDTO));
-
+        //TODO: EC2 이미지 저장
     }
 }

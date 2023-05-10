@@ -23,9 +23,9 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="group_id", nullable=false)
     private Long groupId;
-//    @NotNull
-//    @Column(name = "owner_id")
-//    private UUID ownerId;
+    @NotNull
+    @Column(name = "owner_id")
+    private UUID ownerId;
     @NotBlank
     @Column(name = "name", nullable = false)
     private String groupName;

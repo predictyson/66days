@@ -1,6 +1,7 @@
 package com.ssafy._66days.group.model.entity;
 
 import com.ssafy._66days.user.model.entity.User;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -32,4 +33,14 @@ public class GroupApply {
     @Column(name = "state")
     @NotNull
     private String state;
+
+    public void updateGroupApply(String state) {
+        this.state = state;
+    }
+
+    public GroupApply(User user, Group group, String state) {
+        this.user = user;
+        this.group = group;
+        this.state = state;
+    }
 }

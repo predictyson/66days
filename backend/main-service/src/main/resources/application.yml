@@ -35,8 +35,8 @@ spring:
     properties:
       hibernate:
         globally_quoted_identifiers: true # 이 설정을 추가해준다.
-        #show_sql: true # 쿼리를 출력해준다.
-        #format_sql: true # 쿼리를 예쁘게 출력해준다.
+        show_sql: true # 쿼리를 출력해준다.
+        format_sql: true # 쿼리를 예쁘게 출력해준다.
         #generate_statistics: true # 쿼리 수행 통계를 확인할 수 있다.
   servlet:
     multipart:
@@ -65,15 +65,3 @@ logging:
   com:
     ssafy:
       66days: debug
-
-cloud:
-  aws:
-    credentials:
-      access-key: AKIAUOVGENLOMYXLLQ3N
-      secret-key: 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
-    s3:
-      bucket : a705-66days
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
