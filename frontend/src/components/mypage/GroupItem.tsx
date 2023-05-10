@@ -5,8 +5,7 @@ import Category from "../../styles/CategoryTheme";
 interface IProps {
   group: GroupData;
 }
-export default function Challenge({ group }: IProps) {
-  console.log(group);
+export default function GroupITem({ group }: IProps) {
   return (
     <Container>
       <div className="left-box"></div>
@@ -55,7 +54,7 @@ const Container = styled.div`
   height: 22rem;
   display: flex;
   .left-box {
-    width: 2rem;
+    width: 5%;
     background-color: ${theme.colors.gray400};
   }
   .right {

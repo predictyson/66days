@@ -57,7 +57,7 @@ const Container = styled.div`
   height: 22rem;
   display: flex;
   .left-box {
-    width: 2rem;
+    width: 5%;
     background-color: ${(props) => (props.color ? props.color : "gray")};
   }
   .right {

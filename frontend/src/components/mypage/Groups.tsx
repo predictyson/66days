@@ -5,6 +5,7 @@ import GroupItem from "../../components/mypage/GroupItem";
 import { useState } from "react";
 import { GroupData } from "../../types/main";
 import { MyChallengeData } from "../../types/mypage";
+import Challenge from "../../components/mypage/Challenge";
 interface IProps {
   groups: GroupData[];
   challenges: MyChallengeData[];
