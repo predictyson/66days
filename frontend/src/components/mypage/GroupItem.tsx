@@ -70,9 +70,9 @@ const Tag = styled.div`
   margin-right: 2%;
   background-color: ${(props) => props.color || "gray"};
 `;
-const DateTag = styled(Tag)`
-  background-color: ${theme.colors.gray400};
-`;
+// const DateTag = styled(Tag)`
+//   background-color: ${theme.colors.gray400};
+// `;
 
 const TitleWrapper = styled.div`
   font-size: 2rem;

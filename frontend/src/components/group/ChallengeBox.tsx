@@ -1,5 +1,5 @@
-import { Layout, Avatar, Tooltip } from "antd";
-import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
+import { Layout, Avatar } from "antd";
+// import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 

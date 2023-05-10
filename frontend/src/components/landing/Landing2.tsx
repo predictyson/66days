@@ -1,10 +1,9 @@
-import { theme } from "../../styles/theme";
 import algo from "../../assets/landing//algoBox.png";
 import cs from "../../assets/landing//csBox.png";
 import lecture from "../../assets/landing//lectureBox.png";
 import document from "../../assets/landing//documentBox.png";
 import blog from "../../assets/landing//blogBox.png";
-import styled, { css, keyframes } from "styled-components";
+import styled from "styled-components";
 
 // interface BoxWrapperProps {
 //   delay?: number;

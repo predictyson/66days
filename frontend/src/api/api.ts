@@ -4,7 +4,7 @@ import axios from "axios";
 
 const instance = axios.create({
   withCredentials: true,
-  baseURL: "http://k8a705.p.ssafy.io:8080",
+  baseURL: import.meta.env.VITE_SERVER_DOMAIN,
   timeout: 1000,
 });
 
