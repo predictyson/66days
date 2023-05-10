@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { theme } from "../styles/theme";
 import BreadCrumb from "../components/search/BreadCrumb";
 import GroupItem from "../components/search/GroupItem";
+import { getSearchData } from "../api/search";
+import { SearchData } from "../types/search";
+
 export default function SearchPage() {
   return (
     <Container>
@@ -89,3 +92,108 @@ const GROUPS = [
   <GroupItem />,
   <GroupItem />,
 ];
+
+const DUMMY_DATA_SEARCH: SearchData = {
+  result: "success",
+  groupList: [
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+  ],
+};
