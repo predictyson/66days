@@ -27,11 +27,7 @@ export default function Challenge({ group }: IProps) {
         </TagWrapper>
         <TitleWrapper>{group.name} </TitleWrapper>
         <div className="group-type">
-          {group.type === "personal" ? (
-            <span>개인 그룹 </span>
-          ) : (
-            <span>그룹 </span>
-          )}
+          <span>{group.type === "personal" ? "개인 그룹" : "그룹"}</span>
         </div>
       </div>
     </Container>

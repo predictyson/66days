@@ -1,20 +1,44 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { MyChallengeData } from "../../types/mypage";
+import Category from "../../styles/CategoryTheme";
 
 interface IProps {
-  challenges: MyChallengeData[];
+  challenge: MyChallengeData;
 }
-export default function Challenge({ challenges }: IProps) {
+export default function Challenge({ challenge }: IProps) {
+  function countDays(startDate: string): number {
+    const oneDay = 24 * 60 * 60 * 1000; // 1일을 밀리초로 계산
+    const startDateTime = new Date(startDate).getTime(); // 시작일을 밀리초로 변환
+    const todayDateTime = new Date().getTime(); // 현재 시간을 밀리초로 변환
+    const diffDays = Math.round(
+      Math.abs((todayDateTime - startDateTime) / oneDay)
+    ); // 날짜 차이 계산
+    return diffDays;
+  }
   return (
-    <Container>
+    <Container
+      color={
+        Category.find((category) => category.title === challenge.category)
+          ?.color
+      }
+    >
       <div className="left-box"></div>
       <div className="right">
         <TagWrapper>
-          <DateTag>44일째</DateTag>
-          <Tag color="#B8A9FB">알고리즘</Tag>
+          <DateTag>
+            {countDays(challenge.startDate.substring(0, 10))}일째
+          </DateTag>
+          <Tag
+            color={
+              Category.find((category) => category.title === challenge.category)
+                ?.color
+            }
+          >
+            {challenge.category}
+          </Tag>
         </TagWrapper>
-        <TitleWrapper>백준 1일 1알고를 풀어봅시다. </TitleWrapper>
+        <TitleWrapper>{challenge.name}</TitleWrapper>
       </div>
     </Container>
   );
@@ -34,7 +58,7 @@ const Container = styled.div`
   display: flex;
   .left-box {
     width: 2rem;
-    background-color: ${theme.colors.purple};
+    background-color: ${(props) => (props.color ? props.color : "gray")};
   }
   .right {
     width: 95%;

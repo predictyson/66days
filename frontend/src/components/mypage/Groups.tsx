@@ -18,13 +18,13 @@ export default function Group({ groups, challenges }: IProps) {
     <Container>
       <BreadCrumb activeItem={activeItem} handleBread={handleBread} />
       <ContentWrapper>
-        {activeItem === 0 ? (
-          groups.map((data, idx) => {
-            return <GroupItem key={idx} group={data} />;
-          })
-        ) : (
-          <Challenge challenges={challenges} />
-        )}
+        {activeItem === 0
+          ? groups.map((data, idx) => {
+              return <GroupItem key={idx} group={data} />;
+            })
+          : challenges.map((data, idx) => {
+              return <Challenge key={idx} challenge={data} />;
+            })}
       </ContentWrapper>
     </Container>
   );
