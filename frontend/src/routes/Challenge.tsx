@@ -32,15 +32,20 @@ export default function Challenge() {
         <Member users={members} />
       </StyledContainer>
       <Space style={{ alignItems: "baseline" }}>
-        <Typography.Title level={2}>챌린지 그래프</Typography.Title>
+        <Typography.Title style={{ fontSize: "2.4rem" }}>
+          챌린지 그래프
+        </Typography.Title>
         <Typography.Text
           style={{
             color: "#b8a9fb",
+            fontSize: "2.4rem",
           }}
         >
           35
         </Typography.Text>
-        <Typography.Text type="secondary">일째</Typography.Text>
+        <Typography.Text type="secondary" style={{ fontSize: "1.6rem" }}>
+          일째
+        </Typography.Text>
       </Space>
       {/* FIXME: freeze and design */}
       <StyledContainer>
@@ -63,8 +68,6 @@ const StyledFreeze = styled.section`
   display: flex;
   align-items: center;
   padding: 2.4rem;
-  border: 1px solid #dddddd;
-  border-radius: 8px;
 
   span {
     font-size: 2.4rem;

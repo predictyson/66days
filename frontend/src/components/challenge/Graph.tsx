@@ -31,9 +31,6 @@ const StyledGraph = styled.section`
   flex: 3;
   display: flex;
   padding: 2.4rem;
-  border: 1px solid #dddddd;
-  border-radius: 8px;
-  margin-right: 3.2rem;
 
   .graph {
     flex: 1;

@@ -16,31 +16,36 @@ export default function Member(props: PropsType) {
         <TeamOutlined style={{ fontSize: "2rem" }} />
         구성원({props.users.length}인)
       </Typography.Title>
-      {props.users.map((user, idx) => (
-        <Space key={idx} style={{ justifyContent: "space-between" }}>
-          <Typography.Text
-            ellipsis={{
-              tooltip: `${user.name}`,
-            }}
-            style={{ width: "100px" }}
+      <Space direction="vertical" style={{ width: "100%" }}>
+        {props.users.map((user, idx) => (
+          <Space
+            key={idx}
+            style={{ justifyContent: "space-between", width: "100%" }}
           >
-            <Avatar
-              src={user.profile}
-              icon={<UserOutlined />}
-              style={{ marginRight: "1rem" }}
+            <Typography.Text
+              ellipsis={{
+                tooltip: `${user.name}`,
+              }}
+              style={{ width: "200px", fontSize: "1.6rem" }}
+            >
+              <Avatar
+                src={user.profile}
+                icon={<UserOutlined />}
+                style={{ marginRight: "1rem" }}
+              />
+              {user.name}
+            </Typography.Text>
+            <Checkbox
+              onChange={() => {}}
+              style={{
+                flexDirection: "row-reverse",
+                justifyContent: "space-between",
+              }}
+              checked
             />
-            {user.name}
-          </Typography.Text>
-          <Checkbox
-            onChange={() => {}}
-            style={{
-              flexDirection: "row-reverse",
-              justifyContent: "space-between",
-            }}
-            checked
-          />
-        </Space>
-      ))}
+          </Space>
+        ))}
+      </Space>
     </StyledMember>
   );
 }

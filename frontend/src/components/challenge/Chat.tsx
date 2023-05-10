@@ -30,8 +30,16 @@ export default function Chat(props: PropsType) {
       </div>
       <div ref={messagesEndRef}></div>
       <Space.Compact>
-        <Input placeholder="메시지를 입력해주세요..." />
-        <Button type="primary" icon={<SendOutlined />} onClick={sendMessage}>
+        <Input
+          placeholder="메시지를 입력해주세요..."
+          style={{ fontSize: "1.6rem" }}
+        />
+        <Button
+          type="primary"
+          style={{ fontSize: "1.6rem", height: "100%" }}
+          icon={<SendOutlined />}
+          onClick={sendMessage}
+        >
           Send
         </Button>
       </Space.Compact>

@@ -16,11 +16,11 @@ export default function Message(props: PropsType) {
     <div className={`chat__message ${props.message.me && "chat__message--me"}`}>
       <Avatar icon={<UserOutlined />} />
       <Space direction="vertical" style={{ marginInline: "1rem" }}>
-        <Typography.Text style={{ fontWeight: "bold" }}>
+        <Typography.Text style={{ fontWeight: "bold", fontSize: "1.6rem" }}>
           {props.message.nickname}
         </Typography.Text>
         <TextArea
-          style={{ width: "100%" }}
+          style={{ width: "100%", fontSize: "1.6rem" }}
           size="large"
           autoSize
           value={props.message.value}
