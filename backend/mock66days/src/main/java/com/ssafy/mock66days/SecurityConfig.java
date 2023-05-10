@@ -48,5 +48,6 @@ public class SecurityConfig {
     
 	private static final String[] PERMIT_URL_ARRAY = {
 		 	"/**", //다 허용 일단 나중에 수정해야 함
+            "/swagger-ui/**"
 	};
 }
