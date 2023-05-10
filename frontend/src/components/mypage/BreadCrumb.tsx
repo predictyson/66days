@@ -16,18 +16,16 @@ export default function BreadCrumb() {
     <Container>
       {items.map((item, idx) => {
         return (
-          <>
-            <CrumbItem
-              key={idx}
-              active={idx === activeItem}
-              onClick={() => setActiveItem(idx)}
-            >
-              {item.title}
-            </CrumbItem>
+          <CrumbItem
+            key={idx}
+            active={idx === activeItem}
+            onClick={() => setActiveItem(idx)}
+          >
+            {item.title}
             {idx !== items.length - 1 && (
               <span style={{ marginLeft: "1.6rem" }}>|</span>
             )}
-          </>
+          </CrumbItem>
         );
       })}
     </Container>

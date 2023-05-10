@@ -35,6 +35,34 @@ const mockMessages = [
     date: "오후 8:30",
     me: true,
   },
+  {
+    nickname: "뭉치",
+    profile: "",
+    value: ";lkasjdflk;jasdlkf;jasdklfj klas;djflkas",
+    date: "오후 8:30",
+    me: true,
+  },
+  {
+    nickname: "뭉치",
+    profile: "",
+    value: ";lkasjdflk;jasdlkf;jasdklfj klas;djflkas",
+    date: "오후 8:30",
+    me: true,
+  },
+  {
+    nickname: "뭉치",
+    profile: "",
+    value: ";lkasjdflk;jasdlkf;jasdklfj klas;djflkas",
+    date: "오후 8:30",
+    me: true,
+  },
+  {
+    nickname: "뭉치",
+    profile: "",
+    value: ";lkasjdflk;jasdlkf;jasdklfj klas;djflkas",
+    date: "오후 8:30",
+    me: true,
+  },
 ];
 
 const mockGraph = [

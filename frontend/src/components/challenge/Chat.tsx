@@ -4,14 +4,22 @@ import styled from "styled-components";
 import { mockMessages } from "../../mock/challenge";
 import Message from "./Message";
 import useChat from "../../hooks/useChat";
+import { useEffect, useRef } from "react";
 
 interface PropsType {
   messages: Array<(typeof mockMessages)[0]>;
 }
 
 export default function Chat(props: PropsType) {
-  // TODO: const [messages, setMessages] = useState();
   const { sendMessage } = useChat();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [props.messages]);
 
   return (
     <StyledChat>
@@ -20,6 +28,7 @@ export default function Chat(props: PropsType) {
           <Message key={idx} message={msg} />
         ))}
       </div>
+      <div ref={messagesEndRef}></div>
       <Space.Compact>
         <Input placeholder="메시지를 입력해주세요..." />
         <Button type="primary" icon={<SendOutlined />} onClick={sendMessage}>

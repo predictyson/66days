@@ -8,18 +8,18 @@ interface IProps {
 
 const StreakGraph = ({ commits, length }: IProps) => {
   const renderStreaks = () => {
-    const rows = Math.ceil(length / 22);
+    const cols = Math.ceil(length / 3);
     const streaks = [];
-    for (let i = 0; i < rows; i++) {
-      const startIndex = i * 22;
-      const endIndex = Math.min(startIndex + 22, length);
-      const rowStreaks = [];
+    for (let i = 0; i < cols; i++) {
+      const startIndex = i * 3;
+      const endIndex = Math.min(startIndex + 3, length);
+      const colStreaks = [];
       for (let j = startIndex; j < endIndex; j++) {
         const count = commits[j] || 0;
         const color = count > 0 ? "#50B9C9" : "#D9D9D9";
-        rowStreaks.push(<Streak key={j} count={count} color={color} />);
+        colStreaks.push(<Streak key={j} count={count} color={color} />);
       }
-      streaks.push(<StreakWrapper key={i}>{rowStreaks}</StreakWrapper>);
+      streaks.push(<StreakWrapper key={i}>{colStreaks}</StreakWrapper>);
     }
     return streaks;
   };
@@ -30,7 +30,15 @@ const StreakGraph = ({ commits, length }: IProps) => {
         My 챌린지 그래프
         <div className="accum">누적 2일</div>
       </Title>
-      {renderStreaks()}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {renderStreaks()}
+      </div>
       <SubContent>
         <div>
           현재 진행 중 습관 <span className="count">3</span>개
@@ -74,8 +82,9 @@ const Title = styled.div`
   }
 `;
 const StreakWrapper = styled.div`
-  width: 100%;
+  width: 5%;
   display: flex;
+  flex-direction: column;
   /* height: 2.5rem; */
   justify-content: space-between;
   margin-top: 1.6rem;
