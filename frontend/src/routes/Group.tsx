@@ -98,10 +98,8 @@ export default function Group() {
   const [memberList, setMemberList] = useState<MemberType[]>([]);
   const [appliedList, setAppliedList] = useState<MemberType[]>([]);
   const [badgeList, setBadgeList] = useState<BadgeType[]>([]);
+  const [filteredBadgeList, setFilteredBadgeList] = useState<BadgeType[]>([]);
   const [boardDataList, setBoardDataList] = useState<BoardType>();
-
-  const [clickedBadgeCategory, setClickedBadgeCategory] =
-    useState<string>("알고리즘");
 
   function getCategoryColor(category: string) {
     if (category === "알고리즘") {
@@ -137,13 +135,22 @@ export default function Group() {
     const startDate = new Date(dueDate);
 
     const diffDate = today.getTime() - startDate.getTime();
-    console.log(Math.round(diffDate / (1000 * 60 * 60 * 24)));
 
     return Math.round(diffDate / (1000 * 60 * 60 * 24));
   }
 
   // 선택한 category 대로 배지 data filter
-  function filterBadgesByCategory(category: string) {}
+  function filterBadgesByCategory(category: string) {
+    const filteredBadges = badgeList.filter(
+      (badge) => badge.category === category
+    );
+    setFilteredBadgeList(filteredBadges);
+  }
+
+  function clickBadgeCategory(category: string) {
+    filterBadgesByCategory(category); // badge data filter by selected category
+    setOpenBadgeModal((prev) => !prev); // 모달 오픈
+  }
 
   useEffect(() => {
     // TODO: fetch data
@@ -227,7 +234,7 @@ export default function Group() {
                 <img
                   className="badge-img"
                   src={getCategoryImage(badge.category)}
-                  onClick={() => setOpenBadgeModal((prev) => !prev)}
+                  onClick={() => clickBadgeCategory(badge.category)}
                 />
               </BadgeBox>
             ))}
@@ -310,7 +317,7 @@ export default function Group() {
       <BadgeModal
         open={isOpenBadgeModal}
         toggleModal={() => setOpenBadgeModal((prev) => !prev)}
-        badges={badgeList}
+        badges={filteredBadgeList}
       />
       <ChallengeModal
         open={isOpenNewChallgeModal}
