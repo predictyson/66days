@@ -8,14 +8,23 @@ import { theme } from "../styles/theme";
 import Line from "../assets/mypage/Line.png";
 import { useEffect } from "react";
 import { getMyPageInfo } from "../api/mypage";
+import EditProfile from "../components/mypage/EditProfile";
 // // 프로필 수정시
 export default function MyPage() {
+<<<<<<< HEAD
   // const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
 
+=======
+  const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+>>>>>>> c3bc3b3 (fe/chore: category style global로 빼기)
   useEffect(() => {
     getMyPageInfo();
   }, []);
-
+  const handleEdit = (state: boolean) => {
+    setIsEdit(state);
+    console.log(isEdit);
+  };
   const commits = [
     1, 2, 0, 0, 0, 1, 3, 1, 2, 3, 3, 2, 2, 2, 1, 1, 3, 0, 0, 1, 0, 2, 3, 1, 2,
     0, 0, 0, 1, 3, 1, 2, 3, 3, 2, 2, 2, 1, 1, 3, 0, 0, 1, 0, 2, 3, 1, 2, 0, 0,
@@ -25,11 +34,15 @@ export default function MyPage() {
   return (
     <Container>
       <div className="left">
-        <Profile
-          myInfo={DUMMY_DATA_MYPAGE.memberInfo}
-          date={DUMMY_DATA_MYPAGE.streak.length}
-        />
-        {/* <EditProfile /> */}
+        {!isEdit ? (
+          <Profile
+            handleEdit={handleEdit}
+            myInfo={DUMMY_DATA_MYPAGE.memberInfo}
+            date={DUMMY_DATA_MYPAGE.streak.length}
+          />
+        ) : (
+          <EditProfile handleEdit={handleEdit} />
+        )}
         <Badge />
       </div>
       <div className="right">

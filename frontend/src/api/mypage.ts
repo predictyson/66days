@@ -11,7 +11,5 @@ export async function getMyPageInfo() {
     throw new Error();
   } catch (error) {
     console.log("mypage get data err");
-    // login error -> login  page
-    // unauthorized -> unauthorized error
   }
 }

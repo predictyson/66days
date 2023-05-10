@@ -2,14 +2,17 @@ import styled from "styled-components";
 import BreadCrumb from "./BreadCrumb";
 // import Challenge from "./Challenge";
 import GroupItem from "../../components/mypage/GroupItem";
+import { useState } from "react";
 export default function Group() {
+  const [activeItem, setActiveItem] = useState(0);
+  const handleBread = (idx: number) => {
+    setActiveItem(idx);
+  };
   return (
     <Container>
-      <BreadCrumb />
+      <BreadCrumb activeItem={activeItem} handleBread={handleBread} />
       <ContentWrapper>
-        <GroupItem />
-        {/* <Challenge />
-        <Challenge /> */}
+        {activeItem === 0 ? <GroupItem /> : <Challenge />}
       </ContentWrapper>
     </Container>
   );

@@ -29,7 +29,7 @@ const Container = styled.div`
   height: 22rem;
   display: flex;
   .left {
-    width: 5%;
+    width: 2rem;
     background-color: ${theme.colors.purple};
   }
   .right {

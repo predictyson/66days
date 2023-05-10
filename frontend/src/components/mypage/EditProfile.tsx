@@ -1,16 +1,25 @@
 import styled from "styled-components";
 import ProfileImg from "../../assets/main/Profile3.png";
 import { theme } from "../../styles/theme";
+import Bronze from "../../assets/main/Bronze.png";
 
-export default function EditProfile() {
+interface IProps {
+  handleEdit: (state: boolean) => void;
+}
+export default function EditProfile({ handleEdit }: IProps) {
   return (
     <Container>
       <img className="profile-img" src={ProfileImg} alt="profile-img" />
+      <img className="badge-img" src={Bronze} alt="badge" />
       <Nickname>닉네임 수정</Nickname>
       <SearchInput placeholder="뭉치뭉치똥뭉치"></SearchInput>
       <ButtonWrapper>
-        <button className="save"> save</button>
-        <button className="cancel">cancel</button>
+        <button className="save" onClick={() => handleEdit(false)}>
+          save
+        </button>
+        <button className="cancel" onClick={() => handleEdit(false)}>
+          cancel
+        </button>
       </ButtonWrapper>
     </Container>
   );
@@ -25,7 +34,7 @@ const Nickname = styled.div`
 
 const SearchInput = styled.input`
   margin-top: 1rem;
-  width: 30rem;
+  width: 100%;
   height: 4.5rem;
   border-radius: 10px;
   border: solid 1px ${theme.colors.gray500};
@@ -41,7 +50,7 @@ const SearchInput = styled.input`
 const ButtonWrapper = styled.div`
   margin-top: 3rem;
   display: flex;
-  width: 60%;
+  width: 70%;
   margin-right: auto;
   justify-content: space-between;
   button {
@@ -71,12 +80,18 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   position: relative;
-  width: 70%;
+  width: 80%;
   margin: 0 auto;
   .profile-img {
     width: 18rem;
     height: 18rem;
     margin-top: 4.8rem;
     cursor: pointer;
+  }
+  .badge-img {
+    position: absolute;
+    top: 20.8rem;
+    width: 12.5%;
+    /* height: 3.6rem; */
   }
 `;
