@@ -23,7 +23,7 @@ export default function BreadCrumb() {
           >
             {item.title}
             {idx !== items.length - 1 && (
-              <span style={{ marginLeft: "1.6rem" }}>|</span>
+              <span style={{ marginRight: "1.2%" }}>|</span>
             )}
           </CrumbItem>
         );
@@ -50,7 +50,7 @@ const CrumbItem = styled.div<CrumbItemProps>`
   font-weight: ${(props) => (props.active ? "bold" : "normal")};
   color: ${(props) => (props.active ? "#333" : "#888")};
   cursor: pointer;
-  margin-left: 1.6rem;
+  margin-right: 1.2%;
   font-size: 2rem;
 
   &:hover {

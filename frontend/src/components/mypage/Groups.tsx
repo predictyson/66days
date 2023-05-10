@@ -1,9 +1,16 @@
 import styled from "styled-components";
 import BreadCrumb from "./BreadCrumb";
+import Challenge from "./Challenge";
+import GroupItem from "../../components/mypage/GroupItem";
 export default function Group() {
   return (
     <Container>
       <BreadCrumb />
+      <ContentWrapper>
+        <GroupItem />
+        {/* <Challenge />
+        <Challenge /> */}
+      </ContentWrapper>
     </Container>
   );
 }
@@ -11,6 +18,9 @@ export default function Group() {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  width: 83%;
   margin: 0 auto;
+`;
+
+const ContentWrapper = styled.div`
+  display: flex;
 `;

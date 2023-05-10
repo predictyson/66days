@@ -18,9 +18,9 @@ export default function Badge() {
 }
 
 const Container = styled.div`
-  width: 29rem;
+  width: 80%;
   margin: 0 auto;
-  margin-top: 2rem;
+  margin-top: 1rem;
   .title {
     font-size: 2.4rem;
     font-weight: bold;
@@ -33,6 +33,7 @@ const BadgeWrapper = styled.div`
   justify-content: space-between;
   margin-top: 1rem;
   img {
-    width: 6.4rem;
+    width: 23%;
+    cursor: pointer;
   }
 `;
