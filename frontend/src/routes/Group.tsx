@@ -24,6 +24,7 @@ import BadgeModal from "../components/group/BadgeModal";
 import NewBoardModal from "../components/group/NewBoardModal";
 import {
   fetchAppliedMembers,
+  fetchGroupBadges,
   fetchGroupMembers,
   fetchGroupPageData,
 } from "../api/group";
@@ -55,11 +56,11 @@ interface BadgePreviewType {
 }
 
 interface BadgeType {
-  category: string;
   image: string;
-  title: string;
+  challengeName: string;
   startDate: string;
   endDate: string;
+  category: string;
   status: boolean; // 성공 실패 여부
 }
 
@@ -98,6 +99,9 @@ export default function Group() {
   const [appliedList, setAppliedList] = useState<MemberType[]>([]);
   const [badgeList, setBadgeList] = useState<BadgeType[]>([]);
   const [boardDataList, setBoardDataList] = useState<BoardType>();
+
+  const [clickedBadgeCategory, setClickedBadgeCategory] =
+    useState<string>("알고리즘");
 
   function getCategoryColor(category: string) {
     if (category === "알고리즘") {
@@ -138,6 +142,9 @@ export default function Group() {
     return Math.round(diffDate / (1000 * 60 * 60 * 24));
   }
 
+  // 선택한 category 대로 배지 data filter
+  function filterBadgesByCategory(category: string) {}
+
   useEffect(() => {
     // TODO: fetch data
     async function fetchAndSetGroupPageData() {
@@ -156,9 +163,15 @@ export default function Group() {
       setAppliedList(appliedData["apply-list"]);
     }
 
+    async function fetchAndSetGroupBadgesData() {
+      const badgesData = await fetchGroupBadges();
+      setBadgeList(badgesData["badge-list"]);
+    }
+
     fetchAndSetGroupPageData();
     fetchAndSetGroupSettingData();
-    setBadgeList(mockBadgeList);
+    fetchAndSetGroupBadgesData();
+    // setBadgeList(mockBadgeList);
   }, []);
 
   // function handlePageChange(page: number) {

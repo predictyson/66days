@@ -44,6 +44,23 @@ async function fetchAppliedMembers(id = 1) {
   }
 }
 
-// async function
+async function fetchGroupBadges(id = 1) {
+  try {
+    const res = await api.get(`/api/v1/badge/list/${id}`);
+    if (res.status === 200) {
+      return res.data;
+    }
 
-export { fetchGroupPageData, fetchGroupMembers, fetchAppliedMembers };
+    throw new Error();
+  } catch (error) {
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
+
+export {
+  fetchGroupPageData,
+  fetchGroupMembers,
+  fetchAppliedMembers,
+  fetchGroupBadges,
+};

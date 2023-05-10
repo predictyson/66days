@@ -158,27 +158,6 @@ const TabContainer = styled(Content)`
   .ant-tabs-tab-active {
     font-weight: ${theme.fontWeight.bold};
   }
-
-  .tab-list li {
-    list-style: none;
-    padding-right: 1rem;
-    color: ${theme.colors.gray400};
-    cursor: pointer;
-
-    &:hover {
-      color: ${theme.colors.black};
-    }
-  }
-
-  .tab-list li:last-child {
-    padding-left: 1rem;
-    padding-right: 0;
-  }
-
-  .active-tab {
-    color: ${theme.colors.black} !important;
-    font-weight: 700;
-  }
 `;
 
 const TabContentWrapper = styled(Content)`
