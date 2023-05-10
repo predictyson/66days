@@ -40,7 +40,7 @@ const Container = styled.div`
   height: 22rem;
   display: flex;
   .left {
-    width: 5%;
+    width: 5rem;
     background-color: ${theme.colors.gray400};
   }
   .right {

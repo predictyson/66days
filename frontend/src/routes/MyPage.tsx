@@ -6,40 +6,15 @@ import Group from "../components/mypage/Groups";
 import { MyPageData } from "../types/mypage";
 import { theme } from "../styles/theme";
 import Line from "../assets/mypage/Line.png";
-
-// import { useEffect, useState } from "react";
-// import { getMyPageInfo } from "../api/mypage";
-// import { MyPageData } from "../types/mypage";
+import { useEffect, useState } from "react";
+import { getMyPageInfo } from "../api/mypage";
 // // 프로필 수정시
 export default function MyPage() {
-  // const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
-  // const fetchMyPageInfo = async () => {
-  //   try {
-  //     const res = await getMyPageInfo();
-  //     console.log(res);
-  //     setMyPageInfo(res.data);
-  //   } catch (err) {
-  //     console.log("fetch err");
-  //     throw err;
-  //   }
-  // };
-  // fetchMyPageInfo();
-  fetch("http://k8a705.p.ssafy.io:8080/me")
-    .then((res) => res.json())
-    .then((data) => console.log(data));
-  // useEffect(() => {
-  //   const fetchMyPageInfo = async () => {
-  //     try {
-  //       const res = await getMyPageInfo();
-  //       setMyPageInfo(res.data);
-  //       console.log(res.data);
-  //     } catch (err) {
-  //       throw err;
-  //     }
-  //   };
+  const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
 
-  //   fetchMyPageInfo();
-  // }, []);
+  useEffect(() => {
+    getMyPageInfo();
+  }, []);
 
   const commits = [
     1, 2, 0, 0, 0, 1, 3, 1, 2, 3, 3, 2, 2, 2, 1, 1, 3, 0, 0, 1, 0, 2, 3, 1, 2,
