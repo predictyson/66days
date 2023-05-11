@@ -24,7 +24,7 @@ export default function Challenge({ challenge }: IProps) {
       }
     >
       <div className="left-box"></div>
-      <div className="right">
+      <div className="right-box">
         <TagWrapper>
           <DateTag>
             {countDays(challenge.startDate.substring(0, 10))}일째
@@ -60,7 +60,7 @@ const Container = styled.div`
     width: 5%;
     background-color: ${(props) => (props.color ? props.color : "gray")};
   }
-  .right {
+  .right-box {
     width: 95%;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     display: flex;

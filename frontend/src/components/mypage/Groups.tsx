@@ -35,6 +35,12 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  @media (max-width: 1200px) {
+    width: 80%;
+  }
+  @media (max-width: 800px) {
+    width: 100%;
+  }
 `;
 
 const ContentWrapper = styled.div`

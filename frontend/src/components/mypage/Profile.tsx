@@ -68,6 +68,16 @@ const Container = styled.div`
     width: 10%;
     /* height: 3.6rem; */
   }
+  @media (max-width: 1200px) {
+    width: 70%;
+    margin: 0 auto;
+    .badge-img {
+      width: 4rem;
+    }
+  }
+  @media (max-width: 800px) {
+    width: 90%;
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -89,7 +99,7 @@ const Email = styled.div`
 `;
 
 const EditButton = styled.div`
-  width: 50%;
+  width: 60%;
   height: 3.2rem;
   border-radius: 5px;
   font-size: 1.6rem;
@@ -112,7 +122,7 @@ const ProgressWrapper = styled.div`
   margin-top: 1.4rem;
   display: flex;
   flex-direction: column;
-  width: 29rem;
+  width: 80%;
   img {
     width: 2.4rem;
   }
