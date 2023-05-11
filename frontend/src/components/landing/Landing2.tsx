@@ -11,7 +11,7 @@ import styled from "styled-components";
 const BOXDATA = [
   {
     img: algo,
-    title: "알고리즘 풀이",
+    title: "알고리즘",
   },
   {
     img: cs,
@@ -65,8 +65,11 @@ const Container = styled.div`
   border: solid 1px black;
   display: flex;
   font-family: Pretendard;
-  padding-inline: 0;
+  padding-inline: 2%;
   color: white;
+  @media (max-width: 800px) {
+    height: 45rem;
+  }
 `;
 
 const Content = styled.div`
@@ -77,18 +80,29 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
+  @media (max-width: 800px) {
+    font-size: 3rem;
+    margin-top: 8rem;
+  }
   .subcontent {
     font-size: 2rem;
     margin-top: 2rem;
     font-weight: 400;
+    @media (max-width: 800px) {
+      font-size: 1rem;
+    }
   }
 `;
 
 const BoxContainer = styled.div`
-  padding: 0 10.7rem;
+  padding: 0 10%;
   margin-top: 10rem;
   justify-content: space-between;
   display: flex;
+  @media (max-width: 800px) {
+    font-size: 1rem;
+    margin-top: 5rem;
+  }
 `;
 
 const BoxWrapper = styled.div`
@@ -98,6 +112,11 @@ const BoxWrapper = styled.div`
   font-size: 2.4rem;
   animation: drop 0.5s ease-in-out;
   animation-delay: 2rem;
+  align-items: center;
+  @media (max-width: 800px) {
+    font-size: 1.2rem;
+  }
+  /* justify-content: center; */
   @keyframes drop {
     0% {
       transform: translateY(-10rem);
@@ -111,7 +130,7 @@ const BoxWrapper = styled.div`
 `;
 
 const BoxImg = styled.img`
-  width: 20rem;
-  height: 20rem;
+  width: 90%;
+  /* height: 80%; */
   border-radius: 15px;
 `;
