@@ -37,23 +37,26 @@ export default function Banner({ memberInfo }: IProps) {
 
 const Container = styled.div`
   width: 100%;
-  height: 60rem;
+  height: 55rem;
   display: flex;
   font-family: Pretendard;
   background-color: black;
-  padding: 0 5rem;
+  padding: 0 8%;
 `;
 
 const LeftWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 50%;
+  @media (max-width: 1200px) {
+    width: 100%;
+  }
 `;
 
 const Info = styled.div`
   height: 4.8rem;
   margin: 0 auto;
-  margin-top: 12rem;
+  margin-top: 8rem;
   width: 80%;
   display: flex;
   align-items: center;
@@ -70,14 +73,22 @@ const Info = styled.div`
     border-radius: 10px;
     height: 4rem;
   }
+  img {
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
 `;
 
 const Nickname = styled.div`
   color: white;
   width: 80%;
+  text-shadow: 2px 2px 2px gray;
   margin: 0 auto;
   margin-top: 3.1rem;
-  font-size: 6rem;
+  font-size: 5.5rem;
   font-weight: 700;
 `;
 const ImageWrapper = styled.div`
@@ -87,7 +98,24 @@ const ImageWrapper = styled.div`
   align-items: center;
   img {
     display: flex;
-    margin-top: 3rem;
+    margin-top: 5rem;
+    width: 100%;
+    animation: float 6s ease-in-out infinite;
+
+    @keyframes float {
+      0% {
+        transform: translatey(0px);
+      }
+      50% {
+        transform: translatey(-30px);
+      }
+      100% {
+        transform: translatey(0px);
+      }
+    }
+  }
+  @media (max-width: 1200px) {
+    width: 0%;
   }
 `;
 
@@ -99,7 +127,7 @@ const MoreInfo = styled.div`
   .button {
     border-radius: 5px;
     background-color: white;
-    width: 15rem;
+    width: 35%;
     height: 4.5rem;
     display: flex;
     justify-content: center;
@@ -111,14 +139,17 @@ const MoreInfo = styled.div`
     &:hover {
       background-color: #444444;
       color: white;
+      transform: scale(1.1);
     }
+    transition: transform 0.3s ease-in-out;
   }
 
   .exp {
-    color: white;
-    font-size: 3rem;
+    color: ${theme.colors.gray200};
+    font-size: 2.8rem;
     font-weight: bold;
     margin: auto 0;
+    text-shadow: 1px 2px 1px blue;
   }
 `;
 
@@ -133,6 +164,7 @@ const Coin = styled.div`
   font-weight: ${theme.fontWeight.semibold};
   span {
     margin-left: 1rem;
+    text-shadow: 2px 2px 2px yellowgreen;
   }
   img {
     width: 2.5rem;

@@ -8,9 +8,9 @@ export default function MainPage() {
   return (
     <>
       <Banner memberInfo={MAIN_DUMMY_DATA.memberInfo} />
-      <Todo challenges={MAIN_DUMMY_DATA.challenge} />
-      <Groups groups={MAIN_DUMMY_DATA.group} />
-      <Ranking ranking={MAIN_DUMMY_DATA.rank} />
+      {/* <Todo challenges={MAIN_DUMMY_DATA.challenge} /> */}
+      {/* <Groups groups={MAIN_DUMMY_DATA.group} /> */}
+      {/* <Ranking ranking={MAIN_DUMMY_DATA.rank} /> */}
     </>
   );
 }
