@@ -4,7 +4,6 @@ import BreadCrumb from "../components/search/BreadCrumb";
 import GroupItem from "../components/search/GroupItem";
 // import { getSearchData } from "../api/search";
 import { SearchData } from "../types/search";
-import { useEffect, useState } from "react";
 
 export default function SearchPage() {
   return (

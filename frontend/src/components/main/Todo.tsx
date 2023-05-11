@@ -63,7 +63,7 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   font-family: Pretendard;
-  padding: 3% 2%;
+  padding: 3% 7%;
   display: flex;
   flex-direction: column;
 `;

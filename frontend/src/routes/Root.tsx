@@ -26,5 +26,5 @@ const StyledLayout = styled(Layout)`
 
 const StyledContent = styled(Content)`
   line-height: initial;
-  margin-inline: 8rem;
+  /* margin-inline: 8rem; */
 `;

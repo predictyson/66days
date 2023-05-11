@@ -46,7 +46,7 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   font-family: Pretendard;
-  padding: 2% 2%;
+  padding: 2% 7%;
   display: flex;
   flex-direction: column;
 `;

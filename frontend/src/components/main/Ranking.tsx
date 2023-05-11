@@ -16,7 +16,7 @@ export default function Ranking({ ranking }: IProps) {
       style={{
         display: "flex",
         justifyContent: "space-between",
-        padding: "2%",
+        padding: "2% 3%",
       }}
     >
       <LeftConainer>
