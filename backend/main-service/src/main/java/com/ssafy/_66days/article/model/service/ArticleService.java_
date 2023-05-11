@@ -8,7 +8,7 @@ import com.ssafy._66days.article.model.dto.responseDto.CommentResponseDTO;
 import com.ssafy._66days.article.model.entity.Article;
 import com.ssafy._66days.article.model.entity.Comment;
 import com.ssafy._66days.article.model.repository.CommentRepository;
-import com.ssafy._66days.global.method.CheckUser;
+import com.ssafy._66days.global.util.CheckUserUtil;
 import com.ssafy._66days.group.model.entity.Group;
 import com.ssafy._66days.article.model.repository.ArticleRepository;
 import com.ssafy._66days.group.model.repository.GroupMemberRepository;
@@ -56,14 +56,14 @@ public class ArticleService {
         if (articleRequestDTO.getTitle() == null || articleRequestDTO.getContent() == null) {
             throw new IllegalArgumentException("제목과 내용은 필수 입력 항목입니다.");
         }
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
 
-        UUID userId = checkUser.isExistUser(currentUser);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
         if (userId == null) {
             throw new IllegalArgumentException("존재하지 않는 유저입니다");
         }
 
-        boolean isUSerInGroup = checkUser.isUserInGroup(groupId, userId);
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
         if (isUSerInGroup) {
             throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
         }
@@ -91,13 +91,13 @@ public class ArticleService {
     }
 
     public ArticleResponseDTO getArticle(UserDetails currentUser, Long groupId, Long articleId) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
-        UUID userId = checkUser.isExistUser(currentUser);
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
         if (userId == null) {
             throw new IllegalArgumentException("존재하지 않는 유저입니다");
         }
 
-        boolean isUSerInGroup = checkUser.isUserInGroup(groupId, userId);
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
         if (isUSerInGroup) {
             throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
         }
@@ -110,13 +110,13 @@ public class ArticleService {
         }
     }
     public List<ArticleResponseDTO> getThreeArticles(UserDetails currentUser, Long groupId, Long offset) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
-        UUID userId = checkUser.isExistUser(currentUser);
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
         if (userId == null) {
             throw new IllegalArgumentException("존재하지 않는 유저입니다");
         }
 
-        boolean isUSerInGroup = checkUser.isUserInGroup(groupId, userId);
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
         if (isUSerInGroup) {
             throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
         }
@@ -132,13 +132,13 @@ public class ArticleService {
     }
 
     public ArticleResponseDTO updateArticle(UserDetails currentUser, Long groupId, Long articleId, ArticleUpdateRequestDTO articleUpdateRequestDTO) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
-        UUID userId = checkUser.isExistUser(currentUser);
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
         if (userId == null) {
             throw new IllegalArgumentException("존재하지 않는 유저입니다");
         }
 
-        boolean isUSerInGroup = checkUser.isUserInGroup(groupId, userId);
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
         if (isUSerInGroup) {
             throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
         }
@@ -159,13 +159,13 @@ public class ArticleService {
     }
 
     public int deleteArticle(UserDetails currentUser, Long groupId, Long articleId) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
-        UUID userId = checkUser.isExistUser(currentUser);
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
         if (userId == null) {
             throw new IllegalArgumentException("존재하지 않는 유저입니다");
         }
 
-        boolean isUSerInGroup = checkUser.isUserInGroup(groupId, userId);
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
         if (isUSerInGroup) {
             throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
         }
@@ -188,13 +188,13 @@ public class ArticleService {
             Long articleId,
             CommentRequestDTO commentRequestDTO
     ) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
-        UUID userId = checkUser.isExistUser(currentUser);
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
         if (userId == null) {
             throw new IllegalArgumentException("존재하지 않는 유저입니다");
         }
 
-        boolean isUSerInGroup = checkUser.isUserInGroup(groupId, userId);
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
         if (isUSerInGroup) {
             throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
         }
@@ -222,8 +222,8 @@ public class ArticleService {
             Long articleId,
             Long offset
     ) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
-        UUID userId = checkUser.isExistUser(currentUser);
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
         if (userId == null) {
             throw new IllegalArgumentException("존재하지 않는 유저입니다");
         }
@@ -243,8 +243,8 @@ public class ArticleService {
             Long articleId,
             Long commentId
     ) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
-        UUID userId = checkUser.isExistUser(currentUser);
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
         if (userId == null) {
             throw new IllegalArgumentException("존재하지 않는 유저입니다");
         }

@@ -58,4 +58,8 @@ public class User {
 
 	@Column(name = "blog_url")
 	private String blogUrl;
+
+	public void updatePoint(Long point){
+		this.point = point;
+	}
 }

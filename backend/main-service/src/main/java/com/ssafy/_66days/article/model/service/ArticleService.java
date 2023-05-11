@@ -7,7 +7,7 @@ import com.ssafy._66days.article.model.dto.responseDto.CommentResponseDTO;
 import com.ssafy._66days.article.model.entity.Article;
 import com.ssafy._66days.article.model.entity.Comment;
 import com.ssafy._66days.article.model.repository.CommentRepository;
-import com.ssafy._66days.global.method.CheckUser;
+import com.ssafy._66days.global.util.CheckUserUtil;
 import com.ssafy._66days.group.model.entity.Group;
 import com.ssafy._66days.article.model.repository.ArticleRepository;
 import com.ssafy._66days.group.model.repository.GroupMemberRepository;
@@ -60,14 +60,14 @@ public class ArticleService {
         if (articleRequestDTO.getTitle() == null || articleRequestDTO.getContent() == null) {
             throw new IllegalArgumentException("제목과 내용은 필수 입력 항목입니다.");
         }
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
+        CheckUserUtil checkUserUtil = new CheckUserUtil(groupMemberRepository, userService);
 
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
 
-        boolean isUserInGroup = checkUser.isUserInGroup(group, user);
+        boolean isUserInGroup = checkUserUtil.isUserInGroup(group, user);
         if (!isUserInGroup) {
             throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
         }
@@ -90,14 +90,14 @@ public class ArticleService {
             Long groupId,
             Long articleId
     ) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
+        CheckUserUtil checkUserUtil = new CheckUserUtil(groupMemberRepository, userService);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
 
-        boolean isUserInGroup = checkUser.isUserInGroup(group, user);
+        boolean isUserInGroup = checkUserUtil.isUserInGroup(group, user);
         if (!isUserInGroup) {
             throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
         }
@@ -112,13 +112,13 @@ public class ArticleService {
             Long groupId,
             int offset
     ) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
+        CheckUserUtil checkUserUtil = new CheckUserUtil(groupMemberRepository, userService);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
-        boolean isUserInGroup = checkUser.isUserInGroup(group, user);
+        boolean isUserInGroup = checkUserUtil.isUserInGroup(group, user);
         if (!isUserInGroup) {
             throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
         }
@@ -127,7 +127,7 @@ public class ArticleService {
         List<Article> articleList = articleRepository.findByGroupAndIsDeleted(group, false, pageable);
         // 가져온 게시글을 ArticleDTO 리스트로 변환한다
         List<ArticleResponseDTO> articleResponseDTOs = articleList.stream()
-                .map(article -> ArticleResponseDTO.from(article))
+                .map(article -> ArticleResponseDTO.of(article))
                 .collect(Collectors.toList());
         return articleResponseDTOs;
     }
@@ -137,13 +137,13 @@ public class ArticleService {
             Long articleId,
             ArticleRequestDTO articleUpdateRequestDTO
     ) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
+        CheckUserUtil checkUserUtil = new CheckUserUtil(groupMemberRepository, userService);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
 
-        boolean isUserInGroup = checkUser.isUserInGroup(group, user);
+        boolean isUserInGroup = checkUserUtil.isUserInGroup(group, user);
 
         if (!isUserInGroup) {
             throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
@@ -174,13 +174,13 @@ public class ArticleService {
             Long groupId,
             Long articleId
     ) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
+        CheckUserUtil checkUserUtil = new CheckUserUtil(groupMemberRepository, userService);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
 
-        boolean isUserInGroup = checkUser.isUserInGroup(group, user);
+        boolean isUserInGroup = checkUserUtil.isUserInGroup(group, user);
 
         if (!isUserInGroup) {
             throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
@@ -202,13 +202,13 @@ public class ArticleService {
             Long articleId,
             CommentRequestDTO commentRequestDTO
     ) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
+        CheckUserUtil checkUserUtil = new CheckUserUtil(groupMemberRepository, userService);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
 
-        boolean isUserInGroup = checkUser.isUserInGroup(group, user);
+        boolean isUserInGroup = checkUserUtil.isUserInGroup(group, user);
 
         if (!isUserInGroup) {
             throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
@@ -237,7 +237,7 @@ public class ArticleService {
             Long articleId,
             int offset
     ) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
+        CheckUserUtil checkUserUtil = new CheckUserUtil(groupMemberRepository, userService);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다"));
 
@@ -254,7 +254,7 @@ public class ArticleService {
             Long articleId,
             Long commentId
     ) {
-        CheckUser checkUser = new CheckUser(groupMemberRepository, userService);
+        CheckUserUtil checkUserUtil = new CheckUserUtil(groupMemberRepository, userService);
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다"));
         Comment deleteComment = commentRepository.findByCommentIdAndArticle(commentId, article)

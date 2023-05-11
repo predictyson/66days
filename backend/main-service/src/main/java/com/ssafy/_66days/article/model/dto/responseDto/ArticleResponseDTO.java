@@ -33,16 +33,4 @@ public class ArticleResponseDTO {
                 .groupId(article.getGroup().getGroupId())
                 .build();
     }
-
-    public static ArticleResponseDTO from(Article article) {
-        return ArticleResponseDTO.builder()
-                .articleId(article.getArticleId())
-                .title(article.getTitle())
-                .content(article.getContent())
-                .createdAt(article.getCreatedAt())
-                .userId(article.getUser().getUserId())
-                .nickname(article.getUser().getNickname())
-                .groupId(article.getGroup().getGroupId())
-                .build();
-    }
 }
