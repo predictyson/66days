@@ -5,9 +5,9 @@ import { theme } from "../../styles/theme";
 interface BadgeType {
   image: string;
   challengeName: string;
-  startDate: string;
-  endDate: string;
-  category: string;
+  startDate: Date;
+  endDate: Date;
+  category: "알고리즘" | "CS" | "블로깅" | "강의" | "개발서적";
   status: boolean; // 성공 실패 여부
 }
 
@@ -21,15 +21,23 @@ interface BadgeImgStyled {
 }
 
 export default function BadgeStatusBox(props: PropsType) {
-  // function calcPeriod(oldDate: string, newDate: string) {
-  //   console.log(new Date(oldDate), new Date(newDate));
+  function calcDays(start: Date, end: Date) {
+    const diffDate = end.getTime() - start.getTime();
 
-  //   let diff = Math.abs(
-  //     new Date(newDate).getTime() - new Date(oldDate).getTime()
-  //   );
-  //   diff = Math.ceil(diff / (1000 * 60 * 60 * 24));
-  //   console.log((diff / 66) * 100);
-  // }
+    return Math.ceil(diffDate / (1000 * 60 * 60 * 24)) + 1;
+  }
+
+  function calcPercent(days: number) {
+    return (days / 66) * 100;
+  }
+
+  function changeDateFormat(date: Date) {
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + (date.getDate() + 1)).slice(-2);
+
+    return `${year}-${month}-${day}`;
+  }
 
   return (
     <>
@@ -47,15 +55,31 @@ export default function BadgeStatusBox(props: PropsType) {
 
         <BadgeInfoContainer>
           <div className="badge-title">{props.badge.challengeName}</div>
-          <div>
-            {props.badge.status ? (
-              <Progress percent={100} />
-            ) : (
-              <Progress percent={60} status="exception" />
-            )}
-          </div>
+          {props.badge.status ? (
+            <Progress percent={100} />
+          ) : (
+            <div className="failed-bar">
+              <Progress
+                percent={calcPercent(
+                  calcDays(
+                    new Date(props.badge.startDate),
+                    new Date(props.badge.endDate)
+                  )
+                )}
+                status="exception"
+              />
+              <div className="failed-end-days">
+                {calcDays(
+                  new Date(props.badge.startDate),
+                  new Date(props.badge.endDate)
+                )}{" "}
+                / 66 Days
+              </div>
+            </div>
+          )}
           <div className="badge-period">
-            챌린지 기간: {props.badge.startDate} ~ {props.badge.endDate}
+            챌린지 기간: {changeDateFormat(new Date(props.badge.startDate))} ~{" "}
+            {changeDateFormat(new Date(props.badge.endDate))}
           </div>
           <div className="badge-category-btn">{props.badge.category}</div>
         </BadgeInfoContainer>
@@ -102,6 +126,7 @@ const BadgeImage = styled.div<BadgeImgStyled>`
 
 const BadgeInfoContainer = styled.div`
   padding-left: 3.2rem;
+  flex-grow: 1;
 
   svg {
     width: 2rem;
@@ -120,6 +145,19 @@ const BadgeInfoContainer = styled.div`
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
+  }
+
+  .failed-bar {
+    display: flex;
+  }
+
+  .failed-end-days {
+    padding-left: 1rem;
+    color: ${theme.colors.failure};
+  }
+
+  .ant-progress-line {
+    width: 70%;
   }
 
   .badge-period {
