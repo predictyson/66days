@@ -21,6 +21,19 @@ interface BadgeImgStyled {
 }
 
 export default function BadgeStatusBox(props: PropsType) {
+  function calcDays(start: string, end: string) {
+    const endDate = new Date(end);
+    const startDate = new Date(start);
+
+    const diffDate = endDate.getTime() - startDate.getTime();
+
+    return Math.ceil(diffDate / (1000 * 60 * 60 * 24)) + 1;
+  }
+
+  function calcPercent(days: number) {
+    return (days / 66) * 100;
+  }
+
   return (
     <>
       <BadgeStatusBoxWrapper>
@@ -37,11 +50,22 @@ export default function BadgeStatusBox(props: PropsType) {
 
         <BadgeInfoContainer>
           <div className="badge-title">{props.badge.challengeName}</div>
-          <div>
+          <div className="progress-bar-container">
             {props.badge.status ? (
               <Progress percent={100} />
             ) : (
-              <Progress percent={60} status="exception" />
+              <div className="failed-bar">
+                <Progress
+                  percent={calcPercent(
+                    calcDays(props.badge.startDate, props.badge.endDate)
+                  )}
+                  status="exception"
+                />
+                <div className="failed-end-days">
+                  {calcDays(props.badge.startDate, props.badge.endDate)} / 66
+                  Days
+                </div>
+              </div>
             )}
           </div>
           <div className="badge-period">
@@ -92,6 +116,7 @@ const BadgeImage = styled.div<BadgeImgStyled>`
 
 const BadgeInfoContainer = styled.div`
   padding-left: 3.2rem;
+  flex-grow: 1;
 
   svg {
     width: 2rem;
@@ -110,6 +135,19 @@ const BadgeInfoContainer = styled.div`
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
+  }
+
+  .failed-bar {
+    display: flex;
+  }
+
+  .failed-end-days {
+    padding-left: 1.5rem;
+    color: ${theme.colors.failure};
+  }
+
+  .ant-progress-line {
+    width: 70%;
   }
 
   .badge-period {

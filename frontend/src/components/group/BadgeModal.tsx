@@ -29,22 +29,123 @@ export default function BadgeModal(props: PropsType) {
     return (
       <>
         <BadgeContainer>
+          {props.badges.length === 0 ? (
+            <div className="no-badge">챌린지가 존재하지 않습니다.</div>
+          ) : null}
           <div className="badge__status__box-container">
             {props.badges.slice(page * 2 - 2, page * 2).map((badge, index) => (
               <BadgeStatusBox key={index} badge={badge} />
             ))}
           </div>
+          {props.badges.length > 2 ? (
+            <div className="pagination-bar-container">
+              {page === 1 ? (
+                <LeftCircleFilled className="invisible-arrow icon-margin" />
+              ) : (
+                <LeftCircleFilled
+                  className="pagination-icon icon-margin"
+                  onClick={handleClickLeft}
+                />
+              )}
+              {page === Math.ceil(props.badges.length / 2) ? (
+                <RightCircleFilled className="invisible-arrow" />
+              ) : (
+                <RightCircleFilled
+                  className="pagination-icon"
+                  onClick={handleClickRight}
+                />
+              )}
+            </div>
+          ) : null}
         </BadgeContainer>
       </>
     );
   };
 
+  const filteredSuccessBadgeData = props.badges.filter(
+    (badge) => badge.status === true
+  );
+
+  const filteredFailedBadgeData = props.badges.filter(
+    (badge) => badge.status === false
+  );
+
   const SecondTabContent = () => {
-    return <>2</>;
+    return (
+      <>
+        <BadgeContainer>
+          {filteredSuccessBadgeData.length === 0 ? (
+            <div className="no-badge">성공한 챌린지가 존재하지 않습니다.</div>
+          ) : null}
+          <div className="badge__status__box-container">
+            {filteredSuccessBadgeData
+              .slice(page * 2 - 2, page * 2)
+              .map((badge, index) => (
+                <BadgeStatusBox key={index} badge={badge} />
+              ))}
+          </div>
+          {filteredSuccessBadgeData.length > 2 ? (
+            <div className="pagination-bar-container">
+              {page === 1 ? (
+                <LeftCircleFilled className="invisible-arrow icon-margin" />
+              ) : (
+                <LeftCircleFilled
+                  className="pagination-icon icon-margin"
+                  onClick={handleClickLeft}
+                />
+              )}
+              {page === Math.ceil(filteredSuccessBadgeData.length / 2) ? (
+                <RightCircleFilled className="invisible-arrow" />
+              ) : (
+                <RightCircleFilled
+                  className="pagination-icon"
+                  onClick={handleClickRight}
+                />
+              )}
+            </div>
+          ) : null}
+        </BadgeContainer>
+      </>
+    );
   };
 
   const ThirdTabContent = () => {
-    return <>3</>;
+    return (
+      <>
+        <BadgeContainer>
+          {filteredFailedBadgeData.length === 0 ? (
+            <div className="no-badge">실패한 챌린지가 존재하지 않습니다.</div>
+          ) : null}
+          <div className="badge__status__box-container">
+            {filteredFailedBadgeData
+              .slice(page * 2 - 2, page * 2)
+              .map((badge, index) => (
+                <BadgeStatusBox key={index} badge={badge} />
+              ))}
+          </div>
+          {filteredFailedBadgeData.length > 2 ? (
+            <div className="pagination-bar-container">
+              {page === 1 ? (
+                <LeftCircleFilled className="invisible-arrow icon-margin" />
+              ) : (
+                <LeftCircleFilled
+                  className="pagination-icon icon-margin"
+                  onClick={handleClickLeft}
+                />
+              )}
+              {page === Math.ceil(filteredFailedBadgeData.length / 2) ? (
+                <RightCircleFilled className="invisible-arrow" />
+              ) : (
+                <RightCircleFilled
+                  className="pagination-icon"
+                  onClick={handleClickRight}
+                />
+              )}
+            </div>
+          ) : null}
+        </BadgeContainer>
+      </>
+    );
   };
 
   const items: TabsProps["items"] = [
@@ -55,12 +156,12 @@ export default function BadgeModal(props: PropsType) {
     },
     {
       key: "2",
-      label: `성공`,
+      label: `성공 (${filteredSuccessBadgeData.length})`,
       children: <SecondTabContent />,
     },
     {
       key: "3",
-      label: `실패`,
+      label: `실패 (${filteredFailedBadgeData.length})`,
       children: <ThirdTabContent />,
     },
   ];
@@ -87,26 +188,6 @@ export default function BadgeModal(props: PropsType) {
       <BadgeModalWrapper>
         <TabContainer>
           <Tabs className="tab-list" defaultActiveKey="1" items={items} />
-          {props.badges.length > 2 ? (
-            <div className="pagination-bar-container">
-              {page === 1 ? (
-                <LeftCircleFilled className="invisible-arrow icon-margin" />
-              ) : (
-                <LeftCircleFilled
-                  className="pagination-icon icon-margin"
-                  onClick={handleClickLeft}
-                />
-              )}
-              {page === Math.ceil(props.badges.length / 2) ? (
-                <RightCircleFilled className="invisible-arrow" />
-              ) : (
-                <RightCircleFilled
-                  className="pagination-icon"
-                  onClick={handleClickRight}
-                />
-              )}
-            </div>
-          ) : null}
         </TabContainer>
       </BadgeModalWrapper>
     </CustomModal>
@@ -120,23 +201,44 @@ const CustomModal = styled(Modal)`
 `;
 const BadgeModalWrapper = styled(Content)`
   padding: 6rem 8rem 4rem;
-  height: 85vh;
+  /* height: 85vh; */
 `;
 
 const TabContainer = styled(Content)`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* height: 100%; */
+
   font-size: 1.6rem;
-  height: 100%;
 
   .ant-tabs,
   .ant-tabs-tab-btn {
     font-size: 1.5rem;
   }
 
+  .ant-tabs {
+    flex-grow: 1;
+  }
+
   .ant-tabs-tab-active {
     font-weight: ${theme.fontWeight.bold};
+  }
+`;
+
+const BadgeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  .no-badge {
+    height: 30vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .badge__status__box-container {
+    display: flex;
+    flex-direction: column;
   }
 
   .pagination-bar-container {
@@ -163,15 +265,5 @@ const TabContainer = styled(Content)`
 
   .icon-margin {
     margin-right: 5rem;
-  }
-`;
-
-const BadgeContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  .badge__status__box-container {
-    display: flex;
-    flex-direction: column;
   }
 `;

@@ -154,7 +154,7 @@ export default function Group() {
 
   const tmpAddBadgeData = [
     {
-      image: "/image/image.jpg",
+      image: Algorithms,
       challengeName: "알고리즘 하장",
       startDate: "2023-03-06",
       endDate: "2023-05-11",
@@ -162,7 +162,7 @@ export default function Group() {
       status: true,
     },
     {
-      image: "/image/image.jpg",
+      image: Book,
       challengeName: "개발서적 하루 30분씩 읽을 사람",
       startDate: "2023-02-23",
       endDate: "2023-04-08",
@@ -170,26 +170,18 @@ export default function Group() {
       status: false,
     },
     {
-      image: "/image/image.jpg",
+      image: Algorithms,
       challengeName: "코테 부수기 챌린지",
       startDate: "2023-03-06",
-      endDate: "2023-05-11",
+      endDate: "2023-04-11",
       category: "알고리즘",
-      status: true,
+      status: false,
     },
     {
-      image: "/image/image.jpg",
-      challengeName: "코테 부수기 챌린지",
-      startDate: "2023-03-06",
-      endDate: "2023-05-11",
-      category: "알고리즘",
-      status: true,
-    },
-    {
-      image: "/image/image.jpg",
+      image: Book,
       challengeName: "모던 자바스크립트 정독",
       startDate: "2023-02-23",
-      endDate: "2023-04-08",
+      endDate: "2023-03-27",
       category: "개발서적",
       status: false,
     },
