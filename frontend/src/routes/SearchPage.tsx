@@ -43,7 +43,7 @@ export default function SearchPage() {
 const Container = styled.div`
   width: 100%;
   display: flex;
-  padding: 9.6rem 0;
+  padding: 9.6rem 8rem;
   font-family: Pretendard;
   flex-direction: column;
 `;
