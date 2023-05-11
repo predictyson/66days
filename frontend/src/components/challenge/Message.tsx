@@ -3,17 +3,13 @@ import { Avatar, Space, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
 
 interface PropsType {
-  message: {
-    nickname: string;
-    value: string;
-    date: string;
-    me: boolean;
-  };
+  message: MessageType;
+  isMe: boolean;
 }
 
 export default function Message(props: PropsType) {
   return (
-    <div className={`chat__message ${props.message.me && "chat__message--me"}`}>
+    <div className={`chat__message ${props.isMe && "chat__message--me"}`}>
       <Avatar icon={<UserOutlined />} />
       <Space direction="vertical" style={{ marginInline: "1rem" }}>
         <Typography.Text style={{ fontWeight: "bold", fontSize: "1.6rem" }}>

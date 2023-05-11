@@ -4,7 +4,6 @@ import Algo from "../../assets/landing/algoBox.png";
 // import Blog from "../../assets/landing/blogBox.png";
 import Chart from "./Chart";
 import { CheckCircleOutlined } from "@ant-design/icons";
-import { ChallengeData } from "../../types/main";
 interface IProps {
   challenges: ChallengeData[];
 }

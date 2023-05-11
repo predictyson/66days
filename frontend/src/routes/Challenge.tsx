@@ -6,14 +6,12 @@ import Title from "../components/challenge/Title";
 import Chat from "../components/challenge/Chat";
 import Member from "../components/challenge/Member";
 import Graph from "../components/challenge/Graph";
-import { mockMessages } from "../mock/challenge";
-// import useChat from "../hooks/useChat";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 export default function Challenge() {
-  const [messages] = useState(mockMessages);
+  const { challengeId } = useParams();
   const [members] = useState(mockUsers);
-  // TODO: const { sendMessage } = useChat("123", "tw", setMessage);
 
   useEffect(() => {
     // TODO: fetch data from backend
@@ -28,7 +26,7 @@ export default function Challenge() {
         subtitle="김태원과 아이들의 피그마 정복기"
       />
       <StyledContainer>
-        <Chat messages={messages} />
+        {challengeId && <Chat challengeId={challengeId} />}
         <Member users={members} />
       </StyledContainer>
       <Space style={{ alignItems: "baseline" }}>

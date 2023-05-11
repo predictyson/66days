@@ -1,48 +1,65 @@
 import { SendOutlined } from "@ant-design/icons";
-import { Button, Input, Space } from "antd";
+import { Button, Form, Input, Space } from "antd";
 import styled from "styled-components";
-import { mockMessages } from "../../mock/challenge";
 import Message from "./Message";
 import useChat from "../../hooks/useChat";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { mockMe } from "../../mock/challenge";
 
 interface PropsType {
-  messages: Array<(typeof mockMessages)[0]>;
+  challengeId: string;
 }
 
 export default function Chat(props: PropsType) {
-  const { sendMessage } = useChat();
+  const user = mockMe; // TODO: replace with real user
+  const { messages, sendMessage } = useChat(props.challengeId);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [msgValue, setMsgValue] = useState("");
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     scrollToBottom();
-  }, [props.messages]);
+  }, [messages]);
 
   return (
     <StyledChat>
       <div className="chat">
-        {props.messages.map((msg, idx) => (
-          <Message key={idx} message={msg} />
+        {messages.map((msg, idx) => (
+          <Message
+            key={idx}
+            message={msg}
+            isMe={msg.nickname === user.nickname}
+          />
         ))}
+        <div ref={messagesEndRef}></div>
       </div>
-      <div ref={messagesEndRef}></div>
-      <Space.Compact>
-        <Input
-          placeholder="메시지를 입력해주세요..."
-          style={{ fontSize: "1.6rem" }}
-        />
-        <Button
-          type="primary"
-          style={{ fontSize: "1.6rem", height: "100%" }}
-          icon={<SendOutlined />}
-          onClick={sendMessage}
-        >
-          Send
-        </Button>
-      </Space.Compact>
+      <Form
+        autoComplete="off"
+        onFinish={() => {
+          sendMessage(msgValue);
+          setMsgValue("");
+        }}
+      >
+        <Space.Compact style={{ width: "100%" }}>
+          <Input
+            placeholder="메시지를 입력해주세요..."
+            style={{ fontSize: "1.6rem" }}
+            value={msgValue}
+            onChange={(event: any) => setMsgValue(event.target.value)}
+          />
+          <Button
+            htmlType="submit"
+            type="primary"
+            style={{ fontSize: "1.6rem", height: "100%" }}
+            icon={<SendOutlined />}
+            // onSubmit={() => sendMessage("hello")}
+          >
+            Send
+          </Button>
+        </Space.Compact>
+      </Form>
     </StyledChat>
   );
 }

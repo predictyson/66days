@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
-import { GroupData } from "../../types/main";
 import Category from "../../styles/CategoryTheme";
 interface IProps {
   group: GroupData;

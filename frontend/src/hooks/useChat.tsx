@@ -1,63 +1,63 @@
 import { useEffect, useState } from "react";
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
+import { mockMe } from "../mock/challenge";
 
-// FIXME: URL, roomId, and userId
+// FIXME: URL
 const URL = "http://70.12.247.243:8080";
-export default function useChat(
-  roomId = 123,
-  userId = "tw",
-  onMessage = (content: string) => {
-    console.log(content);
-  }
-) {
+export default function useChat(roomId: string) {
+  const user = mockMe;
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const [client, setClient] = useState<Stomp.Client | null>(null);
 
   useEffect(() => {
-    const client = Stomp.over(new SockJS(URL + "/speedoodle/room"));
+    const client = Stomp.over(new SockJS(URL + "/stomp/chat"));
     setClient(client);
 
     /**
-     * 웹소켓에 접속하면, 서버에게 접속했다고 알린다음에 특정 방에 subscribe한다
+     * 웹소켓에 접속하면, 특정 방에 subscribe하고나서 방 사람들에게 접속했다고 알린한다
      */
     client.connect({}, function () {
-      console.log("hello, world");
-      client.send(
-        "/pub/send",
-        {},
-        JSON.stringify({
-          chatRoomId: roomId,
-          type: "JOIN",
-          writer: userId,
-        })
-      );
-      client.subscribe(`/sub/${roomId}`, function (chat) {
-        // TODO: get messages from others
+      // client.subscribe(`/sub/chat/room/${roomId}`, function (chat) {
+      client.subscribe(`/chat/enter`, function (chat) {
         const content = JSON.parse(chat.body);
-        onMessage(content);
-        console.log("content: " + content);
+        // setMessages((prev) => [...prev, content]); TODO: get messages from others
+        console.log("content: ", content);
       });
+
+      const messagePacket: MessageType = {
+        roomId,
+        type: "ENTER",
+        date: new Date().toLocaleString(),
+        nickname: user.nickname,
+        image: user.image,
+        value: `${user.email}(이)가 참여했습니다.`,
+      };
+
+      // client.send("/pub/chat/message", {}, JSON.stringify(messagePacket));
+      client.send("/challenges/room", {}, JSON.stringify(messagePacket));
     });
 
     return () => client.ws.close();
-    // client?.disconnect(() => console.log("destroyed"));
   }, []);
 
-  const sendMessage = () => {
-    console.log("send message :)");
-    client?.send(
-      "/pub/send",
-      {},
-      JSON.stringify({
-        chatRoomId: "123",
-        type: "CHAT",
-        message: "Hello, world!",
-        writer: "member-tw",
-      })
-    );
+  const sendMessage = (msg: string) => {
+    const messagePacket: MessageType = {
+      roomId,
+      type: "CHAT",
+      date: new Date().toLocaleString(),
+      nickname: user.nickname,
+      image: user.image,
+      value: msg,
+    };
+    // client!.send(`/sub/chat/room/${roomId}`, {}, JSON.stringify(messagePacket));
+    // client!.send("/pub/chat/message", {}, JSON.stringify(messagePacket));
+    client?.send("/challenges/room", {}, JSON.stringify(messagePacket));
+    setMessages((prev) => [...prev, messagePacket]);
   };
 
   return {
+    messages,
     sendMessage,
   };
 }

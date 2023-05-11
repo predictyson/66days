@@ -3,7 +3,6 @@ import Capibara from "../../assets/main/Capibara.png";
 import Badge from "../../assets/main/Bronze.png";
 import CoinIcon from "../../assets/main/Coin.png";
 import { theme } from "../../styles/theme";
-import { MemberInfoData } from "../../types/main";
 
 interface IProps {
   memberInfo: MemberInfoData;

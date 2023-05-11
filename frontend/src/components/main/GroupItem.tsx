@@ -3,7 +3,6 @@ import Moongchi from "../../assets/main/moongchi.png";
 import Algo from "../../assets/landing/algoBox.png";
 import Blog from "../../assets/landing/blogBox.png";
 import CS from "../../assets/landing/csBox.png";
-import { GroupData } from "../../types/main";
 interface ImageWrapperProps {
   imageUrl: string;
 }

@@ -4,7 +4,6 @@ import styled from "styled-components";
 import PrevArrow from "../../assets/main/PrevArrow.png";
 import NextArrow from "../../assets/main/NextArrow.png";
 import GroupItem from "./GroupItem";
-import { GroupData } from "../../types/main";
 // slider
 interface IProps {
   groups: GroupData[];

@@ -13,6 +13,29 @@ const mockUsers = [
   },
 ];
 
+const mockMe: User = {
+  nickname: "sthnickname",
+  image: "/image/카피바라.jpg",
+  email: "moongchi@ssafy.com",
+  exp: 15000,
+  point: 33000,
+  animal: {
+    id: 1,
+    name: "카피바라",
+    image: "/image/카피바라.jpg",
+  },
+  groups: [],
+  id: "123",
+  mygroup: {
+    id: 1,
+    name: "카피바라",
+    badges: [],
+    image: "",
+  },
+  tierImage: "",
+  tierTitle: "늘씬한",
+};
+
 const mockMessages = [
   {
     nickname: "뭉치",
@@ -134,4 +157,4 @@ const mockGraph = [
   { checked: false, freeze: true },
 ];
 
-export { mockUsers, mockMessages, mockGraph };
+export { mockUsers, mockMessages, mockGraph, mockMe };
