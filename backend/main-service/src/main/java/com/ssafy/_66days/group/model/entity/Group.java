@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name="group")
@@ -16,14 +17,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="group_id", nullable=false)
     private Long groupId;
-
+    @NotNull
+    @Column(name = "owner_id")
+    private UUID ownerId;
     @NotBlank
     @Column(name = "name", nullable = false)
     private String groupName;
@@ -33,6 +35,9 @@ public class Group {
     private int maxMemberCount;
     @Column(name = "image_path", nullable = true)
     private String imagePath;
+    @Column(name = "description")
+    @NotNull
+    private String description;
     @NotNull
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
