@@ -152,15 +152,56 @@ export default function Group() {
     setOpenBadgeModal((prev) => !prev); // 모달 오픈
   }
 
+  const tmpAddBadgeData = [
+    {
+      image: "/image/image.jpg",
+      challengeName: "알고리즘 하장",
+      startDate: "2023-03-06",
+      endDate: "2023-05-11",
+      category: "알고리즘",
+      status: true,
+    },
+    {
+      image: "/image/image.jpg",
+      challengeName: "개발서적 하루 30분씩 읽을 사람",
+      startDate: "2023-02-23",
+      endDate: "2023-04-08",
+      category: "개발서적",
+      status: false,
+    },
+    {
+      image: "/image/image.jpg",
+      challengeName: "코테 부수기 챌린지",
+      startDate: "2023-03-06",
+      endDate: "2023-05-11",
+      category: "알고리즘",
+      status: true,
+    },
+    {
+      image: "/image/image.jpg",
+      challengeName: "코테 부수기 챌린지",
+      startDate: "2023-03-06",
+      endDate: "2023-05-11",
+      category: "알고리즘",
+      status: true,
+    },
+    {
+      image: "/image/image.jpg",
+      challengeName: "모던 자바스크립트 정독",
+      startDate: "2023-02-23",
+      endDate: "2023-04-08",
+      category: "개발서적",
+      status: false,
+    },
+  ];
+
   useEffect(() => {
     // TODO: fetch data
     async function fetchAndSetGroupPageData() {
       const data = await fetchGroupPageData();
-      console.log(data);
       setBadgePreview(data.badges);
       setChallengeList(data.challenge);
       setBoardDataList(data.board);
-      console.log(data.board);
     }
 
     async function fetchAndSetGroupSettingData() {
@@ -172,18 +213,14 @@ export default function Group() {
 
     async function fetchAndSetGroupBadgesData() {
       const badgesData = await fetchGroupBadges();
-      setBadgeList(badgesData["badge-list"]);
+      // dummy data 길이가 불충분하여 임시로 데이터 이어붙임
+      setBadgeList([...badgesData["badge-list"], ...tmpAddBadgeData]);
     }
 
     fetchAndSetGroupPageData();
     fetchAndSetGroupSettingData();
     fetchAndSetGroupBadgesData();
-    // setBadgeList(mockBadgeList);
   }, []);
-
-  // function handlePageChange(page: number) {
-  //   // 해당 pgNo board data 호출
-  // }
 
   return (
     <div style={{ marginInline: "8rem" }}>

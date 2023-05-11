@@ -1,9 +1,11 @@
-import { Modal, Carousel, Tabs } from "antd";
+import { Modal, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import styled from "styled-components";
 import { Content } from "antd/es/layout/layout";
 import { theme } from "../../styles/theme";
 import BadgeStatusBox from "./BadgeStatusBox";
+import { LeftCircleFilled, RightCircleFilled } from "@ant-design/icons";
+import { useState } from "react";
 
 interface BadgeType {
   image: string;
@@ -21,36 +23,14 @@ interface PropsType {
 }
 
 export default function BadgeModal(props: PropsType) {
-  // const [tab, setTab] = useState<number>(0);
-  // const [badgeDataList, setBadgeDataList] = useState<BadgeType[]>([]);
-
-  function clickAllTab() {
-    document.getElementById("success-tab")?.classList.remove("active-tab");
-    document.getElementById("fail-tab")?.classList.remove("active-tab");
-    document.getElementById("all-tab")?.classList.add("active-tab");
-    // setTab(0);
-  }
-
-  function clickSuccessTab() {
-    document.getElementById("all-tab")?.classList.remove("active-tab");
-    document.getElementById("fail-tab")?.classList.remove("active-tab");
-    document.getElementById("success-tab")?.classList.add("active-tab");
-    // setTab(1);
-  }
-
-  function clickFailTab() {
-    document.getElementById("all-tab")?.classList.remove("active-tab");
-    document.getElementById("success-tab")?.classList.remove("active-tab");
-    document.getElementById("fail-tab")?.classList.add("active-tab");
-    // setTab(2);
-  }
+  const [page, setPage] = useState<number>(1);
 
   const FirstTabContent = () => {
     return (
       <>
         <BadgeContainer>
           <div className="badge__status__box-container">
-            {props.badges.map((badge, index) => (
+            {props.badges.slice(page * 2 - 2, page * 2).map((badge, index) => (
               <BadgeStatusBox key={index} badge={badge} />
             ))}
           </div>
@@ -70,7 +50,7 @@ export default function BadgeModal(props: PropsType) {
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: `전체보기`,
+      label: `전체보기 (${props.badges.length})`,
       children: <FirstTabContent />,
     },
     {
@@ -85,6 +65,18 @@ export default function BadgeModal(props: PropsType) {
     },
   ];
 
+  function handleClickLeft() {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  }
+
+  function handleClickRight() {
+    if (page < Math.ceil(props.badges.length / 2)) {
+      setPage(page + 1);
+    }
+  }
+
   return (
     <CustomModal
       open={props.open}
@@ -94,30 +86,28 @@ export default function BadgeModal(props: PropsType) {
     >
       <BadgeModalWrapper>
         <TabContainer>
-          {/* <ul className="tab-list">
-            <li id="all-tab" className="active-tab" onClick={clickAllTab}>
-              전체보기(3)
-            </li>
-            |
-            <li id="success-tab" onClick={clickSuccessTab}>
-              성공(2)
-            </li>
-            |
-            <li id="fail-tab" onClick={clickFailTab}>
-              실패(1)
-            </li>
-          </ul> */}
           <Tabs className="tab-list" defaultActiveKey="1" items={items} />
-        </TabContainer>
-        {/* <BadgeContainer>
-          <Carousel afterChange={onSlideChange}>
-            <div className="badge__status__box-container">
-              {props.badges.map((badge, index) => (
-                <BadgeStatusBox key={index} badge={badge} />
-              ))}
+          {props.badges.length > 2 ? (
+            <div className="pagination-bar-container">
+              {page === 1 ? (
+                <LeftCircleFilled className="invisible-arrow icon-margin" />
+              ) : (
+                <LeftCircleFilled
+                  className="pagination-icon icon-margin"
+                  onClick={handleClickLeft}
+                />
+              )}
+              {page === Math.ceil(props.badges.length / 2) ? (
+                <RightCircleFilled className="invisible-arrow" />
+              ) : (
+                <RightCircleFilled
+                  className="pagination-icon"
+                  onClick={handleClickRight}
+                />
+              )}
             </div>
-          </Carousel>
-        </BadgeContainer> */}
+          ) : null}
+        </TabContainer>
       </BadgeModalWrapper>
     </CustomModal>
   );
@@ -129,14 +119,16 @@ const CustomModal = styled(Modal)`
   }
 `;
 const BadgeModalWrapper = styled(Content)`
-  /* max-height: 90vh; */
-  padding: 6rem 8rem;
+  padding: 6rem 8rem 4rem;
+  height: 85vh;
 `;
 
 const TabContainer = styled(Content)`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   font-size: 1.6rem;
+  height: 100%;
 
   .ant-tabs,
   .ant-tabs-tab-btn {
@@ -145,6 +137,32 @@ const TabContainer = styled(Content)`
 
   .ant-tabs-tab-active {
     font-weight: ${theme.fontWeight.bold};
+  }
+
+  .pagination-bar-container {
+    padding-top: 5rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .pagination-icon {
+    font-size: 3.2rem;
+    color: ${theme.colors.gray500};
+    cursor: pointer;
+
+    &:hover {
+      color: #777;
+    }
+  }
+
+  .invisible-arrow {
+    font-size: 3.2rem;
+    visibility: hidden;
+  }
+
+  .icon-margin {
+    margin-right: 5rem;
   }
 `;
 
