@@ -1,31 +1,31 @@
-package com.ssafy._66days.global.method;
+package com.ssafy._66days.global.util;
 
 import com.ssafy._66days.group.model.entity.Group;
 import com.ssafy._66days.group.model.entity.GroupMember;
 import com.ssafy._66days.group.model.repository.GroupMemberRepository;
 import com.ssafy._66days.user.model.entity.User;
 import com.ssafy._66days.user.model.service.UserService;
-import org.springframework.security.core.userdetails.UserDetails;
-import java.util.UUID;
 
-public class CheckUser {
+public class CheckUserUtil {
     private final GroupMemberRepository groupMemberRepository;
     private final UserService userService;
 
-    public CheckUser(GroupMemberRepository groupMemberRepository, UserService userService) {
+    public CheckUserUtil(GroupMemberRepository groupMemberRepository, UserService userService) {
         this.groupMemberRepository = groupMemberRepository;
         this.userService = userService;
     }
-    public UUID isExistUser(
-            UserDetails currentUser
-    ) {
+    // auth 서버에서 user 검증을 하기 때문에 필요없어짐 
+//    public UUID isExistUser(
+//            UserDetails currentUser
+//    ) {
+//
+//        String username = currentUser.getUsername();
+//        UUID userUuid = userService.getUserUuidByNickname(username);
+//        return userUuid;
+//
+//    }
 
-        String username = currentUser.getUsername();
-        UUID userUuid = userService.getUserUuidByNickname(username);
-        return userUuid;
-
-    }
-
+    // 해당 유저가 해당 그룹에 속하고 탈퇴한 회원인지 아닌지 판별해주는 함수
     public boolean isUserInGroup(
             Group group,
             User user

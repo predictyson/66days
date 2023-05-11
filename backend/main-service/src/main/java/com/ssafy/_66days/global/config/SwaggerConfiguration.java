@@ -42,5 +42,7 @@ public class SwaggerConfiguration {
     public Docket group() {
         return getDocket("Group", true, "group");
     }
+    @Bean
+    public Docket item() { return getDocket("Item", true, "item"); }
 
 }
