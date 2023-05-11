@@ -8,7 +8,7 @@ export interface SearchGroupData {
   ownerName: string;
   image: string | null;
   name: string;
-  categories: string[];
+  categories: Array<"알고리즘" | "CS" | "블로깅" | "개발서적" | "강의">;
   description: string;
   memberCounts: number;
   maxMemberCounts: number;

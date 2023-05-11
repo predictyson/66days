@@ -28,17 +28,17 @@ export default function BreadCrumb() {
     <Container>
       {items.map((item, idx) => {
         return (
-          <div key={idx}>
+          <div key={idx} style={{ display: "flex" }}>
             <CrumbItem
               key={idx}
               active={idx === activeItem}
               onClick={() => setActiveItem(idx)}
             >
               {item.title}
-              {idx !== items.length - 1 && (
-                <span style={{ marginLeft: "1.6rem" }}>|</span>
-              )}
             </CrumbItem>
+            {idx !== items.length - 1 && (
+              <span style={{ marginLeft: "1.6rem" }}>|</span>
+            )}
           </div>
         );
       })}
@@ -77,5 +77,14 @@ const CrumbItem = styled.div<CrumbItemProps>`
 
   &:active {
     color: #000;
+  }
+  span {
+    font-weight: normal;
+    color: #888;
+    text-decoration: none;
+    pointer-events: none;
+    &:hover {
+      text-decoration: none;
+    }
   }
 `;
