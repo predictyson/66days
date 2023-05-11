@@ -8,7 +8,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import lombok.Getter;
+
 @Entity
+@Getter
 @Table(name = "tier")
 public class Tier {
 
@@ -21,6 +24,10 @@ public class Tier {
 	@NotNull
 	@Column
 	private String name;
+
+	@NotNull
+	@Column
+	private String imagePath;
 
 	@NotNull
 	@Column

@@ -2,10 +2,9 @@ package com.ssafy._66days.user.model.dto;
 
 import com.ssafy._66days.group.model.entity.GroupMember;
 import com.ssafy._66days.user.model.entity.User;
+
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.UUID;
 
 @Data
 @Builder
