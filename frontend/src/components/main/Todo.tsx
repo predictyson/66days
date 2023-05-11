@@ -63,7 +63,7 @@ const Container = styled.div`
   width: 100%;
   display: flex;
   font-family: Pretendard;
-  padding: 3% 7%;
+  padding: 3% 9%;
   display: flex;
   flex-direction: column;
 `;
@@ -79,8 +79,8 @@ const TodoContianer = styled.div`
 `;
 
 const TodoBox = styled.div`
-  width: 45%;
-  height: 100%;
+  width: 55rem;
+  height: 35rem;
   border: solid 1px ${theme.colors.gray400};
   border-radius: 15px;
   display: flex;

@@ -41,7 +41,7 @@ const Container = styled.div`
   display: flex;
   font-family: Pretendard;
   background-color: black;
-  padding: 0 8%;
+  padding: 0 9%;
 `;
 
 const LeftWrapper = styled.div`
