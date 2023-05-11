@@ -1,15 +1,16 @@
-import { Modal, Carousel } from "antd";
+import { Modal, Carousel, Tabs } from "antd";
+import type { TabsProps } from "antd";
 import styled from "styled-components";
 import { Content } from "antd/es/layout/layout";
 import { theme } from "../../styles/theme";
 import BadgeStatusBox from "./BadgeStatusBox";
 
 interface BadgeType {
-  category: string;
   image: string;
-  title: string;
+  challengeName: string;
   startDate: string;
   endDate: string;
+  category: string;
   status: boolean; // 성공 실패 여부
 }
 
@@ -44,20 +45,45 @@ export default function BadgeModal(props: PropsType) {
     // setTab(2);
   }
 
-  function onSlideChange(currentSlide: number) {
-    console.log(currentSlide);
-    // const slicedBadgeList = props.badges.slice(
-    //   (currentSlide - 1) * 2,
-    //   currentSlide * 2
-    // );
+  const FirstTabContent = () => {
+    return (
+      <>
+        <BadgeContainer>
+          <div className="badge__status__box-container">
+            {props.badges.map((badge, index) => (
+              <BadgeStatusBox key={index} badge={badge} />
+            ))}
+          </div>
+        </BadgeContainer>
+      </>
+    );
+  };
 
-    // setBadgeDataList(slicedBadgeList);
-    // console.log(slicedBadgeList);
-  }
+  const SecondTabContent = () => {
+    return <>2</>;
+  };
 
-  // useEffect(() => {
-  //   setBadgeDataList(props.badges);
-  // }, []);
+  const ThirdTabContent = () => {
+    return <>3</>;
+  };
+
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: `전체보기`,
+      children: <FirstTabContent />,
+    },
+    {
+      key: "2",
+      label: `성공`,
+      children: <SecondTabContent />,
+    },
+    {
+      key: "3",
+      label: `실패`,
+      children: <ThirdTabContent />,
+    },
+  ];
 
   return (
     <CustomModal
@@ -68,7 +94,7 @@ export default function BadgeModal(props: PropsType) {
     >
       <BadgeModalWrapper>
         <TabContainer>
-          <ul className="tab-list">
+          {/* <ul className="tab-list">
             <li id="all-tab" className="active-tab" onClick={clickAllTab}>
               전체보기(3)
             </li>
@@ -80,9 +106,10 @@ export default function BadgeModal(props: PropsType) {
             <li id="fail-tab" onClick={clickFailTab}>
               실패(1)
             </li>
-          </ul>
+          </ul> */}
+          <Tabs className="tab-list" defaultActiveKey="1" items={items} />
         </TabContainer>
-        <BadgeContainer>
+        {/* <BadgeContainer>
           <Carousel afterChange={onSlideChange}>
             <div className="badge__status__box-container">
               {props.badges.map((badge, index) => (
@@ -90,7 +117,7 @@ export default function BadgeModal(props: PropsType) {
               ))}
             </div>
           </Carousel>
-        </BadgeContainer>
+        </BadgeContainer> */}
       </BadgeModalWrapper>
     </CustomModal>
   );
@@ -111,35 +138,13 @@ const TabContainer = styled(Content)`
   flex-direction: column;
   font-size: 1.6rem;
 
-  .tab-list {
-    padding-left: 0;
-    display: flex;
+  .ant-tabs,
+  .ant-tabs-tab-btn {
+    font-size: 1.5rem;
   }
 
-  .tab-list li {
-    list-style: none;
-    padding-left: 1rem;
-    padding-right: 1rem;
-
-    color: ${theme.colors.gray400};
-    cursor: pointer;
-
-    &:hover {
-      color: ${theme.colors.black};
-    }
-  }
-
-  .tab-list li:first-child {
-    padding-left: 0;
-  }
-
-  .tab-list li:last-child {
-    padding-right: 0;
-  }
-
-  .active-tab {
-    color: ${theme.colors.black} !important;
-    font-weight: 700;
+  .ant-tabs-tab-active {
+    font-weight: ${theme.fontWeight.bold};
   }
 `;
 

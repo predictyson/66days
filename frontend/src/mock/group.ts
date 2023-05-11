@@ -183,7 +183,7 @@ const mockBadgeList = [
   {
     category: "알고리즘",
     image: Algorithms,
-    title: "알고리즘 66일 챌린지",
+    challengeName: "알고리즘 66일 챌린지",
     startDate: "2023년 1월 2일",
     endDate: "2023년 3월 8일",
     status: false,
@@ -191,7 +191,7 @@ const mockBadgeList = [
   {
     category: "알고리즘",
     image: Algorithms,
-    title: "개발개발개발개발개발",
+    challengeName: "개발개발개발개발개발",
     startDate: "2023년 1월 2일",
     endDate: "2023년 3월 8일",
     status: true,

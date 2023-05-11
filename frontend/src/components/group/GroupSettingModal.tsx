@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Modal, Layout } from "antd";
+import { Modal, Layout, Tabs } from "antd";
+import type { TabsProps } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import SingleMemberListBox from "./SingleMemberListBox";
@@ -29,12 +29,10 @@ interface PropsType {
 const { Content } = Layout;
 
 export function GroupSettingModal(props: PropsType) {
-  console.log(props.memberList);
-  const [tab, setTab] = useState<number>(0);
-
-  const TabContent = () => {
-    if (tab === 0) {
-      return (
+  // 그룹원 관리 Tab
+  const FirstTabContent = () => {
+    return (
+      <>
         <TabContentWrapper>
           {props.memberList.map((member: MemberType, index: number) => (
             <div className="member-setting-container">
@@ -63,9 +61,14 @@ export function GroupSettingModal(props: PropsType) {
             </div>
           ))}
         </TabContentWrapper>
-      );
-    } else {
-      return (
+      </>
+    );
+  };
+
+  // 대기 중인 요청 Tab
+  const SecondTabContent = () => {
+    return (
+      <>
         <TabContentWrapper>
           {props.appliedList.map((member: MemberType) => (
             <div className="member-setting-container">
@@ -91,21 +94,23 @@ export function GroupSettingModal(props: PropsType) {
             </div>
           ))}
         </TabContentWrapper>
-      );
-    }
+      </>
+    );
   };
 
-  function clickFirstTab() {
-    document.getElementById("second-tab")?.classList.remove("active-tab");
-    document.getElementById("first-tab")?.classList.add("active-tab");
-    setTab(0);
-  }
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: `그룹원 관리`,
+      children: <FirstTabContent />,
+    },
+    {
+      key: "2",
+      label: `대기 중인 요청`,
+      children: <SecondTabContent />,
+    },
+  ];
 
-  function clickSecondTab() {
-    document.getElementById("first-tab")?.classList.remove("active-tab");
-    document.getElementById("second-tab")?.classList.add("active-tab");
-    setTab(1);
-  }
   return (
     <>
       <Modal
@@ -117,17 +122,8 @@ export function GroupSettingModal(props: PropsType) {
         <MemberSettingModalWrapper>
           <div className="modal-title">그룹 관리</div>
           <TabContainer>
-            <ul className="tab-list">
-              <li id="first-tab" className="active-tab" onClick={clickFirstTab}>
-                그룹원 관리
-              </li>
-              |
-              <li id="second-tab" onClick={clickSecondTab}>
-                대기 중인 요청
-              </li>
-            </ul>
+            <Tabs className="tab-list" defaultActiveKey="1" items={items} />
           </TabContainer>
-          <TabContent />
         </MemberSettingModalWrapper>
       </Modal>
     </>
@@ -154,30 +150,13 @@ const TabContainer = styled(Content)`
   flex-direction: column;
   font-size: 1.6rem;
 
-  .tab-list {
-    padding-left: 0;
-    display: flex;
+  .ant-tabs,
+  .ant-tabs-tab-btn {
+    font-size: 1.5rem;
   }
 
-  .tab-list li {
-    list-style: none;
-    padding-right: 1rem;
-    color: ${theme.colors.gray400};
-    cursor: pointer;
-
-    &:hover {
-      color: ${theme.colors.black};
-    }
-  }
-
-  .tab-list li:last-child {
-    padding-left: 1rem;
-    padding-right: 0;
-  }
-
-  .active-tab {
-    color: ${theme.colors.black} !important;
-    font-weight: 700;
+  .ant-tabs-tab-active {
+    font-weight: ${theme.fontWeight.bold};
   }
 `;
 

@@ -3,11 +3,11 @@ import styled from "styled-components";
 import { theme } from "../../styles/theme";
 
 interface BadgeType {
-  category: string;
   image: string;
-  title: string;
+  challengeName: string;
   startDate: string;
   endDate: string;
+  category: string;
   status: boolean; // 성공 실패 여부
 }
 
@@ -46,7 +46,7 @@ export default function BadgeStatusBox(props: PropsType) {
         )}
 
         <BadgeInfoContainer>
-          <div className="badge-title">{props.badge.title}</div>
+          <div className="badge-title">{props.badge.challengeName}</div>
           <div>
             {props.badge.status ? (
               <Progress percent={100} />
