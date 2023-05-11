@@ -4,7 +4,6 @@ import BreadCrumb from "../components/search/BreadCrumb";
 import GroupItem from "../components/search/GroupItem";
 // import { getSearchData } from "../api/search";
 import { SearchData } from "../types/search";
-import { useEffect, useState } from "react";
 
 export default function SearchPage() {
   return (
@@ -44,7 +43,7 @@ export default function SearchPage() {
 const Container = styled.div`
   width: 100%;
   display: flex;
-  padding: 9.6rem 0;
+  padding: 9.6rem 8rem;
   font-family: Pretendard;
   flex-direction: column;
 `;

@@ -31,7 +31,7 @@ const Container = styled.div`
   width: 100%;
   height: 68.8rem;
   display: flex;
-  padding: 0 7.5rem;
+  padding: 0 12%;
   font-family: Pretendard;
 `;
 
@@ -44,6 +44,9 @@ const Title = styled.div`
 const LeftWrapper = styled.div`
   width: 60%;
   flex-direction: column;
+  @media (max-width: 1200px) {
+    width: 100%;
+  }
   .subcontent {
     font-size: 2.4rem;
     color: ${theme.colors.gray500};
@@ -58,7 +61,7 @@ const LeftWrapper = styled.div`
 
 const JoinButton = styled.div`
   margin-top: 4.4rem;
-  width: 31rem;
+  width: 60%;
   height: 6rem;
   display: flex;
   justify-content: center;
@@ -79,8 +82,15 @@ const JoinButton = styled.div`
   }
 `;
 const GifWrapper = styled.div`
-  width: 40%;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 7rem;
+  img {
+    width: 100%;
+    margin-bottom: auto;
+  }
+  @media (max-width: 1200px) {
+    width: 0%;
+  }
 `;

@@ -8,11 +8,7 @@ export default function Landing1() {
       <Container>
         <LeftWrapper>
           <Title>그룹 형성과 챌린지 생성</Title>
-          <img
-            src={View}
-            alt="view"
-            style={{ width: "41.3rem", margin: "2rem auto", display: "flex" }}
-          />
+          <ViewImg src={View} alt="view" />
         </LeftWrapper>
         <GifWrapper>
           <img src={LandingGif3} alt="landing1" />
@@ -24,23 +20,41 @@ export default function Landing1() {
 const Container = styled.div`
   width: 100%;
   height: 68.8rem;
-  border: solid 1px black;
   display: flex;
   padding: 0 7.5rem;
   font-family: Pretendard;
+  @media (max-width: 1200px) {
+    height: 75rem;
+  }
+  @media (max-width: 800px) {
+    height: 65rem;
+  }
+  @media (max-width: 600px) {
+    height: 50rem;
+  }
 `;
-
+const ViewImg = styled.img`
+  width: 90%;
+  margin: 4rem auto;
+  display: flex;
+`;
 const Title = styled.div`
-  margin-top: 15rem;
-  font-size: 4rem;
+  margin-top: 8rem;
+  font-size: 3rem;
   font-weight: bold;
 `;
 const LeftWrapper = styled.div`
-  width: 50%;
-  padding: 0 10rem;
+  width: 55%;
+  padding: 0 8%;
+  @media (max-width: 1200px) {
+    width: 100%;
+    img {
+    }
+  }
   img {
     transition: transform 0.3s ease-in-out;
     cursor: pointer;
+    width: 95%;
     &:hover {
       transform: scale(1.1);
     }
@@ -48,11 +62,18 @@ const LeftWrapper = styled.div`
 `;
 
 const GifWrapper = styled.div`
-  width: 50%;
+  width: 45%;
   display: flex;
   align-items: center;
   justify-content: center;
   background-image: url(${Vector});
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 95%;
+  img {
+    width: 85%;
+  }
+  @media (max-width: 1200px) {
+    width: 0;
+  }
 `;

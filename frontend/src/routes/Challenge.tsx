@@ -22,7 +22,7 @@ export default function Challenge() {
   });
 
   return (
-    <>
+    <div style={{ marginInline: "8rem" }}>
       <Title
         title="김태원의 Figma 정복"
         subtitle="김태원과 아이들의 피그마 정복기"
@@ -50,7 +50,7 @@ export default function Challenge() {
           <span>0개</span>
         </StyledFreeze>
       </StyledContainer>
-    </>
+    </div>
   );
 }
 

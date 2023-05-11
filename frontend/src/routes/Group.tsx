@@ -186,7 +186,7 @@ export default function Group() {
   // }
 
   return (
-    <>
+    <div style={{ marginInline: "8rem" }}>
       <GroupWrapper>
         <div className="group__title-container">
           <div className="title">
@@ -420,7 +420,7 @@ export default function Group() {
           </BoardCommentContainer>
         </BoardModalWrapper>
       </Modal>
-    </>
+    </div>
   );
 }
 

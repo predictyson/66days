@@ -15,7 +15,7 @@ import styled from "styled-components";
 
 export default function GroupIntro() {
   return (
-    <>
+    <div style={{ marginInline: "8rem" }}>
       <Typography.Title style={{ fontSize: "3.2rem" }}>
         Group
         <br /> Introduction
@@ -203,7 +203,7 @@ export default function GroupIntro() {
           </Row>
         </StyledMember>
       </StyledContainer>
-    </>
+    </div>
   );
 }
 

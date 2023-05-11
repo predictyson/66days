@@ -131,6 +131,7 @@ const Title = styled.div`
 const Container = styled.div`
   display: flex;
   height: 70rem;
+  margin-inline: 8rem;
   .left {
     width: 27%;
     display: flex;
