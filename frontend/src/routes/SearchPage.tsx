@@ -2,6 +2,10 @@ import styled from "styled-components";
 import { theme } from "../styles/theme";
 import BreadCrumb from "../components/search/BreadCrumb";
 import GroupItem from "../components/search/GroupItem";
+// import { getSearchData } from "../api/search";
+import { SearchData } from "../types/search";
+import { useEffect, useState } from "react";
+
 export default function SearchPage() {
   return (
     <Container>
@@ -26,10 +30,10 @@ export default function SearchPage() {
       </div>
 
       <ItemContainer>
-        {GROUPS.map((v, idx) => {
+        {DUMMY_DATA_SEARCH.groupList.map((data, idx) => {
           return (
-            <div key={idx} style={{ marginTop: idx >= 3 ? "6rem" : "0" }}>
-              {v}
+            <div key={idx} style={{ marginTop: "6rem" }}>
+              <GroupItem key={idx} group={data} />
             </div>
           );
         })}
@@ -75,17 +79,118 @@ const SearchInput = styled.input`
 `;
 
 const ItemContainer = styled.div`
-  margin-top: 2rem;
   display: grid;
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
+  }
+  @media (max-width: 890px) {
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+  }
   grid-template-columns: repeat(auto-fit, minmax(33%, 1fr));
   justify-content: space-between;
 `;
 
-const GROUPS = [
-  <GroupItem />,
-  <GroupItem />,
-  <GroupItem />,
-  <GroupItem />,
-  <GroupItem />,
-  <GroupItem />,
-];
+const DUMMY_DATA_SEARCH: SearchData = {
+  result: "success",
+  groupList: [
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 66,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "블로깅"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+    {
+      ownerImage: "/image/image.jpg",
+      ownerName: "뭉치",
+      image: null,
+      name: "뭉치뭉치똥뭉치네",
+      categories: ["알고리즘", "강의"],
+      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
+      memberCounts: 33,
+      maxMemberCounts: 66,
+      animal: "카피바라",
+    },
+  ],
+};
