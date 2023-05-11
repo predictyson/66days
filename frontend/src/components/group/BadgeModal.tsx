@@ -10,9 +10,9 @@ import { useState } from "react";
 interface BadgeType {
   image: string;
   challengeName: string;
-  startDate: string;
-  endDate: string;
-  category: string;
+  startDate: Date;
+  endDate: Date;
+  category: "알고리즘" | "CS" | "블로깅" | "강의" | "개발서적";
   status: boolean; // 성공 실패 여부
 }
 
@@ -25,38 +25,49 @@ interface PropsType {
 export default function BadgeModal(props: PropsType) {
   const [page, setPage] = useState<number>(1);
 
+  // 페이지네이션 화살표 컴포넌트 분리
+  const PaginationArrow = ({ ...props }) => {
+    return (
+      <div className="pagination-bar-container">
+        {page === 1 ? (
+          <LeftCircleFilled className="invisible-arrow icon-margin" />
+        ) : (
+          <LeftCircleFilled
+            className="pagination-icon icon-margin"
+            onClick={handleClickLeft}
+          />
+        )}
+        {page === Math.ceil(props.badges.length / 2) ? (
+          <RightCircleFilled className="invisible-arrow" />
+        ) : (
+          <RightCircleFilled
+            className="pagination-icon"
+            onClick={handleClickRight}
+          />
+        )}
+      </div>
+    );
+  };
+
   const FirstTabContent = () => {
     return (
       <>
         <BadgeContainer>
           {props.badges.length === 0 ? (
             <div className="no-badge">챌린지가 존재하지 않습니다.</div>
-          ) : null}
+          ) : (
+            <></>
+          )}
           <div className="badge__status__box-container">
             {props.badges.slice(page * 2 - 2, page * 2).map((badge, index) => (
               <BadgeStatusBox key={index} badge={badge} />
             ))}
           </div>
           {props.badges.length > 2 ? (
-            <div className="pagination-bar-container">
-              {page === 1 ? (
-                <LeftCircleFilled className="invisible-arrow icon-margin" />
-              ) : (
-                <LeftCircleFilled
-                  className="pagination-icon icon-margin"
-                  onClick={handleClickLeft}
-                />
-              )}
-              {page === Math.ceil(props.badges.length / 2) ? (
-                <RightCircleFilled className="invisible-arrow" />
-              ) : (
-                <RightCircleFilled
-                  className="pagination-icon"
-                  onClick={handleClickRight}
-                />
-              )}
-            </div>
-          ) : null}
+            <PaginationArrow badges={props.badges} />
+          ) : (
+            <></>
+          )}
         </BadgeContainer>
       </>
     );
@@ -76,7 +87,9 @@ export default function BadgeModal(props: PropsType) {
         <BadgeContainer>
           {filteredSuccessBadgeData.length === 0 ? (
             <div className="no-badge">성공한 챌린지가 존재하지 않습니다.</div>
-          ) : null}
+          ) : (
+            <></>
+          )}
           <div className="badge__status__box-container">
             {filteredSuccessBadgeData
               .slice(page * 2 - 2, page * 2)
@@ -85,25 +98,10 @@ export default function BadgeModal(props: PropsType) {
               ))}
           </div>
           {filteredSuccessBadgeData.length > 2 ? (
-            <div className="pagination-bar-container">
-              {page === 1 ? (
-                <LeftCircleFilled className="invisible-arrow icon-margin" />
-              ) : (
-                <LeftCircleFilled
-                  className="pagination-icon icon-margin"
-                  onClick={handleClickLeft}
-                />
-              )}
-              {page === Math.ceil(filteredSuccessBadgeData.length / 2) ? (
-                <RightCircleFilled className="invisible-arrow" />
-              ) : (
-                <RightCircleFilled
-                  className="pagination-icon"
-                  onClick={handleClickRight}
-                />
-              )}
-            </div>
-          ) : null}
+            <PaginationArrow badges={filteredSuccessBadgeData} />
+          ) : (
+            <></>
+          )}
         </BadgeContainer>
       </>
     );
@@ -115,7 +113,9 @@ export default function BadgeModal(props: PropsType) {
         <BadgeContainer>
           {filteredFailedBadgeData.length === 0 ? (
             <div className="no-badge">실패한 챌린지가 존재하지 않습니다.</div>
-          ) : null}
+          ) : (
+            <></>
+          )}
           <div className="badge__status__box-container">
             {filteredFailedBadgeData
               .slice(page * 2 - 2, page * 2)
@@ -124,25 +124,10 @@ export default function BadgeModal(props: PropsType) {
               ))}
           </div>
           {filteredFailedBadgeData.length > 2 ? (
-            <div className="pagination-bar-container">
-              {page === 1 ? (
-                <LeftCircleFilled className="invisible-arrow icon-margin" />
-              ) : (
-                <LeftCircleFilled
-                  className="pagination-icon icon-margin"
-                  onClick={handleClickLeft}
-                />
-              )}
-              {page === Math.ceil(filteredFailedBadgeData.length / 2) ? (
-                <RightCircleFilled className="invisible-arrow" />
-              ) : (
-                <RightCircleFilled
-                  className="pagination-icon"
-                  onClick={handleClickRight}
-                />
-              )}
-            </div>
-          ) : null}
+            <PaginationArrow badges={filteredFailedBadgeData} />
+          ) : (
+            <></>
+          )}
         </BadgeContainer>
       </>
     );

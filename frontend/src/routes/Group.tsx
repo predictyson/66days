@@ -17,7 +17,7 @@ import Lecture from "../assets/lecture_badge.png";
 import Book from "../assets/book_badge.jpeg";
 import ChallengeBox from "../components/group/ChallengeBox";
 import { BoardBox } from "../components/group/BoardBox";
-import { mockBoardData, mockBadgeList } from "../mock/group";
+import { mockBoardData } from "../mock/group";
 import ChallengeModal from "../components/group/ChallengeModal";
 import MemberModal from "../components/group/MemberModal";
 import BadgeModal from "../components/group/BadgeModal";
@@ -58,9 +58,9 @@ interface BadgePreviewType {
 interface BadgeType {
   image: string;
   challengeName: string;
-  startDate: string;
-  endDate: string;
-  category: string;
+  startDate: Date;
+  endDate: Date;
+  category: "알고리즘" | "CS" | "블로깅" | "강의" | "개발서적";
   status: boolean; // 성공 실패 여부
 }
 
@@ -152,36 +152,36 @@ export default function Group() {
     setOpenBadgeModal((prev) => !prev); // 모달 오픈
   }
 
-  const tmpAddBadgeData = [
+  const tmpAddBadgeData: BadgeType[] = [
     {
       image: Algorithms,
       challengeName: "알고리즘 하장",
-      startDate: "2023-03-06",
-      endDate: "2023-05-11",
+      startDate: new Date("2023-03-06"),
+      endDate: new Date("2023-05-11"),
       category: "알고리즘",
       status: true,
     },
     {
       image: Book,
       challengeName: "개발서적 하루 30분씩 읽을 사람",
-      startDate: "2023-02-23",
-      endDate: "2023-04-08",
+      startDate: new Date("2023-02-23"),
+      endDate: new Date("2023-04-08"),
       category: "개발서적",
       status: false,
     },
     {
       image: Algorithms,
       challengeName: "코테 부수기 챌린지",
-      startDate: "2023-03-06",
-      endDate: "2023-04-11",
+      startDate: new Date("2023-03-06"),
+      endDate: new Date("2023-04-11"),
       category: "알고리즘",
       status: false,
     },
     {
       image: Book,
       challengeName: "모던 자바스크립트 정독",
-      startDate: "2023-02-23",
-      endDate: "2023-03-27",
+      startDate: new Date("2023-02-23"),
+      endDate: new Date("2023-03-27"),
       category: "개발서적",
       status: false,
     },
