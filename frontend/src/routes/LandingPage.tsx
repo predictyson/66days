@@ -8,7 +8,7 @@ export default function LandingPage() {
       <Landing1 />
       <Landing2 />
       <Landing3 />
-      {/* <Landing4 /> */}
+      <Landing4 />
     </>
   );
 }

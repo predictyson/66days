@@ -12,11 +12,7 @@ export default function Landing1() {
         </GifWrapper>
         <LeftWrapper>
           <Title>나의 챌린지와 스트릭 관리</Title>
-          <img
-            src={View}
-            alt="view"
-            style={{ width: "55rem", margin: "2rem auto", display: "flex" }}
-          />
+          <ViewImg src={View} alt="view" />
         </LeftWrapper>
       </Container>
     </>
@@ -28,16 +24,37 @@ const Container = styled.div`
   display: flex;
   padding: 0 7.5rem;
   font-family: Pretendard;
+  @media (max-width: 1200px) {
+    height: 75rem;
+  }
+  @media (max-width: 800px) {
+    height: 65rem;
+  }
+  @media (max-width: 600px) {
+    height: 50rem;
+  }
 `;
 
 const Title = styled.div`
-  margin-top: 15rem;
-  font-size: 4rem;
+  margin-top: 8rem;
+  font-size: 3rem;
   font-weight: ${theme.fontWeight.bold};
 `;
+const ViewImg = styled.img`
+  width: 90%;
+  margin: 4rem auto;
+  display: flex;
+`;
 const LeftWrapper = styled.div`
-  width: 50%;
-  padding: 0 10rem;
+  width: 55%;
+  padding: 0 8%;
+  @media (max-width: 1200px) {
+    width: 100%;
+    img {
+      /* height: 70%; */
+      /* width: 50%; */
+    }
+  }
   img {
     transition: transform 0.3s ease-in-out;
     cursor: pointer;
@@ -48,11 +65,18 @@ const LeftWrapper = styled.div`
 `;
 
 const GifWrapper = styled.div`
-  width: 50%;
+  width: 45%;
   display: flex;
   align-items: center;
   justify-content: center;
   background-image: url(${Vector});
   background-position: center;
   background-repeat: no-repeat;
+  background-size: 90%;
+  img {
+    width: 85%;
+  }
+  @media (max-width: 1200px) {
+    width: 0;
+  }
 `;

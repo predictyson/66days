@@ -23,6 +23,15 @@ const Container = styled.div`
   display: flex;
   padding: 0 7.5rem;
   font-family: Pretendard;
+  @media (max-width: 1200px) {
+    height: 75rem;
+  }
+  @media (max-width: 800px) {
+    height: 65rem;
+  }
+  @media (max-width: 600px) {
+    height: 50rem;
+  }
 `;
 const ViewImg = styled.img`
   width: 90%;
@@ -31,7 +40,7 @@ const ViewImg = styled.img`
 `;
 const Title = styled.div`
   margin-top: 8rem;
-  font-size: 3.5rem;
+  font-size: 3rem;
   font-weight: bold;
 `;
 const LeftWrapper = styled.div`
@@ -39,11 +48,13 @@ const LeftWrapper = styled.div`
   padding: 0 8%;
   @media (max-width: 1200px) {
     width: 100%;
+    img {
+    }
   }
   img {
     transition: transform 0.3s ease-in-out;
     cursor: pointer;
-    width: 100%;
+    width: 95%;
     &:hover {
       transform: scale(1.1);
     }
@@ -60,7 +71,7 @@ const GifWrapper = styled.div`
   background-repeat: no-repeat;
   background-size: 95%;
   img {
-    width: 95%;
+    width: 85%;
   }
   @media (max-width: 1200px) {
     width: 0;
