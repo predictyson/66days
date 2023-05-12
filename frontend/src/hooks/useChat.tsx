@@ -1,66 +1,63 @@
 import { useEffect, useState } from "react";
-import Stomp from "stompjs";
-import SockJS from "sockjs-client";
+// import Stomp from "stompjs";
+// import SockJS from "sockjs-client";
 import { mockMe } from "../mock/challenge";
 
 // FIXME: URL
-const URL = "http://70.12.247.243:8080";
+// const URL = "http://70.12.247.243:8080";
+const WS_URL = "ws://70.12.247.243:8080";
+// const WS_URL = "ws://localhost:3000";
 export default function useChat(roomId: string) {
   const user = mockMe;
   const [messages, setMessages] = useState<MessageType[]>([]);
-  const [client, setClient] = useState<Stomp.Client | null>(null);
+  const [inputValue, setInputValue] = useState("");
+  const [client, setClient] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    const client = Stomp.over(new SockJS(URL + "/stomp/chat"));
-    setClient(client);
+    // where to?
+    console.log("where: ", `${WS_URL}/challenges/${roomId}`);
 
-    /**
-     * 웹소켓에 접속하면, 특정 방에 subscribe하고나서 방 사람들에게 접속했다고 알린한다
-     */
-    client.connect({}, function () {
-      // client.subscribe(`/sub/chat/room/${roomId}`, function (chat) {
-      // client.subscribe(`/chat/enter`, function (chat) {
-      client.subscribe(`/sub/message`, function (chat) {
-        console.log("Chat: ", chat);
-        const content = JSON.parse(chat.body);
-        // setMessages((prev) => [...prev, content]); TODO: get messages from others
-        console.log("content: ", content);
-      });
+    // Create a WebSocket connection
+    const ws = new WebSocket(`${WS_URL}/challenges/${roomId}`);
+    setClient(ws);
 
-      const messagePacket: MessageType = {
-        roomId,
-        type: "ENTER",
-        date: new Date(),
-        nickname: user.nickname,
-        image: user.image,
-        value: `${user.email}(이)가 참여했습니다.`,
-      };
+    // Handle incoming messages
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      console.log("message: ", message);
+      setMessages((prevMessages) => [...prevMessages, message]);
+    };
 
-      // client.send("/pub/chat/message", {}, JSON.stringify(messagePacket));
-      client.send("/pub/message", {}, JSON.stringify(messagePacket));
-      // client.send("/challenges/room", {}, JSON.stringify(messagePacket));
-    });
+    // Clean up the WebSocket connection when the component unmounts
+    return () => {
+      ws.close();
+    };
+  }, [roomId]);
 
-    return () => client.ws.close();
-  }, []);
+  const handleSubmit = () => {
+    if (!client) return;
 
-  const sendMessage = (msg: string) => {
+    // Send a message to the WebSocket server
     const messagePacket: MessageType = {
       roomId,
       type: "CHAT",
       date: new Date(),
       nickname: user.nickname,
       image: user.image,
-      value: msg,
+      value: inputValue,
     };
-    // client!.send(`/sub/chat/room/${roomId}`, {}, JSON.stringify(messagePacket));
-    client!.send("/pub/message", {}, JSON.stringify(messagePacket));
-    // client?.send("/challenges/room", {}, JSON.stringify(messagePacket));
-    // setMessages((prev) => [...prev, messagePacket]);
+
+    client.send(JSON.stringify(messagePacket));
+
+    // Clear the input value
+    setInputValue("");
   };
 
   return {
     messages,
-    sendMessage,
+    handleSubmit,
+    inputValue,
+    setInputValue,
+    // sendMessage,
   };
 }

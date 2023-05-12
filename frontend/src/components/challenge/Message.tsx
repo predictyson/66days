@@ -23,9 +23,9 @@ export default function Message(props: PropsType) {
           disabled
         />
       </Space>
-      <Typography.Text type="secondary" style={{ marginTop: "auto" }}>
+      {/* <Typography.Text type="secondary" style={{ marginTop: "auto" }}>
         {props.message.date.toLocaleDateString()}
-      </Typography.Text>
+      </Typography.Text> */}
     </div>
   );
 }
