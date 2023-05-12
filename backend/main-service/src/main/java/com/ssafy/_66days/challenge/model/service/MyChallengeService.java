@@ -1,12 +1,14 @@
 package com.ssafy._66days.challenge.model.service;
 
-import com.ssafy._66days.animal.model.entity.Animal;
+import com.ssafy._66days.article.model.dto.responseDto.CommentResponseDTO;
+import com.ssafy._66days.article.model.entity.Comment;
 import com.ssafy._66days.badge.model.entity.Badge;
 import com.ssafy._66days.badge.model.repository.BadgeRepository;
 import com.ssafy._66days.challenge.model.dto.MyChallengeHistoryDTO;
 import com.ssafy._66days.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
 import com.ssafy._66days.challenge.model.dto.responseDTO.AvailableMyChallengeResponseDTO;
-import com.ssafy._66days.challenge.model.dto.responseDTO.MyChallengeDetailDTO;
+import com.ssafy._66days.challenge.model.dto.responseDTO.MyChallengeDetailResponseDTO;
+import com.ssafy._66days.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
 import com.ssafy._66days.challenge.model.entity.Challenge;
 import com.ssafy._66days.challenge.model.entity.GroupChallenge;
 import com.ssafy._66days.challenge.model.entity.GroupChallengeMember;
@@ -15,11 +17,7 @@ import com.ssafy._66days.challenge.model.reposiotry.ChallengeRepository;
 import com.ssafy._66days.challenge.model.reposiotry.GroupChallengeMemberRepository;
 import com.ssafy._66days.challenge.model.reposiotry.GroupChallengeRepository;
 import com.ssafy._66days.challenge.model.reposiotry.MyChallengeRepository;
-import com.ssafy._66days.global.util.CheckUserUtil;
-import com.ssafy._66days.group.model.entity.Group;
-import com.ssafy._66days.group.model.entity.GroupMember;
 import com.ssafy._66days.group.model.repository.GroupRepository;
-import com.ssafy._66days.tier.model.entity.Tier;
 import com.ssafy._66days.user.model.entity.User;
 import com.ssafy._66days.user.model.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -28,8 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service("MyChallengeService")
 @Transactional(readOnly = true)
@@ -91,6 +89,22 @@ public class MyChallengeService {
         return true;
     }
 
+    public List<MyChallengeResponseDTO> getMyChallenges(UUID userId) {      // 개인 챌린지 목록
+
+        User user = userRepository.findById(userId)                         // 유저 객체 받아오기
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
+        
+        String state = "ACTIVATED";                                         // 개인 챌린지 중 진행중인 것만 받아온다 
+        List<MyChallenge> mychallenges = myChallengeRepository.findByUserAndState(user, state);
+        
+        List<MyChallengeResponseDTO> MyChallengeResponseDTOs = new ArrayList<>();
+        if (!mychallenges.isEmpty()) {                                      // 진행중인 챌린지가 있다면
+            MyChallengeResponseDTOs = mychallenges.stream()
+                    .map(myChanllenge -> MyChallengeResponseDTO.of(myChanllenge))
+                    .collect(Collectors.toList());                          // 각 챌린지를 DTO로 변환 후 반환
+        }
+        return MyChallengeResponseDTOs;
+    }
     // 내가 개인 혹은 그룹에서 하고 있는 챌린지아이디를 담을 배열을 만든다
     // userId로 내가 하고 있는 챌린지들의 챌린지 아이디를 찾는다
     // 넘어온 groupIdList로 activated인 챌린지를 찾고 그중 그룹 챌린지 참여자에 userId가 있는 것의 챌린지 아이디를 찾는다
@@ -146,7 +160,7 @@ public class MyChallengeService {
 
     // 개인 챌린지 상세페이지
     // 챌린지 이름, 설명, 이전 챌린지 히스토리 정보 반환
-    public MyChallengeDetailDTO getMyChallengeDetail(UUID userId, Long MyChallengeId) {
+    public MyChallengeDetailResponseDTO getMyChallengeDetail(UUID userId, Long MyChallengeId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         String fail = "FAILD";
@@ -166,7 +180,7 @@ public class MyChallengeService {
 
         MyChallenge myChallenge = myChallengeRepository.findById(MyChallengeId)             // 해당 챌린지 객체 받아오기
                 .orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다"));
-        return MyChallengeDetailDTO.of(myChallenge, MyChallengeHistoryDTOs);                // 해당 챌린지의 정보와 챌린지 히스토리로 상세페이지 정보 DTO 만들어서 반환
+        return MyChallengeDetailResponseDTO.of(myChallenge, MyChallengeHistoryDTOs);                // 해당 챌린지의 정보와 챌린지 히스토리로 상세페이지 정보 DTO 만들어서 반환
     }
 }
 

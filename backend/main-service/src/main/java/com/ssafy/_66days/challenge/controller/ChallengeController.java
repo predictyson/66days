@@ -2,7 +2,8 @@ package com.ssafy._66days.challenge.controller;
 
 import com.ssafy._66days.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
 import com.ssafy._66days.challenge.model.dto.responseDTO.AvailableMyChallengeResponseDTO;
-import com.ssafy._66days.challenge.model.dto.responseDTO.MyChallengeDetailDTO;
+import com.ssafy._66days.challenge.model.dto.responseDTO.MyChallengeDetailResponseDTO;
+import com.ssafy._66days.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
 import com.ssafy._66days.challenge.model.service.GroupChallengeService;
 import com.ssafy._66days.challenge.model.service.MyChallengeService;
 import io.swagger.annotations.ApiOperation;
@@ -82,16 +83,15 @@ public class ChallengeController {
     @ApiOperation(value = "개인 챌린지 목록 반환 API", notes="개인 그룹 페이지에 노출되는 개인 챌린지 목록")
     public ResponseEntity<Map<String, Object>> getMyChallenges(
 //            @RequestHeader(name = "Authorization") String accessToken
-
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        try {
 
+        try {
             // auth서버로 인증 요청
 //            AuthenticateUtil authenticateUtil = new AuthenticateUtil();
 //            UUID userId = authenticateUtil.getUserId(accessToken);
 
-            List<MyChallengeDTO> MyChallengeDTOs = MyChallengeService.getMyChallenges(userId);
+            List<MyChallengeResponseDTO> MyChallengeDTOs = myChallengeService.getMyChallenges(userId);
             resultMap.put("MyChallengeDTOs", MyChallengeDTOs);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
         } catch (Exception e) {
@@ -111,8 +111,8 @@ public class ChallengeController {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         try {
-            MyChallengeDetailDTO myChallengeDetailDTO = myChallengeService.getMyChallengeDetail(userId, MyChallengeId);
-            resultMap.put("myChallengeHistoryDTO", myChallengeDetailDTO);
+            MyChallengeDetailResponseDTO myChallengeDetailResponseDTO = myChallengeService.getMyChallengeDetail(userId, MyChallengeId);
+            resultMap.put("myChallengeHistoryDTO", myChallengeDetailResponseDTO);
             return ResponseEntity.ok(resultMap);
         } catch (Exception e) {
             e.printStackTrace();

@@ -12,4 +12,6 @@ public interface MyChallengeRepository extends JpaRepository<MyChallenge, Long> 
     List<MyChallenge> findByUser(User user);
 
     List<MyChallenge> findByState(String state);
+
+    List<MyChallenge> findByUserAndState(User user, String state);
 }

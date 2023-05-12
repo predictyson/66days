@@ -11,14 +11,14 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString
-public class MyChallengeDetailDTO {
+public class MyChallengeDetailResponseDTO {
     private String challengeName;
     private String content;
     private String imagePath;
     private List<MyChallengeHistoryDTO> MyChallengeHistoryDTOS;
 
-    public static MyChallengeDetailDTO of(MyChallenge myChallenge, List<MyChallengeHistoryDTO> MyChallengeHistoryDTOs) {
-        return MyChallengeDetailDTO.builder()
+    public static MyChallengeDetailResponseDTO of(MyChallenge myChallenge, List<MyChallengeHistoryDTO> MyChallengeHistoryDTOs) {
+        return MyChallengeDetailResponseDTO.builder()
                 .challengeName(myChallenge.getChallengeName())
                 .content(myChallenge.getContent())
                 .imagePath(myChallenge.getChallenge().getBadge().getImagePath())
