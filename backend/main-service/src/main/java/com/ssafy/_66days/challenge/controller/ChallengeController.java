@@ -45,7 +45,7 @@ public class ChallengeController {
 //            AuthenticateUtil authenticateUtil = new AuthenticateUtil();
 //            UUID userId = authenticateUtil.getUserId(accessToken);
 
-            boolean isSuccess = MyChallengeService.createMyChallenge(userId, myChallengeRequestDTO);
+            boolean isSuccess = myChallengeService.createMyChallenge(userId, myChallengeRequestDTO);
             resultMap.put("isSuccess", isSuccess);
             return ResponseEntity.ok(resultMap);
         } catch (Exception e) {

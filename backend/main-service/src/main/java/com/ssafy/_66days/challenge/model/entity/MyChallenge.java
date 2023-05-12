@@ -34,6 +34,10 @@ public class MyChallenge {
     private Challenge challenge;
 
     @NotBlank
+    @Column(name = "challenge_name", nullable = false)
+    private String challengeName;
+
+    @NotBlank
     @Column(name = "content", nullable = false)
     private String content;
 
