@@ -88,6 +88,22 @@ async function fetchBoardData(groupId: number, articleId: number) {
   }
 }
 
+async function fetchCommentData(articleId: number = 2, page: number) {
+  try {
+    const res = await api.get(
+      `/api/v2/article/${articleId}/comments?offset=${page}`
+    );
+    if (res.status === 200) {
+      return res.data;
+    }
+
+    throw new Error();
+  } catch (error) {
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
+
 export {
   fetchGroupPageData,
   fetchGroupMembers,
@@ -95,4 +111,5 @@ export {
   fetchGroupBadges,
   fetchBoardListByPage,
   fetchBoardData,
+  fetchCommentData,
 };

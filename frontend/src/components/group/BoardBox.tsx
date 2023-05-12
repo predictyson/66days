@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { NotificationFilled } from "@ant-design/icons";
 import changeDateFormat from "../../util/common";
-import { fetchBoardData } from "../../api/group";
+import { fetchBoardData, fetchCommentData } from "../../api/group";
 
 const { Content } = Layout;
 
@@ -13,13 +13,18 @@ export function BoardBox({ ...props }) {
       props.data.groupId,
       props.data.articleId
     );
-    console.log(fetchedBoardData);
     props.setBoardData(fetchedBoardData);
+  }
+
+  async function fetchAndSetCommentData() {
+    const fetchedCommentData = await fetchCommentData(props.data.articleId, 0);
+    props.setCommentData(fetchedCommentData.commentsList);
   }
 
   function onClickBoardBox() {
     // boardId에 맞는 article 데이터 불러오기
     fetchAndSetBoardData();
+    fetchAndSetCommentData();
     props.setBoardModal(true);
   }
 
@@ -34,7 +39,7 @@ export function BoardBox({ ...props }) {
           <div className="board-date">
             {changeDateFormat(new Date(props.data.createdAt))}
           </div>
-          <div>작성자: {props.data.writer}</div>
+          <div>작성자: {props.data.nickname}</div>
         </div>
       </BoardBoxWrapper>
     </>

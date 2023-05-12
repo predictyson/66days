@@ -92,6 +92,17 @@ interface BoardType {
   pageNo: number;
 }
 
+interface CommentType {
+  commentId: number;
+  articleId: number;
+  groupId: number;
+  userId: string;
+  nickname: string;
+  profileImagePath: string;
+  content: string;
+  createdAt: Date;
+}
+
 export default function Group() {
   const [isOpenMemberModal, setOpenMemberModal] = useState(false);
   const [isOpenMemberSettingModal, setOpenMemberSettingModal] = useState(false);
@@ -110,6 +121,7 @@ export default function Group() {
   const [filteredBadgeList, setFilteredBadgeList] = useState<BadgeType[]>([]);
   const [boardDataList, setBoardDataList] = useState<BoardType>();
   const [boardData, setBoardData] = useState<ArticleType>();
+  const [commentData, setCommentData] = useState<CommentType[]>([]);
 
   function getCategoryColor(category: string) {
     if (category === "알고리즘") {
@@ -357,6 +369,7 @@ export default function Group() {
                 // writer={boardData.nickname}
                 data={article}
                 setBoardData={setBoardData}
+                setCommentData={setCommentData}
                 setBoardModal={setOpenBoardModal}
               />
             ))}
@@ -410,6 +423,7 @@ export default function Group() {
         open={isOpenBoardModal}
         toggleModal={() => setOpenBoardModal((prev) => !prev)}
         boardData={boardData}
+        commentData={commentData}
       />
       {/* <Modal
         open={boardModal}
