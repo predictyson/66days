@@ -24,6 +24,7 @@ import BadgeModal from "../components/group/BadgeModal";
 import NewBoardModal from "../components/group/NewBoardModal";
 import {
   fetchAppliedMembers,
+  fetchBoardListByPage,
   fetchGroupBadges,
   fetchGroupMembers,
   fetchGroupPageData,
@@ -51,7 +52,7 @@ interface MemberType {
 
 interface BadgePreviewType {
   image: string;
-  category: string;
+  category: "알고리즘" | "CS" | "블로깅" | "강의" | "개발서적";
   count: number;
 }
 
@@ -76,10 +77,14 @@ interface ChallengeType {
 
 interface BoardType {
   articles: {
+    articleId: number;
     title: string;
-    author: string;
-    author_role: string;
-    time: Date;
+    content: string;
+    createdAt: Date;
+    userId: string;
+    nickname: string;
+    groupId: number;
+    role: string;
   }[];
   pageNo: number;
 }
@@ -92,6 +97,8 @@ export default function Group() {
   const [isOpenBadgeModal, setOpenBadgeModal] = useState(false);
   const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
   const [isOpenNewBoardModal, setOpenNewBoardModal] = useState(false);
+
+  const [boardPage, setBoardPage] = useState<number>(1);
 
   const [badgePreview, setBadgePreview] = useState<BadgePreviewType[]>([]);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
@@ -150,6 +157,29 @@ export default function Group() {
   function clickBadgeCategory(category: string) {
     filterBadgesByCategory(category); // badge data filter by selected category
     setOpenBadgeModal((prev) => !prev); // 모달 오픈
+  }
+
+  async function fetchAndSetNewBoardList(page: number) {
+    const newBoardList = await fetchBoardListByPage(1, page);
+    newBoardList.pgNo = boardPage - 1;
+    setBoardDataList(newBoardList);
+  }
+
+  function handleClickLeft() {
+    if (boardPage > 1) {
+      setBoardPage(boardPage - 1);
+      // 이전 페이지 게시글 리스트 호출
+      fetchAndSetNewBoardList(boardPage - 1);
+      // setBoardDataList(newBoardList);
+    }
+  }
+
+  function handleClickRight() {
+    if (boardPage < Math.ceil(4 / 2)) {
+      setBoardPage(boardPage + 1);
+      // 이후 페이지 게시글 리스트 호출
+      fetchAndSetNewBoardList(boardPage + 1);
+    }
   }
 
   const tmpAddBadgeData: BadgeType[] = [
@@ -319,15 +349,29 @@ export default function Group() {
               <BoardBox
                 key={index}
                 title={boardData.title}
-                date={boardData.time}
-                writer={boardData.author}
+                createdAt={boardData.createdAt}
+                writer={boardData.nickname}
                 setBoardModal={setBoardModal}
               />
             ))}
           </BoardList>
           <div className="pagination-bar-container">
-            <LeftCircleFilled className="pagination-icon" />
-            <RightCircleFilled className="pagination-icon" />
+            {boardPage === 1 ? (
+              <LeftCircleFilled className="invisible-arrow icon-margin" />
+            ) : (
+              <LeftCircleFilled
+                className="pagination-icon icon-margin"
+                onClick={handleClickLeft}
+              />
+            )}
+            {boardPage === Math.ceil(4 / 3) ? (
+              <RightCircleFilled className="invisible-arrow" />
+            ) : (
+              <RightCircleFilled
+                className="pagination-icon"
+                onClick={handleClickRight}
+              />
+            )}
           </div>
         </BoardContainer>
       </GroupWrapper>
@@ -590,7 +634,12 @@ const BoardContainer = styled(Content)`
     }
   }
 
-  .pagination-icon:first-child {
+  .invisible-arrow {
+    font-size: 3.2rem;
+    visibility: hidden;
+  }
+
+  .icon-margin {
     margin-right: 5rem;
   }
 `;

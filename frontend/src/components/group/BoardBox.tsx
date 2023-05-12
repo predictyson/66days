@@ -2,6 +2,7 @@ import { Layout } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { NotificationFilled } from "@ant-design/icons";
+import changeDateFormat from "../../util/common";
 
 const { Content } = Layout;
 
@@ -12,7 +13,9 @@ export function BoardBox({ ...props }) {
         {props.admin ? <NotificationFilled className="admin" /> : null}
         <div className="board-title">{props.title}</div>
         <div className="board-info">
-          <div className="board-date">{props.date}</div>
+          <div className="board-date">
+            {changeDateFormat(new Date(props.createdAt))}
+          </div>
           <div>작성자: {props.writer}</div>
         </div>
       </BoardBoxWrapper>
