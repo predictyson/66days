@@ -19,7 +19,9 @@ export default function useChat(roomId: string) {
      */
     client.connect({}, function () {
       // client.subscribe(`/sub/chat/room/${roomId}`, function (chat) {
-      client.subscribe(`/chat/enter`, function (chat) {
+      // client.subscribe(`/chat/enter`, function (chat) {
+      client.subscribe(`/sub/message`, function (chat) {
+        console.log("Chat: ", chat);
         const content = JSON.parse(chat.body);
         // setMessages((prev) => [...prev, content]); TODO: get messages from others
         console.log("content: ", content);
@@ -28,14 +30,15 @@ export default function useChat(roomId: string) {
       const messagePacket: MessageType = {
         roomId,
         type: "ENTER",
-        date: new Date().toLocaleString(),
+        date: new Date(),
         nickname: user.nickname,
         image: user.image,
         value: `${user.email}(이)가 참여했습니다.`,
       };
 
       // client.send("/pub/chat/message", {}, JSON.stringify(messagePacket));
-      client.send("/challenges/room", {}, JSON.stringify(messagePacket));
+      client.send("/pub/message", {}, JSON.stringify(messagePacket));
+      // client.send("/challenges/room", {}, JSON.stringify(messagePacket));
     });
 
     return () => client.ws.close();
@@ -45,15 +48,15 @@ export default function useChat(roomId: string) {
     const messagePacket: MessageType = {
       roomId,
       type: "CHAT",
-      date: new Date().toLocaleString(),
+      date: new Date(),
       nickname: user.nickname,
       image: user.image,
       value: msg,
     };
     // client!.send(`/sub/chat/room/${roomId}`, {}, JSON.stringify(messagePacket));
-    // client!.send("/pub/chat/message", {}, JSON.stringify(messagePacket));
-    client?.send("/challenges/room", {}, JSON.stringify(messagePacket));
-    setMessages((prev) => [...prev, messagePacket]);
+    client!.send("/pub/message", {}, JSON.stringify(messagePacket));
+    // client?.send("/challenges/room", {}, JSON.stringify(messagePacket));
+    // setMessages((prev) => [...prev, messagePacket]);
   };
 
   return {
