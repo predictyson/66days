@@ -36,7 +36,6 @@ interface PropsType {
 }
 
 export function BoardModal(props: PropsType) {
-  console.log(props.boardData);
   const CommentBox = () => {
     return (
       <CommentBoxWrapper>
@@ -45,8 +44,8 @@ export function BoardModal(props: PropsType) {
         ) : (
           <></>
         )}
-        {props.commentData?.map((comment) => (
-          <SingleComment>
+        {props.commentData?.map((comment: CommentType, index) => (
+          <SingleComment key={index}>
             <div className="writer-profile-box">
               <img
                 className="comment-writer-profile"

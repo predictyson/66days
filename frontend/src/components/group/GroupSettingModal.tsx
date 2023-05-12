@@ -16,7 +16,7 @@ interface MemberType {
   image: string;
   nickname: string;
   badge: number;
-  role: string;
+  authority: "MEMBER" | "OWNER" | "MANAGER";
 }
 
 interface PropsType {
@@ -40,8 +40,8 @@ export function GroupSettingModal(props: PropsType) {
                 key={index}
                 profile={member.image}
                 nickname={member.nickname}
-                owner={member.role === "owner" ? true : false}
-                manager={member.role === "manager" ? true : false}
+                owner={member.authority === "OWNER" ? true : false}
+                manager={member.authority === "MANAGER" ? true : false}
                 badge={member.badge}
               />
               <div className="setting-btn-box">
@@ -70,6 +70,11 @@ export function GroupSettingModal(props: PropsType) {
     return (
       <>
         <TabContentWrapper>
+          {props.appliedList.length === 0 ? (
+            <div className="no-applied-members">대기 중인 요청이 없습니다.</div>
+          ) : (
+            <></>
+          )}
           {props.appliedList.map((member: MemberType) => (
             <div className="member-setting-container">
               <SingleMemberListBox
@@ -162,6 +167,11 @@ const TabContainer = styled(Content)`
 
 const TabContentWrapper = styled(Content)`
   padding-top: 5rem;
+
+  .no-applied-members {
+    font-size: 1.5rem;
+    text-align: center;
+  }
 
   .member-setting-container {
     display: flex;
