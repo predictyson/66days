@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -71,7 +72,6 @@ public class ArticleService {
         if (!isUserInGroup) {
             throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
         }
-
         // 유저에게 받은 게시글 정보, 작성일자, user, group 정보등을 담아 객체를 생성한다
         Article articleCreate = Article.builder()
                 .title(articleRequestDTO.getTitle())
@@ -82,7 +82,9 @@ public class ArticleService {
                 .group(group)
                 .build();
         Article savedArticle = articleRepository.save(articleCreate);   // 생성한 객체를 DB에 저장
-        return ArticleResponseDTO.of(savedArticle); // 저장한 게시글을 게시글 dto에 담아 반환한다
+
+        String role = groupMemberRepository.findByUser(user).getAuthority();
+        return ArticleResponseDTO.of(savedArticle, role); // 저장한 게시글을 게시글 dto에 담아 반환한다
     }
 
 
@@ -103,8 +105,9 @@ public class ArticleService {
         }
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다"));
+        String role = groupMemberRepository.findByUser(user).getAuthority();
 
-        return ArticleResponseDTO.of(article);
+        return ArticleResponseDTO.of(article, role);
     }
 
 
@@ -125,10 +128,15 @@ public class ArticleService {
         Pageable pageable = PageRequest.of(offset, 3);
         // offset 값과 limit 값을 이용해 최근 게시글 3개를 가져온다
         List<Article> articleList = articleRepository.findByGroupAndIsDeleted(group, false, pageable);
+        List<ArticleResponseDTO> articleResponseDTOs = new ArrayList<>();
         // 가져온 게시글을 ArticleDTO 리스트로 변환한다
-        List<ArticleResponseDTO> articleResponseDTOs = articleList.stream()
-                .map(article -> ArticleResponseDTO.of(article))
-                .collect(Collectors.toList());
+        for (int i = 0; i < articleList.size(); i++) {
+            User articleUser = articleList.get(i).getUser();
+            Group articleGroup = articleList.get(i).getGroup();
+
+            String role = groupMemberRepository.findByGroupAndUser(articleGroup, articleUser).get().getAuthority();
+            articleResponseDTOs.add(ArticleResponseDTO.of(articleList.get(i), role));
+        }
         return articleResponseDTOs;
     }
 
@@ -163,11 +171,10 @@ public class ArticleService {
         if (articleUpdateRequestDTO.getContent() == null) {
             throw new IllegalArgumentException("수정할 내용을 작성해 주세요");
         }
-        article.ModifyArticle(articleUpdateRequestDTO.getContent());
-//        article.setContent(articleUpdateRequestDTO.getContent());   // 기존글에 수정할 내용을 넣어준다
-//        Article updatedArticle = articleRepository.save(article);   // DB에 저장
 
-        return ArticleResponseDTO.of(article);
+        article.ModifyArticle(articleUpdateRequestDTO.getContent());    // setter쓰지 않고 ModifyArticle함수 이용해 update
+        String role = groupMemberRepository.findByGroupAndUser(group, user).get().getAuthority(); // 그룹, 유저 정보로 그룹 내 권한 가져온다
+        return ArticleResponseDTO.of(article, role);
     }
 
     public boolean deleteArticle(

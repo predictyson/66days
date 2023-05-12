@@ -20,9 +20,8 @@ public class ArticleResponseDTO {
     private UUID userId;
     private String nickname;
     private Long groupId;
-
-
-    public static ArticleResponseDTO of(Article article) {
+    private String role;
+    public static ArticleResponseDTO of(Article article, String role) {
         return ArticleResponseDTO.builder()
                 .articleId(article.getArticleId())
                 .title(article.getTitle())
@@ -31,6 +30,7 @@ public class ArticleResponseDTO {
                 .userId(article.getUser().getUserId())
                 .nickname(article.getUser().getNickname())
                 .groupId(article.getGroup().getGroupId())
+                .role(role)
                 .build();
     }
 }
