@@ -10,4 +10,6 @@ import java.util.Optional;
 
 public interface MyChallengeRepository extends JpaRepository<MyChallenge, Long> {
     List<MyChallenge> findByUser(User user);
+
+    List<MyChallenge> findByState(String state);
 }

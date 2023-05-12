@@ -3,8 +3,10 @@ package com.ssafy._66days.challenge.model.service;
 import com.ssafy._66days.animal.model.entity.Animal;
 import com.ssafy._66days.badge.model.entity.Badge;
 import com.ssafy._66days.badge.model.repository.BadgeRepository;
+import com.ssafy._66days.challenge.model.dto.MyChallengeHistoryDTO;
 import com.ssafy._66days.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
 import com.ssafy._66days.challenge.model.dto.responseDTO.AvailableMyChallengeResponseDTO;
+import com.ssafy._66days.challenge.model.dto.responseDTO.MyChallengeDetailDTO;
 import com.ssafy._66days.challenge.model.entity.Challenge;
 import com.ssafy._66days.challenge.model.entity.GroupChallenge;
 import com.ssafy._66days.challenge.model.entity.GroupChallengeMember;
@@ -39,7 +41,6 @@ public class MyChallengeService {
     private final GroupChallengeRepository groupChallengeRepository;
     private final GroupRepository groupRepository;
     private final GroupChallengeMemberRepository groupChallengeMemberRepository;
-
 
 
     public MyChallengeService(
@@ -89,19 +90,18 @@ public class MyChallengeService {
         }
         return true;
     }
+
     // 내가 개인 혹은 그룹에서 하고 있는 챌린지아이디를 담을 배열을 만든다
     // userId로 내가 하고 있는 챌린지들의 챌린지 아이디를 찾는다
     // 넘어온 groupIdList로 activated인 챌린지를 찾고 그중 그룹 챌린지 참여자에 userId가 있는 것의 챌린지 아이디를 찾는다
     // 개인, 그룹에서 하고 있는 챌린지 아이디를 배열에 담고
     // 챌린지 5개 목록 미리 준비
     // 하고 있는 챌린지 아이디들은 응답DTO에 boolean값을 false호 넣고 반환
-    public List<AvailableMyChallengeResponseDTO> getAvailableMyChallengeList(UUID userId, List<Long> groupIdList) {
-
-
+    public List<AvailableMyChallengeResponseDTO> getAvailableMyChallengeList(UUID userId) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
-        List<Long> temp = new ArrayList<>();    // 하고 있는 챌린지 id 담을 배열
+        List<Long> temp = new ArrayList<>();                                                  // 하고 있는 챌린지 id 담을 배열
         List<Challenge> challlengeList = challengeRepository.findAll();                       // 챌린지 메타 데이터(5개)
 
 
@@ -122,25 +122,51 @@ public class MyChallengeService {
         if (!myChallengeList.isEmpty()) {
             for (int i = 0; i < myChallengeList.size(); i++) {
                 Long challengeId = myChallengeList.get(i).getChallenge().getChallengeId();      // 그것들의 챌린지 아이디를 찾는다
-                temp.add(challengeId);                                                          // 개인이 하고 잇는 챌린지들의 id를 temp에 저장
+                temp.add(challengeId);                                                          // 개인이 하고 dlT는 챌린지들의 id를 temp에 저장
+
             }
         }
 
-        for (int i = 0; i < temp.size(); i++) {
-//            temp에 있는 challenge들은 isavailable 값 false로, 없는 것들은 true로 해서 responseDTO list로 만들어 반환
+        List<AvailableMyChallengeResponseDTO> availableMyChallengeResponseDTOs = new ArrayList<>(); // 가능/불가능 챌린지를 담을 배열
+        int challengeNumber = challlengeList.size();                                                // 전체 챌린지 갯수
+        for (Long i = 1L; i <= challengeNumber; i++) {                                              // 전체 챌린지 갯수만큼 순회 1번부터
+            Challenge challenge = challengeRepository.findById(i)                                   // 해당 번호의 챌린지를 가져온다
+                    .orElseThrow(() -> new IllegalArgumentException("유효한 챌린지가 아닙니다"));
+            if (temp.contains(i)) {                                                                 // 해당 챌린지번호가 temp에 있으면, 즉 유저가 하고 있는 챌린지라면
+                AvailableMyChallengeResponseDTO availableMyChallengeResponseDTO = AvailableMyChallengeResponseDTO.of(challenge, false); // 응답DTO에 available=false로 넣는다
+                availableMyChallengeResponseDTOs.add(availableMyChallengeResponseDTO);
+            } else {                                                                                // 해당 챌린지번호가 temp에 없으면, 즉 유저가 하고 있지 않는 챌린지라면
+                AvailableMyChallengeResponseDTO availableMyChallengeResponseDTO = AvailableMyChallengeResponseDTO.of(challenge, true);  // 응답DTO에 available=true로 넣는다
+                availableMyChallengeResponseDTOs.add(availableMyChallengeResponseDTO);
+            }
         }
-        return null;
-//        if (groupIdList.size() > 0) {
-//
-//            for (int i = 0; i < groupIdList.size(); i++) {
-//                Long groupId = groupIdList.get(i);
-//                Group group = groupRepository.findById(groupId)
-//                        .orElseThrow(() -> new IllegalArgumentException(""));
-//                List<Long> challengeLId = groupChallengeRepository.findByGroupAndUser(userId, groupId);
-//            }
-//        }
-//        if (myChallengeList.size() != 0) {
-//
-//        }
+        return availableMyChallengeResponseDTOs;    // 최종으로 모아서 반환
+
+    }
+
+    // 개인 챌린지 상세페이지
+    // 챌린지 이름, 설명, 이전 챌린지 히스토리 정보 반환
+    public MyChallengeDetailDTO getMyChallengeDetail(UUID userId, Long MyChallengeId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
+        String fail = "FAILD";
+        String success = "SUCCESSFUL";
+        List<MyChallenge> myFailChallenges = myChallengeRepository.findByState(fail);       // 실패했던 챌린지 찾아오기
+        List<MyChallenge> mySuccessChallenges = myChallengeRepository.findByState(success); // 성공했던 챌린지 찾아오기
+        
+        List<MyChallengeHistoryDTO> MyChallengeHistoryDTOs = new ArrayList<>();             // 챌린지 히스토리 받을 배열
+        for (MyChallenge mychallenge : myFailChallenges) {                                  // 실패챌린지 순회
+            MyChallengeHistoryDTO myChallengeHistoryDTO = MyChallengeHistoryDTO.of(mychallenge, false); // 실패챌린지 DTO로 변환
+            MyChallengeHistoryDTOs.add(myChallengeHistoryDTO);                              // 챌린지 히스토리에 담는다
+        }
+        for (MyChallenge mychallenge : mySuccessChallenges) {                               // 성공챌린지 순회
+            MyChallengeHistoryDTO myChallengeHistoryDTO = MyChallengeHistoryDTO.of(mychallenge, true);  // 성공챌린지DTO로 변환
+            MyChallengeHistoryDTOs.add(myChallengeHistoryDTO);                              // 챌린지 히스토리에 담는다
+        }
+
+        MyChallenge myChallenge = myChallengeRepository.findById(MyChallengeId)             // 해당 챌린지 객체 받아오기
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다"));
+        return MyChallengeDetailDTO.of(myChallenge, MyChallengeHistoryDTOs);                // 해당 챌린지의 정보와 챌린지 히스토리로 상세페이지 정보 DTO 만들어서 반환
     }
 }
+

@@ -1,5 +1,6 @@
 package com.ssafy._66days.challenge.model.dto.responseDTO;
 
+import com.ssafy._66days.challenge.model.entity.Challenge;
 import lombok.*;
 
 @Builder
@@ -12,5 +13,14 @@ public class AvailableMyChallengeResponseDTO {
     private String challengeName;
     private String imagePath;
     private boolean available;
+
+    public static AvailableMyChallengeResponseDTO of(Challenge challenge, boolean isAvailable) {
+        return AvailableMyChallengeResponseDTO.builder()
+                .challengeId(challenge.getChallengeId())
+                .challengeName(challenge.getTopic())
+                .imagePath(challenge.getBadge().getImagePath())
+                .available(isAvailable)
+                .build();
+    }
 
 }
