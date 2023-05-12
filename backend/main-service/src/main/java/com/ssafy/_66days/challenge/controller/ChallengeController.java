@@ -1,17 +1,17 @@
 package com.ssafy._66days.challenge.controller;
 
 import com.ssafy._66days.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
+import com.ssafy._66days.challenge.model.dto.responseDTO.AvailableMyChallengeResponseDTO;
 import com.ssafy._66days.challenge.model.service.GroupChallengeService;
 import com.ssafy._66days.challenge.model.service.MyChallengeService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -32,8 +32,31 @@ public class ChallengeController {
         this.myChallengeService = myChallengeService;
     }
 
+    // 개인 챌린지 시작 가능 목록
+    @GetMapping("/")
+    @ApiOperation(value = "가능한 개인 챌린지 목록 반환 API", notes = "챌린지 만들기 클릭 시 나오는 챌린지 목록")
+    public ResponseEntity<Map<String, Object>> getAvailableMyChallengeList(
+//            @RequestHeader(name = "Authorization") String accessToken
+            @PathVariable("group_id_list") List<Long> groupIdList
+    ) {
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        try {
+            // auth서버로 인증 요청
+//            AuthenticateUtil authenticateUtil = new AuthenticateUtil();
+//            UUID userId = authenticateUtil.getUserId(accessToken);
+
+            List<AvailableMyChallengeResponseDTO> availableMyChallengeResponseDTOs = myChallengeService.getAvailableMyChallengeList(userId, groupIdList);
+            resultMap.put("availableMyChallengeResponseDTOs", availableMyChallengeResponseDTOs);
+            return ResponseEntity.ok().body(resultMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
+    }
     // 개인 챌린지 생성
     @PostMapping("/createMyChallenge")
+    @ApiOperation(value="개인 챌린지 생성 API", notes = "개인 챌린지 생성")
     public ResponseEntity<Map<String, Object>> createMyChallenge(
 //            @RequestHeader(name = "Authorization") String accessToken
             @RequestBody MyChallengeRequestDTO myChallengeRequestDTO
