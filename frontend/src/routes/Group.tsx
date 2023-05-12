@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { Layout, Modal } from "antd";
+import { Layout } from "antd";
 import styled from "styled-components";
 import {
   TeamOutlined,
   TrophyFilled,
-  SendOutlined,
   RightCircleFilled,
   LeftCircleFilled,
 } from "@ant-design/icons";
@@ -17,19 +16,20 @@ import Lecture from "../assets/lecture_badge.png";
 import Book from "../assets/book_badge.jpeg";
 import ChallengeBox from "../components/group/ChallengeBox";
 import { BoardBox } from "../components/group/BoardBox";
-import { mockBoardData } from "../mock/group";
 import ChallengeModal from "../components/group/ChallengeModal";
 import MemberModal from "../components/group/MemberModal";
 import BadgeModal from "../components/group/BadgeModal";
 import NewBoardModal from "../components/group/NewBoardModal";
 import {
   fetchAppliedMembers,
+  fetchBoardListByPage,
   fetchGroupBadges,
   fetchGroupMembers,
   fetchGroupPageData,
 } from "../api/group";
 import NoChallengeBox from "../components/group/NoChallengeBox";
 import { GroupSettingModal } from "../components/group/GroupSettingModal";
+import { BoardModal } from "../components/group/BoardModal";
 
 const { Content } = Layout;
 
@@ -51,7 +51,7 @@ interface MemberType {
 
 interface BadgePreviewType {
   image: string;
-  category: string;
+  category: "알고리즘" | "CS" | "블로깅" | "강의" | "개발서적";
   count: number;
 }
 
@@ -74,24 +74,44 @@ interface ChallengeType {
   startDate: Date;
 }
 
-interface BoardType {
-  articles: {
+interface ArticleType {
+  articleDTO: {
+    articleId: number;
     title: string;
-    author: string;
-    author_role: string;
-    time: Date;
-  }[];
+    content: string;
+    createdAt: Date;
+    userId: string;
+    nickname: string;
+    groupId: number;
+    role: string;
+  };
+}
+
+interface BoardType {
+  articles: ArticleType[];
   pageNo: number;
 }
 
-export default function Group() {
-  const [boardModal, setBoardModal] = useState(false);
+interface CommentType {
+  commentId: number;
+  articleId: number;
+  groupId: number;
+  userId: string;
+  nickname: string;
+  profileImagePath: string;
+  content: string;
+  createdAt: Date;
+}
 
+export default function Group() {
   const [isOpenMemberModal, setOpenMemberModal] = useState(false);
   const [isOpenMemberSettingModal, setOpenMemberSettingModal] = useState(false);
   const [isOpenBadgeModal, setOpenBadgeModal] = useState(false);
   const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
   const [isOpenNewBoardModal, setOpenNewBoardModal] = useState(false);
+  const [isOpenBoardModal, setOpenBoardModal] = useState(false);
+
+  const [boardPage, setBoardPage] = useState<number>(1);
 
   const [badgePreview, setBadgePreview] = useState<BadgePreviewType[]>([]);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
@@ -100,6 +120,8 @@ export default function Group() {
   const [badgeList, setBadgeList] = useState<BadgeType[]>([]);
   const [filteredBadgeList, setFilteredBadgeList] = useState<BadgeType[]>([]);
   const [boardDataList, setBoardDataList] = useState<BoardType>();
+  const [boardData, setBoardData] = useState<ArticleType>();
+  const [commentData, setCommentData] = useState<CommentType[]>([]);
 
   function getCategoryColor(category: string) {
     if (category === "알고리즘") {
@@ -150,6 +172,29 @@ export default function Group() {
   function clickBadgeCategory(category: string) {
     filterBadgesByCategory(category); // badge data filter by selected category
     setOpenBadgeModal((prev) => !prev); // 모달 오픈
+  }
+
+  async function fetchAndSetNewBoardList(page: number) {
+    const newBoardList = await fetchBoardListByPage(1, page);
+    newBoardList.pgNo = boardPage - 1;
+    setBoardDataList(newBoardList);
+  }
+
+  function handleClickLeft() {
+    if (boardPage > 1) {
+      setBoardPage(boardPage - 1);
+      // 이전 페이지 게시글 리스트 호출
+      fetchAndSetNewBoardList(boardPage - 1);
+      // setBoardDataList(newBoardList);
+    }
+  }
+
+  function handleClickRight() {
+    if (boardPage < Math.ceil(4 / 2)) {
+      setBoardPage(boardPage + 1);
+      // 이후 페이지 게시글 리스트 호출
+      fetchAndSetNewBoardList(boardPage + 1);
+    }
   }
 
   const tmpAddBadgeData: BadgeType[] = [
@@ -315,19 +360,37 @@ export default function Group() {
             </div>
           </div>
           <BoardList>
-            {boardDataList?.articles.map((boardData, index) => (
+            {boardDataList?.articles.map((article, index) => (
               <BoardBox
                 key={index}
-                title={boardData.title}
-                date={boardData.time}
-                writer={boardData.author}
-                setBoardModal={setBoardModal}
+                // title={boardData.title}
+                // boardId={boardData.articleId}
+                // createdAt={boardData.createdAt}
+                // writer={boardData.nickname}
+                data={article}
+                setBoardData={setBoardData}
+                setCommentData={setCommentData}
+                setBoardModal={setOpenBoardModal}
               />
             ))}
           </BoardList>
           <div className="pagination-bar-container">
-            <LeftCircleFilled className="pagination-icon" />
-            <RightCircleFilled className="pagination-icon" />
+            {boardPage === 1 ? (
+              <LeftCircleFilled className="invisible-arrow icon-margin" />
+            ) : (
+              <LeftCircleFilled
+                className="pagination-icon icon-margin"
+                onClick={handleClickLeft}
+              />
+            )}
+            {boardPage === Math.ceil(4 / 3) ? (
+              <RightCircleFilled className="invisible-arrow" />
+            ) : (
+              <RightCircleFilled
+                className="pagination-icon"
+                onClick={handleClickRight}
+              />
+            )}
           </div>
         </BoardContainer>
       </GroupWrapper>
@@ -356,7 +419,13 @@ export default function Group() {
         open={isOpenNewBoardModal}
         toggleModal={() => setOpenNewBoardModal((prev) => !prev)}
       />
-      <Modal
+      <BoardModal
+        open={isOpenBoardModal}
+        toggleModal={() => setOpenBoardModal((prev) => !prev)}
+        boardData={boardData}
+        commentData={commentData}
+      />
+      {/* <Modal
         open={boardModal}
         width={800}
         footer={null}
@@ -448,7 +517,7 @@ export default function Group() {
             </CommentInputBox>
           </BoardCommentContainer>
         </BoardModalWrapper>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }
@@ -590,7 +659,12 @@ const BoardContainer = styled(Content)`
     }
   }
 
-  .pagination-icon:first-child {
+  .invisible-arrow {
+    font-size: 3.2rem;
+    visibility: hidden;
+  }
+
+  .icon-margin {
     margin-right: 5rem;
   }
 `;
@@ -598,147 +672,4 @@ const BoardContainer = styled(Content)`
 const BoardList = styled(Content)`
   display: flex;
   justify-content: space-between;
-`;
-
-const BoardModalWrapper = styled(Content)`
-  display: flex;
-  flex-direction: column;
-  height: fit-content;
-  max-height: 90vh;
-  overflow-y: scroll;
-  background-color: ${theme.colors.white};
-  font-size: 1.6rem;
-  padding: 6.4rem;
-  border-radius: 1rem;
-
-  .modal-title {
-    font-size: 2.4rem;
-    font-weight: 700;
-    padding-bottom: 3.2rem;
-  }
-
-  .board__modal-info {
-    display: flex;
-    justify-content: space-between;
-    color: ${theme.colors.gray500};
-    padding-bottom: 1rem;
-    border-bottom: 2px solid ${theme.colors.gray300};
-  }
-`;
-
-const BoardContentBox = styled(Content)`
-  padding: 2rem 0;
-  box-sizing: border-box;
-
-  .board-content {
-    padding-bottom: 2rem;
-    border-bottom: 2px solid ${theme.colors.gray300};
-    overflow-y: scroll;
-    max-height: 20vh;
-    font-size: 1.6rem;
-    font-weight: 700;
-  }
-`;
-
-const BoardCommentContainer = styled(Content)`
-  padding: 2.4rem 0;
-
-  .comment-box-title {
-    font-size: 2rem;
-    font-weight: 700;
-    padding-bottom: 1rem;
-  }
-`;
-
-const CommentBox = styled(Content)`
-  display: flex;
-  flex-direction: column;
-  height: 25vh;
-  min-height: min-content;
-  overflow-y: scroll;
-  margin-bottom: 2rem;
-`;
-
-const CommentInputBox = styled(Content)`
-  display: flex;
-  font-size: 1.6rem;
-
-  .comment-input {
-    flex-grow: 1;
-    padding-left: 2rem;
-    border-radius: 0.8rem;
-    border: 1px solid ${theme.colors.gray300};
-  }
-
-  .send-btn {
-    background-color: #6350b6;
-    border-radius: 0.8rem;
-    padding: 0.8rem 1.8rem;
-    font-family: "Kanit-Regular";
-    color: ${theme.colors.white};
-    margin-left: 1.6rem;
-    cursor: pointer;
-  }
-
-  .send-icon {
-    padding-left: 1rem;
-  }
-`;
-
-const SingleComment = styled(Content)`
-  display: flex;
-  align-items: start;
-  /* min-height: 6rem; */
-  min-height: fit-content;
-  padding-top: 1rem;
-  border-bottom: 1px solid ${theme.colors.gray300};
-  font-size: 1.6rem;
-
-  .comment-writer-profile {
-    width: 4.8rem;
-    height: 4.8rem;
-    object-fit: cover;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  .writer-profile-box {
-    width: 4.8rem;
-  }
-
-  .writer-info-box {
-    padding: 0 2rem 1rem;
-    flex-grow: 1;
-  }
-
-  .writer-info-top {
-    display: flex;
-    padding-bottom: 0.5rem;
-  }
-
-  .comment-writer-nickname {
-    font-weight: 700;
-    padding-right: 2rem;
-  }
-
-  .comment-date {
-    color: ${theme.colors.gray400};
-  }
-
-  .comment-delete-box {
-    display: flex;
-    align-items: center;
-    height: max-content;
-    padding-left: 1rem;
-    justify-content: center;
-  }
-
-  .delete-btn {
-    background-color: ${theme.colors.failure};
-    border-radius: 0.8rem;
-    padding: 0.8rem 1.8rem;
-    font-family: "Kanit-Regular";
-    color: ${theme.colors.white};
-    cursor: pointer;
-  }
 `;

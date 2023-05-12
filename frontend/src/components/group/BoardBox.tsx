@@ -2,18 +2,44 @@ import { Layout } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { NotificationFilled } from "@ant-design/icons";
+import changeDateFormat from "../../util/common";
+import { fetchBoardData, fetchCommentData } from "../../api/group";
 
 const { Content } = Layout;
 
 export function BoardBox({ ...props }) {
+  async function fetchAndSetBoardData() {
+    const fetchedBoardData = await fetchBoardData(
+      props.data.groupId,
+      props.data.articleId
+    );
+    props.setBoardData(fetchedBoardData);
+  }
+
+  async function fetchAndSetCommentData() {
+    const fetchedCommentData = await fetchCommentData(props.data.articleId, 0);
+    props.setCommentData(fetchedCommentData.commentsList);
+  }
+
+  function onClickBoardBox() {
+    // boardId에 맞는 article 데이터 불러오기
+    fetchAndSetBoardData();
+    fetchAndSetCommentData();
+    props.setBoardModal(true);
+  }
+
   return (
     <>
-      <BoardBoxWrapper onClick={() => props.setBoardModal(true)}>
-        {props.admin ? <NotificationFilled className="admin" /> : null}
-        <div className="board-title">{props.title}</div>
+      <BoardBoxWrapper onClick={onClickBoardBox}>
+        {props.data.role !== "MEMBER" ? (
+          <NotificationFilled className="admin" />
+        ) : null}
+        <div className="board-title">{props.data.title}</div>
         <div className="board-info">
-          <div className="board-date">{props.date}</div>
-          <div>작성자: {props.writer}</div>
+          <div className="board-date">
+            {changeDateFormat(new Date(props.data.createdAt))}
+          </div>
+          <div>작성자: {props.data.nickname}</div>
         </div>
       </BoardBoxWrapper>
     </>

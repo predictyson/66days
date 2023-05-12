@@ -58,9 +58,58 @@ async function fetchGroupBadges(id = 1) {
   }
 }
 
+async function fetchBoardListByPage(groupId: number = 1, page: number) {
+  try {
+    const res = await api.get(
+      `/api/v2/article/${groupId}/articles?offset=${page}`
+    );
+    if (res.status === 200) {
+      return res.data;
+    }
+
+    throw new Error();
+  } catch (error) {
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
+
+async function fetchBoardData(groupId: number, articleId: number) {
+  try {
+    const res = await api.get(`/api/v2/article/${groupId}/${articleId}`);
+    if (res.status === 200) {
+      return res.data;
+    }
+
+    throw new Error();
+  } catch (error) {
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
+
+async function fetchCommentData(articleId: number = 2, page: number) {
+  try {
+    const res = await api.get(
+      `/api/v2/article/${articleId}/comments?offset=${page}`
+    );
+    if (res.status === 200) {
+      return res.data;
+    }
+
+    throw new Error();
+  } catch (error) {
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
+
 export {
   fetchGroupPageData,
   fetchGroupMembers,
   fetchAppliedMembers,
   fetchGroupBadges,
+  fetchBoardListByPage,
+  fetchBoardData,
+  fetchCommentData,
 };
