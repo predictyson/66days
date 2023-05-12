@@ -4,4 +4,5 @@ import org.springframework.stereotype.Service;
 
 @Service("MyChallengeService")
 public class MyChallengeService {
+    private final
 }

@@ -4,4 +4,5 @@ import org.springframework.stereotype.Service;
 
 @Service("GroupChallengeService")
 public class GroupChallengeService {
+
 }
