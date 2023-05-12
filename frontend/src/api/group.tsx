@@ -74,10 +74,25 @@ async function fetchBoardListByPage(groupId: number = 1, page: number) {
   }
 }
 
+async function fetchBoardData(groupId: number, articleId: number) {
+  try {
+    const res = await api.get(`/api/v2/article/${groupId}/${articleId}`);
+    if (res.status === 200) {
+      return res.data;
+    }
+
+    throw new Error();
+  } catch (error) {
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
+
 export {
   fetchGroupPageData,
   fetchGroupMembers,
   fetchAppliedMembers,
   fetchGroupBadges,
   fetchBoardListByPage,
+  fetchBoardData,
 };

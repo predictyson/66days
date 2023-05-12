@@ -3,20 +3,38 @@ import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { NotificationFilled } from "@ant-design/icons";
 import changeDateFormat from "../../util/common";
+import { fetchBoardData } from "../../api/group";
 
 const { Content } = Layout;
 
 export function BoardBox({ ...props }) {
+  async function fetchAndSetBoardData() {
+    const fetchedBoardData = await fetchBoardData(
+      props.data.groupId,
+      props.data.articleId
+    );
+    console.log(fetchedBoardData);
+    props.setBoardData(fetchedBoardData);
+  }
+
+  function onClickBoardBox() {
+    // boardId에 맞는 article 데이터 불러오기
+    fetchAndSetBoardData();
+    props.setBoardModal(true);
+  }
+
   return (
     <>
-      <BoardBoxWrapper onClick={() => props.setBoardModal(true)}>
-        {props.admin ? <NotificationFilled className="admin" /> : null}
-        <div className="board-title">{props.title}</div>
+      <BoardBoxWrapper onClick={onClickBoardBox}>
+        {props.data.role !== "MEMBER" ? (
+          <NotificationFilled className="admin" />
+        ) : null}
+        <div className="board-title">{props.data.title}</div>
         <div className="board-info">
           <div className="board-date">
-            {changeDateFormat(new Date(props.createdAt))}
+            {changeDateFormat(new Date(props.data.createdAt))}
           </div>
-          <div>작성자: {props.writer}</div>
+          <div>작성자: {props.data.writer}</div>
         </div>
       </BoardBoxWrapper>
     </>
