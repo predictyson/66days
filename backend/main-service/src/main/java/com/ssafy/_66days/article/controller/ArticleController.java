@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,9 +33,10 @@ public class ArticleController {
     //게시글 작성 함수
     @PostMapping("/{group_id}")
     @ApiOperation(value = "게시글 작성 API", notes = "그룹 게시판에 게시글 작성")
-    public ResponseEntity<Map<String, Object>> createArticle (
+    public ResponseEntity<Map<String, Object>> createArticle(
             @PathVariable("group_id") Long groupId,
-            @RequestBody ArticleRequestDTO articleRequestDTO
+            @RequestBody ArticleRequestDTO articleRequestDTO,
+
     ) {
 
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -48,6 +51,7 @@ public class ArticleController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
     }
+
     @GetMapping("/{group_id}/{article_id}")
     @ApiOperation(value = "게시글 상세 조회 API", notes = "게시글 상세 조회")
     public ResponseEntity<Map<String, Object>> getArticleDetail(
