@@ -5,6 +5,11 @@ import Algo from "../../assets/landing/algoBox.png";
 import Chart from "./Chart";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { ChallengeData } from "../../types/main";
+// slider
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+
 interface IProps {
   challenges: ChallengeData[];
 }
@@ -13,37 +18,77 @@ export default function Todo({ challenges }: IProps) {
   function countDays(startDate: string): number {
     const oneDay = 24 * 60 * 60 * 1000; // 1일을 밀리초로 계산
     const startDateTime = new Date(startDate).getTime(); // 시작일을 밀리초로 변환
-    const todayDateTime = new Date().getTime(); // 현재 시간을 밀리초로 변환
+    const todayDateTime = new Date().getTime(); // 현w재 시간을 밀리초로 변환
     const diffDays = Math.round(
       Math.abs((todayDateTime - startDateTime) / oneDay)
     ); // 날짜 차이 계산
     return diffDays;
   }
 
+  const settings = {
+    centerMode: false,
+    dots: false,
+    infinite: true,
+    slidesToShow: 2,
+    slidesToScroll: 2,
+    arrows: true,
+    // prevArrow: <CustomPrevArrow />,
+    // nextArrow: <CustomNextArrow />,
+    // responsive: BREAKPOINT,
+  };
   return (
     <Container>
       <Title>Today's todo</Title>
       <TodoContianer>
-        {challenges.map((challenge, idx) => {
-          return (
-            <TodoBox key={idx}>
-              <div className="left">
-                <img src={Algo} alt="algo" />
-                <div className="title">{challenge.name}</div>
-              </div>
-              <div className="right">
-                {challenge.status ? <CustomChecked /> : <CustomUnChecked />}
-                <Chart x={countDays(challenge.startDate)} />
-                <p>{countDays(challenge.startDate)} / 66</p>
-              </div>
-            </TodoBox>
-          );
-        })}
+        <Slider {...settings}>
+          {challenges.map((challenge, idx) => {
+            return (
+              <TodoBox key={idx}>
+                <div className="left">
+                  <img src={Algo} alt="algo" />
+                  <div className="title">{challenge.name}</div>
+                </div>
+                <div className="right">
+                  {challenge.status ? <CustomChecked /> : <CustomUnChecked />}
+                  <Chart x={countDays(challenge.startDate)} />
+                  <p>{countDays(challenge.startDate)} / 66</p>
+                </div>
+              </TodoBox>
+            );
+          })}
+        </Slider>
       </TodoContianer>
     </Container>
   );
 }
 
+// FIXME: 슬라이더 CSS가 깨져요 :)
+const CustomSlider = styled(Slider)`
+  /* width: 100%; */
+  /* border: solid 2px green;
+  height: 50rem;
+  /* height: 80%; */
+  .slick-slide {
+    margin: 0 1rem;
+    width: auto !important;
+    margin: 0 !important;
+    /* display: flex !important; set margin between slides */
+  }
+
+  .slick-list {
+    overflow: visible; /* show the left and right overflow */
+  }
+
+  .slick-slide > div {
+    width: 55rem;
+    /* margin: 0 auto; center TodoBox within slide */
+  }
+
+  /* hide the extra slide that appears when there are not enough items to fill a slide */
+  .slick-slide:not(.slick-active) {
+    visibility: hidden;
+  }
+`;
 const CustomChecked = styled(CheckCircleOutlined)`
   font-size: 4rem;
   color: ${theme.colors.mint};
@@ -73,8 +118,9 @@ const Title = styled.div`
   font-weight: bold;
 `;
 const TodoContianer = styled.div`
-  display: flex;
-  justify-content: space-between;
+  /* display: flex; */
+  border: solid 1px blue;
+  /* justify-content: space-between; */
   margin-top: 3.2rem;
 `;
 
@@ -83,14 +129,17 @@ const TodoBox = styled.div`
   height: 35rem;
   border: solid 1px ${theme.colors.gray400};
   border-radius: 15px;
-  display: flex;
+  /* display: flex; */
+  /* flex-direction: row; */
   img {
     width: 70%;
     display: flex;
     margin: auto 0;
   }
   .left {
-    width: 55%;
+    border: solid 1px red;
+
+    width: 50%;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -108,6 +157,7 @@ const TodoBox = styled.div`
     text-overflow: ellipsis;
   }
   .right {
+    border: solid 1px red;
     width: 45%;
     padding: 3rem;
     p {

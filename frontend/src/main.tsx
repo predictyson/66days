@@ -7,7 +7,8 @@ import { theme } from "./styles/theme";
 import GlobalStyle from "./styles/GlobalStyle.tsx";
 import GlobalFont from "./styles/GlobalFont.tsx";
 import { ConfigProvider } from "antd";
-
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>

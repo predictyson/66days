@@ -4,6 +4,7 @@ import Badge from "../../assets/main/Bronze.png";
 import CoinIcon from "../../assets/main/Coin.png";
 import { theme } from "../../styles/theme";
 import { MemberInfoData } from "../../types/main";
+import CountUp from "react-countup";
 
 interface IProps {
   memberInfo: MemberInfoData;
@@ -20,12 +21,18 @@ export default function Banner({ memberInfo }: IProps) {
           게으른 <br /> {memberInfo.animal}
         </Nickname>
         <MoreInfo>
-          <div className="exp">{memberInfo.exp} EXP</div>
+          <div className="exp">
+            <CountUp end={memberInfo.exp} duration={5} />
+            EXP
+          </div>
           <div className="button">한눈에 보기</div>
         </MoreInfo>
         <Coin>
           <img src={CoinIcon} alt="icon" />{" "}
-          <span>{memberInfo.point.toLocaleString()}</span>
+          <span>
+            {/* {memberInfo.point.toLocaleString()} */}
+            <CountUp end={memberInfo.point} duration={5} />
+          </span>
         </Coin>
       </LeftWrapper>
       <ImageWrapper>
@@ -125,6 +132,7 @@ const MoreInfo = styled.div`
   width: 80%;
   display: flex;
   .button {
+    margin-left: 4rem;
     border-radius: 5px;
     background-color: white;
     width: 35%;
@@ -134,7 +142,6 @@ const MoreInfo = styled.div`
     align-items: center;
     font-size: 2rem;
     cursor: pointer;
-    margin-left: 5%;
     font-weight: ${theme.fontWeight.semibold};
     &:hover {
       background-color: #444444;
@@ -145,6 +152,7 @@ const MoreInfo = styled.div`
   }
 
   .exp {
+    width: 15rem;
     color: ${theme.colors.gray200};
     font-size: 2.8rem;
     font-weight: bold;
