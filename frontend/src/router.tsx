@@ -14,6 +14,7 @@ import SearchPage from "./routes/SearchPage";
 import MyPage from "./routes/MyPage";
 // import OAuth2Redirect from "./routes/OAuth2Redirect";
 import Signup from "./routes/Signup";
+import Notification from "./components/common/Notification";
 
 export default createBrowserRouter(
   createRoutesFromElements(
@@ -34,6 +35,7 @@ export default createBrowserRouter(
         />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/noti" element={<Notification />} />
       </Route>
     </Route>
   )
