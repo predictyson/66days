@@ -34,18 +34,6 @@ public class CommentResponseDTO {
                 .createdAt(comment.getCreatedAt())
                 .build();
     }
-    public static CommentResponseDTO from(Comment comment) {
-        return CommentResponseDTO.builder()
-                .commentId(comment.getCommentId())
-                .articleId(comment.getArticle().getArticleId())
-                .groupId(comment.getGroup().getGroupId())
-                .userId(comment.getUser().getUserId())
-                .nickname(comment.getUser().getNickname())
-                .profileImagePath(comment.getUser().getProfileImagePath())
-                .content(comment.getContent())
-                .createdAt(comment.getCreatedAt())
-                .build();
-    }
 
 }
 

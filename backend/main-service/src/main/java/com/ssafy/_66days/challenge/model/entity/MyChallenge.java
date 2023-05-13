@@ -21,7 +21,7 @@ public class MyChallenge {
     @Id
     @NotNull
     @Column(name = "my_challenge_id", nullable = false)
-    private Long myChallenge;
+    private Long myChallengeId;
 
     @NotNull
     @ManyToOne

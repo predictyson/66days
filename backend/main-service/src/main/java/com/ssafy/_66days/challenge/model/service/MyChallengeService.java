@@ -83,12 +83,7 @@ public class MyChallengeService {
                 .endAt(endDay)
                 .state(state)
                 .build();
-        MyChallenge savedMyChallenge = myChallengeRepository.save(myChallege);
-        if (savedMyChallenge == null) {
-            return false;
-        }
-        return true;
-
+        return myChallengeRepository.save(myChallege) != null;
     }
 
     public List<MyChallengeResponseDTO> getMyChallenges(UUID userId) {      // 개인 챌린지 목록
@@ -168,24 +163,24 @@ public class MyChallengeService {
     public MyChallengeDetailResponseDTO getMyChallengeDetail(UUID userId, Long MyChallengeId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
-        String fail = "FAILD";
+        String fail = "FAILED";
         String success = "SUCCESSFUL";
         List<MyChallenge> myFailChallenges = myChallengeRepository.findByState(fail);       // 실패했던 챌린지 찾아오기
         List<MyChallenge> mySuccessChallenges = myChallengeRepository.findByState(success); // 성공했던 챌린지 찾아오기
         
-        List<MyChallengeHistoryDTO> MyChallengeHistoryDTOs = new ArrayList<>();             // 챌린지 히스토리 받을 배열
+        List<MyChallengeHistoryDTO> myChallengeHistoryDTOs = new ArrayList<>();             // 챌린지 히스토리 받을 배열
         for (MyChallenge mychallenge : myFailChallenges) {                                  // 실패챌린지 순회
             MyChallengeHistoryDTO myChallengeHistoryDTO = MyChallengeHistoryDTO.of(mychallenge, false); // 실패챌린지 DTO로 변환
-            MyChallengeHistoryDTOs.add(myChallengeHistoryDTO);                              // 챌린지 히스토리에 담는다
+            myChallengeHistoryDTOs.add(myChallengeHistoryDTO);                              // 챌린지 히스토리에 담는다
         }
         for (MyChallenge mychallenge : mySuccessChallenges) {                               // 성공챌린지 순회
             MyChallengeHistoryDTO myChallengeHistoryDTO = MyChallengeHistoryDTO.of(mychallenge, true);  // 성공챌린지DTO로 변환
-            MyChallengeHistoryDTOs.add(myChallengeHistoryDTO);                              // 챌린지 히스토리에 담는다
+            myChallengeHistoryDTOs.add(myChallengeHistoryDTO);                              // 챌린지 히스토리에 담는다
         }
 
         MyChallenge myChallenge = myChallengeRepository.findById(MyChallengeId)             // 해당 챌린지 객체 받아오기
-                .orElseThrow(() -> new RuntimeException("존재하지 않는 챌린지입니다"));
-        return MyChallengeDetailResponseDTO.of(myChallenge, MyChallengeHistoryDTOs);                // 해당 챌린지의 정보와 챌린지 히스토리로 상세페이지 정보 DTO 만들어서 반환
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다"));
+        return MyChallengeDetailResponseDTO.of(myChallenge, myChallengeHistoryDTOs);                // 해당 챌린지의 정보와 챌린지 히스토리로 상세페이지 정보 DTO 만들어서 반환
     }
 }
 

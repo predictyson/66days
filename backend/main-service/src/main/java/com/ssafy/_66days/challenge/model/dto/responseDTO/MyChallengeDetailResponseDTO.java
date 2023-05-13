@@ -17,12 +17,12 @@ public class MyChallengeDetailResponseDTO {
     private String imagePath;
     private List<MyChallengeHistoryDTO> MyChallengeHistoryDTOS;
 
-    public static MyChallengeDetailResponseDTO of(MyChallenge myChallenge, List<MyChallengeHistoryDTO> MyChallengeHistoryDTOs) {
+    public static MyChallengeDetailResponseDTO of(MyChallenge myChallenge, List<MyChallengeHistoryDTO> myChallengeHistoryDTOs) {
         return MyChallengeDetailResponseDTO.builder()
                 .challengeName(myChallenge.getChallengeName())
                 .content(myChallenge.getContent())
                 .imagePath(myChallenge.getChallenge().getBadge().getImagePath())
-                .MyChallengeHistoryDTOS(MyChallengeHistoryDTOs)
+                .MyChallengeHistoryDTOS(myChallengeHistoryDTOs)
                 .build();
     }
 }

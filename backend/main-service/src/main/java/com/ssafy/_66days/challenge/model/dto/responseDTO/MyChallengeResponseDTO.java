@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @ToString
 public class MyChallengeResponseDTO {
+    private Long myChallengeId;
     private String imagePath;
     private String challengeName;
     private String content;
@@ -19,6 +20,7 @@ public class MyChallengeResponseDTO {
 
     public static MyChallengeResponseDTO of(MyChallenge myChallenge) {
         return MyChallengeResponseDTO.builder()
+                .myChallengeId(myChallenge.getMyChallengeId())
                 .imagePath(myChallenge.getChallenge().getBadge().getImagePath())
                 .challengeName(myChallenge.getChallengeName())
                 .content(myChallenge.getContent())

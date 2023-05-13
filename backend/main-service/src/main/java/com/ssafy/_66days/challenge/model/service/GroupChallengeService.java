@@ -1,6 +1,7 @@
 package com.ssafy._66days.challenge.model.service;
 
 import com.ssafy._66days.challenge.model.dto.requestDTO.GroupChallengeRequestDTO;
+import com.ssafy._66days.challenge.model.dto.responseDTO.AvailableGroupChallengeResponseDTO;
 import com.ssafy._66days.challenge.model.entity.Challenge;
 import com.ssafy._66days.challenge.model.entity.GroupChallenge;
 import com.ssafy._66days.challenge.model.reposiotry.ChallengeRepository;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service("GroupChallengeService")
 public class GroupChallengeService {
@@ -103,9 +106,28 @@ public class GroupChallengeService {
                 .maxMemberCount(groupChallengeRequestDTO.getMaxMemberCount())
                 .build();
         return groupChallengeRepository.save(newGroupChallenge) != null;
+    }
 
+    public List<AvailableGroupChallengeResponseDTO>  getAvailableGroupChallengeList(
+            UUID userId,
+            Long groupId
+    ) {
+        User user = userRepository.findById(userId)                         // 유저 객체 받아오기
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
+        Group group = groupRepository.findById(groupId)                     // 그룹 객체 받아오기
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹니다"));
+        GroupMember groupMember = groupMemberRepository.findByGroupAndUser(group, user)     // 그룹멤버 객체 받아오기
+                .orElseThrow(() -> new IllegalArgumentException("그룹에 속한 유저가 아닙니다"));
+        if (groupMember.getAuthority() != "OWNER" && groupMember.getAuthority() != "MANAGER") { // 그룹장이나 매니저가 아니라면 챌린지를 만들 수 없다
+            throw new IllegalArgumentException("챌린지 생성 권한이 없습니다");
+        }
 
+        List<Challenge> challengeList = challengeRepository.findAll();          // 챌린지 메타데이터 받아오기
 
+        List<AvailableGroupChallengeResponseDTO> AvailableGroupChallengeResponseDTOList = challengeList.stream()    // ResponseDTO로 변환해서 List에 담는다
+                .map(challenge -> AvailableGroupChallengeResponseDTO.of(challenge))
+                .collect(Collectors.toList());
 
+        return AvailableGroupChallengeResponseDTOList;
     }
 }

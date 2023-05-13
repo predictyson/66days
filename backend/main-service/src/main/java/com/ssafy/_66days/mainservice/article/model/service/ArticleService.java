@@ -114,16 +114,16 @@ public class ArticleService {
         Pageable pageable = PageRequest.of(offset, 3);
         // offset 값과 limit 값을 이용해 최근 게시글 3개를 가져온다
         List<Article> articleList = articleRepository.findByGroupAndIsDeleted(group, false, pageable);
-        List<ArticleResponseDTO> articleResponseDTOs = new ArrayList<>();
+        List<ArticleResponseDTO> articleResponseDTOList = new ArrayList<>();
         // 가져온 게시글을 ArticleDTO 리스트로 변환한다
         for (int i = 0; i < articleList.size(); i++) {
             User articleUser = articleList.get(i).getUser();
             Group articleGroup = articleList.get(i).getGroup();
 
             String role = groupMemberRepository.findByGroupAndUser(articleGroup, articleUser).get().getAuthority();
-            articleResponseDTOs.add(ArticleResponseDTO.of(articleList.get(i), role));
+            articleResponseDTOList.add(ArticleResponseDTO.of(articleList.get(i), role));
         }
-        return articleResponseDTOs;
+        return articleResponseDTOList;
     }
 
     public ArticleResponseDTO updateArticle(
@@ -237,10 +237,10 @@ public class ArticleService {
         Pageable pageable = PageRequest.of(offset, 10);
         // offset 값과 limit 값을 이용해 최근 댓글 10개를 가져온다
         List<Comment> commentList = commentRepository.findByArticleAndIsDeleted(article, false, pageable);
-        List<CommentResponseDTO> commentResponseDTOs = commentList.stream()
-                .map(comment -> CommentResponseDTO.from(comment))
+        List<CommentResponseDTO> commentResponseDTOList = commentList.stream()
+                .map(comment -> CommentResponseDTO.of(comment))
                 .collect(Collectors.toList());
-        return commentResponseDTOs;
+        return commentResponseDTOList;
     }
 
     public boolean deleteComment(

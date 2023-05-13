@@ -2,6 +2,7 @@ package com.ssafy._66days.challenge.controller;
 
 import com.ssafy._66days.challenge.model.dto.requestDTO.GroupChallengeRequestDTO;
 import com.ssafy._66days.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
+import com.ssafy._66days.challenge.model.dto.responseDTO.AvailableGroupChallengeResponseDTO;
 import com.ssafy._66days.challenge.model.dto.responseDTO.AvailableMyChallengeResponseDTO;
 import com.ssafy._66days.challenge.model.dto.responseDTO.MyChallengeDetailResponseDTO;
 import com.ssafy._66days.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
@@ -36,7 +37,7 @@ public class ChallengeController {
     }
 
     // 개인 챌린지 시작 가능 목록 반환
-    @GetMapping("/createMyChallenge")
+    @GetMapping("/startMyChallenge")
     @ApiOperation(value = "가능한 개인 챌린지 목록 반환 API", notes = "챌린지 만들기 클릭 시 나오는 챌린지 목록")
     public ResponseEntity<Map<String, Object>> getAvailableMyChallengeList(
 //            @RequestHeader(name = "Authorization") String accessToken
@@ -48,8 +49,8 @@ public class ChallengeController {
             // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
             // UUID userId = authenticateUtil.getUserId(accessToken);
 
-            List<AvailableMyChallengeResponseDTO> availableMyChallengeResponseDTOs = myChallengeService.getAvailableMyChallengeList(userId);
-            resultMap.put("availableMyChallengeResponseDTOs", availableMyChallengeResponseDTOs);
+            List<AvailableMyChallengeResponseDTO> availableMyChallengeResponseDTOList = myChallengeService.getAvailableMyChallengeList(userId);
+            resultMap.put("availableMyChallengeResponseDTOList", availableMyChallengeResponseDTOList);
             return ResponseEntity.ok().body(resultMap);
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,7 +59,7 @@ public class ChallengeController {
     }
 
     // 개인 챌린지 생성
-    @PostMapping("/startMyChallenge")
+    @PostMapping("/createMyChallenge")
     @ApiOperation(value = "개인 챌린지 생성 API", notes = "개인 챌린지 생성")
     public ResponseEntity<Map<String, Object>> createMyChallenge(
 //            @RequestHeader(name = "Authorization") String accessToken
@@ -94,8 +95,8 @@ public class ChallengeController {
             // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
             // UUID userId = authenticateUtil.getUserId(accessToken);
 
-            List<MyChallengeResponseDTO> MyChallengeDTOs = myChallengeService.getMyChallenges(userId);
-            resultMap.put("MyChallengeDTOs", MyChallengeDTOs);
+            List<MyChallengeResponseDTO> MyChallengeDTOList = myChallengeService.getMyChallenges(userId);
+            resultMap.put("MyChallengeDTOList", MyChallengeDTOList);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,11 +105,11 @@ public class ChallengeController {
     }
 
     // 개인 챌린지 상세 페이지 / 스트릭, 챌린지 히스토리 반환
-    @GetMapping("/{my_challenge_id}")
+    @GetMapping("/my/{my_challenge_id}")
     @ApiOperation(value = "개인 챌린지 상세 페이지 API", notes = "개인 챌린지 상세눌렀을 때 오른쪽에 보이는 개인 챌린지 히스토리 정보와 챌린지 이름, 설명")
     public ResponseEntity<Map<String, Object>> getMyChallengeDetail(
             // @RequestHeader(name = "Authorization") String accessToken
-            Long MyChallengeId
+            @PathVariable("my_challenge_id") Long MyChallengeId
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -126,17 +127,36 @@ public class ChallengeController {
         }
     }
 
-    // ? 개인 스트릭 찍기 mongoDB쪽이라 유보
-
     // 그룹 챌린지 생성 가능한 챌린지 반환
+    @GetMapping("/startGroupChallenge/{group_id}")
+    @ApiOperation(value = "그룹 챌린지 만들기 API", notes = "챌린지 만들기 클릭 시 챌린지 리스트 반환")
+    public ResponseEntity<Map<String, Object>> getAvailableGroupChallengeList(
+            // @RequestHeader(name = "Authorization") String accessToken
+            @PathVariable("group_id") Long groupId
+    ) {
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        try {
+            // auth서버로 인증 요청
+            // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
+            // UUID userId = authenticateUtil.getUserId(accessToken);
+
+            List<AvailableGroupChallengeResponseDTO> availableGroupChallengeResponseDTOList = groupChallengeService.getAvailableGroupChallengeList(userId, groupId);
+            resultMap.put("availableGroupChallengeResponseDTOList", availableGroupChallengeResponseDTOList);
+            return ResponseEntity.ok().body(resultMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
+    }
 
     // 그룹 챌린지 생성(그룹장이란 매니저만 가능)
     @PostMapping("/group/{group_id}")
     @ApiOperation(value = "그룹 챌린지 생성 API", notes = "그룹장, 매니저만 생성가능, 시작 날짜에 동일 챌린지 진행 중 시 생성 불가, 최대 30일 이내 시작 가능")
     public ResponseEntity<Map<String, Object>> createGroupChallenge(
             // @RequestHeader(name = "Authorization") String accessToken
-            Long groupId,
-            GroupChallengeRequestDTO groupChallengeRequestDTO
+            @PathVariable("group_id") Long groupId,
+            @RequestBody GroupChallengeRequestDTO groupChallengeRequestDTO
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -159,5 +179,6 @@ public class ChallengeController {
     // 그룹 챌린지 가입 신청 허용 or 거부
     // 그룹 챌린지 목록(그룹 들어갔을 때) 반환
     // 그룹 챌린지 상세 페이지 / 스트릭, 챌린지원과 당일 챌린지 달성여부
-    // 그룹 챌린지 찍기
+    // ? 그룹 챌린지 찍기 mongoDB쪽이라 유보
+    // ? 개인 스트릭 찍기 mongoDB쪽이라 유보
 }
