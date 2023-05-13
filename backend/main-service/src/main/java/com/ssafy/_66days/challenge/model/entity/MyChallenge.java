@@ -41,9 +41,6 @@ public class MyChallenge {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "image_path", nullable = true)
-    private String imagePath;
-
     @NotNull
     @Column(name = "start_at", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime startAt;
