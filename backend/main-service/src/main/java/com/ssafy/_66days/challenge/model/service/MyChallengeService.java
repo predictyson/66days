@@ -23,6 +23,7 @@ import com.ssafy._66days.user.model.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.event.WindowFocusListener;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +88,7 @@ public class MyChallengeService {
             return false;
         }
         return true;
+
     }
 
     public List<MyChallengeResponseDTO> getMyChallenges(UUID userId) {      // 개인 챌린지 목록
@@ -105,12 +107,15 @@ public class MyChallengeService {
         }
         return MyChallengeResponseDTOs;
     }
+
     // 내가 개인 혹은 그룹에서 하고 있는 챌린지아이디를 담을 배열을 만든다
     // userId로 내가 하고 있는 챌린지들의 챌린지 아이디를 찾는다
-    // 넘어온 groupIdList로 activated인 챌린지를 찾고 그중 그룹 챌린지 참여자에 userId가 있는 것의 챌린지 아이디를 찾는다
+    // 그룹 챌린지 참여자에서 내 userId오 찾는다
+    // 있다면 그룹 챌린지 ID로 그룹챌린지에서 챌린지 아이디를 찾는다
     // 개인, 그룹에서 하고 있는 챌린지 아이디를 배열에 담고
-    // 챌린지 5개 목록 미리 준비
-    // 하고 있는 챌린지 아이디들은 응답DTO에 boolean값을 false호 넣고 반환
+    // 1부터 챌린지 갯수만큼 순회하면서
+    // 내가하고 있는 챌린지id가 나오면 state응 false로 DTO 생성해서 담고 아니면 true로 담는다
+    // 결론적으로 챌린지id 1번부터 순서가 보장된 DTO 리스트가 반환된다
     public List<AvailableMyChallengeResponseDTO> getAvailableMyChallengeList(UUID userId) {
 
         User user = userRepository.findById(userId)

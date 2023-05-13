@@ -39,10 +39,6 @@ public class GroupChallenge {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @NotBlank
-    @Column(name = "image_path", nullable = false)
-    private String imagePath;
-
     @NotNull
     @Column(name = "start_at", nullable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime startAt;
