@@ -32,10 +32,10 @@ import lombok.extern.slf4j.Slf4j;
 public class UserService {
 
 	@Value("${redirectUrl}")
-	private final String redirectUrl;
+	private String redirectUrl;
 	private final JwtProvider jwtProvider;
 	private final UserRepository userRepository;
-	private final SecurityUtil securityUtil;
+//	private final SecurityUtil securityUtil;
 	private final RedisUtil redisUtil;
 
 	//

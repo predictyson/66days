@@ -75,12 +75,12 @@ public class SecurityConfig {
 				.and()
 				.exceptionHandling()
 				.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-				.accessDeniedHandler(jwtAccessDeniedHandler);
-//				.and()    // 필터 체인에 커스텀 필터 추가 설정
-//				.addFilterBefore(
-//						new JwtAuthenticationFilter(jwtProvider, redisUtil),
-//						UsernamePasswordAuthenticationFilter.class
-//				);
+				.accessDeniedHandler(jwtAccessDeniedHandler)
+				.and()    // 필터 체인에 커스텀 필터 추가 설정
+				.addFilterBefore(
+						new JwtAuthenticationFilter(jwtProvider, redisUtil),
+						UsernamePasswordAuthenticationFilter.class
+				);
 
 		return http.build();
 	}
@@ -90,8 +90,9 @@ public class SecurityConfig {
 
 		CorsConfiguration configuration = new CorsConfiguration();
 		// configuration.addAllowedOrigin("http://localhost:???");
-		configuration.addAllowedOrigin("https://k8a705.p.ssafy.io");
-		configuration.addAllowedOrigin("https://accounts.kakao.com");
+		configuration.addAllowedOriginPattern("*");
+//		configuration.addAllowedOrigin("https://k8a705.p.ssafy.io");
+//		configuration.addAllowedOrigin("https://accounts.kakao.com");
 		configuration.addAllowedHeader("*");
 		configuration.addAllowedMethod("*");
 		configuration.setAllowCredentials(true);
