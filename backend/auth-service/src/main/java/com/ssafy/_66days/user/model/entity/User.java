@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
@@ -18,15 +19,12 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.ssafy._66days.user.enums.Role;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 @Entity
 @Table(name = "user")
 @NoArgsConstructor
 @Getter
 @Builder
+@AllArgsConstructor
 @DynamicInsert
 public class User {
 
