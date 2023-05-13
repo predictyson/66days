@@ -8,9 +8,14 @@ import java.util.List;
 @Data
 @Builder
 public class GroupMainPageResponseDTO {
-    private String image;
-    private String name;
-    private List<String> badges;
-    private String type;
 
+	private Long groupId;
+
+	private String image;
+
+	private String name;
+
+	private List<String> badges;
+
+	private String type;
 }
