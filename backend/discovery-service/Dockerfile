@@ -2,5 +2,5 @@ FROM adoptopenjdk/openjdk11
 ARG JAR_FILE=*.jar
 COPY . .
 WORKDIR /app
-CMD ["ls", "-al"]
+RUN ["ls", "-al"]
 ENTRYPOINT ["java","-jar","/discovery.jar"]
