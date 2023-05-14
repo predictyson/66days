@@ -35,7 +35,7 @@ public class ArticleController {
     @ApiOperation(value = "게시글 작성 API", notes = "그룹 게시판에 게시글 작성")
     public ResponseEntity<Map<String, Object>> createArticle(
             @PathVariable("group_id") Long groupId,
-            @RequestBody ArticleRequestDTO articleRequestDTO,
+            @RequestBody ArticleRequestDTO articleRequestDTO
 
     ) {
 

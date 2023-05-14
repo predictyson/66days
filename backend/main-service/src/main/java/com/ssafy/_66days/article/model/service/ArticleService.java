@@ -15,6 +15,7 @@ import com.ssafy._66days.group.model.repository.GroupRepository;
 import com.ssafy._66days.user.model.repository.UserRepository;
 import com.ssafy._66days.user.model.entity.User;
 import com.ssafy._66days.user.model.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ArticleService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
@@ -37,22 +39,6 @@ public class ArticleService {
     private final UserService userService;
     private final String userIdStr = "a817d372-ee0d-11ed-a26b-0242ac110003";
     private final UUID userId = UUID.fromString(userIdStr);
-    public ArticleService(
-            UserRepository userRepository,
-            GroupRepository groupRepository,
-            GroupMemberRepository groupMemberRepository,
-            ArticleRepository articleRepository,
-            CommentRepository commentRepository,
-            UserService userService
-    ) {
-        this.userRepository = userRepository;
-        this.groupRepository = groupRepository;
-        this.groupMemberRepository = groupMemberRepository;
-        this.articleRepository = articleRepository;
-        this.commentRepository = commentRepository;
-        this.userService = userService;
-    }
-
 
     public ArticleResponseDTO createArticle(
             Long groupId,

@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/animal")
+@RequestMapping("/animal")
 public class AnimalController {
 
 	private final AnimalService animalService;

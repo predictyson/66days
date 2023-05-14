@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/tier")
+@RequestMapping("/tier")
 public class TierController {
 
 	private final TierService tierService;

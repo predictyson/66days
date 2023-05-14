@@ -2,6 +2,9 @@ package com.ssafy._66days.user.controller;
 
 import java.util.UUID;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,13 +20,23 @@ import com.ssafy._66days.util.Utils;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
 	private final UserService userService;
 	private final JwtProvider jwtProvider;
+	Environment env;
+
+	@GetMapping("/health_check")
+	public String check(HttpServletRequest request) {
+		log.info("Server port={}", request.getServerPort());
+		return String.format("Hi, there. This is a message from Chat Service on PORT %s", env.getProperty("local.server.port"));
+	}
 
 	// token reissue
 	@PostMapping("/token/reissue")
