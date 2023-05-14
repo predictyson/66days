@@ -20,13 +20,13 @@ public class Badge {
     private Long badgeId;
 
     @NotBlank
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String badgeName;
     @NotBlank
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
     @NotBlank
-    @Column(name = "image_path", nullable = false)
+    @Column(name = "image_path")
     private String imagePath;
 
 

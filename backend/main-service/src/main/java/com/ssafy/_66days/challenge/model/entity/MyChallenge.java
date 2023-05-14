@@ -25,12 +25,10 @@ public class MyChallenge {
 
     @NotNull
     @ManyToOne
-    @Column(name = "user_id")
     private User user;
 
     @NotNull
     @ManyToOne
-    @Column(name = "challenge_id")
     private Challenge challenge;
 
     @NotBlank

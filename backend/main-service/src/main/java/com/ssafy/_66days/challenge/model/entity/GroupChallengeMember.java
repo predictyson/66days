@@ -20,12 +20,10 @@ public class GroupChallengeMember {
     @Id
     @NotNull
     @ManyToOne
-    @Column(name = "user_id")
     private User user;
 
     @Id
     @NotNull
     @ManyToOne
-    @Column(name = "group_challenge_id")
     private GroupChallenge groupChallenge;
 }

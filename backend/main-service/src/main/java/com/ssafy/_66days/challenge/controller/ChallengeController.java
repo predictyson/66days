@@ -181,7 +181,7 @@ public class ChallengeController {
     @ApiOperation(value="그룹 챌린지 가입 신청 API", notes="그룹 참여자가 시작하지 않은 챌린지에 가입 신청을 할 수 있다")
     public ResponseEntity<Map<String, Object>> challengeApplication(
             // @RequestHeader(name = "Authorization") String accessToken
-
+            @PathVariable("group_challenge_id") Long groupChallengeId
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
@@ -224,7 +224,6 @@ public class ChallengeController {
     @ApiOperation(value="그룹페이지의 챌린지 목록 반환 API", notes="그룹 페이지 접근 시 해당 그룹 참여자라면 진행중, 예약 챌린지 목록 반환")
     public ResponseEntity<Map<String, Object>> getGroupChallenges(
             // @RequestHeader(name = "Authorization") String accessToken
-
             @PathVariable("group_id") Long groupId
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -248,12 +247,17 @@ public class ChallengeController {
     @GetMapping("/group/{group_id}/group_challenge/{group_challenge_id}")
     @ApiOperation(value = "그룹 챌린지 상세 페이지 API", notes = "그룹 챌린지 ")
     public ResponseEntity<Map<String, Object>> getGroupChallengeDetail(
+            // @RequestHeader(name = "Authorization") String accessToken
             @PathVariable("group_id") Long groupId,
             @PathVariable("group_challenge_id") Long groupChallengeId
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
         try {
+            // auth서버로 인증 요청
+            // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
+            // UUID userId = authenticateUtil.getUserId(accessToken);
+
             GroupChallengeDetailResponseDTO groupChallengeDetailResponseDTO = groupChallengeService.getGroupChallengeDetail(userId, groupId, groupChallengeId);
             resultMap.put("groupChallengeDetailResponseDTO", groupChallengeDetailResponseDTO);
             return ResponseEntity.ok().body(resultMap);

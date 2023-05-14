@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -91,7 +92,7 @@ public class GroupChallengeService {
         String state = "ACTIVATE";
         GroupChallenge groupChallenge = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, state); // 현재 진행 중인 챌린지가 있는지 찾아온다
 
-        if (startAt.compareTo(today) > 30) {                //  시작날짜가 오늘 날짜에서 30일 초과한 날짜인지 확인
+        if (ChronoUnit.DAYS.between(today, startAt) > 30) {                //  시작날짜가 오늘 날짜에서 30일 초과한 날짜인지 확인
             throw new IllegalArgumentException("챌린지는 최대 30일 이내에 시작해야 합니다");
         }
         if (groupChallenge != null && groupChallenge.getEndAt().isAfter(startAt)) { // 같은 챌린지가 해당 그룹내에서 진행중인지 확인(시작날짜가 진행 중 챌린지 endAt보다 전인지 확인)
@@ -184,16 +185,18 @@ public class GroupChallengeService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹니다"));
         GroupChallenge groupChallenge = groupChallengeRepository.findById(groupChallengeId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다"));
+        GroupChallengeMember groupChallengeMember = groupChallengeMemberRepository.findByUserAndGroupChallenge(user, groupChallenge);
         List<GroupChallengeMember> groupChallengeMemberList = groupChallengeMemberRepository.findByGroupChallenge(groupChallenge);
+        if (!groupChallengeMemberList.contains(groupChallengeMember)) {
+            throw new IllegalArgumentException("챌린지에 속하지 않은 유저입니다");
+        }
 
         List<GroupChallengeMemberDTO> groupChallengeMemberDTOList = new ArrayList<>();
-        if (!groupChallengeMemberList.isEmpty()) {
-            for (int i = 0; i < groupChallengeMemberList.size(); i++) {
-                GroupChallengeMemberDTO groupChallengeMemberDTO = GroupChallengeMemberDTO.of(groupChallengeMemberList.get(i));
-                groupChallengeMemberDTOList.add(groupChallengeMemberDTO);
-            }
+        for (int i = 0; i < groupChallengeMemberList.size(); i++) {
+            GroupChallengeMemberDTO groupChallengeMemberDTO = GroupChallengeMemberDTO.of(groupChallengeMemberList.get(i));
+            groupChallengeMemberDTOList.add(groupChallengeMemberDTO);
         }
-        GroupChallengeDetailResponseDTO groupChallengeDetailResponseDTO = GroupChallengeDetailResponseDTO.of(groupChallenge, groupChallengeMemberDTOList);
-        return groupChallengeDetailResponseDTO;
+
+        return GroupChallengeDetailResponseDTO.of(groupChallenge, groupChallengeMemberDTOList);
     }
 }

@@ -29,12 +29,10 @@ public class GroupChallenge {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "group_id")
     private Group group;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "challenge_id")
     private Challenge challenge;
 
     @NotBlank
