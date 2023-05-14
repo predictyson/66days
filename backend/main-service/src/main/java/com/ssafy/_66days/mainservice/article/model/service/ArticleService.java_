@@ -1,0 +1,259 @@
+package com.ssafy._66days.article.model.service;
+
+import requestDto.dto.model.article.com.ssafy._66days.mainservice.CommentRequestDTO;
+import responseDto.dto.model.article.com.ssafy._66days.mainservice.ArticleResponseDTO;
+import requestDto.dto.model.article.com.ssafy._66days.mainservice.ArticleRequestDTO;
+import com.ssafy._66days.article.model.dto.requestDto.ArticleUpdateRequestDTO;
+import responseDto.dto.model.article.com.ssafy._66days.mainservice.CommentResponseDTO;
+import entity.model.article.com.ssafy._66days.mainservice.Article;
+import entity.model.article.com.ssafy._66days.mainservice.Comment;
+import repository.model.article.com.ssafy._66days.mainservice.CommentRepository;
+import util.global.com.ssafy._66days.mainservice.CheckUserUtil;
+import entity.model.group.com.ssafy._66days.mainservice.Group;
+import repository.model.article.com.ssafy._66days.mainservice.ArticleRepository;
+import repository.model.group.com.ssafy._66days.mainservice.GroupMemberRepository;
+import repository.model.group.com.ssafy._66days.mainservice.GroupRepository;
+import repository.model.user.com.ssafy._66days.mainservice.UserRepository;
+import entity.model.user.com.ssafy._66days.mainservice.User;
+import service.model.user.com.ssafy._66days.mainservice.UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.xml.bind.DatatypeConverter;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+@Service("articleService")
+@Transactional
+public class ArticleService {
+    private final UserRepository userRepository;
+    private final GroupRepository groupRepository;
+    private final GroupMemberRepository groupMemberRepository;
+    private final ArticleRepository articleRepository;
+    private final CommentRepository commentRepository;
+    private final UserService userService;
+    public ArticleService(
+            UserRepository userRepository,
+            GroupRepository groupRepository,
+            GroupMemberRepository groupMemberRepository,
+            ArticleRepository articleRepository,
+            CommentRepository commentRepository,
+            UserService userService
+    ) {
+        this.userRepository = userRepository;
+        this.groupRepository = groupRepository;
+        this.groupMemberRepository = groupMemberRepository;
+        this.articleRepository = articleRepository;
+        this.commentRepository = commentRepository;
+        this.userService = userService;
+    }
+    public ArticleResponseDTO createArticle(UserDetails currentUser, Long groupId, ArticleRequestDTO articleRequestDTO) {
+        if (articleRequestDTO.getTitle() == null || articleRequestDTO.getContent() == null) {
+            throw new IllegalArgumentException("제목과 내용은 필수 입력 항목입니다.");
+        }
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+
+        UUID userId = checkUserUtil.isExistUser(currentUser);
+        if (userId == null) {
+            throw new IllegalArgumentException("존재하지 않는 유저입니다");
+        }
+
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
+        if (isUSerInGroup) {
+            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+        }
+
+        // userId로 user 객체를 받아온다
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
+        // groupId로 그룹 객체를 받아온다
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
+        System.out.println(articleRequestDTO.getContent());
+        // 유저에게 받은 게시글 정보, 작성일자, user, group 정보등을 담아 객체를 생성한다
+        Article articleCreate = Article.builder()
+                .title(articleRequestDTO.getTitle())
+                .content(articleRequestDTO.getContent())
+                .createdAt(LocalDateTime.now())
+                .isDeleted(0)
+                .user(user)
+                .group(group)
+                .build();
+        // DB 저장하는 함수 호출
+        Article savedArticle = articleRepository.save(articleCreate);
+        // 저장한 게시글을 게시글 dto에 담아 반환한다
+        return ArticleResponseDTO.of(savedArticle);
+    }
+
+    public ArticleResponseDTO getArticle(UserDetails currentUser, Long groupId, Long articleId) {
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
+        if (userId == null) {
+            throw new IllegalArgumentException("존재하지 않는 유저입니다");
+        }
+
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
+        if (isUSerInGroup) {
+            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+        }
+        Optional<Article> optionalArticle = articleRepository.findById(articleId);
+        if (optionalArticle.isPresent()) {
+            Article article = optionalArticle.get();
+            return ArticleResponseDTO.of(article);
+        } else {
+            throw new IllegalArgumentException("존재하지 않는 게시글입니다");
+        }
+    }
+    public List<ArticleResponseDTO> getThreeArticles(UserDetails currentUser, Long groupId, Long offset) {
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
+        if (userId == null) {
+            throw new IllegalArgumentException("존재하지 않는 유저입니다");
+        }
+
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
+        if (isUSerInGroup) {
+            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+        }
+        // offset 값과 limit 값을 이용해 최근 게시글 3개를 가져온다
+        List<Article> articles = articleRepository.findRecentArticlesByGroupId(groupId, offset, 3);
+
+        // 가져온 게시글을 ArticleDTO 리스트로 변환한다
+        List<ArticleResponseDTO> articleResponseDTOs = articles.stream()
+                .map(article -> ArticleResponseDTO.from(article))
+                .collect(Collectors.toList());
+
+        return articleResponseDTOs;
+    }
+
+    public ArticleResponseDTO updateArticle(UserDetails currentUser, Long groupId, Long articleId, ArticleUpdateRequestDTO articleUpdateRequestDTO) {
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
+        if (userId == null) {
+            throw new IllegalArgumentException("존재하지 않는 유저입니다");
+        }
+
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
+        if (isUSerInGroup) {
+            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+        }
+
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        if (!article.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인이 작성한 게시글이 아닙니다");
+        }
+        if (articleUpdateRequestDTO.getContent() == null) {
+            throw new IllegalArgumentException("수정할 내용을 작성해 주세요");
+        }
+
+        article.setContent(articleUpdateRequestDTO.getContent());
+        Article updatedArticle = articleRepository.save(article);
+
+        return ArticleResponseDTO.of(updatedArticle);
+    }
+
+    public int deleteArticle(UserDetails currentUser, Long groupId, Long articleId) {
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
+        if (userId == null) {
+            throw new IllegalArgumentException("존재하지 않는 유저입니다");
+        }
+
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
+        if (isUSerInGroup) {
+            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+        }
+
+        // 게시글을 조회하여 삭제한다
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        if (!article.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인이 작성한 게시글이 아닙니다");
+        } else {
+            article.setIsDeleted(1);
+            articleRepository.save(article);
+            return 1; // 게시글이 성공적으로 삭제되었으므로 1을 반환한다
+        }
+    }
+
+    public CommentResponseDTO writeComment(
+            UserDetails currentUser,
+            Long groupId,
+            Long articleId,
+            CommentRequestDTO commentRequestDTO
+    ) {
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
+        if (userId == null) {
+            throw new IllegalArgumentException("존재하지 않는 유저입니다");
+        }
+
+        boolean isUSerInGroup = checkUserUtil.isUserInGroup(groupId, userId);
+        if (isUSerInGroup) {
+            throw new IllegalArgumentException("그룹에 속하지 않은 유저입니다");
+        }
+
+        Article article = articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다"));
+        if (commentRequestDTO.getContent() == null) {
+            throw new IllegalArgumentException("댓글을 작성해주시기 바랍니다");
+        }
+        Comment comment = Comment.builder()
+                .content(commentRequestDTO.getContent())
+                .group(Group.builder().groupId(groupId).build())
+                .article(article)
+                .user(User.builder().userId(userId).build())
+                .createdAt(LocalDateTime.now())
+                .isDeleted(0)
+                .build();
+
+        Comment savedComment = commentRepository.save(comment);
+        return CommentResponseDTO.of(savedComment);
+    }
+
+    public List<CommentResponseDTO> getCommentsList(
+            UserDetails currentUser,
+            Long articleId,
+            Long offset
+    ) {
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
+        if (userId == null) {
+            throw new IllegalArgumentException("존재하지 않는 유저입니다");
+        }
+        articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다"));
+
+        List<Comment> comments = commentRepository.findCommentsByArticleId(articleId, offset, 10);
+        List<CommentResponseDTO> commentResponseDTOs = comments.stream()
+                .map(comment -> CommentResponseDTO.from(comment))
+                .collect(Collectors.toList());
+
+        return commentResponseDTOs;
+    }
+
+    public Integer deleteComment(
+            UserDetails currentUser,
+            Long articleId,
+            Long commentId
+    ) {
+        CheckUser checkUserUtil = new CheckUser(groupMemberRepository, userService);
+        UUID userId = checkUserUtil.isExistUser(currentUser);
+        if (userId == null) {
+            throw new IllegalArgumentException("존재하지 않는 유저입니다");
+        }
+        Comment deleteComment = commentRepository.findByCommentIdAndArticle(commentId, articleId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 댓글을 찾을 수 없습니다"));
+        if (!deleteComment.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인의 작성한 댓글만 삭제할 수 있습니다");
+        }
+        deleteComment.setIsDeleted(1);
+        return 1;
+    }
+}
