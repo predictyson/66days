@@ -3,25 +3,39 @@ import styled from "styled-components";
 import LogoTitle from "../../assets/logo-title.svg";
 import Logo from "../../assets/logo.svg";
 import avartar from "../../assets/avatar.svg";
-import { Space } from "antd";
+import { Dropdown, MenuProps, Space } from "antd";
 import { useState } from "react";
 import { CreateGroupModal } from "../group/CreateGroupModal";
-// import { kakaoLogin } from "../../api/auth";
-// import { useAuthStore } from "../../stores/useAuthStore";
+import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
+import { useAuthStore } from "../../hooks/useAuthStore";
+
+const items: MenuProps["items"] = [
+  {
+    key: "1",
+    label: <a href="/mypage">my page</a>,
+  },
+  {
+    key: "2",
+    danger: true,
+    label: (
+      <a
+        onClick={(e) => {
+          e.preventDefault();
+          const logout = useAuthStore((state) => state.logout);
+          logout();
+        }}
+      >
+        <LogoutOutlined /> logout
+      </a>
+    ),
+  },
+];
 
 export default function CustomHeader() {
   const [isOpenCreateGroupModal, setOpenCreateGroupModal] = useState(false);
 
-  // TODO: login function and require kakao modal
-  // async function login() {
-  //   const login = useAuthStore((state) => state.login);
-  //   login(await kakaoLogin("some code"));
-  // }
-
-  // function logout() {
-  //   const logout = useAuthStore((state) => state.logout);
-  //   logout();
-  // }
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const loginByKakao = useAuthStore((state) => state.loginByKakao);
 
   return (
     <>
@@ -39,7 +53,15 @@ export default function CustomHeader() {
           <a onClick={() => setOpenCreateGroupModal((prev) => !prev)}>
             create group
           </a>
-          <img src={avartar} />
+          {isLoggedIn() ? (
+            <Dropdown menu={{ items }} placement="bottomRight" arrow>
+              <img src={avartar} />
+            </Dropdown>
+          ) : (
+            <a onClick={() => loginByKakao()}>
+              <LoginOutlined /> login
+            </a>
+          )}
         </Space>
       </StyledHeader>
       <CreateGroupModal
