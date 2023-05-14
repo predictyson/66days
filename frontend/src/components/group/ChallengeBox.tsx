@@ -1,5 +1,4 @@
 import { Layout, Avatar } from "antd";
-// import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 
@@ -49,22 +48,16 @@ export default function ChallengeBox({ ...props }) {
               // 추후 participant.image로 수정 예성
               <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=2" />
             ))}
-            {/* <Avatar style={{ backgroundColor: theme.colors.purple }}>K</Avatar>
-            <Tooltip title="Ant User" placement="top">
-              <Avatar
-                style={{ backgroundColor: "#87d068" }}
-                icon={<UserOutlined />}
-              />
-            </Tooltip>
-            <Avatar
-              style={{ backgroundColor: "#1890ff" }}
-              icon={<AntDesignOutlined />}
-            /> */}
           </Avatar.Group>
           <div className="members__cnt-info">
             {props.participants.length} / {props.maxCnt} 명
           </div>
         </div>
+        {props.notStarted ? (
+          <button className="sign-in__challenge-btn">챌린지 신청하기</button>
+        ) : (
+          <></>
+        )}
       </ChallengeBoxWrapper>
     </>
   );
@@ -129,6 +122,20 @@ const ChallengeBoxWrapper = styled(Content)`
     @media all and (max-width: 830px) {
       margin-top: 1rem;
       margin-left: 0;
+    }
+  }
+
+  .sign-in__challenge-btn {
+    margin-top: 1rem;
+    border: none;
+    padding: 1rem 0;
+    border-radius: 5px;
+    background-color: ${theme.colors.lightred};
+    color: ${theme.colors.white};
+    word-break: keep-all;
+    cursor: pointer;
+    &:hover {
+      background-color: #f88080;
     }
   }
 `;

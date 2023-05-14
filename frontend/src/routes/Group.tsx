@@ -363,10 +363,6 @@ export default function Group() {
             {boardDataList?.articles.map((article, index) => (
               <BoardBox
                 key={index}
-                // title={boardData.title}
-                // boardId={boardData.articleId}
-                // createdAt={boardData.createdAt}
-                // writer={boardData.nickname}
                 data={article}
                 setBoardData={setBoardData}
                 setCommentData={setCommentData}
