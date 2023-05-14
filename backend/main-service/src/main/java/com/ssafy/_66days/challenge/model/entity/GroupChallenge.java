@@ -22,40 +22,50 @@ import java.time.LocalDateTime;
 public class GroupChallenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_challeng_id", nullable = false)
+    @Column(name = "group_challeng_id")
     private Long groupChallengeId;
+
+
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "group_id", nullable = false)
+    @Column(name = "group_id")
     private Group group;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "challenge_id", nullable = false)
+    @Column(name = "challenge_id")
     private Challenge challenge;
 
     @NotBlank
-    @Column(name = "content", nullable = false)
+    @Column(name = "challenge_manager")
+    private String challengeManager;
+
+    @NotBlank
+    @Column(name = "challenge_name")
+    private String challengeName;
+
+    @NotBlank
+    @Column(name = "content")
     private String content;
 
     @NotNull
-    @Column(name = "start_at", nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(name = "start_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime startAt;
 
-    @Column(name = "end_at", nullable = true, columnDefinition = "TIMESTAMP")
+    @Column(name = "end_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime endAt;
 
     @NotBlank
-    @Column(name = "state", nullable = false)
+    @Column(name = "state")
     private String state;
 
     @NotNull
-    @Column(name = "available_freezing_count", nullable = false)
+    @Column(name = "available_freezing_count")
     @ColumnDefault("0")
     private int availableFreezingCount;
     @NotNull
-    @Column(name = "max_member_count", nullable = false)
+    @Column(name = "max_member_count")
     private int maxMemberCount;
 
 }

@@ -20,35 +20,35 @@ import java.time.LocalDateTime;
 public class MyChallenge {
     @Id
     @NotNull
-    @Column(name = "my_challenge_id", nullable = false)
+    @Column(name = "my_challenge_id")
     private Long myChallengeId;
 
     @NotNull
     @ManyToOne
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private User user;
 
     @NotNull
     @ManyToOne
-    @Column(name = "challenge_id", nullable = false)
+    @Column(name = "challenge_id")
     private Challenge challenge;
 
     @NotBlank
-    @Column(name = "challenge_name", nullable = false)
+    @Column(name = "challenge_name")
     private String challengeName;
 
     @NotBlank
-    @Column(name = "content", nullable = false)
+    @Column(name = "content")
     private String content;
 
     @NotNull
-    @Column(name = "start_at", nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(name = "start_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime startAt;
 
-    @Column(name = "end_at", nullable = true, columnDefinition = "TIMESTAMP")
+    @Column(name = "end_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime endAt;
 
     @NotBlank
-    @Column(name = "state", nullable = false)
+    @Column(name = "state")
     private String state;
 }

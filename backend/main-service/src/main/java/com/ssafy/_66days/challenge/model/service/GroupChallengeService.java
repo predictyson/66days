@@ -1,10 +1,14 @@
 package com.ssafy._66days.challenge.model.service;
 
+import com.ssafy._66days.challenge.model.dto.challengeMemberImagePathDTO;
 import com.ssafy._66days.challenge.model.dto.requestDTO.GroupChallengeRequestDTO;
 import com.ssafy._66days.challenge.model.dto.responseDTO.AvailableGroupChallengeResponseDTO;
+import com.ssafy._66days.challenge.model.dto.responseDTO.GroupChallengeResponseDTO;
 import com.ssafy._66days.challenge.model.entity.Challenge;
 import com.ssafy._66days.challenge.model.entity.GroupChallenge;
+import com.ssafy._66days.challenge.model.entity.GroupChallengeMember;
 import com.ssafy._66days.challenge.model.reposiotry.ChallengeRepository;
+import com.ssafy._66days.challenge.model.reposiotry.GroupChallengeMemberRepository;
 import com.ssafy._66days.challenge.model.reposiotry.GroupChallengeRepository;
 import com.ssafy._66days.group.model.entity.Group;
 import com.ssafy._66days.group.model.entity.GroupMember;
@@ -16,9 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("GroupChallengeService")
@@ -28,19 +30,22 @@ public class GroupChallengeService {
     private final GroupRepository groupRepository;
     private final ChallengeRepository challengeRepository;
     private final GroupChallengeRepository groupChallengeRepository;
+    private final GroupChallengeMemberRepository groupChallengeMemberRepository;
 
     public GroupChallengeService(
             UserRepository userRepository,
             GroupMemberRepository groupMemberRepository,
             GroupRepository groupRepository,
             ChallengeRepository challengeRepository,
-            GroupChallengeRepository groupChallengeRepository
+            GroupChallengeRepository groupChallengeRepository,
+            GroupChallengeMemberRepository groupChallengeMemberRepository
     ) {
         this.userRepository = userRepository;
         this.groupMemberRepository = groupMemberRepository;
         this.groupRepository = groupRepository;
         this.challengeRepository = challengeRepository;
         this.groupChallengeRepository = groupChallengeRepository;
+        this.groupChallengeMemberRepository = groupChallengeMemberRepository;
     }
 
     //
@@ -129,5 +134,42 @@ public class GroupChallengeService {
                 .collect(Collectors.toList());
 
         return AvailableGroupChallengeResponseDTOList;
+    }
+
+    public List<GroupChallengeResponseDTO> getGroupChallenges(
+            UUID userId,
+            Long groupId
+    ) {
+        // 내가 그룹에 속한 사람인지 확인
+        User user = userRepository.findById(userId)                         // 유저 객체 받아오기
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
+        Group group = groupRepository.findById(groupId)                     // 그룹 객체 받아오기
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹니다"));
+        GroupMember groupMember = groupMemberRepository.findByGroupAndUser(group, user)
+                .orElseThrow(() -> new IllegalArgumentException("그룹에 속한 유저가 아닙니다"));
+
+        // 그룹아이디로 진행중인 챌린지와 진행 예정인 챌린지 리스트를 받아온다
+        List<GroupChallenge> groupChallengeList = groupChallengeRepository.findByGroupAndStateIn(group, Arrays.asList("ACTIVATED", "WAITING"));
+        List<GroupChallengeResponseDTO> groupChallengeResponseDTOList = new ArrayList<>();  // 그룹 챌린지 반환 리스트
+        List<String> challengeMemberImagePathDTOList = new ArrayList<>();                   // 참여자들의 프로필 이미지 담을 list
+        for (int i = 0; i < groupChallengeList.size(); ) {
+            GroupChallenge groupChallenge = groupChallengeList.get(i);                      // 각 그룹 챌린지 객체
+
+            LocalDateTime startDate = groupChallenge.getStartAt();                          // 챌린지 시작날짜 LocalDateTime -> Date
+            Date startAt = java.sql.Timestamp.valueOf(startDate);
+
+            List<GroupChallengeMember> groupChallengeMemberList = groupChallengeMemberRepository.findByGroupChallenge(groupChallenge); // 그룹 챌린지로 챌린지 참가자 객체받아오기
+            int memberCount = 0;
+            if (!groupChallengeMemberList.isEmpty()) {
+                memberCount = groupChallengeMemberList.size();                          // 그룹 챌린지 참여자 수
+                for (int j = 0; j < memberCount; j++) {
+                    String profileImagePath = groupChallengeMemberList.get(j).getUser().getProfileImagePath();  // 챌린지 참여자 개인의 프로필 이미지
+                    challengeMemberImagePathDTOList.add(profileImagePath);                  // list에 추가
+                }
+            }
+            groupChallengeResponseDTOList.add(GroupChallengeResponseDTO.of(groupChallenge, startAt, memberCount, challengeMemberImagePathDTOList));
+        }
+        // DTO로 변환 후 반환
+        return groupChallengeResponseDTOList;
     }
 }

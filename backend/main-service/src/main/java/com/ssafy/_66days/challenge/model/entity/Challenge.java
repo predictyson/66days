@@ -19,16 +19,16 @@ import javax.validation.constraints.NotNull;
 public class Challenge {    // 챌린지 메타 데이터
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "challenge_id", nullable = false)
+    @Column(name = "challenge_id")
     private Long challengeId;
 
     @NotNull
     @OneToOne   // 챌린지와 뱃지는 1대1 매핑
-    @Column(name = "badge_id", nullable = false)
+    @Column(name = "badge_id")
     private Badge badge;
 
     @NotBlank
-    @Column(name = "tipic", nullable = false)
+    @Column(name = "tipic")
     private String topic;
 
 }

@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface GroupChallengeMemberRepository extends JpaRepository<GroupChallenge, Long> {
     List<GroupChallengeMember> findByUser(User user);
+
+    List<GroupChallengeMember> findByGroupChallenge(GroupChallenge groupChallenge);
 }

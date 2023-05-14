@@ -1,11 +1,9 @@
 package com.ssafy._66days.challenge.controller;
 
 import com.ssafy._66days.challenge.model.dto.requestDTO.GroupChallengeRequestDTO;
+import com.ssafy._66days.challenge.model.dto.requestDTO.ManageApplicationRequestDTO;
 import com.ssafy._66days.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
-import com.ssafy._66days.challenge.model.dto.responseDTO.AvailableGroupChallengeResponseDTO;
-import com.ssafy._66days.challenge.model.dto.responseDTO.AvailableMyChallengeResponseDTO;
-import com.ssafy._66days.challenge.model.dto.responseDTO.MyChallengeDetailResponseDTO;
-import com.ssafy._66days.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
+import com.ssafy._66days.challenge.model.dto.responseDTO.*;
 import com.ssafy._66days.challenge.model.service.GroupChallengeService;
 import com.ssafy._66days.challenge.model.service.MyChallengeService;
 import io.swagger.annotations.ApiOperation;
@@ -59,6 +57,7 @@ public class ChallengeController {
     }
 
     // 개인 챌린지 생성
+    // ? 5개 챌린지를 참여중이거나 동일한 챌린지 참여중이라면 생성 불가
     @PostMapping("/createMyChallenge")
     @ApiOperation(value = "개인 챌린지 생성 API", notes = "개인 챌린지 생성")
     public ResponseEntity<Map<String, Object>> createMyChallenge(
@@ -176,10 +175,71 @@ public class ChallengeController {
     }
 
     // 그룹 챌린지 가입 신청
-    // ? 그룹 챌린지 가입 요청관련 DB가 없는데?
-    @PostMapping()
-    // 그룹 챌린지 가입 신청 허용 or 거부
-    // 그룹 챌린지 목록(그룹 들어갔을 때) 반환
+    // ? 관련 DB가 없음
+    // ? 5개 챌린지를 참여중이거나 동일한 챌린지 참여중이라면 신청 불가
+    @PostMapping("/{group_challenge_id}")
+    @ApiOperation(value="그룹 챌린지 가입 신청 API", notes="그룹 참여자가 시작하지 않은 챌린지에 가입 신청을 할 수 있다")
+    public ResponseEntity<Map<String, Object>> challengeApplication(
+            // @RequestHeader(name = "Authorization") String accessToken
+
+    ) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        try {
+
+            return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
+    }
+    // 그룹장 혹은 매니저 자신이 만든 챌린지 가입 신청 승인 or 거절
+    // ? 관련 DB가 없음
+    @PatchMapping("/group/{group_id}/group_challenge/{group_challenge_id}")
+    @ApiOperation(value="챌린지 가입 승인 or 거절 API", notes="챌린지를 생성한 매니저 혹은 그룹장이 승인 or 거절 할 수 있다")
+    public ResponseEntity<Map<String, Object>> manageSubscriptionApplication(
+            // @RequestHeader(name = "Authorization") String accessToken
+            @PathVariable("group_id") Long groupId,
+            @PathVariable("group_challenge_id") Long groupChallengeId,
+            @RequestBody ManageApplicationRequestDTO manageApplicationRequestDTO
+    ) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        try {
+            // auth서버로 인증 요청
+            // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
+            // UUID userId = authenticateUtil.getUserId(accessToken);
+
+            return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
+    }
+
+    // ? 그룹 챌린지 목록(그룹 들어갔을때) 반환 -->  페이지API로 대체
+    @GetMapping("/{group_id}")
+    @ApiOperation(value="그룹페이지의 챌린지 목록 반환 API", notes="그룹 페이지 접근 시 해당 그룹 참여자라면 진행중, 예약 챌린지 목록 반환")
+    public ResponseEntity<Map<String, Object>> getGroupChallenges(
+            // @RequestHeader(name = "Authorization") String accessToken
+
+            @PathVariable("group_id") Long groupId
+    ) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        try {
+            // auth서버로 인증 요청
+            // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
+            // UUID userId = authenticateUtil.getUserId(accessToken);
+
+            List<GroupChallengeResponseDTO> groupChallengeResponseDTOList = groupChallengeService.getGroupChallenges(userId, groupId);
+            resultMap.put("groupChallengeResponseDTOList", groupChallengeResponseDTOList);
+            return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
+    }
     // 그룹 챌린지 상세 페이지 / 스트릭, 챌린지원과 당일 챌린지 달성여부
     // ? 그룹 챌린지 찍기 mongoDB쪽이라 유보
     // ? 개인 스트릭 찍기 mongoDB쪽이라 유보

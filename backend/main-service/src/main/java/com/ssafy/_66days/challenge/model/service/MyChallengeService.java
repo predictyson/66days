@@ -86,21 +86,23 @@ public class MyChallengeService {
         return myChallengeRepository.save(myChallege) != null;
     }
 
-    public List<MyChallengeResponseDTO> getMyChallenges(UUID userId) {      // 개인 챌린지 목록
+    public List<MyChallengeResponseDTO> getMyChallenges(    // 개인 챌린지 목록
+            UUID userId
+    ) {
 
         User user = userRepository.findById(userId)                         // 유저 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         
         String state = "ACTIVATED";                                         // 개인 챌린지 중 진행중인 것만 받아온다 
-        List<MyChallenge> mychallenges = myChallengeRepository.findByUserAndState(user, state);
+        List<MyChallenge> myChallengeList = myChallengeRepository.findByUserAndState(user, state);
         
-        List<MyChallengeResponseDTO> MyChallengeResponseDTOs = new ArrayList<>();
-        if (!mychallenges.isEmpty()) {                                      // 진행중인 챌린지가 있다면
-            MyChallengeResponseDTOs = mychallenges.stream()
+        List<MyChallengeResponseDTO> myChallengeResponseDTOList = new ArrayList<>();
+        if (!myChallengeList.isEmpty()) {                                      // 진행중인 챌린지가 있다면
+            myChallengeResponseDTOList = myChallengeList.stream()
                     .map(myChanllenge -> MyChallengeResponseDTO.of(myChanllenge))
                     .collect(Collectors.toList());                          // 각 챌린지를 DTO로 변환 후 반환
         }
-        return MyChallengeResponseDTOs;
+        return myChallengeResponseDTOList;
     }
 
     // 내가 개인 혹은 그룹에서 하고 있는 챌린지아이디를 담을 배열을 만든다
