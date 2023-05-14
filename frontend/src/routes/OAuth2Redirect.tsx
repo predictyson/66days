@@ -1,17 +1,18 @@
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import { useEffect, useState } from "react";
-import { useAuthStore } from "../hooks/useAuthStore";
+import { useAuthStore } from "../stores/useAuthStore";
+import { fetchUserByKakao } from "../api/auth";
 
 export default function OAuth2Redirect() {
-  const authenticate = useAuthStore((state) => state.authenticateByKakao);
+  const setUser = useAuthStore((state) => state.setUser);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (isLoading) {
       setIsLoading(false);
     } else {
-      authenticate();
+      fetchUserByKakao().then((user) => setUser(user));
     }
   }, [isLoading]);
 

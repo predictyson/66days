@@ -14,7 +14,7 @@ export async function fetchKakaoURL() {
   }
 }
 
-export async function passKakaoCode() {
+export async function fetchUserByKakao() {
   try {
     const res = await instance.post("/api/v1/oauth/kakao/token", {
       authorizationCode: new URLSearchParams(window.location.search).get(

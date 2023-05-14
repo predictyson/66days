@@ -7,35 +7,36 @@ import { Dropdown, MenuProps, Space } from "antd";
 import { useState } from "react";
 import { CreateGroupModal } from "../group/CreateGroupModal";
 import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
-import { useAuthStore } from "../../hooks/useAuthStore";
-
-const items: MenuProps["items"] = [
-  {
-    key: "1",
-    label: <a href="/mypage">my page</a>,
-  },
-  {
-    key: "2",
-    danger: true,
-    label: (
-      <a
-        onClick={(e) => {
-          e.preventDefault();
-          const logout = useAuthStore((state) => state.logout);
-          logout();
-        }}
-      >
-        <LogoutOutlined /> logout
-      </a>
-    ),
-  },
-];
+import { useAuthStore } from "../../stores/useAuthStore";
+import { expireUserToken, fetchKakaoURL } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function CustomHeader() {
+  const navigate = useNavigate();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const [isOpenCreateGroupModal, setOpenCreateGroupModal] = useState(false);
 
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const loginByKakao = useAuthStore((state) => state.loginByKakao);
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: <a href="/mypage">my page</a>,
+    },
+    {
+      key: "2",
+      danger: true,
+      label: (
+        <a
+          onClick={() => {
+            expireUserToken();
+            const resetUser = useAuthStore((state) => state.resetUser);
+            resetUser();
+          }}
+        >
+          <LogoutOutlined /> logout
+        </a>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -58,7 +59,7 @@ export default function CustomHeader() {
               <img src={avartar} />
             </Dropdown>
           ) : (
-            <a onClick={() => loginByKakao()}>
+            <a onClick={async () => navigate(await fetchKakaoURL())}>
               <LoginOutlined /> login
             </a>
           )}
