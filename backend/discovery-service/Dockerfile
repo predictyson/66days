@@ -19,7 +19,7 @@ RUN chmod +x gradlew
 RUN ./gradlew build
 
 # Copy the JAR file from the build output directory to the container
-COPY build/libs/*.jar app.jar
+COPY /build/libs/*.jar app.jar
 
 # Specify the command to run the Spring Boot application
 CMD ["java", "-jar", "app.jar"]
