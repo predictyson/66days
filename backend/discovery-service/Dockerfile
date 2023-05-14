@@ -1,4 +1,3 @@
-#FROM adoptopenjdk/openjdk11
 # Use an official OpenJDK runtime as the base image
 FROM adoptopenjdk:11-jre-hotspot
 
@@ -16,10 +15,10 @@ COPY gradle /app/gradle
 RUN chmod +x gradlew
 
 # Build the application using Gradle
-RUN ./gradlew build
+RUN ./gradlew build --no-daemon
 
 # Copy the JAR file from the build output directory to the container
-COPY /build/libs/*.jar app.jar
+COPY build/libs/*.jar app.jar
 
 # Specify the command to run the Spring Boot application
 CMD ["java", "-jar", "app.jar"]
