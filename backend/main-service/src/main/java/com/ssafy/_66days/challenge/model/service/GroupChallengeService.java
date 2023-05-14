@@ -1,8 +1,9 @@
 package com.ssafy._66days.challenge.model.service;
 
-import com.ssafy._66days.challenge.model.dto.challengeMemberImagePathDTO;
+import com.ssafy._66days.challenge.model.dto.GroupChallengeMemberDTO;
 import com.ssafy._66days.challenge.model.dto.requestDTO.GroupChallengeRequestDTO;
 import com.ssafy._66days.challenge.model.dto.responseDTO.AvailableGroupChallengeResponseDTO;
+import com.ssafy._66days.challenge.model.dto.responseDTO.GroupChallengeDetailResponseDTO;
 import com.ssafy._66days.challenge.model.dto.responseDTO.GroupChallengeResponseDTO;
 import com.ssafy._66days.challenge.model.entity.Challenge;
 import com.ssafy._66days.challenge.model.entity.GroupChallenge;
@@ -169,7 +170,30 @@ public class GroupChallengeService {
             }
             groupChallengeResponseDTOList.add(GroupChallengeResponseDTO.of(groupChallenge, startAt, memberCount, challengeMemberImagePathDTOList));
         }
-        // DTO로 변환 후 반환
         return groupChallengeResponseDTOList;
+    }
+
+    public GroupChallengeDetailResponseDTO getGroupChallengeDetail(
+            UUID userId,
+            Long groupId,
+            Long groupChallengeId
+    ) {
+        User user = userRepository.findById(userId)                         // 유저 객체 받아오기
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
+        Group group = groupRepository.findById(groupId)                     // 그룹 객체 받아오기
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹니다"));
+        GroupChallenge groupChallenge = groupChallengeRepository.findById(groupChallengeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다"));
+        List<GroupChallengeMember> groupChallengeMemberList = groupChallengeMemberRepository.findByGroupChallenge(groupChallenge);
+
+        List<GroupChallengeMemberDTO> groupChallengeMemberDTOList = new ArrayList<>();
+        if (!groupChallengeMemberList.isEmpty()) {
+            for (int i = 0; i < groupChallengeMemberList.size(); i++) {
+                GroupChallengeMemberDTO groupChallengeMemberDTO = GroupChallengeMemberDTO.of(groupChallengeMemberList.get(i));
+                groupChallengeMemberDTOList.add(groupChallengeMemberDTO);
+            }
+        }
+        GroupChallengeDetailResponseDTO groupChallengeDetailResponseDTO = GroupChallengeDetailResponseDTO.of(groupChallenge, groupChallengeMemberDTOList);
+        return groupChallengeDetailResponseDTO;
     }
 }

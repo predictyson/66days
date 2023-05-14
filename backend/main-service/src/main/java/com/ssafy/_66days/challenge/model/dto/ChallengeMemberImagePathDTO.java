@@ -7,6 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @ToString
-public class challengeMemberImagePathDTO {
+public class ChallengeMemberImagePathDTO {
     private String imagePath;
 }

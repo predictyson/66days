@@ -1,12 +1,10 @@
 package com.ssafy._66days.challenge.model.entity;
 
-import com.ssafy._66days.group.model.entity.GroupMemberId;
 import com.ssafy._66days.user.model.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

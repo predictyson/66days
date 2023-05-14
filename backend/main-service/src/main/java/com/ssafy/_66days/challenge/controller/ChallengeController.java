@@ -57,7 +57,7 @@ public class ChallengeController {
     }
 
     // 개인 챌린지 생성
-    // ? 5개 챌린지를 참여중이거나 동일한 챌린지 참여중이라면 생성 불가
+    // 5개 챌린지를 참여중이거나 동일한 챌린지 참여중이라면 생성 불가
     @PostMapping("/createMyChallenge")
     @ApiOperation(value = "개인 챌린지 생성 API", notes = "개인 챌린지 생성")
     public ResponseEntity<Map<String, Object>> createMyChallenge(
@@ -194,7 +194,9 @@ public class ChallengeController {
         }
     }
     // 그룹장 혹은 매니저 자신이 만든 챌린지 가입 신청 승인 or 거절
+    // 참가인원이 맥스 인원을 넘기면 안된다
     // ? 관련 DB가 없음
+
     @PatchMapping("/group/{group_id}/group_challenge/{group_challenge_id}")
     @ApiOperation(value="챌린지 가입 승인 or 거절 API", notes="챌린지를 생성한 매니저 혹은 그룹장이 승인 or 거절 할 수 있다")
     public ResponseEntity<Map<String, Object>> manageSubscriptionApplication(
@@ -240,8 +242,29 @@ public class ChallengeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
     }
-    // 그룹 챌린지 상세 페이지 / 스트릭, 챌린지원과 당일 챌린지 달성여부
+
+    // 그룹 챌린지 상세 페이지
+    // 챌린지 이미지경로, 챌린지 이름, 챌린지 설명, 구성원 리스트
+    @GetMapping("/group/{group_id}/group_challenge/{group_challenge_id}")
+    @ApiOperation(value = "그룹 챌린지 상세 페이지 API", notes = "그룹 챌린지 ")
+    public ResponseEntity<Map<String, Object>> getGroupChallengeDetail(
+            @PathVariable("group_id") Long groupId,
+            @PathVariable("group_challenge_id") Long groupChallengeId
+    ) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        try {
+            GroupChallengeDetailResponseDTO groupChallengeDetailResponseDTO = groupChallengeService.getGroupChallengeDetail(userId, groupId, groupChallengeId);
+            resultMap.put("groupChallengeDetailResponseDTO", groupChallengeDetailResponseDTO);
+            return ResponseEntity.ok().body(resultMap);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
+    }
+
     // ? 그룹 챌린지 찍기 mongoDB쪽이라 유보
     // ? 개인 스트릭 찍기 mongoDB쪽이라 유보
-    // ? 챌린지 끝났을 때 챌린지 상태값, 종료일 update
+    // ? 챌린지 끝났을 때 챌린지 상태값, 종료일 update mongoDB인가?
 }

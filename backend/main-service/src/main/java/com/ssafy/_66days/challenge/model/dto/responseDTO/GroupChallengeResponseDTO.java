@@ -1,6 +1,5 @@
 package com.ssafy._66days.challenge.model.dto.responseDTO;
 
-import com.ssafy._66days.challenge.model.dto.challengeMemberImagePathDTO;
 import com.ssafy._66days.challenge.model.entity.GroupChallenge;
 import lombok.*;
 
