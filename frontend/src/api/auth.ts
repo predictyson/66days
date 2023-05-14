@@ -31,7 +31,7 @@ export async function passKakaoCode() {
   }
 }
 
-export async function logout() {
+export async function expireUserToken() {
   try {
     const res = await instance.get("/api/v1/logout");
     if (res.status === 200) {

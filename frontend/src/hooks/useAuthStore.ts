@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { produce } from "immer";
-import { logout, passKakaoCode, fetchKakaoURL } from "../api/auth";
-// import { kakaoLogin } from "../api/auth";
+import { expireUserToken, passKakaoCode, fetchKakaoURL } from "../api/auth";
 
 interface authSlice {
   user: UserType | null;
@@ -30,7 +29,7 @@ export const useAuthStore = create<authSlice>((set, get) => ({
     produce((state) => {
       state.user = null;
     });
-    logout();
+    expireUserToken();
   },
   isLoggedIn: () => get().user !== null,
 }));
