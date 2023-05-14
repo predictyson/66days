@@ -11,6 +11,9 @@ COPY build.gradle settings.gradle /app/
 COPY gradlew /app/
 COPY gradle /app/gradle
 
+# Grant executable permissions to the Gradle wrapper script
+RUN chmod +x gradlew
+
 # Build the application using Gradle
 RUN ./gradlew build
 
