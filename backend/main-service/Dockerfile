@@ -1,5 +1,4 @@
 FROM adoptopenjdk/openjdk11
 ARG JAR_FILE=*.jar
-WORKDIR /app
-COPY . .
-ENTRYPOINT ["java","-jar","main-service-0.0.1-SNAPSHOT.jar"]
+COPY /build/libs/${JAR_FILE} main-service.jar
+ENTRYPOINT ["java","-jar","/main-service.jar"]
