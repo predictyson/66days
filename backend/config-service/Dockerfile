@@ -1,5 +1,5 @@
 FROM adoptopenjdk/openjdk11
 ARG JAR_FILE=*.jar
 WORKDIR /app
-COPY /build/libs/${JAR_FILE} /app
+COPY . .
 ENTRYPOINT ["java","-jar","config-service-0.0.1-SNAPSHOT.jar"]
