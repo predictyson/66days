@@ -25,7 +25,7 @@ public class SwaggerConfiguration {
 //                .securityContexts(Arrays.asList(securityContext()))
 //                .securitySchemes(Arrays.asList(apiKey()))
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ssafy._66days." + basePackage + ".controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.ssafy._66days.mainservice." + basePackage + ".controller"))
                 .paths(PathSelectors.any()) // 아무 경로나 가능
                 .build();
     }
