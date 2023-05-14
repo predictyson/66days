@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  apigateway:
+    build: ./apigateway-service
+    ports:
+      - 8080:8080
+    links:
+      - eureka
+      - config
+
+  eureka:
+    build: ./discovery-service
+    ports:
+      - 8761:8761
+
+  config:
+    build: ./config-service
+    ports:
+      - 8888:8888
+
+  business:
+    build: ./main-service
+    ports:
+      - 8082:8080
+    links:
+      - eureka
+      - config
+
