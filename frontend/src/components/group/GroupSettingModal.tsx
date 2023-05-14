@@ -44,20 +44,28 @@ export function GroupSettingModal(props: PropsType) {
                 manager={member.authority === "MANAGER" ? true : false}
                 badge={member.badge}
               />
-              <div className="setting-btn-box">
-                <CommonButton
-                  className="setting-btn"
-                  color={theme.colors.lightblue}
-                >
-                  매니저 지정
-                </CommonButton>
-                <CommonButton
-                  className="setting-btn"
-                  color={theme.colors.failure}
-                >
-                  강퇴하기
-                </CommonButton>
-              </div>
+              {/* 그룹장일 경우는 매니저 지정, 강퇴하기 안보이게 처리 */}
+              {member.authority !== "OWNER" ? (
+                <div className="setting-btn-box">
+                  <CommonButton
+                    className="setting-btn"
+                    color={theme.colors.lightblue}
+                  >
+                    {/* 현재 매니저일 경우엔 매니저 해임 글씨 뜨게 하기 */}
+                    {member.authority === "MANAGER"
+                      ? "매니저 해임"
+                      : "매니저 지정"}
+                  </CommonButton>
+                  <CommonButton
+                    className="setting-btn"
+                    color={theme.colors.failure}
+                  >
+                    강퇴하기
+                  </CommonButton>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
           ))}
         </TabContentWrapper>

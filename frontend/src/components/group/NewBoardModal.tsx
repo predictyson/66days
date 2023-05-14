@@ -2,13 +2,37 @@ import { Button, Modal } from "antd";
 import { Content } from "antd/es/layout/layout";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
+import { useRef } from "react";
+import { postBoard } from "../../api/group";
 
 interface PropsType {
   open: boolean;
   toggleModal: () => void;
 }
 
+interface Board {
+  title: string;
+  content: string;
+}
+
 export default function NewBoardModal(props: PropsType) {
+  const titleInputRef = useRef<HTMLInputElement>(null);
+  const contentInputRef = useRef<HTMLTextAreaElement>(null);
+
+  async function checkValidation() {
+    // title과 content가 모두 작성되었다면
+    if (titleInputRef.current?.value && contentInputRef.current?.value) {
+      const newBoard: Board = {
+        title: titleInputRef.current.value,
+        content: contentInputRef.current.value,
+      };
+      // TODO: 나중에 하드코딩 된 부분 groupId로 수정
+      postBoard(1, newBoard);
+    } else {
+      console.log("미작성된 부분이 있음");
+    }
+  }
+
   return (
     <>
       <CustomModal
@@ -38,6 +62,7 @@ export default function NewBoardModal(props: PropsType) {
               marginRight: "6rem",
               marginBottom: "4rem",
             }}
+            onClick={checkValidation}
           >
             continue
           </Button>,
@@ -48,11 +73,17 @@ export default function NewBoardModal(props: PropsType) {
           <NewBoardContentContainer>
             <TitleBox>
               <div className="title">제목</div>
-              <input placeholder="게시판 제목을 입력해주세요." />
+              <input
+                placeholder="게시판 제목을 입력해주세요."
+                ref={titleInputRef}
+              />
             </TitleBox>
             <ContentBox>
               <div className="title">내용</div>
-              <textarea placeholder="게시판 내용을 입력해주세요." />
+              <textarea
+                placeholder="게시판 내용을 입력해주세요."
+                ref={contentInputRef}
+              />
             </ContentBox>
           </NewBoardContentContainer>
         </NewBoardModalWrapper>
