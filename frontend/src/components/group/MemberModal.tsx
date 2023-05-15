@@ -7,7 +7,7 @@ interface MemberType {
   image: string;
   nickname: string;
   badge: number;
-  role: string;
+  authority: "MEMBER" | "OWNER" | "MANAGER";
 }
 
 interface PropsType {
@@ -27,8 +27,8 @@ export default function MemberModal(props: PropsType) {
               key={index}
               profile={member.image}
               nickname={member.nickname}
-              owner={member.role === "owner" ? true : false}
-              manager={member.role === "manager" ? true : false}
+              owner={member.authority === "OWNER" ? true : false}
+              manager={member.authority === "MANAGER" ? true : false}
               badge={member.badge}
             />
           ))}

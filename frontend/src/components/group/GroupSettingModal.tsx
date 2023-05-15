@@ -3,9 +3,11 @@ import type { TabsProps } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import SingleMemberListBox from "./SingleMemberListBox";
+import { fetchGroupMembers, handleMember } from "../../api/group";
 
 interface ButtonStyled {
   color?: string;
+  hoverColor?: string;
   font?: string;
   fontWeight?: number;
   margin?: string;
@@ -16,19 +18,54 @@ interface MemberType {
   image: string;
   nickname: string;
   badge: number;
-  role: string;
+  authority: "MEMBER" | "OWNER" | "MANAGER";
 }
 
 interface PropsType {
   open: boolean;
   toggleModal: () => void;
   memberList: MemberType[];
+  setMemberList: React.Dispatch<React.SetStateAction<MemberType[]>>;
   appliedList: MemberType[];
 }
 
 const { Content } = Layout;
 
 export function GroupSettingModal(props: PropsType) {
+  // 그룹원들 리렌더링 메소드
+  async function fetchAndUpdateGroupMembers() {
+    const membersData = await fetchGroupMembers();
+    props.setMemberList(membersData["member-list"]);
+  }
+
+  // 그룹 매니저 지정, 해임 메소드
+  async function handleManagerSetting(authority: string, nickname: string) {
+    if (authority === "MEMBER") {
+      // 매니저 지정
+      // TODO: 1을 groupId로 추후에 수정
+      const resp = await handleMember(1, "MANAGER", nickname);
+      if (resp) {
+        fetchAndUpdateGroupMembers();
+      }
+    } else if (authority === "MANAGER") {
+      // 매니저 해임
+      // TODO: 1을 groupId로 추후에 수정
+      const resp = await handleMember(1, "MEMBER", nickname);
+      if (resp) {
+        fetchAndUpdateGroupMembers();
+      }
+    }
+  }
+
+  // 그룹 멤버 강퇴 메소드
+  async function handleDropMember(nickname: string) {
+    // TODO: 1을 groupId로 추후에 수정
+    const resp = await handleMember(1, "DROP", nickname);
+    if (resp) {
+      fetchAndUpdateGroupMembers();
+    }
+  }
+
   // 그룹원 관리 Tab
   const FirstTabContent = () => {
     return (
@@ -40,26 +77,44 @@ export function GroupSettingModal(props: PropsType) {
                 key={index}
                 profile={member.image}
                 nickname={member.nickname}
-                owner={member.role === "owner" ? true : false}
-                manager={member.role === "manager" ? true : false}
+                owner={member.authority === "OWNER" ? true : false}
+                manager={member.authority === "MANAGER" ? true : false}
                 badge={member.badge}
               />
-              <div className="setting-btn-box">
-                <CommonButton
-                  className="setting-btn"
-                  color={theme.colors.lightblue}
-                >
-                  매니저 지정
-                </CommonButton>
-                <CommonButton
-                  className="setting-btn"
-                  color={theme.colors.failure}
-                >
-                  강퇴하기
-                </CommonButton>
-              </div>
+              {/* 그룹장일 경우는 매니저 지정, 강퇴하기 안보이게 처리 */}
+              {member.authority !== "OWNER" ? (
+                <div className="setting-btn-box">
+                  <CommonButton
+                    className="setting-btn"
+                    color={theme.colors.lightblue}
+                    hoverColor={theme.colors.hoverLightBlue}
+                    onClick={() =>
+                      handleManagerSetting(member.authority, member.nickname)
+                    }
+                  >
+                    {/* 현재 매니저일 경우엔 매니저 해임 글씨 뜨게 하기 */}
+                    {member.authority === "MANAGER"
+                      ? "매니저 해임"
+                      : "매니저 지정"}
+                  </CommonButton>
+                  <CommonButton
+                    className="setting-btn"
+                    color={theme.colors.failure}
+                    hoverColor={theme.colors.hoverFailure}
+                    onClick={() => handleDropMember(member.nickname)}
+                  >
+                    강퇴하기
+                  </CommonButton>
+                </div>
+              ) : (
+                <></>
+              )}
             </div>
           ))}
+          <div className="manager-desc">
+            <span className="red-dot">*</span>매니저는 최대 3명까지 지정이
+            가능합니다.
+          </div>
         </TabContentWrapper>
       </>
     );
@@ -70,6 +125,11 @@ export function GroupSettingModal(props: PropsType) {
     return (
       <>
         <TabContentWrapper>
+          {props.appliedList.length === 0 ? (
+            <div className="no-applied-members">대기 중인 요청이 없습니다.</div>
+          ) : (
+            <></>
+          )}
           {props.appliedList.map((member: MemberType) => (
             <div className="member-setting-container">
               <SingleMemberListBox
@@ -81,12 +141,14 @@ export function GroupSettingModal(props: PropsType) {
                 <CommonButton
                   className="setting-btn"
                   color={theme.colors.lightblue}
+                  hoverColor={theme.colors.hoverLightBlue}
                 >
                   수락
                 </CommonButton>
                 <CommonButton
                   className="setting-btn"
                   color={theme.colors.failure}
+                  hoverColor={theme.colors.hoverFailure}
                 >
                   거절
                 </CommonButton>
@@ -161,7 +223,12 @@ const TabContainer = styled(Content)`
 `;
 
 const TabContentWrapper = styled(Content)`
-  padding-top: 5rem;
+  padding-top: 2rem;
+
+  .no-applied-members {
+    font-size: 1.5rem;
+    text-align: center;
+  }
 
   .member-setting-container {
     display: flex;
@@ -176,6 +243,15 @@ const TabContentWrapper = styled(Content)`
   .setting-btn {
     margin-left: 1rem;
     cursor: pointer;
+  }
+
+  .manager-desc {
+    font-size: 1.5rem;
+  }
+
+  .red-dot {
+    padding-right: 0.5rem;
+    color: ${theme.colors.failure};
   }
 `;
 
@@ -192,4 +268,8 @@ const CommonButton = styled(Content)<ButtonStyled>`
   align-items: center;
   justify-content: center;
   font-size: 1.6rem;
+
+  &:hover {
+    background-color: ${(props) => props.hoverColor};
+  }
 `;

@@ -59,9 +59,11 @@ export default function BadgeModal(props: PropsType) {
             <></>
           )}
           <div className="badge__status__box-container">
-            {props.badges.slice(page * 2 - 2, page * 2).map((badge, index) => (
-              <BadgeStatusBox key={index} badge={badge} />
-            ))}
+            {props.badges
+              .slice(page * 2 - 2, page * 2)
+              .map((badge: BadgeType, index) => (
+                <BadgeStatusBox key={index} badge={badge} />
+              ))}
           </div>
           {props.badges.length > 2 ? (
             <PaginationArrow badges={props.badges} />
@@ -93,7 +95,7 @@ export default function BadgeModal(props: PropsType) {
           <div className="badge__status__box-container">
             {filteredSuccessBadgeData
               .slice(page * 2 - 2, page * 2)
-              .map((badge, index) => (
+              .map((badge: BadgeType, index) => (
                 <BadgeStatusBox key={index} badge={badge} />
               ))}
           </div>
@@ -119,7 +121,7 @@ export default function BadgeModal(props: PropsType) {
           <div className="badge__status__box-container">
             {filteredFailedBadgeData
               .slice(page * 2 - 2, page * 2)
-              .map((badge, index) => (
+              .map((badge: BadgeType, index) => (
                 <BadgeStatusBox key={index} badge={badge} />
               ))}
           </div>

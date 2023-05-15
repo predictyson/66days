@@ -19,6 +19,8 @@ export const theme: DefaultTheme = {
     success: "#007bff",
     update: "#00BFA6",
     failure: "#FF4A4A",
+    hoverFailure: "#ee5252",
+    hoverLightBlue: "#799cfe",
   },
   fontWeight: {
     normal: 400,
