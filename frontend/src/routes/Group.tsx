@@ -16,7 +16,7 @@ import Lecture from "../assets/lecture_badge.png";
 import Book from "../assets/book_badge.jpeg";
 import ChallengeBox from "../components/group/ChallengeBox";
 import { BoardBox } from "../components/group/BoardBox";
-import ChallengeSelectionModal from "../components/group/ChallengeSelectionModal";
+import CreateChallengeModal from "../components/group/CreateChallengeModal";
 import MemberModal from "../components/group/MemberModal";
 import BadgeModal from "../components/group/BadgeModal";
 import NewBoardModal from "../components/group/NewBoardModal";
@@ -30,7 +30,7 @@ import {
 import NoChallengeBox from "../components/group/NoChallengeBox";
 import { GroupSettingModal } from "../components/group/GroupSettingModal";
 import { BoardModal } from "../components/group/BoardModal";
-import ChallengeInfoModal from "../components/group/ChallengeInfoModal";
+// import ChallengeInfoModal from "../components/group/ChallengeInfoModal";
 
 const { Content } = Layout;
 
@@ -414,15 +414,9 @@ export default function Group() {
         toggleModal={() => setOpenBadgeModal((prev) => !prev)}
         badges={filteredBadgeList}
       />
-      <ChallengeSelectionModal
+      <CreateChallengeModal
         open={isOpenNewChallgeModal}
-        toggleNextModal={() => setOpenChallengeInfoModal((prev) => !prev)}
         toggleModal={() => setOpenNewChallgeModal((prev) => !prev)}
-      />
-      <ChallengeInfoModal
-        open={isOpenChallengeInfoModal}
-        togglePreviousModal={() => setOpenNewChallgeModal((prev) => !prev)}
-        toggleModal={() => setOpenChallengeInfoModal((prev) => !prev)}
       />
       <NewBoardModal
         open={isOpenNewBoardModal}

@@ -1,5 +1,5 @@
 import { Button, DatePicker, Divider, Input, InputNumber, Modal } from "antd";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 
@@ -13,13 +13,18 @@ interface PropsType {
 
 export default function ChallengeInfoModal(props: PropsType) {
   const [loading, setLoading] = useState(false);
+  const challengeTitleRef = useRef<HTMLInputElement | null>(null);
+  const challengeMemberCntRef = useRef<HTMLInputElement | null>(null);
+  const challengeDescRef = useRef<HTMLTextAreaElement | null>(null);
+  const startDateRef = useRef<HTMLInputElement | null>(null);
 
   function handleSubmit() {
+    console.log(challengeTitleRef.current?.value);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      props.toggleModal();
     }, 1500);
+    props.toggleModal();
   }
 
   function handleBackClick() {
@@ -72,6 +77,7 @@ export default function ChallengeInfoModal(props: PropsType) {
             </div>
             <Input
               className="input-font"
+              ref={() => challengeTitleRef}
               placeholder="챌린지 명을 입력해주세요"
             />
           </ChallengeTitleBox>
