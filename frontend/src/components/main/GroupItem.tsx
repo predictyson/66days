@@ -61,8 +61,10 @@ const ImageWrapper = styled.div<ImageWrapperProps>`
   }
 `;
 const BoxWrapper = styled.div`
-  width: 27%;
+  width: 35rem !important;
   border-radius: 15px;
+  margin: 0 auto !important;
+  cursor: pointer;
 `;
 
 const ChallengeWrapper = styled.div`
