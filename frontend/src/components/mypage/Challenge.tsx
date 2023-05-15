@@ -45,6 +45,7 @@ export default function Challenge({ challenge }: IProps) {
 }
 
 const Container = styled.div`
+  margin: 0 auto;
   margin-top: 2.5rem;
   margin-right: 5%;
   cursor: pointer;

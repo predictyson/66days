@@ -39,15 +39,35 @@ export default function Group({ groups, challenges }: IProps) {
     <Container>
       <BreadCrumb activeItem={activeItem} handleBread={handleBread} />
       <ContentWrapper>
-        <Slider {...settings}>
-          {activeItem === 0
-            ? groups.map((data, idx) => {
-                return <GroupItem key={idx} group={data} />;
-              })
-            : challenges.map((data, idx) => {
-                return <Challenge key={idx} challenge={data} />;
+        {activeItem === 0 ? (
+          groups.length === 0 ? (
+            <h1>empty</h1>
+          ) : groups.length === 1 ? (
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <GroupItem group={groups[0]} />
+              <EmptyBox />
+            </div>
+          ) : (
+            <Slider {...settings}>
+              {groups.map((group, idx) => {
+                return <GroupItem key={idx} group={group} />;
               })}
-        </Slider>
+            </Slider>
+          )
+        ) : challenges.length === 0 ? (
+          <h1>challenge empty</h1>
+        ) : challenges.length === 1 ? (
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Challenge challenge={challenges[0]} />
+            <EmptyBox />
+          </div>
+        ) : (
+          <Slider {...settings}>
+            {challenges.map((challenge, idx) => {
+              return <Challenge key={idx} challenge={challenge} />;
+            })}
+          </Slider>
+        )}
       </ContentWrapper>
     </Container>
   );
@@ -69,4 +89,8 @@ const ContentWrapper = styled.div`
   .slick-list {
     height: 30rem;
   }
+`;
+const EmptyBox = styled.div`
+  width: 45rem;
+  height: 22rem;
 `;

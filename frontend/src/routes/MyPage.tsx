@@ -203,11 +203,6 @@ const DUMMY_DATA_MYPAGE: MyPageData = {
       name: "김영한의 스프링 강의 정복",
       startDate: "2023-03-04T08:01:17.379696",
     },
-    {
-      category: "알고리즘",
-      name: "김태원의 5조",
-      startDate: "2023-02-28T08:01:17.379705",
-    },
   ],
   streak: [
     {
