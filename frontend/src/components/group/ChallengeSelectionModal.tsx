@@ -1,32 +1,47 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Col, Divider, Modal, Row } from "antd";
 import styled from "styled-components";
-import Algorithms from "../../assets/algorithm_badge.png";
-import CS from "../../assets/cs_badge.png";
-import Blog from "../../assets/blog_badge.png";
-import Lecture from "../../assets/lecture_badge.png";
-import Book from "../../assets/book_badge.jpeg";
 import { theme } from "../../styles/theme";
+import { mockCategories } from "../../mock/group";
 
 interface PropsType {
   open: boolean;
+  toggleNextModal: () => void;
   toggleModal: () => void;
 }
 
-export default function ChallengeModal(props: PropsType) {
-  const [loading, setLoading] = useState(false);
+interface CategoryType {
+  img: string;
+  title: string;
+  selected: boolean;
+}
 
-  function handleOk() {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      props.toggleModal();
-    }, 3000);
+export default function ChallengeSelectionModal(props: PropsType) {
+  const [categories, setCategories] = useState<CategoryType[]>([]);
+
+  function handleContinue() {
+    props.toggleModal();
+    props.toggleNextModal();
   }
 
-  // function toggleNewChallgenModal() {
-  //   setOpenNewChallgeModal((prev) => !prev);
-  // }
+  function changeCategory(idx: number) {
+    const copyCategory = categories;
+    copyCategory.map((category: CategoryType, index) => {
+      if (index === idx) {
+        // TODO: 추후에 실제 데이터 넘어오면 이미 진행 중인 카테고리라면 true 처리 막기
+        category.selected = true;
+      } else {
+        category.selected = false;
+      }
+    });
+    setCategories([...copyCategory]);
+  }
+
+  useEffect(() => {
+    // TODO: 나중에 실제 데이터로 변경
+    setCategories(mockCategories);
+  }, []);
+
   return (
     <Modal
       open={props.open}
@@ -46,15 +61,14 @@ export default function ChallengeModal(props: PropsType) {
           cancel
         </Button>,
         <Button
-          key="submit"
-          onClick={handleOk}
-          loading={loading}
+          onClick={handleContinue}
           style={{
             fontFamily: "Kanit-SemiBold",
             height: "inherit",
             fontSize: "2rem",
           }}
         >
+          {/* 첫번째 단계일 때만 continue로 표시 */}
           continue
         </Button>,
       ]}
@@ -65,36 +79,17 @@ export default function ChallengeModal(props: PropsType) {
       </CategorySelectionTitle>
       <Divider />
       <StyledCategory gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 16]}>
-        <Col span={12}>
-          <div className="category active">
-            <img src={CS} />
-            CS 공부
-          </div>
-        </Col>
-        <Col span={12}>
-          <div className="category">
-            <img src={Book} />
-            개발서적
-          </div>
-        </Col>
-        <Col span={12}>
-          <div className="category">
-            <img src={Blog} />
-            블로그 포스팅
-          </div>
-        </Col>
-        <Col span={12}>
-          <div className="category">
-            <img src={Lecture} />
-            강의 시청
-          </div>
-        </Col>
-        <Col span={12}>
-          <div className="category">
-            <img src={Algorithms} />
-            알고리즘
-          </div>
-        </Col>
+        {categories.map((category, index) => (
+          <Col span={12} key={index}>
+            <div
+              className={`category ${category.selected ? "active" : ""}`}
+              onClick={() => changeCategory(index)}
+            >
+              <img src={category.img} />
+              {category.title}
+            </div>
+          </Col>
+        ))}
       </StyledCategory>
     </Modal>
   );
@@ -120,7 +115,7 @@ const StyledCategory = styled(Row)`
 
   .category {
     border-radius: 8px;
-    border: 1px solid #dddddd;
+    border: 1px solid ${theme.colors.gray300};
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -128,6 +123,13 @@ const StyledCategory = styled(Row)`
     font-size: 1.6rem;
     font-weight: bold;
     padding: 1rem;
+    cursor: pointer;
+
+    &:hover {
+      filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.25));
+      border: 1px solid ${theme.colors.gray500};
+      transition: 0.3s;
+    }
 
     img {
       width: 6vw;
@@ -141,10 +143,6 @@ const StyledCategory = styled(Row)`
       object-fit: cover;
       cursor: pointer;
       filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.15));
-
-      &:hover {
-        filter: drop-shadow(0px 4px 5px rgba(0, 0, 0, 0.3));
-      }
     }
   }
 

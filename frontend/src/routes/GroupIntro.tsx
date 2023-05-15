@@ -69,8 +69,11 @@ export default function GroupIntro() {
               <Button
                 size="large"
                 style={{
+                  fontSize: "2rem",
                   backgroundColor: "black",
+                  height: "inherit",
                   color: "white",
+                  marginBottom: "2rem",
                 }}
               >
                 apply
@@ -213,11 +216,11 @@ const StyledContainer = styled.div`
 
 const StyledImage = styled.section`
   flex: 1;
-  background-color: #ffb8da;
 
   img {
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 `;
 

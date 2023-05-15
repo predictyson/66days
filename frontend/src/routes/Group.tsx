@@ -16,7 +16,7 @@ import Lecture from "../assets/lecture_badge.png";
 import Book from "../assets/book_badge.jpeg";
 import ChallengeBox from "../components/group/ChallengeBox";
 import { BoardBox } from "../components/group/BoardBox";
-import ChallengeModal from "../components/group/ChallengeModal";
+import ChallengeSelectionModal from "../components/group/ChallengeSelectionModal";
 import MemberModal from "../components/group/MemberModal";
 import BadgeModal from "../components/group/BadgeModal";
 import NewBoardModal from "../components/group/NewBoardModal";
@@ -30,6 +30,7 @@ import {
 import NoChallengeBox from "../components/group/NoChallengeBox";
 import { GroupSettingModal } from "../components/group/GroupSettingModal";
 import { BoardModal } from "../components/group/BoardModal";
+import ChallengeInfoModal from "../components/group/ChallengeInfoModal";
 
 const { Content } = Layout;
 
@@ -108,6 +109,7 @@ export default function Group() {
   const [isOpenMemberSettingModal, setOpenMemberSettingModal] = useState(false);
   const [isOpenBadgeModal, setOpenBadgeModal] = useState(false);
   const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
+  const [isOpenChallengeInfoModal, setOpenChallengeInfoModal] = useState(false);
   const [isOpenNewBoardModal, setOpenNewBoardModal] = useState(false);
   const [isOpenBoardModal, setOpenBoardModal] = useState(false);
 
@@ -412,9 +414,15 @@ export default function Group() {
         toggleModal={() => setOpenBadgeModal((prev) => !prev)}
         badges={filteredBadgeList}
       />
-      <ChallengeModal
+      <ChallengeSelectionModal
         open={isOpenNewChallgeModal}
+        toggleNextModal={() => setOpenChallengeInfoModal((prev) => !prev)}
         toggleModal={() => setOpenNewChallgeModal((prev) => !prev)}
+      />
+      <ChallengeInfoModal
+        open={isOpenChallengeInfoModal}
+        togglePreviousModal={() => setOpenNewChallgeModal((prev) => !prev)}
+        toggleModal={() => setOpenChallengeInfoModal((prev) => !prev)}
       />
       <NewBoardModal
         open={isOpenNewBoardModal}
@@ -536,6 +544,8 @@ const CommonButton = styled(Content)<ButtonStyled>`
   align-items: center;
   justify-content: center;
   font-size: 1.6rem;
+  text-align: center;
+  word-break: keep-all;
 `;
 
 const GroupChallenges = styled(Content)`
