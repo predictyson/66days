@@ -2,8 +2,14 @@ import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import Algo from "../../assets/landing/algoBox.png";
 // import Blog from "../../assets/landing/blogBox.png";
+import PrevArrow from "../../assets/main/PrevArrow.png";
+import NextArrow from "../../assets/main/NextArrow.png";
 import Chart from "./Chart";
-import { CheckCircleOutlined } from "@ant-design/icons";
+import {
+  CheckCircleOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from "@ant-design/icons";
 import { ChallengeData } from "../../types/main";
 // slider
 import "slick-carousel/slick/slick.css";
@@ -32,9 +38,18 @@ export default function Todo({ challenges }: IProps) {
     slidesToShow: 2,
     slidesToScroll: 2,
     arrows: true,
-    // prevArrow: <CustomPrevArrow />,
-    // nextArrow: <CustomNextArrow />,
-    // responsive: BREAKPOINT,
+    prevArrow: <img src={PrevArrow} style={{ width: "5rem" }} />,
+    nextArrow: <img className="arrow" src={NextArrow} />,
+    responsive: [
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+        },
+      },
+    ],
   };
   return (
     <Container>
@@ -62,33 +77,6 @@ export default function Todo({ challenges }: IProps) {
   );
 }
 
-// FIXME: 슬라이더 CSS가 깨져요 :)
-const CustomSlider = styled(Slider)`
-  /* width: 100%; */
-  /* border: solid 2px green;
-  height: 50rem;
-  /* height: 80%; */
-  .slick-slide {
-    margin: 0 1rem;
-    width: auto !important;
-    margin: 0 !important;
-    /* display: flex !important; set margin between slides */
-  }
-
-  .slick-list {
-    overflow: visible; /* show the left and right overflow */
-  }
-
-  .slick-slide > div {
-    width: 55rem;
-    /* margin: 0 auto; center TodoBox within slide */
-  }
-
-  /* hide the extra slide that appears when there are not enough items to fill a slide */
-  .slick-slide:not(.slick-active) {
-    visibility: hidden;
-  }
-`;
 const CustomChecked = styled(CheckCircleOutlined)`
   font-size: 4rem;
   color: ${theme.colors.mint};
@@ -111,6 +99,20 @@ const Container = styled.div`
   padding: 3% 9%;
   display: flex;
   flex-direction: column;
+  .slick-prev {
+    width: 3rem;
+  }
+  .slick-next {
+    width: 3rem;
+  }
+
+  /* .slick-slide {
+    border: solid 2px blue;
+    height: 40rem;
+    align-items: center;
+    /* margin: auto 0; */
+  /* display: flex; */
+  /* align-items: center; */
 `;
 
 const Title = styled.div`
@@ -119,27 +121,31 @@ const Title = styled.div`
 `;
 const TodoContianer = styled.div`
   /* display: flex; */
-  border: solid 1px blue;
-  /* justify-content: space-between; */
   margin-top: 3.2rem;
 `;
 
 const TodoBox = styled.div`
-  width: 55rem;
+  width: 90% !important;
   height: 35rem;
   border: solid 1px ${theme.colors.gray400};
   border-radius: 15px;
-  /* display: flex; */
-  /* flex-direction: row; */
+  margin: 0 auto !important;
+  display: flex !important;
+  justify-content: space-between;
+  cursor: pointer;
+
+  /* transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+  &:hover {
+    transform: scale(1.01);
+  } */
   img {
     width: 70%;
     display: flex;
     margin: auto 0;
   }
   .left {
-    border: solid 1px red;
-
-    width: 50%;
+    width: 55%;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -152,12 +158,10 @@ const TodoBox = styled.div`
     display: flex;
     margin: 0 auto;
     margin-bottom: auto;
-
     white-space: nowrap;
     text-overflow: ellipsis;
   }
   .right {
-    border: solid 1px red;
     width: 45%;
     padding: 3rem;
     p {
