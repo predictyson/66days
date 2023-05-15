@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import TodoItem from "./TodoItem";
+import EmptySign from "../../util/EmptySign";
 
 interface IProps {
   challenges: ChallengeData[];
@@ -34,16 +35,21 @@ export default function Todo({ challenges }: IProps) {
       },
     ],
   };
-
   return (
     <Container>
       <Title>Today's todo</Title>
       <TodoContianer>
-        <Slider {...settings}>
-          {challenges.map((challenge, idx) => {
-            return <TodoItem key={idx} challenge={challenge} />;
-          })}
-        </Slider>
+        {challenges.length === 0 ? (
+          <EmptySign category="할 일" />
+        ) : challenges.length === 1 ? (
+          <TodoItem challenge={challenges[0]} />
+        ) : (
+          <Slider {...settings}>
+            {challenges.map((challenge, idx) => {
+              return <TodoItem key={idx} challenge={challenge} />;
+            })}
+          </Slider>
+        )}
       </TodoContianer>
     </Container>
   );

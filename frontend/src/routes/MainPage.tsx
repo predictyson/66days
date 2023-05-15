@@ -3,6 +3,7 @@ import Todo from "../components/main/Todo";
 import Groups from "../components/main/Groups";
 import Ranking from "../components/main/Ranking";
 import { MainData } from "../types/main";
+import styled from "styled-components";
 
 export default function MainPage() {
   return (
@@ -32,41 +33,6 @@ const MAIN_DUMMY_DATA: MainData = {
       participants: ["뽀삐", "뭉치", "해피"],
       startDate: "2023-05-03",
       status: false,
-    },
-    {
-      image: "/image/image.jpg",
-      name: "김태원의 5조",
-      participants: ["태원", "귀렬", "해피"],
-      startDate: "2023-03-27",
-      status: true,
-    },
-    {
-      image: "/image/image.jpg",
-      name: "김영한의 스프링 강의 정복",
-      participants: ["뽀삐", "뭉치", "해피"],
-      startDate: "2023-05-03",
-      status: false,
-    },
-    {
-      image: "/image/image.jpg",
-      name: "김태원의 5조",
-      participants: ["태원", "귀렬", "해피"],
-      startDate: "2023-03-27",
-      status: true,
-    },
-    {
-      image: "/image/image.jpg",
-      name: "김영한의 스프링 강의 정복",
-      participants: ["뽀삐", "뭉치", "해피"],
-      startDate: "2023-05-03",
-      status: false,
-    },
-    {
-      image: "/image/image.jpg",
-      name: "김태원의 5조",
-      participants: ["태원", "귀렬", "해피"],
-      startDate: "2023-03-27",
-      status: true,
     },
   ],
   rank: {
@@ -154,3 +120,5 @@ const MAIN_DUMMY_DATA: MainData = {
     },
   ],
 };
+
+const EmptyBox = styled.div``;
