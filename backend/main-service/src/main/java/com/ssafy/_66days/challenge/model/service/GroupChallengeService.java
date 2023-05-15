@@ -18,6 +18,7 @@ import com.ssafy._66days.group.model.repository.GroupRepository;
 import com.ssafy._66days.user.model.entity.User;
 import com.ssafy._66days.user.model.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -26,6 +27,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("GroupChallengeService")
+@Transactional(readOnly = true)
 public class GroupChallengeService {
     private final UserRepository userRepository;
     private final GroupMemberRepository groupMemberRepository;
@@ -50,7 +52,8 @@ public class GroupChallengeService {
         this.groupChallengeMemberRepository = groupChallengeMemberRepository;
     }
 
-    //
+    @Transactional
+
     public boolean createGroupChallenge(
             UUID userId,
             Long groupId,
@@ -59,13 +62,13 @@ public class GroupChallengeService {
         User user = userRepository.findById(userId)                         // 유저 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹니다"));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
         GroupMember groupMember = groupMemberRepository.findByGroupAndUser(group, user)
                 .orElseThrow(() -> new IllegalArgumentException("그룹에 속하지 않은 유저입니다"));
         Challenge challenge = challengeRepository.findById(groupChallengeRequestDTO.getChallengeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지 입니다"));
 
-        if (groupMember.getAuthority() != "OWNER" && groupMember.getAuthority() != "MANAGER") {
+        if (!groupMember.getAuthority().equals("OWNER") && !groupMember.getAuthority().equals("MANAGER")) {
             throw new IllegalArgumentException("챌린지를 생성할 권한이 없습니다");
         }
         if (groupChallengeRequestDTO.getChallengeName() == null) {
@@ -84,14 +87,13 @@ public class GroupChallengeService {
         Date startDate = groupChallengeRequestDTO.getStartAt();
         LocalDateTime startAt = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());  // 입력받은 시작날짜를 LocalDateTime으로 변환
 
-        Date endDate = groupChallengeRequestDTO.getStartAt();
+        Date endDate = groupChallengeRequestDTO.getEndAt();
         LocalDateTime endAt = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());  // 입력받은 종료날짜를 LocalDateTime으로 변환
 
         LocalDateTime today = LocalDateTime.now();          // 오늘 날짜
 
-        String state = "ACTIVATE";
+        String state = "ACTIVATED";
         GroupChallenge groupChallenge = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, state); // 현재 진행 중인 챌린지가 있는지 찾아온다
-
         if (ChronoUnit.DAYS.between(today, startAt) > 30) {                //  시작날짜가 오늘 날짜에서 30일 초과한 날짜인지 확인
             throw new IllegalArgumentException("챌린지는 최대 30일 이내에 시작해야 합니다");
         }
@@ -100,11 +102,12 @@ public class GroupChallengeService {
         }
 
 
-        String status = "ACTIVATE";                         // 새로 시작할 챌린지 상태값
+        String status = "ACTIVATED";                         // 새로 시작할 챌린지 상태값
         int availableFreezingCount = 0;                     // 사용가능 프리징 수 기본값
         GroupChallenge newGroupChallenge = GroupChallenge.builder()
                 .group(group)
                 .challenge(challenge)
+                .challengeName(groupChallengeRequestDTO.getChallengeName())
                 .content(groupChallengeRequestDTO.getContent())
                 .startAt(startAt)
                 .endAt(endAt)
@@ -122,10 +125,10 @@ public class GroupChallengeService {
         User user = userRepository.findById(userId)                         // 유저 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Group group = groupRepository.findById(groupId)                     // 그룹 객체 받아오기
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹니다"));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
         GroupMember groupMember = groupMemberRepository.findByGroupAndUser(group, user)     // 그룹멤버 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("그룹에 속한 유저가 아닙니다"));
-        if (groupMember.getAuthority() != "OWNER" && groupMember.getAuthority() != "MANAGER") { // 그룹장이나 매니저가 아니라면 챌린지를 만들 수 없다
+        if (!groupMember.getAuthority().equals("OWNER") && !groupMember.getAuthority().equals("MANAGER")) { // 그룹장이나 매니저가 아니라면 챌린지를 만들 수 없다
             throw new IllegalArgumentException("챌린지 생성 권한이 없습니다");
         }
 
@@ -146,7 +149,7 @@ public class GroupChallengeService {
         User user = userRepository.findById(userId)                         // 유저 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Group group = groupRepository.findById(groupId)                     // 그룹 객체 받아오기
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹니다"));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
         GroupMember groupMember = groupMemberRepository.findByGroupAndUser(group, user)
                 .orElseThrow(() -> new IllegalArgumentException("그룹에 속한 유저가 아닙니다"));
 
@@ -160,6 +163,7 @@ public class GroupChallengeService {
             LocalDateTime startDate = groupChallenge.getStartAt();                          // 챌린지 시작날짜 LocalDateTime -> Date
             Date startAt = java.sql.Timestamp.valueOf(startDate);
 
+            // ! 순환참조
             List<GroupChallengeMember> groupChallengeMemberList = groupChallengeMemberRepository.findByGroupChallenge(groupChallenge); // 그룹 챌린지로 챌린지 참가자 객체받아오기
             int memberCount = 0;
             if (!groupChallengeMemberList.isEmpty()) {
@@ -172,7 +176,10 @@ public class GroupChallengeService {
             groupChallengeResponseDTOList.add(GroupChallengeResponseDTO.of(groupChallenge, startAt, memberCount, challengeMemberImagePathDTOList));
         }
         return groupChallengeResponseDTOList;
+//        return null;
+
     }
+
 
     public GroupChallengeDetailResponseDTO getGroupChallengeDetail(
             UUID userId,
@@ -182,7 +189,7 @@ public class GroupChallengeService {
         User user = userRepository.findById(userId)                         // 유저 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Group group = groupRepository.findById(groupId)                     // 그룹 객체 받아오기
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹니다"));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
         GroupChallenge groupChallenge = groupChallengeRepository.findById(groupChallengeId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다"));
         GroupChallengeMember groupChallengeMember = groupChallengeMemberRepository.findByUserAndGroupChallenge(user, groupChallenge);

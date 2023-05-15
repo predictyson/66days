@@ -20,6 +20,7 @@ import com.ssafy._66days.challenge.model.reposiotry.MyChallengeRepository;
 import com.ssafy._66days.group.model.repository.GroupRepository;
 import com.ssafy._66days.user.model.entity.User;
 import com.ssafy._66days.user.model.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 
 @Service("MyChallengeService")
 @Transactional(readOnly = true)
+@Slf4j
 public class MyChallengeService {
     private final MyChallengeRepository myChallengeRepository;
     private final UserRepository userRepository;
@@ -67,7 +69,12 @@ public class MyChallengeService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         Challenge challenge = challengeRepository.findById(myChallengeRequestDTO.getChallengeId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다"));
-
+        if (myChallengeRequestDTO.getChallengeName() == null || myChallengeRequestDTO.getChallengeName().trim().isEmpty()) {
+            throw new IllegalArgumentException("챌린지 명을 작성해 주시기 바랍니다");
+        }
+        if (myChallengeRequestDTO.getContent() == null || myChallengeRequestDTO.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("챌린지 설명을 작성해 주시기 바랍니다");
+        }
         // 중복된 챌린지를 하고 있는지 확인
         List<Long> temp = new ArrayList<>();                                                  // 하고 있는 챌린지 id 담을 배열
         List<GroupChallengeMember> groupChallengeMemberList = groupChallengeMemberRepository.findByUser(user); // 내가 참여중인 그룹 챌린지들
@@ -76,19 +83,18 @@ public class MyChallengeService {
 
                 GroupChallenge groupChallenge = groupChallengeRepository.findById(groupChallengeMemberList.get(i).getGroupChallenge().getGroupChallengeId()) // 그룹챌린지를 찾아서
                         .orElseThrow(() -> new IllegalArgumentException("알수없는 에러"));
-                if (groupChallenge.getState() == "ACTIVATED") {                                 // 진행중인 챌린지라면
+                if (groupChallenge.getState().equals("ACTIVATED")) {                                 // 진행중인 챌린지라면
                     Long challengeId = groupChallenge.getChallenge().getChallengeId();          // 그것의 챌린지 아이디를 찾는다
                     temp.add(challengeId);                                                      // 그룹에서 참여하고 있는 challenge들의 id값을 temp에 저장
                 }
             }
         }
-
-        List<MyChallenge> myChallengeList = myChallengeRepository.findByUser(user);             // 개인 챌린지들을 찾아서
+        String status = "ACTIVATED";
+        List<MyChallenge> myChallengeList = myChallengeRepository.findByUserAndState(user, status);             // 개인 챌린지들을 찾아서
         if (!myChallengeList.isEmpty()) {
             for (int i = 0; i < myChallengeList.size(); i++) {
                 Long challengeId = myChallengeList.get(i).getChallenge().getChallengeId();      // 그것들의 챌린지 아이디를 찾는다
                 temp.add(challengeId);                                                          // 개인이 하고 dlT는 챌린지들의 id를 temp에 저장
-
             }
         }
         if (temp.contains(challenge.getChallengeId())) {
@@ -97,19 +103,19 @@ public class MyChallengeService {
         }
 
         LocalDateTime startAt = LocalDateTime.now();                                            // 오늘날짜 시작
-        LocalDateTime endDay = startAt.plusDays(66);                                            // 종료날짜 = 시작날짜 + 66일
-        String state = "ACTIVATE";                                                              // 상태 활성화
+        LocalDateTime endAt = startAt.plusDays(66);                                            // 종료날짜 = 시작날짜 + 66일
+        String state = "ACTIVATED";                                                              // 상태 활성화
 
-        MyChallenge myChallege = MyChallenge.builder()
+        MyChallenge myChallenge = MyChallenge.builder()
                 .user(user)
                 .challenge(challenge)
                 .challengeName(myChallengeRequestDTO.getChallengeName())
                 .content(myChallengeRequestDTO.getContent())
                 .startAt(startAt)
-                .endAt(endDay)
+                .endAt(endAt)
                 .state(state)
                 .build();
-        return myChallengeRepository.save(myChallege) != null;
+        return myChallengeRepository.save(myChallenge) != null;
     }
 
     public List<MyChallengeResponseDTO> getMyChallenges(    // 개인 챌린지 목록
@@ -153,7 +159,7 @@ public class MyChallengeService {
 
                 GroupChallenge groupChallenge = groupChallengeRepository.findById(groupChallengeMemberList.get(i).getGroupChallenge().getGroupChallengeId()) // 그룹챌린지를 찾아서
                         .orElseThrow(() -> new IllegalArgumentException("알수없는 에러"));
-                if (groupChallenge.getState() == "ACTIVATED") {                                 // 진행중인 챌린지라면
+                if (groupChallenge.getState().equals("ACTIVATED")) {                                 // 진행중인 챌린지라면
                     Long challengeId = groupChallenge.getChallenge().getChallengeId();          // 그것의 챌린지 아이디를 찾는다
                     temp.add(challengeId);                                                      // 그룹에서 참여하고 있는 challenge들의 id값을 temp에 저장
                 }
@@ -163,8 +169,11 @@ public class MyChallengeService {
         List<MyChallenge> myChallengeList = myChallengeRepository.findByUser(user);             // 개인 챌린지들을 찾아서
         if (!myChallengeList.isEmpty()) {
             for (int i = 0; i < myChallengeList.size(); i++) {
-                Long challengeId = myChallengeList.get(i).getChallenge().getChallengeId();      // 그것들의 챌린지 아이디를 찾는다
-                temp.add(challengeId);                                                          // 개인이 하고 dlT는 챌린지들의 id를 temp에 저장
+                String isActivated = myChallengeList.get(i).getState();
+                if (isActivated.equals("ACTIVATED")) {
+                    Long challengeId = myChallengeList.get(i).getChallenge().getChallengeId();      // 그것들의 챌린지 아이디를 찾는다
+                    temp.add(challengeId);                                                          // 개인이 하고 있는 챌린지들의 id를 temp에 저장
+                }
 
             }
         }

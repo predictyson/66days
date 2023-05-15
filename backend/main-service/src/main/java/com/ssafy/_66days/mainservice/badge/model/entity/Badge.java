@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 public class Badge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "badge")
+    @Column(name = "badge_id")
     private Long badgeId;
 
     @NotBlank

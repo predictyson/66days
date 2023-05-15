@@ -19,16 +19,18 @@ import java.time.LocalDateTime;
 @Builder
 public class MyChallenge {
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "my_challenge_id")
     private Long myChallengeId;
 
     @NotNull
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
     @NotBlank

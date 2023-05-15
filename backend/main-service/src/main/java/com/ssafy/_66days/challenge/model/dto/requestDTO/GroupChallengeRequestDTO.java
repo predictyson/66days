@@ -11,7 +11,7 @@ import java.util.Date;
 @ToString
 public class GroupChallengeRequestDTO {
     private Long challengeId;
-    private String ChallengeName;
+    private String challengeName;
     private int maxMemberCount;
     private String content;
     private Date startAt;

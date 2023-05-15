@@ -19,11 +19,13 @@ import javax.validation.constraints.NotNull;
 public class GroupChallengeMember {
     @Id
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Id
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_challenge_id")
     private GroupChallenge groupChallenge;
 }

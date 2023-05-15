@@ -22,22 +22,21 @@ import java.time.LocalDateTime;
 public class GroupChallenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_challeng_id")
+    @Column(name = "group_challenge_id")
     private Long groupChallengeId;
 
 
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
-    @NotBlank
-    @Column(name = "challenge_manager")
-    private String challengeManager;
 
     @NotBlank
     @Column(name = "challenge_name")
