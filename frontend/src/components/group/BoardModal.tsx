@@ -89,8 +89,13 @@ export function BoardModal(props: PropsType) {
                   )
                 : ""}
             </div>
-            <div className="board-writer">
+            {/* TODO: auth 연결되면 userId와 board userId 비교해서 일치하면 수정 삭제 버튼 보이게 하기 */}
+            {/* <div>
               작성자: {props.boardData?.articleDTO.nickname}
+            </div> */}
+            <div className="board-btn-list">
+              <button className="board-btn edit">수정</button>
+              <button className="board-btn delete">삭제</button>
             </div>
           </div>
           <BoardContentBox>
@@ -147,6 +152,34 @@ const BoardModalWrapper = styled(Content)`
     color: ${theme.colors.gray500};
     padding-bottom: 1rem;
     border-bottom: 2px solid ${theme.colors.gray300};
+  }
+
+  .board-btn-list {
+    display: flex;
+    width: 11rem;
+    justify-content: space-between;
+  }
+
+  .board-btn {
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    color: ${theme.colors.white};
+    cursor: pointer;
+  }
+
+  .edit {
+    background-color: ${theme.colors.lightblue};
+    &:hover {
+      background-color: ${theme.colors.hoverLightBlue};
+    }
+  }
+
+  .delete {
+    background-color: ${theme.colors.failure};
+    &:hover {
+      background-color: ${theme.colors.hoverFailure};
+    }
   }
 `;
 

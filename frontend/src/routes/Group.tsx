@@ -111,7 +111,7 @@ export default function Group() {
   const [isOpenNewBoardModal, setOpenNewBoardModal] = useState(false);
   const [isOpenBoardModal, setOpenBoardModal] = useState(false);
 
-  const [boardPage, setBoardPage] = useState<number>(1);
+  const [boardPage, setBoardPage] = useState<number>(0);
 
   const [badgePreview, setBadgePreview] = useState<BadgePreviewType[]>([]);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
@@ -175,13 +175,15 @@ export default function Group() {
   }
 
   async function fetchAndSetNewBoardList(page: number) {
+    // TODO: group page api 완성되면 1대신 groupId 전송
     const newBoardList = await fetchBoardListByPage(1, page);
     newBoardList.pgNo = boardPage - 1;
     setBoardDataList(newBoardList);
   }
 
   function handleClickLeft() {
-    if (boardPage > 1) {
+    // 첫번째 페이지가 아니면
+    if (boardPage > 0) {
       setBoardPage(boardPage - 1);
       // 이전 페이지 게시글 리스트 호출
       fetchAndSetNewBoardList(boardPage - 1);
@@ -190,7 +192,9 @@ export default function Group() {
   }
 
   function handleClickRight() {
-    if (boardPage < Math.ceil(4 / 2)) {
+    // 마지막 페이지라면
+    // TODO: group page api 완성되면 5대신 게시글 전체 갯수 넣기
+    if (boardPage < Math.ceil(5 / 3)) {
       setBoardPage(boardPage + 1);
       // 이후 페이지 게시글 리스트 호출
       fetchAndSetNewBoardList(boardPage + 1);
@@ -233,7 +237,6 @@ export default function Group() {
   ];
 
   useEffect(() => {
-    // TODO: fetch data
     async function fetchAndSetGroupPageData() {
       const data = await fetchGroupPageData();
       setBadgePreview(data.badges);
@@ -371,7 +374,7 @@ export default function Group() {
             ))}
           </BoardList>
           <div className="pagination-bar-container">
-            {boardPage === 1 ? (
+            {boardPage === 0 ? (
               <LeftCircleFilled className="invisible-arrow icon-margin" />
             ) : (
               <LeftCircleFilled
@@ -379,7 +382,8 @@ export default function Group() {
                 onClick={handleClickLeft}
               />
             )}
-            {boardPage === Math.ceil(4 / 3) ? (
+            {/* TODO: 추후에 group page api 완성된 후 board 전체 갯수를 3으로 나누기 */}
+            {boardPage === Math.ceil(5 / 3) ? (
               <RightCircleFilled className="invisible-arrow" />
             ) : (
               <RightCircleFilled
@@ -399,6 +403,7 @@ export default function Group() {
         open={isOpenMemberSettingModal}
         toggleModal={() => setOpenMemberSettingModal((prev) => !prev)}
         memberList={memberList}
+        setMemberList={setMemberList}
         appliedList={appliedList}
       />
 

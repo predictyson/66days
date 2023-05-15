@@ -1,7 +1,4 @@
-import { useNavigate } from "react-router-dom";
 import api from "./api";
-
-const navigate = useNavigate();
 
 interface Board {
   title: string;
@@ -123,9 +120,8 @@ async function postBoard(groupId: number, board: Board) {
       board
     );
     if (res.status === 200) {
-      console.log(board);
-      console.log(res);
-      navigate("/groups/me");
+      alert("게시글 작성이 완료되었습니다.");
+      return true;
     }
 
     throw new Error();
@@ -136,25 +132,27 @@ async function postBoard(groupId: number, board: Board) {
   }
 }
 
-// async function handleManager(
-//   groupId: number,
-//   status: string,
-//   userName: string
-// ) {
-//   try {
-//     const res = await api.patch(
-//       `/api/v1/main-service/group/${groupId}/manage/members/${status}?user_name=${userName}`
-//     );
-//     if (res.status === 200) {
-//       return res.data;
-//     }
+async function handleMember(groupId: number, status: string, userName: string) {
+  try {
+    const res = await api.patch(
+      `/api/v1/main-service/group/${groupId}/manage/members/${status}?user_name=${userName}`
+    );
+    if (res.status === 200) {
+      if (status === "MANAGER") {
+        alert(`${userName}님 매니저 지정이 완료되었습니다.`);
+        return true;
+      } else if (status === "MEMBER") {
+        alert(`${userName}님 매니저 해임이 완료되었습니다.`);
+        return true;
+      }
+    }
 
-//     throw new Error();
-//   } catch (error) {
-//     // login error -> login  page
-//     // unauthorized -> unauthorized error
-//   }
-// }
+    throw new Error();
+  } catch (error) {
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
 
 export {
   fetchGroupPageData,
@@ -165,4 +163,5 @@ export {
   fetchBoardData,
   fetchCommentData,
   postBoard,
+  handleMember,
 };

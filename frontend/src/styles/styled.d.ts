@@ -21,6 +21,8 @@ declare module "styled-components" {
       success: string;
       update: string;
       failure: string;
+      hoverFailure: string;
+      hoverLightBlue: string;
     };
     fontWeight: {
       normal: number;

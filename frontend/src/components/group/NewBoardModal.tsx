@@ -19,7 +19,7 @@ export default function NewBoardModal(props: PropsType) {
   const titleInputRef = useRef<HTMLInputElement>(null);
   const contentInputRef = useRef<HTMLTextAreaElement>(null);
 
-  async function checkValidation() {
+  async function handleSubmit() {
     // title과 content가 모두 작성되었다면
     if (titleInputRef.current?.value && contentInputRef.current?.value) {
       const newBoard: Board = {
@@ -27,7 +27,13 @@ export default function NewBoardModal(props: PropsType) {
         content: contentInputRef.current.value,
       };
       // TODO: 나중에 하드코딩 된 부분 groupId로 수정
-      postBoard(1, newBoard);
+      const resp = await postBoard(1, newBoard);
+      if (resp) {
+        titleInputRef.current.value = "";
+        contentInputRef.current.value = "";
+        // TODO: API 나온 후 게시판 리렌더링하기
+        props.toggleModal();
+      }
     } else {
       console.log("미작성된 부분이 있음");
     }
@@ -62,9 +68,9 @@ export default function NewBoardModal(props: PropsType) {
               marginRight: "6rem",
               marginBottom: "4rem",
             }}
-            onClick={checkValidation}
+            onClick={handleSubmit}
           >
-            continue
+            submit
           </Button>,
         ]}
       >

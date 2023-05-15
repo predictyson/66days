@@ -53,11 +53,11 @@ export default function ChallengeBox({ ...props }) {
             {props.participants.length} / {props.maxCnt} 명
           </div>
         </div>
-        {props.notStarted ? (
+        {/* {props.notStarted ? (
           <button className="sign-in__challenge-btn">챌린지 신청하기</button>
         ) : (
           <></>
-        )}
+        )} */}
       </ChallengeBoxWrapper>
     </>
   );

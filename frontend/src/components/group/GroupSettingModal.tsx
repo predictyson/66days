@@ -3,9 +3,11 @@ import type { TabsProps } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import SingleMemberListBox from "./SingleMemberListBox";
+import { fetchGroupMembers, handleMember } from "../../api/group";
 
 interface ButtonStyled {
   color?: string;
+  hoverColor?: string;
   font?: string;
   fontWeight?: number;
   margin?: string;
@@ -23,12 +25,47 @@ interface PropsType {
   open: boolean;
   toggleModal: () => void;
   memberList: MemberType[];
+  setMemberList: React.Dispatch<React.SetStateAction<MemberType[]>>;
   appliedList: MemberType[];
 }
 
 const { Content } = Layout;
 
 export function GroupSettingModal(props: PropsType) {
+  // 그룹원들 리렌더링 메소드
+  async function fetchAndUpdateGroupMembers() {
+    const membersData = await fetchGroupMembers();
+    props.setMemberList(membersData["member-list"]);
+  }
+
+  // 그룹 매니저 지정, 해임 메소드
+  async function handleManagerSetting(authority: string, nickname: string) {
+    if (authority === "MEMBER") {
+      // 매니저 지정
+      // TODO: 1을 groupId로 추후에 수정
+      const resp = await handleMember(1, "MANAGER", nickname);
+      if (resp) {
+        fetchAndUpdateGroupMembers();
+      }
+    } else if (authority === "MANAGER") {
+      // 매니저 해임
+      // TODO: 1을 groupId로 추후에 수정
+      const resp = await handleMember(1, "MEMBER", nickname);
+      if (resp) {
+        fetchAndUpdateGroupMembers();
+      }
+    }
+  }
+
+  // 그룹 멤버 강퇴 메소드
+  async function handleDropMember(nickname: string) {
+    // TODO: 1을 groupId로 추후에 수정
+    const resp = await handleMember(1, "DROP", nickname);
+    if (resp) {
+      fetchAndUpdateGroupMembers();
+    }
+  }
+
   // 그룹원 관리 Tab
   const FirstTabContent = () => {
     return (
@@ -50,6 +87,10 @@ export function GroupSettingModal(props: PropsType) {
                   <CommonButton
                     className="setting-btn"
                     color={theme.colors.lightblue}
+                    hoverColor={theme.colors.hoverLightBlue}
+                    onClick={() =>
+                      handleManagerSetting(member.authority, member.nickname)
+                    }
                   >
                     {/* 현재 매니저일 경우엔 매니저 해임 글씨 뜨게 하기 */}
                     {member.authority === "MANAGER"
@@ -59,6 +100,8 @@ export function GroupSettingModal(props: PropsType) {
                   <CommonButton
                     className="setting-btn"
                     color={theme.colors.failure}
+                    hoverColor={theme.colors.hoverFailure}
+                    onClick={() => handleDropMember(member.nickname)}
                   >
                     강퇴하기
                   </CommonButton>
@@ -68,6 +111,10 @@ export function GroupSettingModal(props: PropsType) {
               )}
             </div>
           ))}
+          <div className="manager-desc">
+            <span className="red-dot">*</span>매니저는 최대 3명까지 지정이
+            가능합니다.
+          </div>
         </TabContentWrapper>
       </>
     );
@@ -94,12 +141,14 @@ export function GroupSettingModal(props: PropsType) {
                 <CommonButton
                   className="setting-btn"
                   color={theme.colors.lightblue}
+                  hoverColor={theme.colors.hoverLightBlue}
                 >
                   수락
                 </CommonButton>
                 <CommonButton
                   className="setting-btn"
                   color={theme.colors.failure}
+                  hoverColor={theme.colors.hoverFailure}
                 >
                   거절
                 </CommonButton>
@@ -174,7 +223,7 @@ const TabContainer = styled(Content)`
 `;
 
 const TabContentWrapper = styled(Content)`
-  padding-top: 5rem;
+  padding-top: 2rem;
 
   .no-applied-members {
     font-size: 1.5rem;
@@ -195,6 +244,15 @@ const TabContentWrapper = styled(Content)`
     margin-left: 1rem;
     cursor: pointer;
   }
+
+  .manager-desc {
+    font-size: 1.5rem;
+  }
+
+  .red-dot {
+    padding-right: 0.5rem;
+    color: ${theme.colors.failure};
+  }
 `;
 
 const CommonButton = styled(Content)<ButtonStyled>`
@@ -210,4 +268,8 @@ const CommonButton = styled(Content)<ButtonStyled>`
   align-items: center;
   justify-content: center;
   font-size: 1.6rem;
+
+  &:hover {
+    background-color: ${(props) => props.hoverColor};
+  }
 `;
