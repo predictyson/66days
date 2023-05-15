@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -40,6 +41,7 @@ public class SecurityConfig {
 	private final JwtProvider jwtProvider;
 
 	private static final String[] PERMIT_URL_ARRAY = {
+			"**/*",
 			/* swagger v2 */
 			"/v2/api-docs",
 			"/swagger-resources",
@@ -65,7 +67,7 @@ public class SecurityConfig {
 				.and()
 				.authorizeRequests()
 				.antMatchers(PERMIT_URL_ARRAY).permitAll()
-				.anyRequest().authenticated()
+//				.anyRequest().authenticated()
 				.and()
 				.oauth2Login()
 				.userInfoEndpoint().userService(customOAuth2UserService)
@@ -75,12 +77,12 @@ public class SecurityConfig {
 				.and()
 				.exceptionHandling()
 				.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-				.accessDeniedHandler(jwtAccessDeniedHandler)
-				.and()    // 필터 체인에 커스텀 필터 추가 설정
-				.addFilterBefore(
-						new JwtAuthenticationFilter(jwtProvider, redisUtil),
-						UsernamePasswordAuthenticationFilter.class
-				);
+				.accessDeniedHandler(jwtAccessDeniedHandler);
+//				.and()    // 필터 체인에 커스텀 필터 추가 설정
+//				.addFilterBefore(
+//						new JwtAuthenticationFilter(jwtProvider, redisUtil),
+//						UsernamePasswordAuthenticationFilter.class
+//				);
 
 		return http.build();
 	}

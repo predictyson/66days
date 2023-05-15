@@ -23,6 +23,10 @@ ext {
 }
 
 dependencies {
+    //feignclient
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    //eureka
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     // redis
