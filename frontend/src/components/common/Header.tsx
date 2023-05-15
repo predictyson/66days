@@ -8,11 +8,9 @@ import { useState } from "react";
 import { CreateGroupModal } from "../group/CreateGroupModal";
 import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useAuthStore } from "../../stores/useAuthStore";
-import { expireUserToken, fetchKakaoURL } from "../../api/auth";
-import { useNavigate } from "react-router-dom";
+import { expireUserToken } from "../../api/auth";
 
 export default function CustomHeader() {
-  const navigate = useNavigate();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const [isOpenCreateGroupModal, setOpenCreateGroupModal] = useState(false);
 
@@ -59,7 +57,11 @@ export default function CustomHeader() {
               <img src={avartar} />
             </Dropdown>
           ) : (
-            <a onClick={async () => navigate(await fetchKakaoURL())}>
+            <a
+              href={`${
+                import.meta.env.VITE_SERVER_DOMAIN
+              }/oauth2/authorization/kakao`}
+            >
               <LoginOutlined /> login
             </a>
           )}

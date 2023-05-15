@@ -10,8 +10,11 @@ export default function Root() {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
 
+  /**
+   * Whenever a user is logged in, logged out, or update User info
+   */
   useEffect(() => {
-    navigate("/", { replace: true });
+    user !== null && navigate("/", { replace: true });
   }, [user]);
 
   return (

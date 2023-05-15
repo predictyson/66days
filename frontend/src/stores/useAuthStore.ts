@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { produce } from "immer";
-// import { expireUserToken, passKakaoCode, fetchKakaoURL } from "../api/auth";
 
 interface authSlice {
   user: UserType | null;
