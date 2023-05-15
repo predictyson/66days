@@ -9,6 +9,7 @@ import Line from "../assets/mypage/Line.png";
 import { useEffect, useState } from "react";
 import { getMyPageInfo } from "../api/mypage";
 import EditProfile from "../components/mypage/EditProfile";
+
 // // 프로필 수정시
 export default function MyPage() {
   // const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
@@ -40,38 +41,42 @@ export default function MyPage() {
         <Badge />
       </div>
       <div className="right">
-        <Title>
-          My 챌린지 그래프
-          <div className="accum">누적 {DUMMY_DATA_MYPAGE.streak.length}일</div>
-        </Title>
-        <StreakGraph
-          commits={DUMMY_DATA_MYPAGE.streak.map((item) => item.count)}
-          length={length}
-        />
-        <SubContent>
-          <div>
-            현재 진행 중 습관 <span className="count">3</span>개
-          </div>
-          <StreakDescription>
-            <div className="wrap">
-              <Streak count={0} color="#50B9C9" />
-              <span>4-5건</span>
+        <div className="streak-wrapper">
+          <Title>
+            My 챌린지 그래프
+            <div className="accum">
+              누적 {DUMMY_DATA_MYPAGE.streak.length}일
             </div>
-            <div className="wrap">
-              <Streak count={0} color="#7EE3F2" />
-              <span>2-3건</span>
+          </Title>
+          <StreakGraph
+            commits={DUMMY_DATA_MYPAGE.streak.map((item) => item.count)}
+            length={length}
+          />
+          <SubContent>
+            <div>
+              현재 진행 중 습관 <span className="count">3</span>개
             </div>
+            <StreakDescription>
+              <div className="wrap">
+                <Streak count={0} color="#50B9C9" />
+                <span>4-5건</span>
+              </div>
+              <div className="wrap">
+                <Streak count={0} color="#7EE3F2" />
+                <span>2-3건</span>
+              </div>
 
-            <div className="wrap">
-              <Streak count={0} color="#BBE6EC" />
-              <span>1건</span>
-            </div>
-          </StreakDescription>
-        </SubContent>
-        <img
-          src={Line}
-          style={{ margin: "3.2rem auto 2rem auto", width: "100%" }}
-        />
+              <div className="wrap">
+                <Streak count={0} color="#BBE6EC" />
+                <span>1건</span>
+              </div>
+            </StreakDescription>
+          </SubContent>
+          <img
+            src={Line}
+            style={{ margin: "3.2rem auto 2rem auto", width: "100%" }}
+          />
+        </div>
         <Group
           groups={DUMMY_DATA_MYPAGE.group}
           challenges={DUMMY_DATA_MYPAGE.challenge}
@@ -132,15 +137,29 @@ const Container = styled.div`
   display: flex;
   height: 70rem;
   margin-inline: 8rem;
-  .left {
-    width: 27%;
+  @media (max-width: 1200px) {
+    .streak-wrapper {
+      display: none;
+    }
     display: flex;
     flex-direction: column;
+    height: 100%;
+  }
+  .left {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    @media (max-width: 1200px) {
+      width: 100%;
+    }
   }
   .right {
-    width: 73%;
+    width: 70%;
     padding: 2%;
     margin: 0 auto;
+  }
+  @media (max-width: 800px) {
+    width: 100%;
   }
 `;
 
@@ -183,11 +202,6 @@ const DUMMY_DATA_MYPAGE: MyPageData = {
       category: "강의",
       name: "김영한의 스프링 강의 정복",
       startDate: "2023-03-04T08:01:17.379696",
-    },
-    {
-      category: "알고리즘",
-      name: "김태원의 5조",
-      startDate: "2023-02-28T08:01:17.379705",
     },
   ],
   streak: [
@@ -462,6 +476,18 @@ const DUMMY_DATA_MYPAGE: MyPageData = {
       name: "뭉치뭉치똥뭉치",
       badges: ["알고리즘", "CS"],
       type: "personal",
+    },
+    {
+      image: "/image/image.jpg",
+      name: "범블비식구들",
+      badges: ["알고리즘", "CS", "개발서적", "블로깅", "강의"],
+      type: "group",
+    },
+    {
+      image: "/image/image.jpg",
+      name: "범블비식구들",
+      badges: ["알고리즘", "CS", "개발서적", "블로깅", "강의"],
+      type: "group",
     },
     {
       image: "/image/image.jpg",

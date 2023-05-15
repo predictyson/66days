@@ -25,7 +25,7 @@ export default function BreadCrumb({ activeItem, handleBread }: IProps) {
           >
             {item.title}
             {idx !== items.length - 1 && (
-              <span style={{ marginLeft: "auto" }}>|</span>
+              <span style={{ marginLeft: "1.6rem" }}>|</span>
             )}
           </CrumbItem>
         );
@@ -48,12 +48,12 @@ interface CrumbItemProps {
 
 const CrumbItem = styled.div<CrumbItemProps>`
   display: flex;
-  width: 17%;
   align-items: center;
   font-weight: ${(props) => (props.active ? "bold" : "normal")};
   color: ${(props) => (props.active ? "#333" : "#888")};
   cursor: pointer;
   margin-right: 1.6%;
+  /* margin-left: 1.6%; */
   font-size: 2rem;
 
   &:hover {

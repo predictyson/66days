@@ -4,8 +4,6 @@ import styled from "styled-components";
 import Header from "../components/common/Header";
 import Footer from "../components/common/Footer";
 
-const { Content } = Layout;
-
 export default function Root() {
   return (
     <StyledLayout>
@@ -24,7 +22,7 @@ const StyledLayout = styled(Layout)`
   background-color: ${(props) => props.theme.colors.white};
 `;
 
-const StyledContent = styled(Content)`
+const StyledContent = styled.div`
   line-height: initial;
   /* margin-inline: 8rem; */
 `;

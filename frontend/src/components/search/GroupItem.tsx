@@ -295,28 +295,3 @@ const CategoryItem = styled.div<CategoryItemProps>`
   border: solid 2px ${(props) => props.color};
   border-radius: 10px;
 `;
-
-const DUMMY = ["알고리즘", "블로그"];
-const CATEGORY = [
-  {
-    title: "알고리즘",
-    color: "#6CD3C0",
-  },
-  {
-    title: "CS",
-    color: "#FBA9D6",
-  },
-  {
-    title: "블로그",
-    color: "#F37F3A",
-  },
-  {
-    title: "강의 시청",
-    color: "#B8A9FB",
-  },
-  {
-    title: "개발 서적",
-    color:
-      "#FF8383                                                                                                                                      ",
-  },
-];

@@ -26,20 +26,13 @@ const MAIN_DUMMY_DATA: MainData = {
     animal: "카피바라",
   },
   challenge: [
-    {
-      image: "/image/image.jpg",
-      name: "김영한의 스프링 강의 정복",
-      participants: ["뽀삐", "뭉치", "해피"],
-      startDate: "2023-03-03",
-      status: false,
-    },
-    {
-      image: "/image/image.jpg",
-      name: "김태원의 5조",
-      participants: ["태원", "귀렬", "해피"],
-      startDate: "2023-02-27",
-      status: true,
-    },
+    // {
+    //   image: "/image/image.jpg",
+    //   name: "김영한의 스프링 강의 정복",
+    //   participants: ["뽀삐", "뭉치", "해피"],
+    //   startDate: "2023-05-03",
+    //   status: false,
+    // },
   ],
   rank: {
     expRank: [
@@ -105,24 +98,6 @@ const MAIN_DUMMY_DATA: MainData = {
       name: "뭉치뭉치똥뭉치",
       badges: ["알고리즘", "CS"],
       type: "personal",
-    },
-    {
-      image: "/image/image.jpg",
-      name: "범블비식구들",
-      badges: ["알고리즘", "CS", "개발서적", "블로깅", "강의"],
-      type: "group",
-    },
-    {
-      image: "/image/image.jpg",
-      name: "뭉치뭉치똥뭉치",
-      badges: ["알고리즘", "CS"],
-      type: "group",
-    },
-    {
-      image: "/image/image.jpg",
-      name: "범블비식구들",
-      badges: ["알고리즘", "CS", "개발서적", "블로깅", "강의"],
-      type: "group",
     },
   ],
 };

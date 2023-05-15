@@ -4,11 +4,14 @@ import Badge from "../../assets/main/Bronze.png";
 import CoinIcon from "../../assets/main/Coin.png";
 import { theme } from "../../styles/theme";
 import { MemberInfoData } from "../../types/main";
+import CountUp from "react-countup";
+import { useNavigate } from "react-router";
 
 interface IProps {
   memberInfo: MemberInfoData;
 }
 export default function Banner({ memberInfo }: IProps) {
+  const navigate = useNavigate();
   return (
     <Container>
       <LeftWrapper>
@@ -20,12 +23,19 @@ export default function Banner({ memberInfo }: IProps) {
           게으른 <br /> {memberInfo.animal}
         </Nickname>
         <MoreInfo>
-          <div className="exp">{memberInfo.exp} EXP</div>
-          <div className="button">한눈에 보기</div>
+          <div className="exp">
+            <CountUp end={memberInfo.exp} duration={5} />
+            EXP
+          </div>
+          <div className="button" onClick={() => navigate("/mypage")}>
+            한눈에 보기
+          </div>
         </MoreInfo>
         <Coin>
           <img src={CoinIcon} alt="icon" />{" "}
-          <span>{memberInfo.point.toLocaleString()}</span>
+          <span>
+            <CountUp end={memberInfo.point} duration={5} />
+          </span>
         </Coin>
       </LeftWrapper>
       <ImageWrapper>
@@ -37,23 +47,26 @@ export default function Banner({ memberInfo }: IProps) {
 
 const Container = styled.div`
   width: 100%;
-  height: 60rem;
+  height: 55rem;
   display: flex;
   font-family: Pretendard;
   background-color: black;
-  padding: 0 5rem;
+  padding: 0 9%;
 `;
 
 const LeftWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 50%;
+  @media (max-width: 1200px) {
+    width: 100%;
+  }
 `;
 
 const Info = styled.div`
   height: 4.8rem;
   margin: 0 auto;
-  margin-top: 12rem;
+  margin-top: 8rem;
   width: 80%;
   display: flex;
   align-items: center;
@@ -70,14 +83,22 @@ const Info = styled.div`
     border-radius: 10px;
     height: 4rem;
   }
+  img {
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
 `;
 
 const Nickname = styled.div`
   color: white;
   width: 80%;
+  text-shadow: 2px 2px 2px gray;
   margin: 0 auto;
   margin-top: 3.1rem;
-  font-size: 6rem;
+  font-size: 5.5rem;
   font-weight: 700;
 `;
 const ImageWrapper = styled.div`
@@ -87,7 +108,24 @@ const ImageWrapper = styled.div`
   align-items: center;
   img {
     display: flex;
-    margin-top: 3rem;
+    margin-top: 5rem;
+    width: 100%;
+    animation: float 6s ease-in-out infinite;
+
+    @keyframes float {
+      0% {
+        transform: translatey(0px);
+      }
+      50% {
+        transform: translatey(-30px);
+      }
+      100% {
+        transform: translatey(0px);
+      }
+    }
+  }
+  @media (max-width: 1200px) {
+    width: 0%;
   }
 `;
 
@@ -97,28 +135,32 @@ const MoreInfo = styled.div`
   width: 80%;
   display: flex;
   .button {
+    margin-left: 4rem;
     border-radius: 5px;
     background-color: white;
-    width: 15rem;
+    width: 35%;
     height: 4.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 2rem;
     cursor: pointer;
-    margin-left: 5%;
     font-weight: ${theme.fontWeight.semibold};
     &:hover {
       background-color: #444444;
       color: white;
+      transform: scale(1.1);
     }
+    transition: transform 0.3s ease-in-out;
   }
 
   .exp {
-    color: white;
-    font-size: 3rem;
+    width: 15rem;
+    color: ${theme.colors.gray200};
+    font-size: 2.8rem;
     font-weight: bold;
     margin: auto 0;
+    text-shadow: 1px 2px 1px blue;
   }
 `;
 
@@ -133,6 +175,7 @@ const Coin = styled.div`
   font-weight: ${theme.fontWeight.semibold};
   span {
     margin-left: 1rem;
+    text-shadow: 2px 2px 2px yellowgreen;
   }
   img {
     width: 2.5rem;

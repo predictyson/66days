@@ -26,6 +26,12 @@ const Container = styled.div`
     font-weight: bold;
     font-family: "Kanit-bold";
   }
+  @media (max-width: 1200px) {
+    width: 48%;
+  }
+  @media (max-width: 800px) {
+    width: 65%;
+  }
 `;
 
 const BadgeWrapper = styled.div`

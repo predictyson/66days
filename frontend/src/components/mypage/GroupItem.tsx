@@ -9,7 +9,7 @@ export default function GroupITem({ group }: IProps) {
   return (
     <Container>
       <div className="left-box"></div>
-      <div className="right">
+      <div className="right-box">
         <TagWrapper>
           {group.badges.map((data, idx) => {
             return (
@@ -34,11 +34,11 @@ export default function GroupITem({ group }: IProps) {
 }
 
 const Container = styled.div`
+  margin: 0 auto;
   margin-top: 2.5rem;
   margin-right: 5%;
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
-  cursor: pointer;
   .group-type {
     font-size: 1.6rem;
     font-weight: bold;
@@ -50,14 +50,14 @@ const Container = styled.div`
   &:hover {
     transform: scale(1.05);
   }
-  width: 38rem;
+  width: 38rem !important;
   height: 22rem;
   display: flex;
   .left-box {
     width: 5%;
     background-color: ${theme.colors.gray400};
   }
-  .right {
+  .right-box {
     width: 95%;
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     display: flex;

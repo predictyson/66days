@@ -131,6 +131,10 @@ const LeftConainer = styled.div`
     width: 50rem;
     height: 50rem;
   }
+  @media (max-width: 1200px) {
+    width: 0%;
+    display: none;
+  }
 `;
 
 const ImgConatiner = styled.div`
@@ -151,6 +155,10 @@ const RightContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+
+  @media (max-width: 1200px) {
+    width: 100%;
+  }
 `;
 
 const RankingBox = styled.div`
@@ -162,6 +170,9 @@ const RankingBox = styled.div`
   padding: 3.2rem 2.4rem;
   display: flex;
   flex-direction: column;
+  @media (max-width: 1200px) {
+    margin: 0 auto;
+  }
   .title {
     font-size: 3rem;
     font-weight: ${theme.fontWeight.extrabold};
