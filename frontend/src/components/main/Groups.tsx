@@ -11,7 +11,6 @@ interface IProps {
   groups: GroupData[];
 }
 export default function GroupList({ groups }: IProps) {
-  console.log(groups);
   // const groupItems = groups.map((group, idx) => {
   //   return <GroupItem key={idx} group={group} />;
   // });

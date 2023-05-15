@@ -45,13 +45,15 @@ export default function TodoItem({ challenge }: IProps) {
         <p>{countDays(challenge.startDate)} / 66</p>
       </div>
       <CustomModal open={isModalOpen}>
-        dddd
+        <div className="modal-title">{challenge.name}</div>
+        <div className="modal-sub"> 챌린지를 완료하였습니까?</div>
+        <div className="modal-warning">챌린지 확인 후 취소가 불가합니다.</div>
         <ModalButtonWrapper>
           <button className="ok" onClick={handleOk}>
-            예
+            Yes
           </button>
           <button className="no" onClick={handleCancel}>
-            아니요
+            Yet
           </button>
         </ModalButtonWrapper>
       </CustomModal>

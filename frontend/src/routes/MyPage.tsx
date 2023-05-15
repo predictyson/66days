@@ -9,7 +9,6 @@ import Line from "../assets/mypage/Line.png";
 import { useEffect, useState } from "react";
 import { getMyPageInfo } from "../api/mypage";
 import EditProfile from "../components/mypage/EditProfile";
-import { Breadcrumb } from "antd";
 
 // // 프로필 수정시
 export default function MyPage() {
@@ -482,6 +481,18 @@ const DUMMY_DATA_MYPAGE: MyPageData = {
       name: "뭉치뭉치똥뭉치",
       badges: ["알고리즘", "CS"],
       type: "personal",
+    },
+    {
+      image: "/image/image.jpg",
+      name: "범블비식구들",
+      badges: ["알고리즘", "CS", "개발서적", "블로깅", "강의"],
+      type: "group",
+    },
+    {
+      image: "/image/image.jpg",
+      name: "범블비식구들",
+      badges: ["알고리즘", "CS", "개발서적", "블로깅", "강의"],
+      type: "group",
     },
     {
       image: "/image/image.jpg",

@@ -5,11 +5,13 @@ import CoinIcon from "../../assets/main/Coin.png";
 import { theme } from "../../styles/theme";
 import { MemberInfoData } from "../../types/main";
 import CountUp from "react-countup";
+import { useNavigate } from "react-router";
 
 interface IProps {
   memberInfo: MemberInfoData;
 }
 export default function Banner({ memberInfo }: IProps) {
+  const navigate = useNavigate();
   return (
     <Container>
       <LeftWrapper>
@@ -25,12 +27,13 @@ export default function Banner({ memberInfo }: IProps) {
             <CountUp end={memberInfo.exp} duration={5} />
             EXP
           </div>
-          <div className="button">한눈에 보기</div>
+          <div className="button" onClick={() => navigate("/mypage")}>
+            한눈에 보기
+          </div>
         </MoreInfo>
         <Coin>
           <img src={CoinIcon} alt="icon" />{" "}
           <span>
-            {/* {memberInfo.point.toLocaleString()} */}
             <CountUp end={memberInfo.point} duration={5} />
           </span>
         </Coin>

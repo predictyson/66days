@@ -6,6 +6,7 @@ import { useState } from "react";
 import { GroupData } from "../../types/main";
 import { MyChallengeData } from "../../types/mypage";
 import Challenge from "../../components/mypage/Challenge";
+import Slider from "react-slick";
 interface IProps {
   groups: GroupData[];
   challenges: MyChallengeData[];
@@ -15,17 +16,38 @@ export default function Group({ groups, challenges }: IProps) {
   const handleBread = (idx: number) => {
     setActiveItem(idx);
   };
+
+  const settings = {
+    centerMode: false,
+    dots: false,
+    infinite: true,
+    slidesToShow: 2,
+    slidesToScroll: 2,
+    arrows: false,
+    responsive: [
+      {
+        breakpoint: 880,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+        },
+      },
+    ],
+  };
   return (
     <Container>
       <BreadCrumb activeItem={activeItem} handleBread={handleBread} />
       <ContentWrapper>
-        {activeItem === 0
-          ? groups.map((data, idx) => {
-              return <GroupItem key={idx} group={data} />;
-            })
-          : challenges.map((data, idx) => {
-              return <Challenge key={idx} challenge={data} />;
-            })}
+        <Slider {...settings}>
+          {activeItem === 0
+            ? groups.map((data, idx) => {
+                return <GroupItem key={idx} group={data} />;
+              })
+            : challenges.map((data, idx) => {
+                return <Challenge key={idx} challenge={data} />;
+              })}
+        </Slider>
       </ContentWrapper>
     </Container>
   );
@@ -44,5 +66,7 @@ const Container = styled.div`
 `;
 
 const ContentWrapper = styled.div`
-  display: flex;
+  .slick-list {
+    height: 30rem;
+  }
 `;
