@@ -11,13 +11,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.GenericGenerator;
 
+import com.ssafy._66days.user.enums.Provider;
 import com.ssafy._66days.user.enums.Role;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "user")
@@ -31,7 +36,7 @@ public class User {
 	@Id
 	@GeneratedValue(generator = "uuid2")
 	@GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(columnDefinition = "BINARY(16)", updatable = false)
+	@Column(columnDefinition = "BINARY(16)", updatable = false, name = "user_id")
 	private UUID userId;
 
 	@Enumerated(EnumType.STRING)
@@ -41,16 +46,18 @@ public class User {
 	@Column(name = "email", nullable = false, length = 320)
 	private String email;
 
-	@Column(name = "provider", nullable = false, length = 15)
-	private String provider;
+	@Enumerated(EnumType.STRING)
+	private Provider provider;
 
 	@CreationTimestamp
 	@Column(name = "created_at", nullable = false, insertable = false, updatable = false)
 	private LocalDateTime createdAt;
 
+	@Column(name = "withdrawal_at")
 	private LocalDateTime withdrawalAt;
 
 	public void withdraw() {
+		this.email = "withdraw@withdraw.net";
 		this.withdrawalAt = LocalDateTime.now();
 	}
 }

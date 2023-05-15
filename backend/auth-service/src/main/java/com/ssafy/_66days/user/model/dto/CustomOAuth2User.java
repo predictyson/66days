@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 
+import com.ssafy._66days.user.enums.Provider;
 import com.ssafy._66days.user.enums.Role;
 
 import lombok.Getter;
@@ -14,20 +15,20 @@ import lombok.Getter;
 @Getter
 public class CustomOAuth2User extends DefaultOAuth2User {
 
-	private final UUID uuid;
+	private final UUID userId;
 	private final String email;
-	private final String provider;
+	private final Provider provider;
 	private final Role role;
 
 	public CustomOAuth2User(Collection<? extends GrantedAuthority> authorities,
 							Map<String, Object> attributes,
 							String nameAttributeKey,
-							UUID uuid,
+							UUID userId,
 							String email,
-							String provider,
+							Provider provider,
 							Role role) {
 		super(authorities, attributes, nameAttributeKey);
-		this.uuid = uuid;
+		this.userId = userId;
 		this.email = email;
 		this.provider = provider;
 		this.role = role;

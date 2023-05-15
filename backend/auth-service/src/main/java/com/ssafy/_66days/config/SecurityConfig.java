@@ -32,13 +32,14 @@ import lombok.RequiredArgsConstructor;
 )
 @RequiredArgsConstructor
 public class SecurityConfig {
+
 	private final CustomOAuth2UserService customOAuth2UserService;
-	private final RedisUtil redisUtil;
 	private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 	private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 	private final JwtProvider jwtProvider;
+	private final RedisUtil redisUtil;
 
 	private static final String[] PERMIT_URL_ARRAY = {
 			"**/*",
@@ -77,19 +78,17 @@ public class SecurityConfig {
 				.and()
 				.exceptionHandling()
 				.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-				.accessDeniedHandler(jwtAccessDeniedHandler);
-//				.and()    // 필터 체인에 커스텀 필터 추가 설정
-//				.addFilterBefore(
-//						new JwtAuthenticationFilter(jwtProvider, redisUtil),
-//						UsernamePasswordAuthenticationFilter.class
-//				);
-
+				.accessDeniedHandler(jwtAccessDeniedHandler)
+				.and()
+				.addFilterBefore(
+						new JwtAuthenticationFilter(jwtProvider, redisUtil),
+						UsernamePasswordAuthenticationFilter.class
+				);
 		return http.build();
 	}
 
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
-
 		CorsConfiguration configuration = new CorsConfiguration();
 		// configuration.addAllowedOrigin("http://localhost:???");
 		configuration.addAllowedOriginPattern("*");
