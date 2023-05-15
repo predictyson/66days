@@ -40,9 +40,12 @@ export default function Todo({ challenges }: IProps) {
       <Title>Today's todo</Title>
       <TodoContianer>
         {challenges.length === 0 ? (
-          <EmptySign category="할 일" />
+          <EmptySign category="할 일이" />
         ) : challenges.length === 1 ? (
-          <TodoItem challenge={challenges[0]} />
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <TodoItem challenge={challenges[0]} />
+            <EmptyTodo />
+          </div>
         ) : (
           <Slider {...settings}>
             {challenges.map((challenge, idx) => {
@@ -79,4 +82,9 @@ const Title = styled.div`
 const TodoContianer = styled.div`
   /* display: flex; */
   margin-top: 3.2rem;
+`;
+
+const EmptyTodo = styled.div`
+  width: 90% !important;
+  height: 35rem;
 `;

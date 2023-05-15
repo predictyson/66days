@@ -7,6 +7,7 @@ import { GroupData } from "../../types/main";
 import { MyChallengeData } from "../../types/mypage";
 import Challenge from "../../components/mypage/Challenge";
 import Slider from "react-slick";
+import EmptySign from "../../util/EmptySign";
 interface IProps {
   groups: GroupData[];
   challenges: MyChallengeData[];
@@ -41,7 +42,7 @@ export default function Group({ groups, challenges }: IProps) {
       <ContentWrapper>
         {activeItem === 0 ? (
           groups.length === 0 ? (
-            <h1>empty</h1>
+            <EmptySign category="그룹이" />
           ) : groups.length === 1 ? (
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <GroupItem group={groups[0]} />
@@ -55,7 +56,7 @@ export default function Group({ groups, challenges }: IProps) {
             </Slider>
           )
         ) : challenges.length === 0 ? (
-          <h1>challenge empty</h1>
+          <EmptySign category="챌린지가" />
         ) : challenges.length === 1 ? (
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Challenge challenge={challenges[0]} />

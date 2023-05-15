@@ -11,23 +11,6 @@ interface IProps {
   groups: GroupData[];
 }
 export default function GroupList({ groups }: IProps) {
-  // const groupItems = groups.map((group, idx) => {
-  //   return <GroupItem key={idx} group={group} />;
-  // });
-  // let group: any = [];
-  // group[0] = groupItems.slice(0, 3);
-  // group[1] = groupItems.slice(3, groupItems.length);
-  // if (groupItems.length === 5) {
-  //   group[1].push(<BoxWrapper />);
-  // }
-  // const [sliderdata, setSliderData] = useState(0);
-  // const handlePrevClick = () => {
-  //   setSliderData(Math.abs(sliderdata - 1));
-  // };
-
-  // const handleNextClick = () => {
-  //   setSliderData(Math.abs(sliderdata - 1));
-  // };
   const settings = {
     centerMode: false,
     dots: false,
@@ -61,11 +44,38 @@ export default function GroupList({ groups }: IProps) {
     <Container>
       <Title>Groups</Title>
       <GroupContainer>
-        <Slider {...settings}>
-          {groups.map((group, idx) => {
-            return <GroupItem key={idx} group={group} />;
-          })}
-        </Slider>
+        {groups.length === 1 ? (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <GroupItem group={groups[0]} />
+            <EmptyBox />
+            <EmptyBox />
+          </div>
+        ) : groups.length === 2 ? (
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            {groups.map((group, idx) => {
+              return <GroupItem key={idx} group={group} />;
+            })}
+            <EmptyBox />
+          </div>
+        ) : (
+          <Slider {...settings}>
+            {groups.map((group, idx) => {
+              return <GroupItem key={idx} group={group} />;
+            })}
+          </Slider>
+        )}
       </GroupContainer>
     </Container>
   );
@@ -97,4 +107,9 @@ const Title = styled.div`
 const GroupContainer = styled.div`
   margin-top: 2rem;
   height: 55rem;
+`;
+
+const EmptyBox = styled.div`
+  width: 35rem !important;
+  margin: 0 auto;
 `;
