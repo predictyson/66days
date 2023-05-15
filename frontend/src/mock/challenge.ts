@@ -65,73 +65,271 @@ const mockMessages = [
   },
 ];
 
-const mockGraph = [
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: true, freeze: false },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: true, freeze: false },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: true, freeze: false },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: true, freeze: false },
-  { checked: false, freeze: true },
-  { checked: false, freeze: true },
-  { checked: true, freeze: false },
-  { checked: false, freeze: true },
+const mockStreak = [
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 2,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 2,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 2,
+  },
+  {
+    date: "2023-05-09",
+    count: 1,
+  },
+  {
+    date: "2023-05-09",
+    count: 1,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 1,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
 ];
 
-export { mockUsers, mockMessages, mockGraph };
+export { mockUsers, mockMessages, mockStreak };
