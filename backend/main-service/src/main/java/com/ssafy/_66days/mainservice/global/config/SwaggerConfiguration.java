@@ -44,5 +44,7 @@ public class SwaggerConfiguration {
     }
     @Bean
     public Docket item() { return getDocket("Item", true, "item"); }
+    @Bean
+    public Docket challenge() { return getDocket("challenge", true, "challenge"); }
 
 }
