@@ -1,29 +1,29 @@
 version: '3'
-
 services:
   apigateway:
-    build: ./apigateway-service
+    build:
+      context: ./apigateway-service
+      dockerfile: Dockerfile
     ports:
-      - 8000:8000
-    links:
-      - eureka
+      - 8080:8080
+    depends_on:
       - config
-
-  eureka:
-    build: ./discovery-service
-    ports:
-      - 8761:8761
+      - discovery
 
   config:
-    build: ./config-service
-    ports:
-      - 8888:8888
+    build:
+      context: ./config-service
+      dockerfile: Dockerfile
 
-  business:
-    build: ./main-service
-    ports:
-      - 8082:8080
-    links:
-      - eureka
+  discovery:
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+
+  main:
+    build:
+      context: ./main-service
+      dockerfile: Dockerfile
+    depends_on:
       - config
-
+      - discovery
