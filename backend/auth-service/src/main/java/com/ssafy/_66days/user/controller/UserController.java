@@ -2,13 +2,11 @@ package com.ssafy._66days.user.controller;
 
 import java.util.UUID;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy._66days.security.JwtProvider;
 import com.ssafy._66days.user.model.dto.JwtDTO;
@@ -17,13 +15,29 @@ import com.ssafy._66days.util.Utils;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
 	private final UserService userService;
 	private final JwtProvider jwtProvider;
+	Environment env;
+
+	@GetMapping("/health_check")
+	public String check(HttpServletRequest request) {
+		log.info("Server port={}", request.getServerPort());
+		return String.format("Hi, there. This is a message from Auth service");
+	}
+	// TEST Code : UUID GET FROM TOKEN.
+	@GetMapping("/uuid/{uuid}")
+	public ResponseEntity<UUID> extractUUID(@PathVariable UUID uuid) {
+		System.out.println(uuid);
+		return ResponseEntity.ok(uuid);
+	}
 
 	// token reissue
 	@PostMapping("/token/reissue")
@@ -37,6 +51,7 @@ public class UserController {
 	@GetMapping("/token/uuid")
 	public ResponseEntity<UUID> extractUUIDFromToken(@RequestHeader("Authorization") String authorization) {
 		String token = authorization.split(Utils.BLANK)[1];
+		System.out.println(token);
 		UUID uuid = jwtProvider.getUserIdFromJwt(token);
 		return ResponseEntity.ok(uuid);
 	}
