@@ -17,6 +17,8 @@ import com.ssafy._66days.mainservice.group.model.repository.GroupMemberRepositor
 import com.ssafy._66days.mainservice.group.model.repository.GroupRepository;
 import com.ssafy._66days.mainservice.user.model.entity.User;
 import com.ssafy._66days.mainservice.user.model.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 
 @Service("GroupChallengeService")
 @Transactional(readOnly = true)
+@Slf4j
 public class GroupChallengeService {
     private final UserRepository userRepository;
     private final GroupMemberRepository groupMemberRepository;
@@ -53,7 +56,6 @@ public class GroupChallengeService {
     }
 
     @Transactional
-
     public boolean createGroupChallenge(
             UUID userId,
             Long groupId,
@@ -86,15 +88,13 @@ public class GroupChallengeService {
 
         Date startDate = groupChallengeRequestDTO.getStartAt();
         LocalDateTime startAt = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());  // 입력받은 시작날짜를 LocalDateTime으로 변환
+        LocalDateTime endAt = startAt.plusDays(66);                                                      // 종료날짜 = 시작날짜 + 66일
 
-        Date endDate = groupChallengeRequestDTO.getEndAt();
-        LocalDateTime endAt = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());  // 입력받은 종료날짜를 LocalDateTime으로 변환
-
-        LocalDateTime today = LocalDateTime.now();          // 오늘 날짜
+        LocalDateTime today = LocalDateTime.now();                                                       // 오늘 날짜
 
         String state = "ACTIVATED";
         GroupChallenge groupChallenge = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, state); // 현재 진행 중인 챌린지가 있는지 찾아온다
-        if (ChronoUnit.DAYS.between(today, startAt) > 30) {                //  시작날짜가 오늘 날짜에서 30일 초과한 날짜인지 확인
+        if (ChronoUnit.DAYS.between(today, startAt) > 30) {                                              //  시작날짜가 오늘 날짜에서 30일 초과한 날짜인지 확인
             throw new IllegalArgumentException("챌린지는 최대 30일 이내에 시작해야 합니다");
         }
         if (groupChallenge != null && groupChallenge.getEndAt().isAfter(startAt)) { // 같은 챌린지가 해당 그룹내에서 진행중인지 확인(시작날짜가 진행 중 챌린지 endAt보다 전인지 확인)
@@ -102,8 +102,8 @@ public class GroupChallengeService {
         }
 
 
-        String status = "ACTIVATED";                         // 새로 시작할 챌린지 상태값
-        int availableFreezingCount = 0;                     // 사용가능 프리징 수 기본값
+        String status = "ACTIVATED";                                                                     // 새로 시작할 챌린지 상태값
+        int availableFreezingCount = 0;                                                                  // 사용가능 프리징 수 기본값
         GroupChallenge newGroupChallenge = GroupChallenge.builder()
                 .group(group)
                 .challenge(challenge)
@@ -140,7 +140,6 @@ public class GroupChallengeService {
 
         return AvailableGroupChallengeResponseDTOList;
     }
-
     public List<GroupChallengeResponseDTO> getGroupChallenges(
             UUID userId,
             Long groupId
@@ -156,14 +155,12 @@ public class GroupChallengeService {
         // 그룹아이디로 진행중인 챌린지와 진행 예정인 챌린지 리스트를 받아온다
         List<GroupChallenge> groupChallengeList = groupChallengeRepository.findByGroupAndStateIn(group, Arrays.asList("ACTIVATED", "WAITING"));
         List<GroupChallengeResponseDTO> groupChallengeResponseDTOList = new ArrayList<>();  // 그룹 챌린지 반환 리스트
-        List<String> challengeMemberImagePathDTOList = new ArrayList<>();                   // 참여자들의 프로필 이미지 담을 list
-        for (int i = 0; i < groupChallengeList.size(); ) {
+        for (int i = 0; i < groupChallengeList.size(); i++) {
             GroupChallenge groupChallenge = groupChallengeList.get(i);                      // 각 그룹 챌린지 객체
 
+            List<String> challengeMemberImagePathDTOList = new ArrayList<>();               // 참여자들의 프로필 이미지 담을 list
             LocalDateTime startDate = groupChallenge.getStartAt();                          // 챌린지 시작날짜 LocalDateTime -> Date
             Date startAt = java.sql.Timestamp.valueOf(startDate);
-
-            // ! 순환참조
             List<GroupChallengeMember> groupChallengeMemberList = groupChallengeMemberRepository.findByGroupChallenge(groupChallenge); // 그룹 챌린지로 챌린지 참가자 객체받아오기
             int memberCount = 0;
             if (!groupChallengeMemberList.isEmpty()) {
