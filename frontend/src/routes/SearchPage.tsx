@@ -4,8 +4,26 @@ import BreadCrumb from "../components/search/BreadCrumb";
 import GroupItem from "../components/search/GroupItem";
 // import { getSearchData } from "../api/search";
 import { SearchData } from "../types/search";
-
+import { fetchSearchData } from "../api/search";
+import { useEffect, useState } from "react";
 export default function SearchPage() {
+  const [searchValue, setSearchValue] = useState<string>("");
+  
+  //FIXME: CORS error
+  async function getSearchData() {
+    try {
+      const data = await fetchSearchData(searchValue, "알고리즘");
+      console.log(data);
+    } catch (error) {
+      console.log("Error occurred while fetching search data:", error);
+    }
+  }
+  const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      getSearchData();
+    }
+  };
+
   return (
     <Container>
       <TitleWrapprer>
@@ -16,6 +34,9 @@ export default function SearchPage() {
       <SearchInput
         type="text"
         placeholder="그룹장 또는 그룹명을 입력해주세요"
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        onKeyDown={handleSearch}
       ></SearchInput>
       <div
         style={{
