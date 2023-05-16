@@ -44,7 +44,7 @@ export default function ChallengeBox({ ...props }) {
               backgroundColor: "#fde3cf",
             }}
           >
-            {props.participants.map((index: number) => (
+            {props.profileList.map((index: number) => (
               // 추후 participant.image로 수정 예성
               <Avatar
                 src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=2"
@@ -53,7 +53,7 @@ export default function ChallengeBox({ ...props }) {
             ))}
           </Avatar.Group>
           <div className="members__cnt-info">
-            {props.participants.length} / {props.maxCnt} 명
+            {props.memberCnt} / {props.maxCnt} 명
           </div>
         </div>
         {/* {props.notStarted ? (

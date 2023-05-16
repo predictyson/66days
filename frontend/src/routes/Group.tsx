@@ -128,7 +128,7 @@ export default function Group() {
   const [boardData, setBoardData] = useState<ArticleType>();
   const [commentData, setCommentData] = useState<CommentType[]>([]);
 
-  const Carousel = () => {
+  const ChallengeListCarousel = () => {
     // 옵션
     const settings = {
       dots: true,
@@ -148,7 +148,8 @@ export default function Group() {
               notStarted={calcDueDate(challenge.startAt) < 0 ? true : false}
               title={challenge.challengeName}
               dueDate={calcDueDate(challenge.startAt)}
-              participants={challenge.memberCount}
+              profileList={challenge.profileImagePathList}
+              memberCnt={challenge.memberCount}
               maxCnt={challenge.maxMemberCount}
             />
           ))}
@@ -315,7 +316,7 @@ export default function Group() {
         </div>
         <GroupBadges>
           <div className="title-box">
-            <div className="small__title">
+            <div className="small__title ellipsis">
               <TrophyFilled className="badge-icon" />
               뭉치뭉치똥뭉치네 업적
               <TrophyFilled className="badge-icon" />
@@ -373,7 +374,7 @@ export default function Group() {
               </CommonButton>
             </div>
           </div>
-          <Carousel />
+          <ChallengeListCarousel />
         </GroupChallenges>
         <BoardContainer>
           <div className="title-box">
@@ -501,6 +502,16 @@ const GroupBadges = styled(Content)`
 
   .badge-icon:last-child {
     margin-left: 1rem;
+  }
+
+  .ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 `;
 
