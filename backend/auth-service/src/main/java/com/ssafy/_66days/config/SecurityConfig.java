@@ -49,8 +49,8 @@ public class SecurityConfig {
 		http
 				.httpBasic().disable()
 				.csrf().disable()
-//				.cors().configurationSource(corsConfigurationSource())
-//				.and()
+				.cors().configurationSource(corsConfigurationSource())
+				.and()
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
@@ -76,21 +76,21 @@ public class SecurityConfig {
 		return http.build();
 	}
 
-//	@Bean
-//	public CorsConfigurationSource corsConfigurationSource() {
-//
-//		CorsConfiguration configuration = new CorsConfiguration();
-//		// configuration.addAllowedOrigin("http://localhost:???");
-//		configuration.addAllowedOriginPattern("*");
-////		configuration.addAllowedOrigin("https://k8a705.p.ssafy.io");
-////		configuration.addAllowedOrigin("https://accounts.kakao.com");
-//		configuration.addAllowedHeader("*");
-//		configuration.addAllowedMethod("*");
-//		configuration.setAllowCredentials(true);
-//
-//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//		source.registerCorsConfiguration("/**", configuration);
-//
-//		return source;
-//	}
+	@Bean
+	public CorsConfigurationSource corsConfigurationSource() {
+
+		CorsConfiguration configuration = new CorsConfiguration();
+		// configuration.addAllowedOrigin("http://localhost:???");
+		configuration.addAllowedOriginPattern("*");
+//		configuration.addAllowedOrigin("https://k8a705.p.ssafy.io");
+//		configuration.addAllowedOrigin("https://accounts.kakao.com");
+		configuration.addAllowedHeader("*");
+		configuration.addAllowedMethod("*");
+		configuration.setAllowCredentials(true);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+
+		return source;
+	}
 }
