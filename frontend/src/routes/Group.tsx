@@ -112,11 +112,11 @@ export default function Group() {
   const [isOpenMemberSettingModal, setOpenMemberSettingModal] = useState(false);
   const [isOpenBadgeModal, setOpenBadgeModal] = useState(false);
   const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
-  const [isOpenChallengeInfoModal, setOpenChallengeInfoModal] = useState(false);
   const [isOpenNewBoardModal, setOpenNewBoardModal] = useState(false);
   const [isOpenBoardModal, setOpenBoardModal] = useState(false);
 
   const [boardPage, setBoardPage] = useState<number>(0);
+  const [groupName, setGroupName] = useState<string>("");
 
   const [badgePreview, setBadgePreview] = useState<BadgePreviewType[]>([]);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
@@ -128,6 +128,7 @@ export default function Group() {
   const [boardData, setBoardData] = useState<ArticleType>();
   const [commentData, setCommentData] = useState<CommentType[]>([]);
 
+  // 챌린지 리스트 캐러셀
   const ChallengeListCarousel = () => {
     // 옵션
     const settings = {
@@ -239,48 +240,15 @@ export default function Group() {
     }
   }
 
-  const tmpAddBadgeData: BadgeType[] = [
-    {
-      image: Algorithms,
-      challengeName: "알고리즘 하장",
-      startDate: new Date("2023-03-06"),
-      endDate: new Date("2023-05-11"),
-      category: "알고리즘",
-      status: true,
-    },
-    {
-      image: Book,
-      challengeName: "개발서적 하루 30분씩 읽을 사람",
-      startDate: new Date("2023-02-23"),
-      endDate: new Date("2023-04-08"),
-      category: "개발서적",
-      status: false,
-    },
-    {
-      image: Algorithms,
-      challengeName: "코테 부수기 챌린지",
-      startDate: new Date("2023-03-06"),
-      endDate: new Date("2023-04-11"),
-      category: "알고리즘",
-      status: false,
-    },
-    {
-      image: Book,
-      challengeName: "모던 자바스크립트 정독",
-      startDate: new Date("2023-02-23"),
-      endDate: new Date("2023-03-27"),
-      category: "개발서적",
-      status: false,
-    },
-  ];
-
   useEffect(() => {
     async function fetchAndSetGroupPageData() {
       const data = await fetchGroupPageData();
       console.log(data);
+      setGroupName(data["group-name"]);
       setBadgePreview(data.badges);
       setChallengeList(data.challenges);
-      setBoardDataList(data.articles);
+      const boardList = { articles: data.articles, pageNo: 0 };
+      setBoardDataList(boardList);
     }
 
     async function fetchAndSetGroupSettingData() {
@@ -293,11 +261,7 @@ export default function Group() {
     async function fetchAndSetGroupBadgesData() {
       const badgesData = await fetchGroupBadges();
       // dummy data 길이가 불충분하여 임시로 데이터 이어붙임
-      setBadgeList(
-        badgesData.length
-          ? [...badgesData["badge-list"], ...tmpAddBadgeData]
-          : []
-      );
+      setBadgeList(badgesData);
     }
 
     fetchAndSetGroupPageData();
@@ -311,14 +275,13 @@ export default function Group() {
         <div className="group__title-container">
           <div className="title">
             <TeamOutlined className="title-icon" />
-            뭉치뭉치똥뭉치네
+            {groupName}
           </div>
         </div>
         <GroupBadges>
           <div className="title-box">
             <div className="small__title ellipsis">
-              <TrophyFilled className="badge-icon" />
-              뭉치뭉치똥뭉치네 업적
+              {groupName} 의 업적
               <TrophyFilled className="badge-icon" />
             </div>
             <div className="btn-wrapper">
@@ -498,6 +461,7 @@ const GroupBadges = styled(Content)`
     margin-right: 1rem;
     color: #ffcc4d;
     font-size: 3.2rem;
+    filter: drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.15));
   }
 
   .badge-icon:last-child {
