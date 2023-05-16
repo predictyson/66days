@@ -17,12 +17,16 @@ export default function Member(props: PropsType) {
         구성원({props.users.length}인)
       </Typography.Title>
       {props.users.map((user, idx) => (
-        <Space key={idx} style={{ justifyContent: "space-between" }}>
+        <Space
+          key={idx}
+          style={{ justifyContent: "space-between", width: "100%" }}
+        >
           <Typography.Text
             ellipsis={{
               tooltip: `${user.name}`,
             }}
-            style={{ width: "100px" }}
+            style={{ width: "150px" }}
+            // style={{ width: "calc(100% - 20px)" }}
           >
             <Avatar
               src={user.profile}

@@ -18,11 +18,11 @@ export default function Root() {
 
 const StyledLayout = styled(Layout)`
   width: 100vw;
-  min-height: 100vh;
   background-color: ${(props) => props.theme.colors.white};
 `;
 
 const StyledContent = styled.div`
   line-height: initial;
+  min-height: 100vh;
   /* margin-inline: 8rem; */
 `;
