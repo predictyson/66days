@@ -77,6 +77,8 @@ public class SwaggerConfig {
     @Bean
     public Docket item() { return getDocket("Item", true, "item"); }
     @Bean
-    public Docket challenge() { return getDocket("challenge", true, "challenge"); }
+    public Docket challenge() { return getDocket("Challenge", true, "challenge"); }
+    @Bean
+    public Docket page() { return getDocket("Page", true, "page"); }
 
 }

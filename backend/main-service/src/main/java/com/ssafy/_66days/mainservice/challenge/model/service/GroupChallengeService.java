@@ -19,8 +19,8 @@ import com.ssafy._66days.mainservice.group.model.repository.GroupMemberRepositor
 import com.ssafy._66days.mainservice.group.model.repository.GroupRepository;
 import com.ssafy._66days.mainservice.user.model.entity.User;
 import com.ssafy._66days.mainservice.user.model.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +37,7 @@ import static java.time.LocalDateTime.now;
 @Service("GroupChallengeService")
 @Transactional(readOnly = true)
 @Slf4j
+@RequiredArgsConstructor
 public class GroupChallengeService {
     private final UserRepository userRepository;
     private final GroupMemberRepository groupMemberRepository;
@@ -45,24 +46,6 @@ public class GroupChallengeService {
     private final GroupChallengeRepository groupChallengeRepository;
     private final GroupChallengeMemberRepository groupChallengeMemberRepository;
     private final GroupChallengeLogRepository groupChallengeLogRepository;
-
-    public GroupChallengeService(
-            UserRepository userRepository,
-            GroupMemberRepository groupMemberRepository,
-            GroupRepository groupRepository,
-            ChallengeRepository challengeRepository,
-            GroupChallengeRepository groupChallengeRepository,
-            GroupChallengeMemberRepository groupChallengeMemberRepository,
-            GroupChallengeLogRepository groupChallengeLogRepository
-    ) {
-        this.userRepository = userRepository;
-        this.groupMemberRepository = groupMemberRepository;
-        this.groupRepository = groupRepository;
-        this.challengeRepository = challengeRepository;
-        this.groupChallengeRepository = groupChallengeRepository;
-        this.groupChallengeMemberRepository = groupChallengeMemberRepository;
-        this.groupChallengeLogRepository = groupChallengeLogRepository;
-    }
 
     @Transactional
     public boolean createGroupChallenge(
@@ -181,9 +164,8 @@ public class GroupChallengeService {
             }
             groupChallengeResponseDTOList.add(GroupChallengeResponseDTO.of(groupChallenge, startAt, memberCount, challengeMemberImagePathDTOList));
         }
+        log.info("GroupChallengeService --- groupChallengeResponseDTO: {}",groupChallengeResponseDTOList);
         return groupChallengeResponseDTOList;
-//        return null;
-
     }
 
 

@@ -167,4 +167,9 @@ public class GroupService {
         boolean isOwner = groupRepository.findByOwnerIdAndGroupId(userId,groupId).isPresent();
         return isOwner;
     }
+
+    public String getGroupName(Long groupId) {
+        Group group = groupRepository.findById(groupId).orElseThrow(()->new NoSuchElementException("해당하는 그룹이 없습니다"));
+        return group.getGroupName();
+    }
 }
