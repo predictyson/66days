@@ -43,7 +43,7 @@ public class FileUtil {
 			if (originalFileName != null && !originalFileName.isEmpty()) {
 				String saveFileName = UUID.randomUUID().toString()
 						+ originalFileName.substring(originalFileName.lastIndexOf('.'));
-				log.debug("registDog save path : {}", saveFolder + "/" + saveFileName);
+				log.debug("image save path : {}", saveFolder + "/" + saveFileName);
 				image.transferTo(new File(folder, saveFileName));
 				return today + File.separator + saveFileName;
 			} else {

@@ -2,6 +2,7 @@ package com.ssafy._66days.mainservice.user.model.service;
 
 //import com.ssafy._66days.animal.model.dto.AnimalMainPageResponseDTO;
 import com.ssafy._66days.mainservice.animal.model.repository.AnimalRepository;
+import com.ssafy._66days.mainservice.global.util.FileUtil;
 import com.ssafy._66days.mainservice.group.model.repository.GroupMemberRepository;
 //import com.ssafy._66days.tier.model.dto.TierMainPageResponseDTO;
 import com.ssafy._66days.mainservice.user.model.dto.UserDetailDTO;
@@ -10,14 +11,17 @@ import com.ssafy._66days.mainservice.user.model.repository.UserRepository;
 import com.ssafy._66days.mainservice.tier.model.repository.TierRepository;
 //import com.ssafy._66days.user.model.dto.UserDetailResponseDTO;
 //import com.ssafy._66days.user.model.dto.UserSignUpRequestDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +32,9 @@ public class UserService {
     private final AnimalRepository animalRepository;
     private final TierRepository tierRepository;
     private final GroupMemberRepository groupMemberRepository;
-    // private final Challenge
+    private final FileUtil fileUtil;
+    @Value("${file.path.upload-images-users}")
+    private String userImageFilePath;
 
 //    public void createUser(UUID uuid, UserSignUpRequestDTO userSignUpRequestDto) {
 //        if (userRepository.findById(uuid).isPresent()) {
@@ -59,8 +65,12 @@ public class UserService {
         user.updateNickname(nickname);
     }
 
-    public void modifyPofileImage(UUID userId, String imagePath) throws Exception{
+    public void modifyPofileImage(UUID userId, MultipartFile image) throws Exception{
+        if (image.isEmpty()) {
+            throw new InputMismatchException("필요한 값이 들어오지 않았습니다.");
+        }
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
-        user.updateNickname(imagePath);
+        String savePath = fileUtil.fileUpload(image, userImageFilePath);
+        user.updateImage(savePath);
     }
 }

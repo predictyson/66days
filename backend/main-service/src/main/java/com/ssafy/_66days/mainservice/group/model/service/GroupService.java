@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -159,6 +161,8 @@ public class GroupService {
             throw new InputMismatchException("필요한 값이 들어오지 않았습니다.");
         }
         String savePath = fileUtil.fileUpload(image, groupImageFilePath);
+        groupCreateDTO.setImage(savePath);
+        log.info("GroupService -- groupCreateDTO: {}", groupCreateDTO);
 
         groupRepository.save(groupCreateDTO.toEntity(groupCreateDTO));
     }

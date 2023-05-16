@@ -202,9 +202,11 @@ public class GroupController {
     public ResponseEntity<Map<String, Object>> createGroup(
             @RequestHeader(value = "Authorization") String token,
             @RequestPart(value="groupContent") GroupCreateDTO groupCreateDTO,
-            @RequestPart(value="image") @ApiParam(required = true) MultipartFile groupImage
+            @RequestPart(value="image") @ApiParam(required = false) MultipartFile groupImage
             ){
         Map<String, Object> resultMap = new HashMap<>();
+
+        log.info("GroupController -- groupCreateDTO: {}", groupCreateDTO);
 
         //token validation
         UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
