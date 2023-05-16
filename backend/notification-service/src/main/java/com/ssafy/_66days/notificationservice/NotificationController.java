@@ -20,9 +20,15 @@ public class NotificationController {
     private final NotificationRepository notificationRepository;
     @CrossOrigin
     @GetMapping(value="/{userId}",produces= MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<Notification> findByUserId(@PathVariable(value = "userId") Integer userId){
+    public Flux<Notification> findListByUserId(@PathVariable(value = "userId") Integer userId){
         Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "createdAt"));
-        return notificationRepository.mFindByUserId(userId, pageable)
+        return notificationRepository.mFindListByUserId(userId, pageable)
+                .subscribeOn(Schedulers.boundedElastic());
+    }
+    @CrossOrigin
+    @GetMapping(value="/list/{userId}",produces= MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<Notification> findByUserId(@PathVariable(value = "userId") Integer userId){
+        return notificationRepository.mFindByUserId(userId)
                 .subscribeOn(Schedulers.boundedElastic());
     }
     @CrossOrigin

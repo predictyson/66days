@@ -8,6 +8,11 @@ import org.springframework.data.mongodb.repository.Tailable;
 
 
 public interface NotificationRepository extends ReactiveMongoRepository<Notification,String> {
+
+    @Tailable
     @Query("{ 'user_id' : ?0 }")
-    Flux<Notification> mFindByUserId(Integer userId, Pageable pageable);
+    Flux<Notification> mFindByUserId(Integer userId);
+
+    @Query("{ 'user_id' : ?0 }")
+    Flux<Notification> mFindListByUserId(Integer userId, Pageable pageable);
 }
