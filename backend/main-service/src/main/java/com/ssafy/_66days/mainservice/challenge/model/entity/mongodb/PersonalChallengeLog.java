@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -15,10 +16,10 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(collection = "personal_challenge_log")
+@Document(collection = "myChallengeLog")
 public class PersonalChallengeLog {
     @Id
-    private Long personalChallengeId;
+    private Long myChallengeId;
 
-    private Date time;
+    private LocalDate time;
 }

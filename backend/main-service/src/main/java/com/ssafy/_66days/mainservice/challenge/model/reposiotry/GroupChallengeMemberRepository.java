@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface GroupChallengeMemberRepository extends JpaRepository<GroupChallengeMember, GroupChallengeMemberId> {
@@ -15,7 +16,7 @@ public interface GroupChallengeMemberRepository extends JpaRepository<GroupChall
 
     List<GroupChallengeMember> findByGroupChallenge(GroupChallenge groupChallenge);
 
-    GroupChallengeMember findByUserAndGroupChallenge(User user, GroupChallenge groupChallenge);
+    Optional<GroupChallengeMember> findByUserAndGroupChallenge(User user, GroupChallenge groupChallenge);
 
 
 }

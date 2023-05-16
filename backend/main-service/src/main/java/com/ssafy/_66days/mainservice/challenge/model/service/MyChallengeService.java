@@ -3,6 +3,7 @@ package com.ssafy._66days.mainservice.challenge.model.service;
 import com.ssafy._66days.mainservice.badge.model.repository.BadgeRepository;
 import com.ssafy._66days.mainservice.challenge.model.dto.MyChallengeHistoryDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
+import com.ssafy._66days.mainservice.challenge.model.dto.requestDTO.StreakRequestDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.AvailableMyChallengeResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.MyChallengeDetailResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
@@ -19,9 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -222,18 +223,27 @@ public class MyChallengeService {
 
     public boolean checkPrivateStreak(
             UUID userId,
-            Long myChallengeId,
-            Date today
+            Long myChallengeId
     ) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));    // 유저 유무 체크
+        MyChallenge myChallenge = myChallengeRepository.findById(myChallengeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 개인 챌린지입니다"));  // 개인 챌린지 존재 유무 체크
+        if (!myChallenge.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인의 개인 챌린지가 아닙니다");                 // 해당 개인 챌린지가 해당 유저의 것인지 체크
+        }
 
-        PersonalChallengeLog perSonalChallengeLog = PersonalChallengeLog.builder()          // 몽고DB에 로그 작성
-                .personalChallengeId(myChallengeId)
-                .time(today)
+        LocalDate time = LocalDate.now();                                                   // 오늘 날짜
+        PersonalChallengeLog todayPersonalChallengeLog = personalChallengeLogRepository.findByMyChallengeIdAndTime(myChallengeId, time); // 오늘 날짜 스트릭 로그 조회
+        if (todayPersonalChallengeLog != null) {                                            // 스트릭 존재한다면
+            throw new IllegalArgumentException("이미 금일 스트릭을 채우셨습니다");                // 예외처리
+        }
+        PersonalChallengeLog personalChallengeLog = PersonalChallengeLog.builder()          // 금일 스트릭 로그 없다면 몽고DB에 로그 작성
+                .myChallengeId(myChallengeId)
+                .time(LocalDate.now())
                 .build();
 
-        return personalChallengeLogRepository.save(perSonalChallengeLog) != null;
+        return personalChallengeLogRepository.save(personalChallengeLog) != null;
     }
 }
 
