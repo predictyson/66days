@@ -34,6 +34,24 @@ public class UserController {
 		}
 		return ResponseEntity.ok(response.getBody());
 	}
+	@PatchMapping("/modify/{nickname}")
+	public ResponseEntity<Boolean> modifyNickname(@RequestHeader("Authorization") String token,
+											  @RequestParam(value = "nickname") String nickname
+											  ) {
+
+		// get UUID from token?
+		UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+		log.info("Modify nickname userId: {}",userId);
+
+		try {
+			userService.modifyNickname(userId, nickname);
+		} catch (Exception e){
+			log.error(e.getMessage());
+			return ResponseEntity.ok(false);
+		}
+
+		return ResponseEntity.ok(true);
+	}
 
 	@GetMapping("/check-nickname/{nickname}")
 	public ResponseEntity<Boolean> isNicknameAvailable(@RequestHeader("Authorization") String token,
@@ -46,7 +64,7 @@ public class UserController {
 		return ResponseEntity.ok(!isAvailable);
 	}
 
-//	@GetMapping
+//	@GetMapping()
 //	public ResponseEntity<UserDetailResponseDTO> getUserDetail(@RequestHeader("Authorization") String token) {
 //		// get UUID from token
 //		//UserDetailResponseDTO userDetailResponseDTO = userService.getUserDetail(uuid);
