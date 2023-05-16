@@ -35,7 +35,6 @@ export default createBrowserRouter(
         />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/mypage" element={<MyPage />} />
-        <Route path="/noti" element={<Notification />} />
       </Route>
     </Route>
   )
