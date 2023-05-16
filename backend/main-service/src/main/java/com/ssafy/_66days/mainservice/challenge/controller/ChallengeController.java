@@ -290,6 +290,7 @@ public class ChallengeController {
     // ? 개인 스트릭 찍기 mongoDB쪽이라 유보
     @PostMapping("/{my_challenge_id}")
     public ResponseEntity<Map<String, Object>> checkPrivateStreak(
+            @RequestHeader(value = "Authorization") String token,
             @PathVariable("my_challenge_id") Long myChallengeId,
             @PathVariable("today") Date today
     ) {
@@ -299,7 +300,10 @@ public class ChallengeController {
 //            // auth서버로 인증 요청
 //            // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
 //            // UUID userId = authenticateUtil.getUserId(accessToken);
-//
+            //token validation
+            UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+            log.info("Group Page, USER ID : {}", userId);
+
             boolean isChecked = myChallengeService.checkPrivateStreak(userId, myChallengeId, today);
             resultMap.put("isChecked", isChecked);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
@@ -313,6 +317,7 @@ public class ChallengeController {
     // ? 그룹 챌린지 찍기 mongoDB쪽이라 유보
     @PostMapping("/{group_challenge_id}/{today}")
     public ResponseEntity<Map<String, Object>> checkGroupStreak(
+            @RequestHeader(value = "Authorization") String token,
             @PathVariable("group_challenge_id") Long groupChallengeId,
             @PathVariable("today") Date today
     ) {
@@ -322,7 +327,10 @@ public class ChallengeController {
 //            // auth서버로 인증 요청
 //            // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
 //            // UUID userId = authenticateUtil.getUserId(accessToken);
-//
+            //token validation
+            UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+            log.info("Group Page, USER ID : {}", userId);
+
             boolean isChecked = groupChallengeService.checkGroupStreak(userId, groupChallengeId, today);
             resultMap.put("isChecked", isChecked);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
