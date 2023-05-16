@@ -14,9 +14,11 @@ public class AnimalDTO {
     private String animalName;
     private String imagePath;
 
-    public AnimalDTO(Animal animal) {
-        this.animalId = animal.getAnimalId();
-        this.animalName = animal.getAnimalName();
-        this.imagePath = animal.getImagePath();
+    public static AnimalDTO of(Animal animal) {
+        return AnimalDTO.builder()
+                .animalId(animal.getAnimalId())
+                .animalName(animal.getAnimalName())
+                .imagePath(animal.getImagePath())
+                .build();
     }
 }
