@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @IdClass(GroupChallengeMemberId.class)
 @Entity
@@ -18,13 +17,11 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class GroupChallengeMember {
     @Id
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Id
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_challenge_id")
     private GroupChallenge groupChallenge;

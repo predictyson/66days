@@ -15,6 +15,5 @@ public class GroupChallengeRequestDTO {
     private int maxMemberCount;
     private String content;
     private Date startAt;
-    private Date endAt;
 
 }
