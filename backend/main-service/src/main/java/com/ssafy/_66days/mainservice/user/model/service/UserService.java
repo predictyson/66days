@@ -1,27 +1,26 @@
 package com.ssafy._66days.mainservice.user.model.service;
 
 //import com.ssafy._66days.animal.model.dto.AnimalMainPageResponseDTO;
+
+import com.ssafy._66days.mainservice.animal.model.dto.AnimalDTO;
 import com.ssafy._66days.mainservice.animal.model.repository.AnimalRepository;
 import com.ssafy._66days.mainservice.global.util.FileUtil;
 import com.ssafy._66days.mainservice.group.model.repository.GroupMemberRepository;
-//import com.ssafy._66days.tier.model.dto.TierMainPageResponseDTO;
+import com.ssafy._66days.mainservice.tier.model.dto.TierDTO;
+import com.ssafy._66days.mainservice.tier.model.repository.TierRepository;
 import com.ssafy._66days.mainservice.user.model.dto.UserDetailDTO;
 import com.ssafy._66days.mainservice.user.model.entity.User;
 import com.ssafy._66days.mainservice.user.model.repository.UserRepository;
-import com.ssafy._66days.mainservice.tier.model.repository.TierRepository;
-//import com.ssafy._66days.user.model.dto.UserDetailResponseDTO;
-//import com.ssafy._66days.user.model.dto.UserSignUpRequestDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +55,9 @@ public class UserService {
 
     public UserDetailDTO findUserById(UUID userId) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
-        UserDetailDTO userDetailDTO = UserDetailDTO.of(user);
+        AnimalDTO animalDTO = AnimalDTO.of(animalRepository.findById(user.getAnimalId()).orElseThrow(()-> new NoSuchElementException("해당하는 동물이 없습니다.")));
+        TierDTO tierDTO = TierDTO.of(tierRepository.findByTierId(user.getTierId()).orElseThrow(()->new NoSuchElementException("해당하는 티어 정보가 없습니다.")));
+        UserDetailDTO userDetailDTO = UserDetailDTO.of(user, animalDTO, tierDTO);
         return userDetailDTO;
     }
 

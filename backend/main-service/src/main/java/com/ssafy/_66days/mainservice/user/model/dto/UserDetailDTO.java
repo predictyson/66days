@@ -1,5 +1,7 @@
 package com.ssafy._66days.mainservice.user.model.dto;
 
+import com.ssafy._66days.mainservice.animal.model.dto.AnimalDTO;
+import com.ssafy._66days.mainservice.tier.model.dto.TierDTO;
 import com.ssafy._66days.mainservice.user.model.entity.User;
 import lombok.Builder;
 import lombok.Data;
@@ -17,9 +19,9 @@ public class UserDetailDTO {
     private Long point;
     private String githubUrl;
     private String blogUrl;
-    private Long animalId;
-    private Long tierId;
-    public static UserDetailDTO of(User user) {
+    private AnimalDTO animalDTO;
+    private TierDTO tierDTO;
+    public static UserDetailDTO of(User user, AnimalDTO animalDTO, TierDTO tierDTO) {
         return UserDetailDTO.builder()
                 .userId(user.getUserId())
                 .email(user.getEmail())
@@ -29,8 +31,8 @@ public class UserDetailDTO {
                 .point(user.getPoint())
                 .githubUrl(user.getGithubUrl())
                 .blogUrl(user.getBlogUrl())
-                .animalId(user.getAnimalId())
-                .tierId(user.getTierId())
+                .animalDTO(animalDTO)
+                .tierDTO(tierDTO)
                 .build();
     }
 }
