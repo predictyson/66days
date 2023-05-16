@@ -7,10 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GroupApplyRepository extends JpaRepository <GroupApply, Long> {
     List<GroupApply> findAllByStateAndGroup(String state, Group group);
 
-    GroupApply findByUserAndGroup(User user, Group group);
+    Optional<GroupApply> findByUserAndGroup(User user, Group group);
+
+    Optional<GroupApply> findByUserAndGroupAndState(User user, Group group, String state);
 }

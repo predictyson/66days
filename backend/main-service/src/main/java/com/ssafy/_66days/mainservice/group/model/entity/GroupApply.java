@@ -2,6 +2,7 @@ package com.ssafy._66days.mainservice.group.model.entity;
 
 import com.ssafy._66days.mainservice.user.model.entity.User;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "GROUP_APPLICATION")
 @Data
+@RequiredArgsConstructor
 public class GroupApply {
 
     @Id
@@ -39,5 +41,6 @@ public class GroupApply {
         this.user = user;
         this.group = group;
         this.state = state;
+        this.applyTime = LocalDateTime.now();
     }
 }
