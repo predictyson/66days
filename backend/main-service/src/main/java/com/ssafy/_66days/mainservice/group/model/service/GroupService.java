@@ -70,7 +70,7 @@ public class GroupService {
     }
 
     public List<UserManageDTO> getGroupMembers(Long groupId) {
-        List<GroupMember> groupMemberList = groupMemberRepository.findByGroup(groupRepository.findById(groupId));
+        List<GroupMember> groupMemberList = groupMemberRepository.findByGroupAndAuthorityNot(groupRepository.findById(groupId),DROP);
         List<UserManageDTO> userManageDTOList = groupMemberList.stream()
                 .map(groupMember -> UserManageDTO.of(userRepository.findById(groupMember.getUser().getUserId()).orElseThrow(() -> new NoSuchElementException("user doesn't exist"))
                         ,groupMember)).collect(Collectors.toList());
