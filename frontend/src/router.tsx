@@ -12,14 +12,17 @@ import Challenge from "./routes/Challenge";
 import MainPage from "./routes/MainPage";
 import SearchPage from "./routes/SearchPage";
 import MyPage from "./routes/MyPage";
+// import OAuth2Redirect from "./routes/OAuth2Redirect";
+import Signup from "./routes/Signup";
 
-// TODO: add my-page by YeG
 export default createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
       <Route errorElement={<ErrorPage />}>
         <Route index element={<MainPage />} />
+        {/* <Route path="/oauth/kakao" element={<OAuth2Redirect />} /> */}
         <Route path="/landing" element={<LandingPage />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/groups" element={<SearchPage />} />
         <Route path="/groups/me" index element={<Group />} />
         <Route path="/groups/:groupId" index element={<GroupIntro />} />
@@ -29,7 +32,6 @@ export default createBrowserRouter(
           path="/groups/:groupId/challenges/:challengeId"
           element={<Challenge />}
         />
-        <Route path="/main" element={<MainPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/mypage" element={<MyPage />} />
       </Route>
