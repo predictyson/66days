@@ -8,7 +8,9 @@ import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.GroupChalle
 import com.ssafy._66days.mainservice.challenge.model.entity.Challenge;
 import com.ssafy._66days.mainservice.challenge.model.entity.GroupChallenge;
 import com.ssafy._66days.mainservice.challenge.model.entity.GroupChallengeMember;
+import com.ssafy._66days.mainservice.challenge.model.entity.mongodb.GroupChallengeLog;
 import com.ssafy._66days.mainservice.challenge.model.reposiotry.ChallengeRepository;
+import com.ssafy._66days.mainservice.challenge.model.reposiotry.GroupChallengeLogRepository;
 import com.ssafy._66days.mainservice.challenge.model.reposiotry.GroupChallengeMemberRepository;
 import com.ssafy._66days.mainservice.challenge.model.reposiotry.GroupChallengeRepository;
 import com.ssafy._66days.mainservice.group.model.entity.Group;
@@ -22,11 +24,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.time.LocalDateTime.now;
 
 @Service("GroupChallengeService")
 @Transactional(readOnly = true)
@@ -38,6 +44,7 @@ public class GroupChallengeService {
     private final ChallengeRepository challengeRepository;
     private final GroupChallengeRepository groupChallengeRepository;
     private final GroupChallengeMemberRepository groupChallengeMemberRepository;
+    private final GroupChallengeLogRepository groupChallengeLogRepository;
 
     public GroupChallengeService(
             UserRepository userRepository,
@@ -45,7 +52,8 @@ public class GroupChallengeService {
             GroupRepository groupRepository,
             ChallengeRepository challengeRepository,
             GroupChallengeRepository groupChallengeRepository,
-            GroupChallengeMemberRepository groupChallengeMemberRepository
+            GroupChallengeMemberRepository groupChallengeMemberRepository,
+            GroupChallengeLogRepository groupChallengeLogRepository
     ) {
         this.userRepository = userRepository;
         this.groupMemberRepository = groupMemberRepository;
@@ -53,6 +61,7 @@ public class GroupChallengeService {
         this.challengeRepository = challengeRepository;
         this.groupChallengeRepository = groupChallengeRepository;
         this.groupChallengeMemberRepository = groupChallengeMemberRepository;
+        this.groupChallengeLogRepository = groupChallengeLogRepository;
     }
 
     @Transactional
@@ -90,7 +99,7 @@ public class GroupChallengeService {
         LocalDateTime startAt = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());  // 입력받은 시작날짜를 LocalDateTime으로 변환
         LocalDateTime endAt = startAt.plusDays(66);                                                      // 종료날짜 = 시작날짜 + 66일
 
-        LocalDateTime today = LocalDateTime.now();                                                       // 오늘 날짜
+        LocalDateTime today = now();                                                       // 오늘 날짜
 
         String state = "ACTIVATED";
         GroupChallenge groupChallenge = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, state); // 현재 진행 중인 챌린지가 있는지 찾아온다
@@ -194,13 +203,35 @@ public class GroupChallengeService {
         if (!groupChallengeMemberList.contains(groupChallengeMember)) {
             throw new IllegalArgumentException("챌린지에 속하지 않은 유저입니다");
         }
-
         List<GroupChallengeMemberDTO> groupChallengeMemberDTOList = new ArrayList<>();
-        for (int i = 0; i < groupChallengeMemberList.size(); i++) {
-            GroupChallengeMemberDTO groupChallengeMemberDTO = GroupChallengeMemberDTO.of(groupChallengeMemberList.get(i));
-            groupChallengeMemberDTOList.add(groupChallengeMemberDTO);
+        Date today = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());       // 오늘 날짜
+        Date startOfToday = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());// 오늘 날짜 스트릭 로그만 받아오기 위한 시작시간
+        Date endOfToday = Date.from(LocalDate.now().atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant()); // 오늘 날짜 스트릭 로그만 받아오기 위한 끝시간
+
+        for (int i = 0; i < groupChallengeMemberList.size(); i++) {                                     // 챌린지 멤버들을 순회
+            UUID  tempUserId = groupChallengeMemberList.get(i).getUser().getUserId();                   // 챌린지 멤버 userId 받아온다
+            GroupChallengeLog groupChallengeLog = groupChallengeLogRepository.findByGroupChallengeIdAndTimeAndUserIdAndTimeBetween(groupChallengeId, today, tempUserId, startOfToday, endOfToday);  // 챌린지Id, 오늘널짜, 유저Id, 시작~끝시간으로 로그를 찾아온다
+            GroupChallengeMemberDTO groupChallengeMemberDTO = GroupChallengeMemberDTO.of(groupChallengeMemberList.get(i), groupChallengeLog != null); // 오늘 안찍은 사람이면 false, 찍은 사람은 true로 DTO에 저장된다
+            groupChallengeMemberDTOList.add(groupChallengeMemberDTO);                                   // 각 개인의 정보를 리스트에 넣는다
         }
 
-        return GroupChallengeDetailResponseDTO.of(groupChallenge, groupChallengeMemberDTOList);
+
+        return GroupChallengeDetailResponseDTO.of(groupChallenge, groupChallengeMemberDTOList);         // 그룹 챌린지의 이름 등 데이터와 챌린지 멤버들의 정보를 담아서 반환
+    }
+
+    public boolean checkGroupStreak(
+            UUID userId,
+            Long groupChallengeId,
+            Date today
+    ) {
+        User user = userRepository.findById(userId)                         // 유저 객체 받아오기
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
+
+        GroupChallengeLog groupChallengeLog = GroupChallengeLog.builder()
+                .groupChallengeId(groupChallengeId)
+                .userId(user.getUserId())
+                .time(today)
+                .build();
+        return groupChallengeLogRepository.save(groupChallengeLog) != null;
     }
 }
