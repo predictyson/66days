@@ -46,7 +46,10 @@ export default function Landing2() {
       <BoxContainer>
         {BOXDATA.map((v, index) => {
           return (
-            <BoxWrapper style={{ marginTop: index % 2 === 1 ? "6rem" : "0" }}>
+            <BoxWrapper
+              key={index}
+              style={{ marginTop: index % 2 === 1 ? "6rem" : "0" }}
+            >
               <BoxImg src={v.img} alt="box img" />
               <p>{v.title}</p>
             </BoxWrapper>
