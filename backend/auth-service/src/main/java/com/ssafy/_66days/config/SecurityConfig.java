@@ -41,18 +41,7 @@ public class SecurityConfig {
 	private final JwtProvider jwtProvider;
 
 	private static final String[] PERMIT_URL_ARRAY = {
-			"**/*",
-			/* swagger v2 */
-			"/v2/api-docs",
-			"/swagger-resources",
-			"/swagger-resources/**",
-			"/configuration/ui",
-			"/configuration/security",
-			"/swagger-ui.html",
-			"/webjars/**",
-			/* swagger v3 */
-			"/v3/api-docs/**",
-			"/swagger-ui/**"
+			"/**"
 	};
 
 	@Bean
@@ -60,8 +49,8 @@ public class SecurityConfig {
 		http
 				.httpBasic().disable()
 				.csrf().disable()
-				.cors().configurationSource(corsConfigurationSource())
-				.and()
+//				.cors().configurationSource(corsConfigurationSource())
+//				.and()
 				.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
@@ -87,21 +76,21 @@ public class SecurityConfig {
 		return http.build();
 	}
 
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-
-		CorsConfiguration configuration = new CorsConfiguration();
-		// configuration.addAllowedOrigin("http://localhost:???");
-		configuration.addAllowedOriginPattern("*");
-//		configuration.addAllowedOrigin("https://k8a705.p.ssafy.io");
-//		configuration.addAllowedOrigin("https://accounts.kakao.com");
-		configuration.addAllowedHeader("*");
-		configuration.addAllowedMethod("*");
-		configuration.setAllowCredentials(true);
-
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-
-		return source;
-	}
+//	@Bean
+//	public CorsConfigurationSource corsConfigurationSource() {
+//
+//		CorsConfiguration configuration = new CorsConfiguration();
+//		// configuration.addAllowedOrigin("http://localhost:???");
+//		configuration.addAllowedOriginPattern("*");
+////		configuration.addAllowedOrigin("https://k8a705.p.ssafy.io");
+////		configuration.addAllowedOrigin("https://accounts.kakao.com");
+//		configuration.addAllowedHeader("*");
+//		configuration.addAllowedMethod("*");
+//		configuration.setAllowCredentials(true);
+//
+//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//		source.registerCorsConfiguration("/**", configuration);
+//
+//		return source;
+//	}
 }
