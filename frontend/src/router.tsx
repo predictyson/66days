@@ -16,6 +16,8 @@ import MyPage from "./routes/MyPage";
 import Signup from "./routes/Signup";
 import Notification from "./components/common/Notification";
 
+import Noti from "./components/common/PostNotification";
+// TODO: add my-page by YeG
 export default createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Root />} errorElement={<ErrorPage />}>
@@ -35,6 +37,7 @@ export default createBrowserRouter(
         />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/noti" element={<Noti />} />
       </Route>
     </Route>
   )

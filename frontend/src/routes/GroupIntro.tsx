@@ -53,8 +53,9 @@ export default function GroupIntro() {
               </Typography.Text>
               <Typography.Text style={{ fontSize: "2.4rem" }}>
                 완료
-                <br /> 10건
-              </Typography.Text>
+                <br />
+              </Typography.Text>{" "}
+              10건
             </Card>
             <Space
               direction="vertical"
