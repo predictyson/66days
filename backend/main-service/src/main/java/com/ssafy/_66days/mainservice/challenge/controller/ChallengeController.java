@@ -12,10 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/challenge")
@@ -108,7 +105,7 @@ public class ChallengeController {
     @ApiOperation(value = "개인 챌린지 상세 페이지 API", notes = "개인 챌린지 상세눌렀을 때 오른쪽에 보이는 개인 챌린지 히스토리 정보와 챌린지 이름, 설명")
     public ResponseEntity<Map<String, Object>> getMyChallengeDetail(
             // @RequestHeader(name = "Authorization") String accessToken
-            @PathVariable("my_challenge_id") Long MyChallengeId
+            @PathVariable("my_challenge_id") Long myChallengeId
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -117,7 +114,7 @@ public class ChallengeController {
             // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
             // UUID userId = authenticateUtil.getUserId(accessToken);
 
-            MyChallengeDetailResponseDTO myChallengeDetailResponseDTO = myChallengeService.getMyChallengeDetail(userId, MyChallengeId);
+            MyChallengeDetailResponseDTO myChallengeDetailResponseDTO = myChallengeService.getMyChallengeDetail(userId, myChallengeId);
             resultMap.put("myChallengeHistoryDTO", myChallengeDetailResponseDTO);
             return ResponseEntity.ok(resultMap);
         } catch (Exception e) {
@@ -178,7 +175,7 @@ public class ChallengeController {
     // ? 관련 DB가 없음
     // ? 5개 챌린지를 참여중이거나 동일한 챌린지 참여중이라면 신청 불가
     @PostMapping("/{group_challenge_id}")
-    @ApiOperation(value="그룹 챌린지 가입 신청 API", notes="그룹 참여자가 시작하지 않은 챌린지에 가입 신청을 할 수 있다")
+    @ApiOperation(value = "그룹 챌린지 가입 신청 API", notes = "그룹 참여자가 시작하지 않은 챌린지에 가입 신청을 할 수 있다")
     public ResponseEntity<Map<String, Object>> challengeApplication(
             // @RequestHeader(name = "Authorization") String accessToken
             @PathVariable("group_challenge_id") Long groupChallengeId
@@ -198,7 +195,7 @@ public class ChallengeController {
     // ? 관련 DB가 없음
 
     @PatchMapping("/group/{group_id}/group_challenge/{group_challenge_id}")
-    @ApiOperation(value="챌린지 가입 승인 or 거절 API", notes="챌린지를 생성한 매니저 혹은 그룹장이 승인 or 거절 할 수 있다")
+    @ApiOperation(value = "챌린지 가입 승인 or 거절 API", notes = "챌린지를 생성한 매니저 혹은 그룹장이 승인 or 거절 할 수 있다")
     public ResponseEntity<Map<String, Object>> manageSubscriptionApplication(
             // @RequestHeader(name = "Authorization") String accessToken
             @PathVariable("group_id") Long groupId,
@@ -221,7 +218,7 @@ public class ChallengeController {
 
     // ? 그룹 챌린지 목록(그룹 들어갔을때) 반환 -->  페이지API로 대체
     @GetMapping("/{group_id}")
-    @ApiOperation(value="그룹페이지의 챌린지 목록 반환 API", notes="그룹 페이지 접근 시 해당 그룹 참여자라면 진행중, 예약 챌린지 목록 반환")
+    @ApiOperation(value = "그룹페이지의 챌린지 목록 반환 API", notes = "그룹 페이지 접근 시 해당 그룹 참여자라면 진행중, 예약 챌린지 목록 반환")
     public ResponseEntity<Map<String, Object>> getGroupChallenges(
             // @RequestHeader(name = "Authorization") String accessToken
             @PathVariable("group_id") Long groupId
@@ -268,7 +265,51 @@ public class ChallengeController {
         }
     }
 
-    // ? 그룹 챌린지 찍기 mongoDB쪽이라 유보
     // ? 개인 스트릭 찍기 mongoDB쪽이라 유보
+    @PostMapping("/{my_challenge_id}")
+    public ResponseEntity<Map<String, Object>> checkPrivateStreak(
+            @PathVariable("my_challenge_id") Long myChallengeId,
+            @PathVariable("today") Date today
+    ) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        try{
+//            // auth서버로 인증 요청
+//            // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
+//            // UUID userId = authenticateUtil.getUserId(accessToken);
+//
+            boolean isChecked = myChallengeService.checkPrivateStreak(userId, myChallengeId, today);
+            resultMap.put("isChecked", isChecked);
+            return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
+    }
+
+
+    // ? 그룹 챌린지 찍기 mongoDB쪽이라 유보
+    @PostMapping("/{group_challenge_id}/{today}")
+    public ResponseEntity<Map<String, Object>> checkGroupStreak(
+            @PathVariable("group_challenge_id") Long groupChallengeId,
+            @PathVariable("today") Date today
+    ) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        try{
+//            // auth서버로 인증 요청
+//            // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
+//            // UUID userId = authenticateUtil.getUserId(accessToken);
+//
+            boolean isChecked = groupChallengeService.checkGroupStreak(userId, groupChallengeId, today);
+            resultMap.put("isChecked", isChecked);
+            return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
+    }
+    // ? 개인 챌린지 스트릭 정보
+    // ? 그룹 챌린지 스트릭 정보
     // ? 챌린지 끝났을 때 챌린지 상태값, 종료일 update mongoDB인가?
 }
