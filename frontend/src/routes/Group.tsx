@@ -30,7 +30,10 @@ import {
 import NoChallengeBox from "../components/group/NoChallengeBox";
 import { GroupSettingModal } from "../components/group/GroupSettingModal";
 import { BoardModal } from "../components/group/BoardModal";
-// import ChallengeInfoModal from "../components/group/ChallengeInfoModal";
+
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const { Content } = Layout;
 
@@ -66,13 +69,13 @@ interface BadgeType {
 }
 
 interface ChallengeType {
-  image: string; // challenge badge image
-  name: string; // challenge name
-  participants: {
-    image: string;
-  }[];
-  maxParticipant: number;
-  startDate: Date;
+  groupChallengeId: number;
+  imagePath: string; // challenge badge image
+  challengeName: string; // challenge name
+  startAt: Date;
+  maxMemberCount: number;
+  memberCount: number;
+  profileImagePathList: string[];
 }
 
 interface ArticleType {
@@ -124,6 +127,38 @@ export default function Group() {
   const [boardDataList, setBoardDataList] = useState<BoardType>();
   const [boardData, setBoardData] = useState<ArticleType>();
   const [commentData, setCommentData] = useState<CommentType[]>([]);
+
+  const Carousel = () => {
+    // 옵션
+    const settings = {
+      dots: true,
+      infinite: false,
+      speed: 500,
+      slidesToShow: 5,
+      slidesToScroll: 5,
+    };
+
+    return (
+      <div className="carousel">
+        <Slider {...settings}>
+          {challengeList.map((challenge: ChallengeType, index: number) => (
+            <ChallengeBox
+              key={index}
+              bgImg={challenge.imagePath}
+              notStarted={calcDueDate(challenge.startAt) < 0 ? true : false}
+              title={challenge.challengeName}
+              dueDate={calcDueDate(challenge.startAt)}
+              participants={challenge.memberCount}
+              maxCnt={challenge.maxMemberCount}
+            />
+          ))}
+          {[...Array(10 - challengeList.length)].map((index: number) => (
+            <NoChallengeBox key={index} />
+          ))}
+        </Slider>
+      </div>
+    );
+  };
 
   function getCategoryColor(category: string) {
     if (category === "알고리즘") {
@@ -241,9 +276,10 @@ export default function Group() {
   useEffect(() => {
     async function fetchAndSetGroupPageData() {
       const data = await fetchGroupPageData();
+      console.log(data);
       setBadgePreview(data.badges);
-      setChallengeList(data.challenge);
-      setBoardDataList(data.board);
+      setChallengeList(data.challenges);
+      setBoardDataList(data.articles);
     }
 
     async function fetchAndSetGroupSettingData() {
@@ -256,7 +292,11 @@ export default function Group() {
     async function fetchAndSetGroupBadgesData() {
       const badgesData = await fetchGroupBadges();
       // dummy data 길이가 불충분하여 임시로 데이터 이어붙임
-      setBadgeList([...badgesData["badge-list"], ...tmpAddBadgeData]);
+      setBadgeList(
+        badgesData.length
+          ? [...badgesData["badge-list"], ...tmpAddBadgeData]
+          : []
+      );
     }
 
     fetchAndSetGroupPageData();
@@ -333,22 +373,7 @@ export default function Group() {
               </CommonButton>
             </div>
           </div>
-          <ChallengesContainer>
-            {challengeList.map((challenge, index) => (
-              <ChallengeBox
-                key={index}
-                bgImg={Algorithms}
-                notStarted={calcDueDate(challenge.startDate) < 0 ? true : false}
-                title={challenge.name}
-                dueDate={calcDueDate(challenge.startDate)}
-                participants={challenge.participants}
-                maxCnt={challenge.maxParticipant}
-              />
-            ))}
-            {[...Array(5 - challengeList.length)].map((index) => {
-              return <NoChallengeBox key={index} />;
-            })}
-          </ChallengesContainer>
+          <Carousel />
         </GroupChallenges>
         <BoardContainer>
           <div className="title-box">
@@ -365,7 +390,7 @@ export default function Group() {
             </div>
           </div>
           <BoardList>
-            {boardDataList?.articles.map((article, index) => (
+            {boardDataList?.articles?.map((article, index) => (
               <BoardBox
                 key={index}
                 data={article}
@@ -544,11 +569,6 @@ const CommonButton = styled(Content)<ButtonStyled>`
 
 const GroupChallenges = styled(Content)`
   padding: 3rem 0;
-`;
-
-const ChallengesContainer = styled(Content)`
-  display: flex;
-  justify-content: space-between;
 `;
 
 const BoardContainer = styled(Content)`

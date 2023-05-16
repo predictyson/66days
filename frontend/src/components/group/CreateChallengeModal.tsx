@@ -31,10 +31,14 @@ export default function CreateChallengeModal(props: PropsType) {
   const [step, setStep] = useState<number>(1);
   const [loading, setLoading] = useState(false);
 
-  const challengeTitleRef = useRef<HTMLInputElement>(null);
-  const challengeMemberCntRef = useRef<HTMLInputElement>(null);
-  const challengeDescRef = useRef<HTMLTextAreaElement>(null);
-  const startDateRef = useRef<HTMLInputElement>(null);
+  // const challengeTitleRef = useRef<HTMLInputElement>(null);
+  // const challengeMemberCntRef = useRef<HTMLInputElement>(null);
+  // const challengeDescRef = useRef<HTMLTextAreaElement>(null);
+  // const startDateRef = useRef<HTMLInputElement>(null);
+
+  function onChangeTitle(e: Event) {
+    // const inputTitle = e.target?.value;
+  }
 
   const FirstStepContent = () => {
     return (
@@ -64,6 +68,7 @@ export default function CreateChallengeModal(props: PropsType) {
           <Input
             className="input-font"
             placeholder="챌린지 명을 입력해주세요"
+            // onChange={onChangeTitle}
           />
         </ChallengeTitleBox>
         <ChallengeCountBox>

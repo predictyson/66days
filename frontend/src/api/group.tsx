@@ -7,7 +7,7 @@ interface Board {
 
 async function fetchGroupPageData(id = 1) {
   try {
-    const res = await api.get(`/api/v1/groups/${id}`);
+    const res = await api.get(`/api/v1/main-service/page/groups/${id}`);
     if (res.status === 200) {
       return res.data;
     }
@@ -53,7 +53,7 @@ async function fetchAppliedMembers(id = 1) {
 
 async function fetchGroupBadges(id = 1) {
   try {
-    const res = await api.get(`/api/v1/badge/list/${id}`);
+    const res = await api.get(`/api/v1/main-service/badge/list/${id}`);
     if (res.status === 200) {
       return res.data;
     }
