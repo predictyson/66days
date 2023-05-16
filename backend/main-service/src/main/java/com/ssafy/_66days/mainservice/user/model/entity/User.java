@@ -75,4 +75,11 @@ public class User {
 	public void updatePoint(Long point) {
 		this.point = point;
 	}
+	public void updateImage(String profileImagePath){
+		this.profileImagePath = profileImagePath;
+	}
+
+	public void updateNickname(String nickname) {
+		this.nickname = nickname;
+	}
 }

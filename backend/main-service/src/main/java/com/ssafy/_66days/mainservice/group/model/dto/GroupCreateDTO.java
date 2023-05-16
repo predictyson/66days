@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Data
 @Builder
@@ -15,7 +16,6 @@ public class GroupCreateDTO {
     private int maxMember;
     private String image;
     private LocalDateTime createTime;
-    private LocalDateTime updatedTime;
     private boolean isDeleted;
 
     public static Group toEntity(GroupCreateDTO groupCreateDTO) {
@@ -24,7 +24,7 @@ public class GroupCreateDTO {
                 .description(groupCreateDTO.getDescription())
                 .maxMemberCount(groupCreateDTO.getMaxMember())
                 .imagePath(groupCreateDTO.getImage())
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
                 .build();
     }
 }

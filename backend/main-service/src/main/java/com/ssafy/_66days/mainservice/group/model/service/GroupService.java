@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -70,7 +72,7 @@ public class GroupService {
     }
 
     public List<UserManageDTO> getGroupMembers(Long groupId) {
-        List<GroupMember> groupMemberList = groupMemberRepository.findByGroup(groupRepository.findById(groupId));
+        List<GroupMember> groupMemberList = groupMemberRepository.findByGroupAndAuthorityNot(groupRepository.findById(groupId),DROP);
         List<UserManageDTO> userManageDTOList = groupMemberList.stream()
                 .map(groupMember -> UserManageDTO.of(userRepository.findById(groupMember.getUser().getUserId()).orElseThrow(() -> new NoSuchElementException("user doesn't exist"))
                         ,groupMember)).collect(Collectors.toList());
@@ -159,6 +161,8 @@ public class GroupService {
             throw new InputMismatchException("필요한 값이 들어오지 않았습니다.");
         }
         String savePath = fileUtil.fileUpload(image, groupImageFilePath);
+        groupCreateDTO.setImage(savePath);
+        log.info("GroupService -- groupCreateDTO: {}", groupCreateDTO);
 
         groupRepository.save(groupCreateDTO.toEntity(groupCreateDTO));
     }
@@ -166,5 +170,10 @@ public class GroupService {
     public boolean isUserGroupOwner(UUID userId, Long groupId) {
         boolean isOwner = groupRepository.findByOwnerIdAndGroupId(userId,groupId).isPresent();
         return isOwner;
+    }
+
+    public String getGroupName(Long groupId) {
+        Group group = groupRepository.findById(groupId).orElseThrow(()->new NoSuchElementException("해당하는 그룹이 없습니다"));
+        return group.getGroupName();
     }
 }

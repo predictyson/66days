@@ -27,5 +27,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, GroupM
     Long countByGroupAndAuthorityAndIsDeleted(Group group, String manager, boolean b);
 
     Long countByGroupAndIsDeleted(Group group, boolean b);
+
+    List<GroupMember> findByGroupAndAuthorityNot(Optional<Group> byId, String drop);
 }
 

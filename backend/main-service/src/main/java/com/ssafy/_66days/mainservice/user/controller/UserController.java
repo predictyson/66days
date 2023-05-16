@@ -1,9 +1,11 @@
 package com.ssafy._66days.mainservice.user.controller;
 
+import com.ssafy._66days.mainservice.global.util.FileUtil;
 import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
 import com.ssafy._66days.mainservice.user.model.service.UserService;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 //import com.ssafy._66days.user.model.dto.UserSignUpRequestDTO;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -34,6 +37,43 @@ public class UserController {
 		}
 		return ResponseEntity.ok(response.getBody());
 	}
+	@PatchMapping("/modify/{nickname}")
+	public ResponseEntity<Boolean> modifyNickname(@RequestHeader("Authorization") String token,
+											  @RequestParam(value = "nickname") String nickname
+											  ) {
+
+		// get UUID from token?
+		UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+		log.info("Modify nickname userId: {}",userId);
+
+		try {
+			userService.modifyNickname(userId, nickname);
+		} catch (Exception e){
+			log.error(e.getMessage());
+			return ResponseEntity.ok(false);
+		}
+
+		return ResponseEntity.ok(true);
+	}
+
+	@PatchMapping("/modify/image")
+	public ResponseEntity<Boolean> modifyImage(@RequestHeader("Authorization") String token,
+												  @RequestPart(value = "image") MultipartFile image
+	) {
+
+		// get UUID from token?
+		UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+		log.info("Modify nickname userId: {}",userId);
+
+		try {
+			userService.modifyPofileImage(userId, image);
+		} catch (Exception e){
+			log.error(e.getMessage());
+			return ResponseEntity.ok(false);
+		}
+
+		return ResponseEntity.ok(true);
+	}
 
 	@GetMapping("/check-nickname/{nickname}")
 	public ResponseEntity<Boolean> isNicknameAvailable(@RequestHeader("Authorization") String token,
@@ -46,7 +86,7 @@ public class UserController {
 		return ResponseEntity.ok(!isAvailable);
 	}
 
-//	@GetMapping
+//	@GetMapping()
 //	public ResponseEntity<UserDetailResponseDTO> getUserDetail(@RequestHeader("Authorization") String token) {
 //		// get UUID from token
 //		//UserDetailResponseDTO userDetailResponseDTO = userService.getUserDetail(uuid);

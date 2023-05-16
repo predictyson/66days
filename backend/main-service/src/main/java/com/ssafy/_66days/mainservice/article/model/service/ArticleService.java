@@ -37,10 +37,8 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
     private final UserService userService;
-    private final String userIdStr = "a817d372-ee0d-11ed-a26b-0242ac110003";
-    private final UUID userId = UUID.fromString(userIdStr);
-
     public ArticleResponseDTO createArticle(
+            UUID userId,
             Long groupId,
             ArticleRequestDTO articleRequestDTO
     ) {
@@ -69,12 +67,13 @@ public class ArticleService {
                 .build();
         Article savedArticle = articleRepository.save(articleCreate);   // 생성한 객체를 DB에 저장
 
-        String role = groupMemberRepository.findByUser(user).getAuthority();
+        String role = groupMemberRepository.findByGroupAndUser(group,user).orElse(null).getAuthority();
         return ArticleResponseDTO.of(savedArticle, role); // 저장한 게시글을 게시글 dto에 담아 반환한다
     }
 
 
     public ArticleResponseDTO getArticle(
+            UUID userId,
             Long groupId,
             Long articleId
     ) {
@@ -98,6 +97,7 @@ public class ArticleService {
 
 
     public List<ArticleResponseDTO> getArticleList(
+            UUID userId,
             Long groupId,
             int offset
     ) {
@@ -127,6 +127,7 @@ public class ArticleService {
     }
 
     public ArticleResponseDTO updateArticle(
+            UUID userId,
             Long groupId,
             Long articleId,
             ArticleRequestDTO articleUpdateRequestDTO
@@ -164,6 +165,7 @@ public class ArticleService {
     }
 
     public boolean deleteArticle(
+            UUID userId,
             Long groupId,
             Long articleId
     ) {
@@ -191,6 +193,7 @@ public class ArticleService {
     }
 
     public CommentResponseDTO writeComment(
+            UUID userId,
             Long groupId,
             Long articleId,
             CommentRequestDTO commentRequestDTO
@@ -244,6 +247,7 @@ public class ArticleService {
     }
 
     public boolean deleteComment(
+            UUID userId,
             Long articleId,
             Long commentId
     ) {
