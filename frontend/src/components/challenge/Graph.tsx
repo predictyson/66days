@@ -9,27 +9,37 @@ interface PropsType {
   }[];
 }
 
+const LENGTH_COMMIT = 66;
+const EMPTY_COMMITS = new Array(LENGTH_COMMIT).fill({
+  freeze: false,
+  checked: false,
+});
+
 export default function Graph(props: PropsType) {
   const renderStreaks = () => {
-    const length = 66;
-    const cols = Math.ceil(length / 3);
+    const commits = props.commits.concat(
+      EMPTY_COMMITS.slice(0, LENGTH_COMMIT - props.commits.length)
+    );
+    console.info(commits);
+    const cols = Math.ceil(LENGTH_COMMIT / 3);
     const streaks = [];
     for (let i = 0; i < cols; i++) {
       const startIndex = i * 3;
-      const endIndex = Math.min(startIndex + 3, length);
+      const endIndex = Math.min(startIndex + 3, LENGTH_COMMIT);
       const colStreaks = [];
       for (let j = startIndex; j < endIndex; j++) {
         colStreaks.push(
           <Checkbox
             key={j}
-            indeterminate={props.commits[j].freeze}
+            indeterminate={commits[j].freeze}
             onChange={() => {}}
-            checked={props.commits[j].checked}
+            checked={commits[j].checked}
           />
         );
       }
       streaks.push(<StreakWrapper key={i}>{colStreaks}</StreakWrapper>);
     }
+    console.log("streaks", streaks);
     return streaks;
   };
 

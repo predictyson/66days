@@ -5,6 +5,7 @@ import TextArea from "antd/es/input/TextArea";
 interface PropsType {
   message: {
     nickname: string;
+    profile: string;
     value: string;
     date: string;
     me: boolean;
@@ -14,7 +15,11 @@ interface PropsType {
 export default function Message(props: PropsType) {
   return (
     <div className={`chat__message ${props.message.me && "chat__message--me"}`}>
-      <Avatar icon={<UserOutlined />} />
+      {props.message.profile ? (
+        <Avatar src={props.message.profile} />
+      ) : (
+        <Avatar icon={<UserOutlined />} />
+      )}
       <Space direction="vertical" style={{ marginInline: "1rem" }}>
         <Typography.Text style={{ fontWeight: "bold" }}>
           {props.message.nickname}
