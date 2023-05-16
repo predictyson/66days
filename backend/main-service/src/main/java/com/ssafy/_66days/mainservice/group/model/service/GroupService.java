@@ -1,5 +1,6 @@
 package com.ssafy._66days.mainservice.group.model.service;
 
+import com.ssafy._66days.mainservice.global.util.FileUtil;
 import com.ssafy._66days.mainservice.group.model.dto.GroupCreateDTO;
 import com.ssafy._66days.mainservice.group.model.dto.GroupSearchPageResponseDTO;
 import com.ssafy._66days.mainservice.group.model.entity.Group;
@@ -8,12 +9,11 @@ import com.ssafy._66days.mainservice.group.model.entity.GroupMember;
 import com.ssafy._66days.mainservice.group.model.repository.GroupApplyRepository;
 import com.ssafy._66days.mainservice.group.model.repository.GroupMemberRepository;
 import com.ssafy._66days.mainservice.group.model.repository.GroupRepository;
-import com.ssafy._66days.mainservice.global.util.FileUtil;
 import com.ssafy._66days.mainservice.user.model.dto.UserManageDTO;
 import com.ssafy._66days.mainservice.user.model.entity.User;
 import com.ssafy._66days.mainservice.user.model.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class GroupService {
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
@@ -36,22 +37,14 @@ public class GroupService {
     @Value("${file.path.upload-images-groups}")
     private String groupImageFilePath;
 
+    private final String APPLIED = "APPLIED";
+    private final String CANCELLED = "CANCELLED";
     private final String ACCEPTED = "ACCEPTED";
     private final String REJECTED = "REJECTED";
     private final String WAITING = "WAITING";
     private final String MANAGER = "MANAGER";
     private final String MEMBER = "MEMBER";
-
-    @Autowired
-    public GroupService(UserRepository userRepository,
-                        GroupRepository groupRepository, GroupApplyRepository groupApplyRepository,
-                        GroupMemberRepository groupMemberRepository, FileUtil fileUtil) {
-        this.userRepository = userRepository;
-        this.groupRepository = groupRepository;
-        this.groupApplyRepository = groupApplyRepository;
-        this.groupMemberRepository = groupMemberRepository;
-        this.fileUtil = fileUtil;
-    }
+    private final String DROP = "DROP";
 
     public List<GroupSearchPageResponseDTO> searchGroup(String searchContent, String filterBy) {
         User user = userRepository.findByNickname(searchContent).orElse(null);
@@ -82,15 +75,12 @@ public class GroupService {
                 .map(groupMember -> UserManageDTO.of(userRepository.findById(groupMember.getUser().getUserId()).orElseThrow(() -> new NoSuchElementException("user doesn't exist"))
                         ,groupMember)).collect(Collectors.toList());
 
-        // 유저 권한 체크 하지 않고 그룹에 속한 사람 모두 반환 중, 23-05-10 기준
-        // TODO: 필요시, 자신보다 권한이 높은 사람 반환 안하는 부분 추가해야함
         log.info("userManageDtoList: {}", userManageDTOList);
 
         return userManageDTOList;
     }
 
     public List<UserManageDTO> getGroupApplyList(Long groupId) {
-        // TODO:       if(현재유저가 현재그룹의 그룹장이나 매니저가 아닌 경우 return)
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("group doesn't exist"));
         List<GroupApply> applyList = groupApplyRepository.findAllByStateAndGroup(WAITING, group);
 
@@ -104,7 +94,7 @@ public class GroupService {
 
     public void setGroupMemberState(Long groupId, String state, String userName) throws InputMismatchException {
         state = state.toUpperCase();
-        if (!(state.equals(MANAGER) || state.equals(MEMBER))) throw new InputMismatchException("권한 설정이 잘못 입력되었습니다");
+        if (!(state.equals(MANAGER) || state.equals(MEMBER) || state.equals(DROP))) throw new InputMismatchException("권한 설정이 잘못 입력되었습니다");
         User user = userRepository.findByNickname(userName).orElseThrow(() -> new NoSuchElementException("user doesn't exist"));
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("group doesn't exist"));
         GroupMember groupMember = groupMemberRepository.findByGroupAndUser(group,user).orElseThrow(() -> new NoSuchElementException("user is not in a group"));
@@ -119,15 +109,12 @@ public class GroupService {
         log.info("group member state AFTER: {}", groupMember.getAuthority());
     }
 
-    public void setGroupApplyState(Long groupId, String state, String userName) {
-        // TODO: 현재 사용자가 그룹장인 경우, 추방 기능 추가
-        // TODO:       if(현재유저가 현재그룹의 그룹장이나 매니저가 아닌 경우 return)
-
+    public void setGroupApplyState(Long groupId, String state, String userName) throws Exception{
         state = state.toUpperCase();
         if (!(state.equals(ACCEPTED) || state.equals(REJECTED))) throw new InputMismatchException("그룹 가입승인 설정이 잘못 입력되었습니다");
         User user = userRepository.findByNickname(userName).orElseThrow(() -> new NoSuchElementException("user doesn't exist"));
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("group doesn't exist"));
-        GroupApply groupApply = groupApplyRepository.findByUserAndGroup(user, group);
+        GroupApply groupApply = groupApplyRepository.findByUserAndGroup(user, group).orElseThrow(() -> new NoSuchElementException("groupApply doesn't exist"));
         if(state.equals(ACCEPTED)){
             // 가입한 그룹 수가 5개 이하인지 확인
             Long groupSize = groupMemberRepository.countByUserAndIsDeleted(user, false);
@@ -147,9 +134,22 @@ public class GroupService {
      * 가입 신청은 어떤 상황에도 가능, 승인 여부를 확인할 때 조건확인
      */
     public void applyGroup(Long groupId, String state, UUID userId) {
+        state = state.toUpperCase();
+        if (!(state.equals(APPLIED) || state.equals(CANCELLED))) throw new InputMismatchException("그룹 가입신청이 잘못 입력되었습니다");
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user doesn't exist"));
         Group group = groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("group doesn't exist"));
-        GroupApply groupApply = new GroupApply(user, group, state);
+        GroupApply groupApply = null;
+
+        if(state.equals(APPLIED)){
+            state = WAITING;
+            if(groupApplyRepository.findByUserAndGroupAndState(user,group,WAITING).isPresent()){
+                return;
+            }
+            groupApply = new GroupApply(user, group, state);
+        } else {
+            groupApply = groupApplyRepository.findByUserAndGroupAndState(user,group,WAITING).orElse(null);
+            groupApply.updateGroupApply(CANCELLED);
+        }
 
         groupApplyRepository.save(groupApply);
     }
@@ -161,5 +161,10 @@ public class GroupService {
         String savePath = fileUtil.fileUpload(image, groupImageFilePath);
 
         groupRepository.save(groupCreateDTO.toEntity(groupCreateDTO));
+    }
+
+    public boolean isUserGroupOwner(UUID userId, Long groupId) {
+        boolean isOwner = groupRepository.findByOwnerIdAndGroupId(userId,groupId).isPresent();
+        return isOwner;
     }
 }

@@ -48,5 +48,6 @@ public class GroupMember {
 
     public void updateAuthority(String authority){
         this.authority = authority;
+        this.updatedAt = LocalDateTime.now();
     }
 }

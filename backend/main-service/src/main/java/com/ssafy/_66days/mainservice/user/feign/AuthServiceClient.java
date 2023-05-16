@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
+//@FeignClient(name = "auth-service", url = "13.124.253.176:8000")
 @FeignClient(name = "auth-service", url = "localhost:8000")
 public interface AuthServiceClient {
 

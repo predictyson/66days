@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/user")
 @Slf4j
 public class UserController {
 
@@ -35,23 +35,15 @@ public class UserController {
 		return ResponseEntity.ok(response.getBody());
 	}
 
-	// 회원가입
-//	@PostMapping("/signup")
-//	public ResponseEntity<Void> createUser(@RequestHeader("Authorization") String token,
-//		@RequestBody UserSignUpRequestDTO userSignUpRequestDto) {
-//		// get UUID from token
-//
-//		// in service logic, 티어 id는 정해져 있겠지만 .. 동물 id는 ㅇㅋ..뽑아야함.
-//		return ResponseEntity.ok().build();
-//	}
-
-	//
 	@GetMapping("/check-nickname/{nickname}")
-	public ResponseEntity<Void> isNicknameAvailable(@RequestHeader("Authorization") String token,
-		@PathVariable String nickname) {
+	public ResponseEntity<Boolean> isNicknameAvailable(@RequestHeader("Authorization") String token,
+													   @PathVariable String nickname) {
+		//token validation
 		// get UUID from token?
+		UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
 		// userService.
-		return ResponseEntity.ok().build();
+		boolean isAvailable = userService.isNicknameAvailable(nickname);
+		return ResponseEntity.ok(!isAvailable);
 	}
 
 //	@GetMapping
