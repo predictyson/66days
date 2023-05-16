@@ -3,7 +3,7 @@ import axios from "axios";
 const postData = async () => {
   try {
     const data = {
-      msg: "아아 앙",
+      msg: "제발 제발",
       user_id: "321",
     };
 
