@@ -1,19 +1,9 @@
-import { useEffect, useState } from "react";
-import {
-  Button,
-  Col,
-  DatePicker,
-  Divider,
-  Input,
-  InputNumber,
-  Modal,
-  Row,
-} from "antd";
+import { useEffect, useRef, useState } from "react";
+import { Button, Col, DatePicker, Divider, Input, Modal, Row } from "antd";
+import type { InputRef } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { mockCategories } from "../../mock/group";
-
-const { TextArea } = Input;
 
 interface PropsType {
   open: boolean;
@@ -31,16 +21,10 @@ export default function CreateChallengeModal(props: PropsType) {
   const [step, setStep] = useState<number>(1);
   const [loading, setLoading] = useState(false);
 
-  const [title, setTitle] = useState<string>("");
-  const [cnt, setCnt] = useState<number>();
-  const [desc, setDesc] = useState<string>();
-  const [startDate, setStartDate] = useState<Date>();
-
-  // function onChangeTitle(e: React.ChangeEvent<HTMLInputElement>) {
-  //   setTitle(e.target.value);
-  // }
-
-  // function
+  const titleRef = useRef<InputRef | null>(null);
+  const cntRef = useRef<InputRef | null>(null);
+  const descRef = useRef<InputRef | null>(null);
+  const startDateRef = useRef<InputRef | null>(null);
 
   const FirstStepContent = () => {
     return (
@@ -70,21 +54,29 @@ export default function CreateChallengeModal(props: PropsType) {
           <Input
             className="input-font"
             placeholder="챌린지 명을 입력해주세요"
-            onChange={(event) => setTitle(event.target.value)}
-            value={title}
+            ref={titleRef}
           />
         </ChallengeTitleBox>
         <ChallengeCountBox>
           <div className="sub-title">
             인원 수<span className="essential">*</span>
           </div>
-          <InputNumber min={2} max={66} className="input-font" />
+          <Input
+            type="number"
+            className="input-font input-number"
+            ref={cntRef}
+          />
         </ChallengeCountBox>
         <ChallengeDescBox>
           <div className="sub-title">
             챌린지 설명<span className="essential">*</span>
           </div>
-          <TextArea className="input-font" showCount maxLength={50} />
+          <Input
+            className="input-font input-desc"
+            showCount
+            maxLength={50}
+            ref={descRef}
+          />
         </ChallengeDescBox>
         <ChallengeDateBox>
           <div className="date-box">
@@ -118,11 +110,17 @@ export default function CreateChallengeModal(props: PropsType) {
       setTimeout(() => {
         setLoading(false);
       }, 1500);
+      handleCreateChallenge();
     }
   }
 
   // 2단계에서 최종 create 눌렀을 때 handler function
-  function handleCreateChallenge() {}
+  function handleCreateChallenge() {
+    console.log(titleRef.current?.input?.value);
+    console.log(cntRef.current?.input?.value);
+    console.log(descRef.current?.input);
+    console.log(startDateRef);
+  }
 
   function changeCategory(idx: number) {
     const copyCategory = categories;
@@ -273,6 +271,14 @@ const ChallengeInfoWrapper = styled.div`
 
   .input-font {
     font-size: 1.6rem;
+  }
+
+  .input-number {
+    width: 30%;
+  }
+
+  .input-desc {
+    height: 8rem;
   }
 
   .essential {
