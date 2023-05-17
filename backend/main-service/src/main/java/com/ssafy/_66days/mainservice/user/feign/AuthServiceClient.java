@@ -17,16 +17,23 @@ import java.util.UUID;
 //    @GetMapping("/auth-service/user/uuid/{uuid}")
 //    ResponseEntity<UUID> extractUUID(@PathVariable("uuid") UUID uuid);
 //}
+//@Component
+//public class AuthServiceClient {
+
+//    @GetMapping("/user/token/uuid")
+//    ResponseEntity<UUID> extractUUIDFromToken(@RequestHeader("Authorization") String authorization);
+//
+//    @PutMapping("/user/signup")
+//    ResponseEntity<Void> signup(@RequestHeader("Authorization") String authorization);
+//
+//
+//    @GetMapping("/auth-service/user/uuid/{uuid}")
+//    ResponseEntity<UUID> extractUUID(@PathVariable("uuid") UUID uuid);
+//}
+
 @Component
 public class AuthServiceClient {
-
-    @GetMapping("/user/token/uuid")
-    ResponseEntity<UUID> extractUUIDFromToken(@RequestHeader("Authorization") String authorization);
-
-    @PutMapping("/user/signup")
-    ResponseEntity<Void> signup(@RequestHeader("Authorization") String authorization);
-
-
-    @GetMapping("/auth-service/user/uuid/{uuid}")
-    ResponseEntity<UUID> extractUUID(@PathVariable("uuid") UUID uuid);
+    public ResponseEntity<UUID> extractUUID(UUID userId) {
+        return ResponseEntity.ok(userId);
+    }
 }

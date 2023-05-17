@@ -82,9 +82,22 @@ public class GroupChallengeService {
         LocalDateTime startAt = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());  // 입력받은 시작날짜를 LocalDateTime으로 변환
         LocalDateTime endAt = startAt.plusDays(66);                                                      // 종료날짜 = 시작날짜 + 66일
 
-        LocalDateTime today = now();                                                       // 오늘 날짜
+        LocalDateTime today = now();          // 오늘 날짜
 
-        String state = "ACTIVATED";
+        LocalDate date1 = startAt.toLocalDate();
+        LocalDate date2 = today.toLocalDate();
+
+        int comparison = date1.compareTo(date2);
+
+        String state = "";
+        if (comparison == 0) {
+            state = "ACTIVATED";
+        } else if (comparison < 0) {
+            throw new IllegalArgumentException("과거는 선택할 수 없습니다");
+        } else {
+            state = "WAITING";
+        }
+
         GroupChallenge groupChallenge = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, state); // 현재 진행 중인 챌린지가 있는지 찾아온다
         if (ChronoUnit.DAYS.between(today, startAt) > 30) {                                              //  시작날짜가 오늘 날짜에서 30일 초과한 날짜인지 확인
             throw new IllegalArgumentException("챌린지는 최대 30일 이내에 시작해야 합니다");
@@ -240,7 +253,10 @@ public class GroupChallengeService {
         User user = userRepository.findById(userId)                                               // 유저 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         GroupChallenge groupChallenge = groupChallengeRepository.findById(groupChallengeId)
-                .orElseThrow(() -> new IllegalArgumentException("신청할 수 없는 챌린지입니다"));    // 그룹 챌린지 존재 유무 체크
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지 입니다"));    // 그룹 챌린지 존재 유무 체크
+        if (!groupChallenge.getState().equals("WAITING")) {
+            throw new IllegalArgumentException("이미 시작했거나 종료된 챌린지는 참여신청을 할 수 없습니다"); // 예약 상태인 챌린지인지 체크
+        }
         Group group = groupChallenge.getGroup();                                                // 그룹 객체 받아오기
         GroupMember groupMember = groupMemberRepository.findByGroupAndUser(group, user)         // 신청한 유저가 그룹에 속한 사람인지 확인
                 .orElseThrow(() -> new IllegalArgumentException("그룹에 속한 유저가 아닙니다"));
