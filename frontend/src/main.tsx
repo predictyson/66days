@@ -10,6 +10,7 @@ import { ConfigProvider } from "antd";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import SSENoti from "./components/common/SSENoti.tsx";
+import SSENoti2 from "./components/common/SSENoti2.tsx";
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
@@ -29,7 +30,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         }}
       >
         <RouterProvider router={router} />
-        <SSENoti />
+        <SSENoti2 />
       </ConfigProvider>
     </ThemeProvider>
   </React.StrictMode>

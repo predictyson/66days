@@ -6,14 +6,11 @@ import avartar from "../../assets/avatar.svg";
 import { Dropdown, MenuProps, Space } from "antd";
 import { useState } from "react";
 import { CreateGroupModal } from "../group/CreateGroupModal";
-<<<<<<< HEAD
 import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { expireUserToken } from "../../api/auth";
 
-=======
 import NotificationList from "./Notification";
->>>>>>> e8d05b8 (fe/feat: push alarm)
 export default function CustomHeader() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const [isOpenCreateGroupModal, setOpenCreateGroupModal] = useState(false);
@@ -56,7 +53,6 @@ export default function CustomHeader() {
           <a onClick={() => setOpenCreateGroupModal((prev) => !prev)}>
             create group
           </a>
-<<<<<<< HEAD
           {isLoggedIn() ? (
             <Dropdown menu={{ items }} placement="bottomRight" arrow>
               <img src={avartar} />
@@ -70,10 +66,8 @@ export default function CustomHeader() {
               <LoginOutlined /> login
             </a>
           )}
-=======
           <NotificationList />
           <img src={avartar} />
->>>>>>> e8d05b8 (fe/feat: push alarm)
         </Space>
       </StyledHeader>
       <CreateGroupModal
