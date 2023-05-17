@@ -1,17 +1,30 @@
 import { Button, Form, Input, InputRef, Typography } from "antd";
-import instance from "../api/api";
+// import instance from "../api/api";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../stores/useAuthStore";
+import { signup } from "../api/auth";
 
 export default function Signup() {
+  const setToken = useAuthStore((state) => state.setToken);
+  const navigate = useNavigate();
   const inputRef = useRef<InputRef | null>(null);
 
   function onFinish() {
     const val = inputRef.current?.input?.value;
-    console.log("hoid", val);
     if (val) {
-      instance
-        .get(`/signup/nickname/${val}`)
-        .then((res) => console.log(res.data));
+      const queryParams = new URLSearchParams(location.search);
+
+      const token = queryParams.get("token");
+      setToken(token);
+
+      // FIXME: check if nickname is duplicate
+      signup(
+        val,
+        queryParams.get("email"),
+        queryParams.get("profileImagePath")
+      );
+      navigate("/", { replace: true });
     }
     console.log("Success!");
   }

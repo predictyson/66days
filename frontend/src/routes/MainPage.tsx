@@ -3,13 +3,12 @@ import Todo from "../components/main/Todo";
 import Groups from "../components/main/Groups";
 import Ranking from "../components/main/Ranking";
 import { MainData } from "../types/main";
-// import { useAuthStore } from "../stores/useAuthStore";
-// import LandingPage from "./LandingPage";
+import { useAuthStore } from "../stores/useAuthStore";
+import LandingPage from "./LandingPage";
 
 export default function MainPage() {
-  // TODO: check if isLoggedIn
-  // const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  // if (!isLoggedIn()) return <LandingPage />;
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  if (!isLoggedIn()) return <LandingPage />;
 
   return (
     <>
