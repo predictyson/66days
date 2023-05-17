@@ -1,5 +1,6 @@
 package com.ssafy._66days.mainservice.group.model.dto;
 
+import com.ssafy._66days.mainservice.challenge.model.entity.Challenge;
 import com.ssafy._66days.mainservice.group.model.entity.GroupAchievement;
 import lombok.*;
 
@@ -22,4 +23,13 @@ public class GroupAchievementResponseDTO {
                 .achievementCount(groupAchievement.getAchievementCount())
                 .build();
     }
-}
+
+    public static GroupAchievementResponseDTO from(Challenge challenge) {
+        return GroupAchievementResponseDTO.builder()
+                .imagePath(challenge.getBadgeImage())
+                .challengeName(challenge.getTopic())
+                .challengeId(challenge.getChallengeId())
+                .achievementCount(0)
+                .build();
+    }
+    }

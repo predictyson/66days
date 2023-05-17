@@ -198,19 +198,14 @@ public class GroupChallengeService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다"));
         GroupChallengeMember groupChallengeMember = groupChallengeMemberRepository.findByUserAndGroupChallenge(user, groupChallenge)
                 .orElseThrow(() -> new IllegalArgumentException("챌린지에 속하지 않은 유저입니다"));
-        List<GroupChallengeMember> groupChallengeMemberList = groupChallengeMemberRepository.findByGroupChallenge(groupChallenge);
+        List<GroupChallengeMember> groupChallengeMemberList = groupChallengeMemberRepository.findByGroupChallenge(groupChallenge);  // 해당 챌린지에 참여하는 멤버들 리스트 받아오기
 
-        List<GroupChallengeMemberDTO> groupChallengeMemberDTOList = new ArrayList<>();
+        List<GroupChallengeMemberDTO> groupChallengeMemberDTOList = new ArrayList<>();                  // 반환 배열
 
         LocalDate today = LocalDate.now(ZoneOffset.UTC);
         for (int i = 0; i < groupChallengeMemberList.size(); i++) {                                     // 챌린지 멤버들을 순회
             UUID tempUserId = groupChallengeMemberList.get(i).getUser().getUserId();                   // 챌린지 멤버 userId 받아온다
-            GroupChallengeLog groupChallengeLog = groupChallengeLogRepository.findByUserIdAndGroupChallengeIdAndTime(tempUserId, groupChallengeId, today);  // 유저Id, 챌린지Id, 오늘널짜로 로그를 찾아온다
-            if (groupChallengeLog != null) {
-
-                System.out.println(groupChallengeLog.getTime());
-                System.out.println(groupChallengeLog.getUserId());
-            }
+            GroupChallengeLog groupChallengeLog = groupChallengeLogRepository.findByUserIdAndGroupChallengeIdAndTime(tempUserId, groupChallengeId, today);  // 유저Id, 챌린지Id, 오늘날짜로 로그를 찾아온다
             GroupChallengeMemberDTO groupChallengeMemberDTO = GroupChallengeMemberDTO.of(groupChallengeMemberList.get(i), groupChallengeLog != null); // 오늘 안찍은 사람이면 false, 찍은 사람은 true로 DTO에 저장된다
             groupChallengeMemberDTOList.add(groupChallengeMemberDTO);                                   // 각 개인의 정보를 리스트에 넣는다
         }
@@ -276,28 +271,18 @@ public class GroupChallengeService {
         Long challengeId = groupChallenge.getChallenge().getChallengeId();
         List<Long> temp = new ArrayList<>();                                                      // 하고 있는 챌린지 id 담을 배열
         List<GroupChallengeMember> groupChallengeMemberList = groupChallengeMemberRepository.findByUser(user); // 내가 참여중인 그룹 챌린지들
-        System.out.println("1  " + user.getUserId());
-        System.out.println("2  " + groupChallengeMemberList.size());
-        for (int i = 0; i < groupChallengeMemberList.size(); i++) {
-            System.out.println(groupChallengeMemberList.get(i).getGroupChallenge().getChallenge().getChallengeId().toString());
-
-        }
 
         if (!groupChallengeMemberList.isEmpty()) {
             for (int i = 0; i < groupChallengeMemberList.size(); i++) {
 
                 GroupChallenge tempGroupChallenge = groupChallengeRepository.findById(groupChallengeMemberList.get(i).getGroupChallenge().getGroupChallengeId()) // 그룹챌린지를 찾아서
                         .orElseThrow(() -> new IllegalArgumentException("알수없는 에러"));
-                System.out.println("여기여기여기   " + tempGroupChallenge.getChallenge().getChallengeId());
                 if (tempGroupChallenge.getState().equals("ACTIVATED")) {                                 // 진행중인 챌린지라면
                     Long tempChallengeId = tempGroupChallenge.getChallenge().getChallengeId();          // 그것의 챌린지 아이디를 찾는다
-                    System.out.println("왜이래????? " + tempChallengeId);
                     temp.add(tempChallengeId);                                                      // 그룹에서 참여하고 있는 challenge들의 id값을 temp에 저장
-                    System.out.println("저기저기저기   " + temp.toString());
                 }
             }
         }
-        System.out.println("3  " + temp.toString());
         List<MyChallenge> myChallengeList = myChallengeRepository.findByUser(user);                 // 개인 챌린지들을 찾아서
         if (!myChallengeList.isEmpty()) {
             for (int i = 0; i < myChallengeList.size(); i++) {
@@ -309,8 +294,6 @@ public class GroupChallengeService {
             }
         }
 
-        System.out.println("4  " + challengeId);
-        System.out.println("5  " + temp.toString());
         if (temp.contains(challengeId)) {                                                               // 신청하려는 챌린지와 내가 진행중인 챌린지를 비교해서
             throw new IllegalArgumentException("이미 진행중인 챌린지는 참가 신청 할 수 없습니다");            // 이미 하고 있는 챌린지면 신청 불가
         }
