@@ -1,9 +1,9 @@
 import { Button, Form, Input, InputRef, Typography } from "antd";
 // import instance from "../api/api";
 import { useRef } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../stores/useAuthStore";
+import { signup } from "../api/auth";
 
 export default function Signup() {
   const setToken = useAuthStore((state) => state.setToken);
@@ -13,35 +13,18 @@ export default function Signup() {
   function onFinish() {
     const val = inputRef.current?.input?.value;
     if (val) {
-      // instance
-      //   .get(`/signup/nickname/${val}`)
-      //   .then((res) => console.log(res.data));
       const queryParams = new URLSearchParams(location.search);
 
       const token = queryParams.get("token");
       setToken(token);
 
-      // FIXME:
-      // axios
-      //   .post(
-      //     "http://localhost:8081/user/signup/nickname",
-      //     {
-      //       nickname: val,
-      //       email: queryParams.get("email"),
-      //       profileImagePath: queryParams.get("profileImagePath"),
-      //     },
-      //     {
-      //       headers: {
-      //         Authorization: queryParams.get("token"),
-      //       },
-      //     }
-      //   )
-      //   .then((res) => {
-      //     console.log(res.data);
-      //     navigate("/", { replace: true });
-      //   })
-      //   .catch((err) => console.log("error", err));
-      // TODO: duplicate nickname
+      // FIXME: check if nickname is duplicate
+      signup(
+        val,
+        queryParams.get("email"),
+        queryParams.get("profileImagePath")
+      );
+      navigate("/", { replace: true });
     }
     console.log("Success!");
   }

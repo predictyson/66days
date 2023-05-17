@@ -13,7 +13,11 @@ export async function expireUserToken() {
   }
 }
 
-export async function signup(nickname: string, email: string, profile: string) {
+export async function signup(
+  nickname: string,
+  email: string | null,
+  profile: string | null
+) {
   try {
     const getToken = useAuthStore((state) => state.getToken);
     const res = await instance.post(
