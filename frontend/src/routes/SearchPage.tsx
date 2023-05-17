@@ -99,7 +99,6 @@ export default function SearchPage() {
       >
         {/* <BreadCrumb /> */}
       </div>
-
       <ItemContainer>
         {groupdata[`group-list`] &&
           groupdata[`group-list`].map((data, idx) => {
