@@ -16,7 +16,7 @@ import Lecture from "../assets/lecture_badge.png";
 import Book from "../assets/book_badge.jpeg";
 import ChallengeBox from "../components/group/ChallengeBox";
 import { BoardBox } from "../components/group/BoardBox";
-import ChallengeModal from "../components/group/ChallengeModal";
+import CreateChallengeModal from "../components/group/CreateChallengeModal";
 import MemberModal from "../components/group/MemberModal";
 import BadgeModal from "../components/group/BadgeModal";
 import NewBoardModal from "../components/group/NewBoardModal";
@@ -30,6 +30,10 @@ import {
 import NoChallengeBox from "../components/group/NoChallengeBox";
 import { GroupSettingModal } from "../components/group/GroupSettingModal";
 import { BoardModal } from "../components/group/BoardModal";
+
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const { Content } = Layout;
 
@@ -65,13 +69,13 @@ interface BadgeType {
 }
 
 interface ChallengeType {
-  image: string; // challenge badge image
-  name: string; // challenge name
-  participants: {
-    image: string;
-  }[];
-  maxParticipant: number;
-  startDate: Date;
+  groupChallengeId: number;
+  imagePath: string; // challenge badge image
+  challengeName: string; // challenge name
+  startAt: Date;
+  maxMemberCount: number;
+  memberCount: number;
+  profileImagePathList: string[];
 }
 
 interface ArticleType {
@@ -112,6 +116,7 @@ export default function Group() {
   const [isOpenBoardModal, setOpenBoardModal] = useState(false);
 
   const [boardPage, setBoardPage] = useState<number>(0);
+  const [groupName, setGroupName] = useState<string>("");
 
   const [badgePreview, setBadgePreview] = useState<BadgePreviewType[]>([]);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
@@ -122,6 +127,40 @@ export default function Group() {
   const [boardDataList, setBoardDataList] = useState<BoardType>();
   const [boardData, setBoardData] = useState<ArticleType>();
   const [commentData, setCommentData] = useState<CommentType[]>([]);
+
+  // 챌린지 리스트 캐러셀
+  const ChallengeListCarousel = () => {
+    // 옵션
+    const settings = {
+      dots: true,
+      infinite: false,
+      speed: 500,
+      slidesToShow: 5,
+      slidesToScroll: 5,
+    };
+
+    return (
+      <div className="carousel">
+        <Slider {...settings}>
+          {challengeList.map((challenge: ChallengeType, index: number) => (
+            <ChallengeBox
+              key={index}
+              bgImg={challenge.imagePath}
+              notStarted={calcDueDate(challenge.startAt) < 0 ? true : false}
+              title={challenge.challengeName}
+              dueDate={calcDueDate(challenge.startAt)}
+              profileList={challenge.profileImagePathList}
+              memberCnt={challenge.memberCount}
+              maxCnt={challenge.maxMemberCount}
+            />
+          ))}
+          {[...Array(10 - challengeList.length)].map((index: number) => (
+            <NoChallengeBox key={index} />
+          ))}
+        </Slider>
+      </div>
+    );
+  };
 
   function getCategoryColor(category: string) {
     if (category === "알고리즘") {
@@ -201,47 +240,15 @@ export default function Group() {
     }
   }
 
-  const tmpAddBadgeData: BadgeType[] = [
-    {
-      image: Algorithms,
-      challengeName: "알고리즘 하장",
-      startDate: new Date("2023-03-06"),
-      endDate: new Date("2023-05-11"),
-      category: "알고리즘",
-      status: true,
-    },
-    {
-      image: Book,
-      challengeName: "개발서적 하루 30분씩 읽을 사람",
-      startDate: new Date("2023-02-23"),
-      endDate: new Date("2023-04-08"),
-      category: "개발서적",
-      status: false,
-    },
-    {
-      image: Algorithms,
-      challengeName: "코테 부수기 챌린지",
-      startDate: new Date("2023-03-06"),
-      endDate: new Date("2023-04-11"),
-      category: "알고리즘",
-      status: false,
-    },
-    {
-      image: Book,
-      challengeName: "모던 자바스크립트 정독",
-      startDate: new Date("2023-02-23"),
-      endDate: new Date("2023-03-27"),
-      category: "개발서적",
-      status: false,
-    },
-  ];
-
   useEffect(() => {
     async function fetchAndSetGroupPageData() {
       const data = await fetchGroupPageData();
+      console.log(data);
+      setGroupName(data["group-name"]);
       setBadgePreview(data.badges);
-      setChallengeList(data.challenge);
-      setBoardDataList(data.board);
+      setChallengeList(data.challenges);
+      const boardList = { articles: data.articles, pageNo: 0 };
+      setBoardDataList(boardList);
     }
 
     async function fetchAndSetGroupSettingData() {
@@ -254,7 +261,7 @@ export default function Group() {
     async function fetchAndSetGroupBadgesData() {
       const badgesData = await fetchGroupBadges();
       // dummy data 길이가 불충분하여 임시로 데이터 이어붙임
-      setBadgeList([...badgesData["badge-list"], ...tmpAddBadgeData]);
+      setBadgeList(badgesData);
     }
 
     fetchAndSetGroupPageData();
@@ -268,14 +275,13 @@ export default function Group() {
         <div className="group__title-container">
           <div className="title">
             <TeamOutlined className="title-icon" />
-            뭉치뭉치똥뭉치네
+            {groupName}
           </div>
         </div>
         <GroupBadges>
           <div className="title-box">
-            <div className="small__title">
-              <TrophyFilled className="badge-icon" />
-              뭉치뭉치똥뭉치네 업적
+            <div className="small__title ellipsis">
+              {groupName} 의 업적
               <TrophyFilled className="badge-icon" />
             </div>
             <div className="btn-wrapper">
@@ -331,22 +337,7 @@ export default function Group() {
               </CommonButton>
             </div>
           </div>
-          <ChallengesContainer>
-            {challengeList.map((challenge, index) => (
-              <ChallengeBox
-                key={index}
-                bgImg={Algorithms}
-                notStarted={calcDueDate(challenge.startDate) < 0 ? true : false}
-                title={challenge.name}
-                dueDate={calcDueDate(challenge.startDate)}
-                participants={challenge.participants}
-                maxCnt={challenge.maxParticipant}
-              />
-            ))}
-            {[...Array(5 - challengeList.length)].map((index) => {
-              return <NoChallengeBox key={index} />;
-            })}
-          </ChallengesContainer>
+          <ChallengeListCarousel />
         </GroupChallenges>
         <BoardContainer>
           <div className="title-box">
@@ -363,7 +354,7 @@ export default function Group() {
             </div>
           </div>
           <BoardList>
-            {boardDataList?.articles.map((article, index) => (
+            {boardDataList?.articles?.map((article, index) => (
               <BoardBox
                 key={index}
                 data={article}
@@ -412,7 +403,7 @@ export default function Group() {
         toggleModal={() => setOpenBadgeModal((prev) => !prev)}
         badges={filteredBadgeList}
       />
-      <ChallengeModal
+      <CreateChallengeModal
         open={isOpenNewChallgeModal}
         toggleModal={() => setOpenNewChallgeModal((prev) => !prev)}
       />
@@ -470,10 +461,21 @@ const GroupBadges = styled(Content)`
     margin-right: 1rem;
     color: #ffcc4d;
     font-size: 3.2rem;
+    filter: drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.15));
   }
 
   .badge-icon:last-child {
     margin-left: 1rem;
+  }
+
+  .ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
   }
 `;
 
@@ -536,15 +538,12 @@ const CommonButton = styled(Content)<ButtonStyled>`
   align-items: center;
   justify-content: center;
   font-size: 1.6rem;
+  text-align: center;
+  word-break: keep-all;
 `;
 
 const GroupChallenges = styled(Content)`
   padding: 3rem 0;
-`;
-
-const ChallengesContainer = styled(Content)`
-  display: flex;
-  justify-content: space-between;
 `;
 
 const BoardContainer = styled(Content)`

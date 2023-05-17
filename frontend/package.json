@@ -12,7 +12,6 @@
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@types/chart.js": "^2.9.37",
-    "@types/react-slick": "^0.23.10",
     "@types/swiper": "^6.0.0",
     "antd": "^5.4.6",
     "axios": "^1.4.0",
