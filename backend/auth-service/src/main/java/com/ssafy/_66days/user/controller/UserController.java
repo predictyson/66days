@@ -1,21 +1,17 @@
 package com.ssafy._66days.user.controller;
 
-import java.util.UUID;
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.ssafy._66days.security.JwtProvider;
 import com.ssafy._66days.user.model.dto.JwtDTO;
 import com.ssafy._66days.user.model.service.UserService;
 import com.ssafy._66days.util.Utils;
-
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
@@ -32,14 +28,16 @@ public class UserController {
 		log.info("Server port={}", request.getServerPort());
 		return String.format("Hi, there. This is a message from Auth service");
 	}
+
 	// TEST Code : UUID GET FROM TOKEN.
 	@GetMapping("/uuid/{uuid}")
 	public ResponseEntity<UUID> extractUUID(@PathVariable UUID uuid) {
-		System.out.println(uuid);
 		return ResponseEntity.ok(uuid);
 	}
 
-	// token reissue
+	/**
+	 * Token 재발급 API
+	 */
 	@PostMapping("/token/reissue")
 	public ResponseEntity<JwtDTO> tokenReissue(@RequestHeader("Authorization") String authorization) {
 		String token = authorization.split(Utils.BLANK)[1];
@@ -51,12 +49,13 @@ public class UserController {
 	@GetMapping("/token/uuid")
 	public ResponseEntity<UUID> extractUUIDFromToken(@RequestHeader("Authorization") String authorization) {
 		String token = authorization.split(Utils.BLANK)[1];
-		System.out.println(token);
 		UUID uuid = jwtProvider.getUserIdFromJwt(token);
 		return ResponseEntity.ok(uuid);
 	}
 
-	// logout
+	/**
+	 * 로그아웃 API
+	 */
 	@PostMapping("/logout")
 	public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authorization) {
 		String token = authorization.split(Utils.BLANK)[1];
@@ -64,15 +63,22 @@ public class UserController {
 		return ResponseEntity.noContent().build();
 	}
 
-	// Sign up for 66days service
-	@PostMapping("/signup")
-	public ResponseEntity<Void> signup(@RequestHeader("Authorization") String authorization,
-									   @RequestBody String nickname) {
+	/**
+	 * 회원 탈퇴 API
+	 */
+	@PostMapping("/{user-id}/withdrawal")
+	public ResponseEntity<Void> withdraw(@RequestHeader("Authorization") String authorization) {
+		String token = authorization.split(Utils.BLANK)[1];
+		userService.withdraw(token);
+		return ResponseEntity.noContent().build();
+	}
+
+	// Auth 서버에 user role 변경
+	@PutMapping("/signup")
+	public ResponseEntity<Void> signup(@RequestHeader("Authorization") String authorization) {
 		String token = authorization.split(Utils.BLANK)[1];
 		UUID userId = jwtProvider.getUserIdFromJwt(token);
-		// RequestBody 바꿔야함 객체 ㅇㅇ..
-		// 서비스 로직에서 UUID 로 이메일 찾고, 같이 넣어서 API CALL(해당 API에서는 TOKEN 추출하는거 하지 말기. 그냥 받아서 쓰기)
-		// 마지막에 ROLE 변경해야(가입 확정됐다는 의미)
+		userService.signup(userId);
 		return ResponseEntity.ok().build();
 	}
 }

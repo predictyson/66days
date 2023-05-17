@@ -11,11 +11,17 @@ public class GroupMainPageResponseDTO {
 
 	private Long groupId;
 
-	private String image;
+	private String imagePath;
 
 	private String name;
 
 	private List<String> badges;
 
-	private String type;
+	@Builder
+	public GroupMainPageResponseDTO(Long groupId, String imagePath, String name, List<String> badges) {
+		this.groupId = groupId;
+		this.imagePath = imagePath;
+		this.name = name;
+		this.badges = badges;
+	}
 }

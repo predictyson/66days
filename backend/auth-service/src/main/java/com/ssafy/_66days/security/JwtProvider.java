@@ -1,9 +1,12 @@
 package com.ssafy._66days.security;
 
+import java.nio.ByteBuffer;
 import java.security.Key;
 import java.util.Date;
 import java.util.UUID;
 
+import com.ssafy._66days.exception.ForbiddenException;
+import com.ssafy._66days.exception.RefreshTokenNotFoundException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,18 +42,19 @@ public class JwtProvider implements InitializingBean {
 	private final UserRepository userRepository;
 	private final long accessTokenValidTime;
 	private final long refreshTokenValidTime;
+	private final String secretKey;
 	private Key key;
-	@Value("${jwt.secret-key}")
-	private String secretKey;
 
 	public JwtProvider(@Value("${jwt.access-token-valid-time}") long accessTokenValidTime,
-					   @Value("${jwt.refresh-token-valid-time}") long refreshTokenValidTime,
-					   UserRepository userRepository,
-					   RedisUtil redisUtil) {
+			@Value("${jwt.refresh-token-valid-time}") long refreshTokenValidTime,
+			@Value("${jwt.secret-key}") String secretKey,
+			UserRepository userRepository,
+			RedisUtil redisUtil) {
 		this.redisUtil = redisUtil;
 		this.userRepository = userRepository;
-		this.accessTokenValidTime = accessTokenValidTime;
+		this.secretKey = secretKey;
 		this.refreshTokenValidTime = refreshTokenValidTime;
+		this.accessTokenValidTime = accessTokenValidTime;
 	}
 
 	@Override
@@ -63,24 +67,19 @@ public class JwtProvider implements InitializingBean {
 	 * 유저 인증 정보로 토큰 생성 (카카오 로그인 시)
 	 */
 	public String createTokensFromAuthentication(Authentication authentication, String tokenType) {
-
 		CustomOAuth2User customOAuth2User = (CustomOAuth2User)authentication.getPrincipal();
-
 		Date currentTime = new Date();
 		Date expirationTime = calcTokenExpirationTime(currentTime, tokenType);
-
 		String token = Jwts.builder()
-				.setSubject(customOAuth2User.getUuid().toString())
-				// .claim(Utils.EMAIL, customOAuth2User.getEmail())
+				.setSubject(customOAuth2User.getUserId().toString())
 				.claim(Utils.ROLE, customOAuth2User.getRole())
 				.setIssuedAt(currentTime)
 				.setExpiration(expirationTime)
 				.signWith(key, SignatureAlgorithm.HS512)
 				.compact();
 
-		// refresh token은 redis에 저장
 		if (tokenType.equals(Utils.REFRESH_TOKEN)) {
-			String key = "RT:" + Encoders.BASE64.encode(customOAuth2User.getName().getBytes());
+			String key = Utils.RT_COLON + Encoders.BASE64.encode(uuidToByteArray(customOAuth2User.getUserId()));
 			redisUtil.setDataExpire(key, token, refreshTokenValidTime);
 			log.info("createTokensFromAuthentication | key: {}", key);
 		}
@@ -91,25 +90,22 @@ public class JwtProvider implements InitializingBean {
 	 * 유저 정보로 토큰 생성
 	 */
 	public String createTokensFromUserPrincipal(UserPrincipal userPrincipal, String tokenType) {
-
 		Date currentTime = new Date();
 		Date expirationTime = calcTokenExpirationTime(currentTime, tokenType);
 
 		String token = Jwts.builder()
-				.setSubject(userPrincipal.getUserId().toString()) // user id
-				// .claim(Utils.EMAIL, userPrincipal.getEmail())    // 이메일 정보 저장
-				.claim(Utils.ROLE, userPrincipal.getRole()) // 권한 정보 저장
-				.setIssuedAt(currentTime) // 토큰 발행 시간
-				.setExpiration(expirationTime) // 토큰 유효 시간
+				.setSubject(userPrincipal.getUserId().toString())
+				.claim(Utils.ROLE, userPrincipal.getRole())
+				.setIssuedAt(currentTime)
+				.setExpiration(expirationTime)
 				.signWith(
 						key,
 						SignatureAlgorithm.HS512
-				) // 사용할 암호화 알고리즘 (HS512), signature 에 들어갈 secret key 세팅
+				)
 				.compact();
 
-		// refresh token은 redis에 저장
 		if (tokenType.equals(Utils.REFRESH_TOKEN)) {
-			String key = "RT:" + Encoders.BASE64.encode(userPrincipal.getName().getBytes());
+			String key = Utils.RT_COLON + Encoders.BASE64.encode(uuidToByteArray(userPrincipal.getUserId()));
 			redisUtil.setDataExpire(key, token, refreshTokenValidTime);
 			log.info("createTokensFromUserPrincipal | key: {}", key);
 		}
@@ -117,28 +113,44 @@ public class JwtProvider implements InitializingBean {
 	}
 
 	/**
+	 * 사용자 아이디로 토큰 생성(회원 가입 유저를 위한)
+	 */
+	public void createTokensFromUserId(UUID userId, String tokenType) {
+		Date currentTime = new Date();
+		Date expirationTime = calcTokenExpirationTime(currentTime, tokenType);
+		String token = Jwts.builder()
+				.setSubject(userId.toString())
+				.claim(Utils.ROLE, Role.ROLE_USER)
+				.setIssuedAt(currentTime)
+				.setExpiration(expirationTime)
+				.signWith(key, SignatureAlgorithm.HS512)
+				.compact();
+
+		if (tokenType.equals(Utils.REFRESH_TOKEN)) {
+			String key = Utils.RT_COLON + Encoders.BASE64.encode(uuidToByteArray(userId));
+			redisUtil.setDataExpire(key, token, refreshTokenValidTime);
+			log.info("createTokensFromAuthentication | key: {}", key);
+		}
+	}
+
+	/**
 	 * 인증 정보 조회
 	 */
 	public Authentication getAuthentication(String token) {
 		UserPrincipal userPrincipal = null;
-
 		Claims claims = parseClaims(token);
 
 		log.info("getAuthentication | claims: {}", claims);
 
-		// 권한이 없는 경우 예외 발생
 		if (claims.get(Utils.ROLE) == null) {
 			log.info("getAuthentication | claims.get(Utils.ROLE): {}", claims.get(Utils.ROLE));
-			throw new RuntimeException();
-			// throw new CustomException(CustomExceptionType.AUTHORITY_ERROR);
+			throw new ForbiddenException("해당 기능을 요청할 권한이 없습니다.");
 		}
 		if (claims.get(Utils.ROLE).equals(Utils.ROLE_ANONYMOUS)) {
 			// 익명 권한 (카카오 로그인 성공 후, 서비스 회원가입 중)이면 토큰 정보 꺼내와서 사용
 			User user = User.builder()
 					.userId(getUserIdFromClaims(claims))
-					// .email(getEmailFromClaims(claims))
-					// .provider(get)
-					// .role()
+					.role(getRoleFromClaims(claims))
 					.build();
 			userPrincipal = UserPrincipal.createUserPrincipal(user);
 
@@ -151,8 +163,7 @@ public class JwtProvider implements InitializingBean {
 			// 유저 권한 (카카로 로그인, 서비스 회원가입 완료)이면 db에서 조회해서 사용
 			userPrincipal = userRepository.findById(getUserIdFromClaims(claims))
 					.map(UserPrincipal::createUserPrincipal)
-					.orElseThrow(RuntimeException::new);
-			// .orElseThrow(() -> new CustomException(CustomExceptionType.AUTHORITY_ERROR));
+					.orElseThrow(() -> new ForbiddenException("해당 기능을 요청할 권한이 없습니다."));
 
 			log.info(
 					"getAuthentication | claims.get(Utils.ROLE).equals(Utils.ROLE_USER): {}",
@@ -160,12 +171,8 @@ public class JwtProvider implements InitializingBean {
 			);
 		}
 		log.info("userPrincipal: {}", userPrincipal);
-		//
-		// Collection<? extends GrantedAuthority> authorities =
-		// 	Arrays.stream(userPrincipal.getRole().toString().split(","))
-		// 		.map(SimpleGrantedAuthority::new)
-		// 		.collect(Collectors.toList());
 
+		assert userPrincipal != null;
 		return new UsernamePasswordAuthenticationToken(
 				userPrincipal,
 				token,
@@ -180,7 +187,6 @@ public class JwtProvider implements InitializingBean {
 		try {
 			Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build()
 					.parseClaimsJws(token);
-
 			log.info("validateToken | claims.getBody().getExpiration():{}",
 					claims.getBody().getExpiration());
 			log.info("validateToken | claims.getBody().getExpiration().after(new Date()):{}",
@@ -208,14 +214,13 @@ public class JwtProvider implements InitializingBean {
 					.setSigningKey(key).build()
 					.parseClaimsJws(token)
 					.getBody();
-
 		} catch (ExpiredJwtException expiredJwtException) {
 			return expiredJwtException.getClaims();
 		}
 	}
 
 	/**
-	 * Jwt 복호화 후 user id 가져오기
+	 * Jwt 복호화 후 userId 가져오기
 	 */
 	public UUID getUserIdFromJwt(String token) {
 		try {
@@ -230,17 +235,10 @@ public class JwtProvider implements InitializingBean {
 	}
 
 	/**
-	 * claims에서 email 가져오기
+	 * claims에서 userId 가져오기
 	 */
 	public UUID getUserIdFromClaims(Claims claims) {
 		return UUID.fromString(claims.getSubject());
-	}
-
-	/**
-	 * claims에서 email 가져오기
-	 */
-	public String getEmailFromClaims(Claims claims) {
-		return claims.get(Utils.EMAIL).toString();
 	}
 
 	/**
@@ -275,11 +273,10 @@ public class JwtProvider implements InitializingBean {
 		Authentication authentication = getAuthentication(token);
 		UserPrincipal userPrincipal = (UserPrincipal)authentication.getPrincipal();
 		UUID userId = userPrincipal.getUserId();
-		String key = "RT:" + Encoders.BASE64.encode(userId.toString().getBytes());
+		String key = Utils.RT_COLON + Encoders.BASE64.encode(uuidToByteArray(userId));
 		String refreshToken = redisUtil.getData(key);
 		if (refreshToken == null) {
-			throw new RuntimeException();
-			// throw new CustomException(CustomExceptionType.REFRESH_TOKEN_ERROR);
+			throw new RefreshTokenNotFoundException("Refresh Token이 존재하지 않습니다.");
 		}
 		String accessToken = createTokensFromUserPrincipal(userPrincipal, Utils.ACCESS_TOKEN);
 		SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -297,5 +294,12 @@ public class JwtProvider implements InitializingBean {
 			expirationTime = new Date(currentTime.getTime() + refreshTokenValidTime);
 		}
 		return expirationTime;
+	}
+
+	public static byte[] uuidToByteArray(UUID uuid) {
+		ByteBuffer byteBuffer = ByteBuffer.allocate(16);
+		byteBuffer.putLong(uuid.getMostSignificantBits());
+		byteBuffer.putLong(uuid.getLeastSignificantBits());
+		return byteBuffer.array();
 	}
 }

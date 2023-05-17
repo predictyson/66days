@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
+import com.ssafy._66days.user.enums.Provider;
 import com.ssafy._66days.user.enums.Role;
 import com.ssafy._66days.user.model.entity.User;
 
@@ -24,7 +25,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
 	private UUID userId;
 	private String email;
-	private String provider;
+	private Provider provider;
 	private Role role;
 	private Collection<SimpleGrantedAuthority> authorities;
 	private Map<String, Object> attributes;
@@ -32,7 +33,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 	@Builder
 	public UserPrincipal(UUID userId,
 						 String email,
-						 String provider,
+						 Provider provider,
 						 Role role,
 						 Collection<SimpleGrantedAuthority> authorities,
 						 Map<String, Object> attributes) {
@@ -72,7 +73,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 		return email;
 	}
 
-	public String getProvider() {
+	public Provider getProvider() {
 		return provider;
 	}
 

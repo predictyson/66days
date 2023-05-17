@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.ssafy._66days.mainservice.group.model.dto.GroupMainPageResponseDTO;
+
 @Entity
 @Table(name="group")
 @Getter
@@ -47,4 +49,12 @@ public class Group {
     @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT(1)")
     @ColumnDefault("false")
     private boolean isDeleted;
+
+    public static GroupMainPageResponseDTO toGroupMainPageResponseDTO(Group group) {
+        return GroupMainPageResponseDTO.builder()
+                .groupId(group.getGroupId())
+                .name(group.getGroupName())
+                .imagePath(group.getImagePath())
+                .build();
+    }
 }
