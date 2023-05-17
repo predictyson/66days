@@ -92,6 +92,7 @@ export function CreateGroupModal(props: PropsType) {
                 className="group-desc-input"
                 showCount
                 maxLength={100}
+                style={{ resize: "none" }}
               />
             </GroupDescBox>
             <GroupImageInputBox>

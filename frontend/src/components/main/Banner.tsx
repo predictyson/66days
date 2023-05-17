@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 import Capibara from "../../assets/main/Capibara.png";
 import Badge from "../../assets/main/Bronze.png";
@@ -6,42 +7,56 @@ import { theme } from "../../styles/theme";
 import { MemberInfoData } from "../../types/main";
 import CountUp from "react-countup";
 import { useNavigate } from "react-router";
+import TierInfoModal from "./TierInfoModal";
 
 interface IProps {
   memberInfo: MemberInfoData;
 }
 export default function Banner({ memberInfo }: IProps) {
   const navigate = useNavigate();
+
+  const [isOpenTierModal, setTierModal] = useState(false);
+
   return (
-    <Container>
-      <LeftWrapper>
-        <Info>
-          <img src={Badge} alt="badge" />
-          <div className="email">{memberInfo.email}</div>
-        </Info>
-        <Nickname>
-          게으른 <br /> {memberInfo.animal}
-        </Nickname>
-        <MoreInfo>
-          <div className="exp">
-            <CountUp end={memberInfo.exp} duration={5} />
-            EXP
-          </div>
-          <div className="button" onClick={() => navigate("/mypage")}>
-            한눈에 보기
-          </div>
-        </MoreInfo>
-        <Coin>
-          <img src={CoinIcon} alt="icon" />{" "}
-          <span>
-            <CountUp end={memberInfo.point} duration={5} />
-          </span>
-        </Coin>
-      </LeftWrapper>
-      <ImageWrapper>
-        <img src={Capibara} alt="capibara" />
-      </ImageWrapper>
-    </Container>
+    <>
+      <TierInfoModal
+        open={isOpenTierModal}
+        toggleModal={() => setTierModal((prev) => !prev)}
+      />
+      <Container>
+        <LeftWrapper>
+          <Info>
+            <img
+              src={Badge}
+              alt="badge"
+              onClick={() => setTierModal((prev) => !prev)}
+            />
+            <div className="email">{memberInfo.email}</div>
+          </Info>
+          <Nickname>
+            게으른 <br /> {memberInfo.animal}
+          </Nickname>
+          <MoreInfo>
+            <div className="exp">
+              <CountUp end={memberInfo.exp} duration={5} />
+              EXP
+            </div>
+            <div className="button" onClick={() => navigate("/mypage")}>
+              한눈에 보기
+            </div>
+          </MoreInfo>
+          <Coin>
+            <img src={CoinIcon} alt="icon" />{" "}
+            <span>
+              <CountUp end={memberInfo.point} duration={5} />
+            </span>
+          </Coin>
+        </LeftWrapper>
+        <ImageWrapper>
+          <img src={Capibara} alt="capibara" />
+        </ImageWrapper>
+      </Container>
+    </>
   );
 }
 

@@ -1,11 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { Button, Col, DatePicker, Divider, Input, Modal, Row } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  DatePickerProps,
+  Divider,
+  Input,
+  Modal,
+  Row,
+} from "antd";
 import type { InputRef } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { mockCategories } from "../../mock/group";
 import TextArea from "antd/es/input/TextArea";
-import dayjs, { Dayjs } from "dayjs";
 
 interface PropsType {
   open: boolean;
@@ -30,10 +38,8 @@ export default function CreateChallengeModal(props: PropsType) {
   const titleRef = useRef<InputRef | null>(null);
   const cntRef = useRef<InputRef | null>(null);
   const descRef = useRef<TextAreaRef | null>(null);
-  // const startDateRef = useRef<InputRef | null>(null);
-  const [startDate, setStartDate] = useState<Date>();
-
-  const dateFormat = "YYYY-MM-DD";
+  // const [startDate, setStartDate] = useState<Date>();
+  let startDate: Date = new Date();
 
   const FirstStepContent = () => {
     return (
@@ -84,6 +90,7 @@ export default function CreateChallengeModal(props: PropsType) {
             className="input-font input-desc"
             showCount
             maxLength={50}
+            style={{ resize: "none" }}
             ref={descRef}
           />
         </ChallengeDescBox>
@@ -92,12 +99,7 @@ export default function CreateChallengeModal(props: PropsType) {
             <div className="sub-title">
               시작 날짜<span className="essential">*</span>
             </div>
-            <DatePicker
-              className="date-picker"
-              onChange={handleDateValue}
-              value={dayjs("2015-06-06", dateFormat)}
-              // disabled={[false, true]}
-            />
+            <DatePicker className="date-picker" onChange={handleDateValue} />
           </div>
           {/* 시간이 남을 경우 프론트 단에서 예상 종료 날짜 띄워주기 */}
           {/* <div className="date-box">
@@ -119,7 +121,6 @@ export default function CreateChallengeModal(props: PropsType) {
       setStep(2);
     } else if (step === 2) {
       // TODO: submit handle
-      // console.log(challengeTitleRef.current?.value);
       handleCreateChallenge();
       setLoading(true);
       setTimeout(() => {
@@ -136,10 +137,10 @@ export default function CreateChallengeModal(props: PropsType) {
     console.log(startDate);
   }
 
-  function handleDateValue(dateObject: Dayjs | null, dateString: string) {
-    console.log(dateObject);
-    setStartDate(new Date(dateString));
-  }
+  const handleDateValue: DatePickerProps["onChange"] = (date, dateString) => {
+    console.log(date, dateString);
+    startDate = new Date(dateString);
+  };
 
   function changeCategory(idx: number) {
     const copyCategory = categories;
