@@ -156,13 +156,22 @@ public class GroupService {
         groupApplyRepository.save(groupApply);
     }
 
-    public void createGroup(GroupCreateDTO groupCreateDTO, MultipartFile image) throws IOException {
+    public void createGroup(UUID userId, GroupCreateDTO groupCreateDTO, MultipartFile image) throws Exception {
         if (groupCreateDTO == null || image.isEmpty()) {
             throw new InputMismatchException("필요한 값이 들어오지 않았습니다.");
         }
         String savePath = fileUtil.fileUpload(image, groupImageFilePath);
         groupCreateDTO.setImage(savePath);
         log.info("GroupService -- groupCreateDTO: {}", groupCreateDTO);
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
+
+        if(groupRepository.findByOwnerId(userId).isPresent()){
+            throw new InputMismatchException("사용자가 이미 소유한 그룹이 있습니다.");
+        }
+
+        Long groupSize = groupMemberRepository.countByUserAndIsDeleted(user, false);
+        if(groupSize > 5L) throw new InputMismatchException("사용자의 가입한 그룹 수가 한도 초과했습니다");
 
         groupRepository.save(groupCreateDTO.toEntity(groupCreateDTO));
     }

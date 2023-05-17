@@ -14,7 +14,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
 
     List<Group> findAllByGroupNameContains(String searchContent);
 
-    Group findByOwnerId(String searchContent);
+    Optional<Group> findByOwnerId(UUID ownerId);
 
     List<Group> findAllByGroupNameContainsOrOwnerId(String searchContent, UUID ownerId);
 

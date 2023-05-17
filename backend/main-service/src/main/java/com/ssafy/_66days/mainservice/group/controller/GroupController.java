@@ -213,9 +213,10 @@ public class GroupController {
         log.info("Group create, USER ID : {}", userId);
 
         try {
-            groupService.createGroup(groupCreateDTO, groupImage);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            groupService.createGroup(userId, groupCreateDTO, groupImage);
+        } catch (Exception e) {
+            resultMap.put(RESULT, e.getMessage());
+            return new ResponseEntity<>(resultMap, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         resultMap.put(RESULT, SUCCESS);
