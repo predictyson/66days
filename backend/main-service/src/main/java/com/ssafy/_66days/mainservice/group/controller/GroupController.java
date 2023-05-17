@@ -41,7 +41,7 @@ public class GroupController {
         UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group search, USER ID : {}", userId);
 
-        List<GroupSearchPageResponseDTO> groupList = groupService.searchGroup(searchContent, filterBy);
+        List<GroupSearchPageResponseDTO> groupList = groupService.searchGroup(searchContent);
 
         resultMap.put("group-list", groupList);
 

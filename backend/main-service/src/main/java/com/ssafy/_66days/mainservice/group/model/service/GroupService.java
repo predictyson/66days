@@ -48,7 +48,7 @@ public class GroupService {
     private final String MEMBER = "MEMBER";
     private final String DROP = "DROP";
 
-    public List<GroupSearchPageResponseDTO> searchGroup(String searchContent, String filterBy) {
+    public List<GroupSearchPageResponseDTO> searchGroup(String searchContent) {
         User user = userRepository.findByNickname(searchContent).orElse(null);
         List<Group> groups = null;
         if(user == null) {
@@ -57,7 +57,6 @@ public class GroupService {
             groups = groupRepository.findAllByGroupNameContainsOrOwnerId(searchContent, user.getUserId());
         }
         // TODO: categories 리스트 추후, 챌린지 구현 후 추가
-        // TODO: categories 릿스트는 filterBy로 찾기
         List<GroupSearchPageResponseDTO> groupDTOList = new ArrayList<>();
         for (Group group:groups) {
             GroupSearchPageResponseDTO pageResponseDTO = GroupSearchPageResponseDTO.of(group, user);
