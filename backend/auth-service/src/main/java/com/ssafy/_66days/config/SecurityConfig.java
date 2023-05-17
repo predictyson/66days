@@ -60,7 +60,7 @@ public class SecurityConfig {
 				.and()
 				.authorizeRequests()
 				.antMatchers(PERMIT_URL_ARRAY).permitAll()
-//				.anyRequest().authenticated()
+				.anyRequest().authenticated()
 				.and()
 				.oauth2Login()
 				.userInfoEndpoint().userService(customOAuth2UserService)
