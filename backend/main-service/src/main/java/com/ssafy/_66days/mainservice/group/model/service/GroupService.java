@@ -4,8 +4,11 @@ import com.ssafy._66days.mainservice.global.util.FileUtil;
 import com.ssafy._66days.mainservice.group.model.dto.GroupCreateDTO;
 import com.ssafy._66days.mainservice.group.model.dto.GroupSearchPageResponseDTO;
 import com.ssafy._66days.mainservice.group.model.entity.Group;
+import com.ssafy._66days.mainservice.group.model.entity.GroupAchievement;
 import com.ssafy._66days.mainservice.group.model.entity.GroupApply;
 import com.ssafy._66days.mainservice.group.model.entity.GroupMember;
+import com.ssafy._66days.mainservice.group.model.repository.GroupAchievementRepository;
+import com.ssafy._66days.mainservice.group.model.repository.GroupAchievementResponseDTO;
 import com.ssafy._66days.mainservice.group.model.repository.GroupApplyRepository;
 import com.ssafy._66days.mainservice.group.model.repository.GroupMemberRepository;
 import com.ssafy._66days.mainservice.group.model.repository.GroupRepository;
@@ -36,6 +39,7 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final GroupApplyRepository groupApplyRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final GroupAchievementRepository groupAchievementRepository;
     private final FileUtil fileUtil;
 
     @Value("${file.path.upload-images-groups}")
@@ -207,5 +211,16 @@ public class GroupService {
     public String getGroupName(Long groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow(()->new NoSuchElementException("해당하는 그룹이 없습니다"));
         return group.getGroupName();
+    }
+
+    public List<GroupAchievementResponseDTO> getGroupAchievement(UUID userId, Long groupId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 그룹입니다"));
+        GroupMember groupMember = groupMemberRepository.findByGroupAndUserAndIsDeleted(group, user, false)
+                .orElseThrow(() -> new NoSuchElementException("그룹에 속하지 않는 유저입니다"));
+        List<GroupAchievement> groupAchievements = groupAchievementRepository.findByGroup(group);
+        if
     }
 }
