@@ -15,6 +15,8 @@ import com.ssafy._66days.mainservice.user.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,21 +50,22 @@ public class GroupService {
     private final String MEMBER = "MEMBER";
     private final String DROP = "DROP";
 
-    public List<GroupSearchPageResponseDTO> searchGroup(String searchContent) {
+    public List<GroupSearchPageResponseDTO> searchGroup(String searchContent, int pgNo) {
         User user = userRepository.findByNickname(searchContent).orElse(null);
-        List<Group> groups = null;
+        Page<Group> groups = null;
+        PageRequest pageRequest = PageRequest.of(pgNo, 9);
         if(user == null) {
-           groups  = groupRepository.findAllByGroupNameContains(searchContent);
+           groups  = groupRepository.findAllByGroupNameContains(searchContent, pageRequest);
         } else {
-            groups = groupRepository.findAllByGroupNameContainsOrOwnerId(searchContent, user.getUserId());
+            groups = groupRepository.findAllByGroupNameContainsOrOwnerId(searchContent, user.getUserId(),pageRequest);
         }
+        List<Group> groupList = groups.getContent();
         // TODO: categories 리스트 추후, 챌린지 구현 후 추가
         List<GroupSearchPageResponseDTO> groupDTOList = new ArrayList<>();
-        for (Group group:groups) {
+        for (Group group:groupList) {
             GroupSearchPageResponseDTO pageResponseDTO = GroupSearchPageResponseDTO.of(group, user);
             Long memberCount = groupMemberRepository.countByGroupAndIsDeleted(group, false);
             pageResponseDTO.setMemberCounts(memberCount);
-
 
             groupDTOList.add(pageResponseDTO);
         }
