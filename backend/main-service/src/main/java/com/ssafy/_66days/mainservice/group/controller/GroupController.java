@@ -66,6 +66,7 @@ public class GroupController {
 
         //is User a group Owner?
         boolean isOwner = groupService.isUserGroupOwner(userId,groupId);
+        log.info("Group Controller - manage members isOwner: {}", isOwner);
         if(!isOwner) {
             resultMap.put(RESULT, "유저가 권한을 가지고 있지 않습니다.");
             return new ResponseEntity<>(resultMap, HttpStatus.FORBIDDEN);

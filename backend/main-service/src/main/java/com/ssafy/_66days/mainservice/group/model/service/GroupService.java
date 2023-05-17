@@ -56,14 +56,17 @@ public class GroupService {
         PageRequest pageRequest = PageRequest.of(pgNo, 9);
         if(user == null) {
            groups  = groupRepository.findAllByGroupNameContains(searchContent, pageRequest);
+           log.info("Group Service - searchGroup only name: {}", groups.getContent());
         } else {
             groups = groupRepository.findAllByGroupNameContainsOrOwnerId(searchContent, user.getUserId(),pageRequest);
+            log.info("Group Service - searchGroup name and user: {}", groups.getContent());
         }
         List<Group> groupList = groups.getContent();
         // TODO: categories 리스트 추후, 챌린지 구현 후 추가
         List<GroupSearchPageResponseDTO> groupDTOList = new ArrayList<>();
         for (Group group:groupList) {
-            GroupSearchPageResponseDTO pageResponseDTO = GroupSearchPageResponseDTO.of(group, user);
+            User owner = userRepository.findById(group.getOwnerId()).orElseThrow(()->new NoSuchElementException("존재하지 않는 유저입니다"));
+            GroupSearchPageResponseDTO pageResponseDTO = GroupSearchPageResponseDTO.of(group, owner);
             Long memberCount = groupMemberRepository.countByGroupAndIsDeleted(group, false);
             pageResponseDTO.setMemberCounts(memberCount);
 
