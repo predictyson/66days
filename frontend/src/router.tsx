@@ -13,6 +13,8 @@ import SearchPage from "./routes/SearchPage";
 import MyPage from "./routes/MyPage";
 import OAuth2Redirect from "./routes/OAuth2Redirect";
 import SocialSignup from "./routes/SocialSignup";
+// import OAuth2Redirect from "./routes/OAuth2Redirect";
+import SearchPage2 from "./routes/SearchPage2";
 
 export default createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +33,7 @@ export default createBrowserRouter(
           element={<Challenge />}
         />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/search2" element={<SearchPage2 />} />
         <Route path="/mypage" element={<MyPage />} />
       </Route>
     </Route>

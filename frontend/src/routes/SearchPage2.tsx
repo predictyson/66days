@@ -1,37 +1,23 @@
+import { useState, useEffect, useRef } from "react";
+import { fetchSearchData } from "../api/search";
+import { SearchData } from "../types/search";
+import GroupItem from "../components/search/GroupItem";
 import styled from "styled-components";
 import { theme } from "../styles/theme";
-import GroupItem from "../components/search/GroupItem";
-import { SearchData } from "../types/search";
-import { fetchSearchData } from "../api/search";
-import { useEffect, useRef, useState } from "react";
-export default function SearchPage() {
+
+export default function SearchPage2() {
   const [searchValue, setSearchValue] = useState<string>("");
-  const [page, setPage] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement>(null);
   const [groupdata, setGroupdata] = useState<SearchData>({
     result: "success",
     [`group-list`]: [],
   });
 
-  async function getSearchData(page: number) {
-    try {
-      const data = await fetchSearchData(searchValue, page);
-      console.log(page);
-      // setGroupdata(data);
-      setGroupdata((prev) => ({
-        result: data.result,
-        [`group-list`]: [...prev[`group-list`], ...data[`group-list`]],
-      }));
-      console.log(data);
-      console.log(data[`group-list`]);
-    } catch (error) {
-      console.log("Error occurred while fetching search data:", error);
-    }
-  }
+  // infinite scroll
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // getSearchData(page);
     // Intersection Observer 생성
     const observer = new IntersectionObserver(handleObserver, {
       root: null, // 뷰포트 기준
@@ -49,32 +35,44 @@ export default function SearchPage() {
     };
   }, []);
 
-  const handleObserver: IntersectionObserverCallback = (entries) => {
-    const target = entries[0];
-    if (target.isIntersecting) {
-      fetchMoreData();
-    }
-  };
+  useEffect(() => {
+    // 페이지가 변경될 때마다 데이터를 가져옴
+    fetchData();
+    console.log("fetch");
+  }, [page]);
 
-  async function fetchMoreData() {
-    if (!loading) {
+  async function fetchData() {
+    try {
       setLoading(true);
-      try {
-        await getSearchData(page + 1);
-        setPage((prev) => prev + 1);
-      } catch (err) {
-        console.log("fetching more data err");
-      }
+      // 백엔드 API를 호출하여 데이터를 가져옴
+      const data = await fetchSearchData(searchValue, page);
+      console.log(data);
+      // 가져온 데이터를 기존 아이템 배열에 추가
+      setGroupdata((prev) => ({
+        result: data.result,
+        [`group-list`]: [...prev[`group-list`], ...data[`group-list`]],
+      }));
+    } catch (error) {
+      console.log("Error occurred while fetching data:", error);
+    } finally {
       setLoading(false);
     }
   }
+
+  const handleObserver: IntersectionObserverCallback = (entries) => {
+    const target = entries[0];
+    if (target.isIntersecting) {
+      // Sentinel 요소가 뷰포트 안에 들어왔을 때 페이지를 증가시키고 데이터를 가져옴
+      setPage((prevPage) => prevPage + 1);
+      console.log(page);
+    }
+  };
   const handleSearch = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      searchValue !== "" && (await getSearchData(page));
+      searchValue !== "" && (await fetchData());
       setSearchValue("");
     }
   };
-
   return (
     <Container>
       <TitleWrapprer>
@@ -96,9 +94,7 @@ export default function SearchPage() {
           margin: "0 auto",
           justifyContent: "flex-end",
         }}
-      >
-        {/* <BreadCrumb /> */}
-      </div>
+      ></div>
 
       <ItemContainer>
         {groupdata[`group-list`] &&

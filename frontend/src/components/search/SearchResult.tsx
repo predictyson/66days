@@ -1,14 +1,42 @@
 import { useState, useEffect, useRef } from "react";
+import { SearchData } from "../../types/search";
+import { fetchSearchData } from "../../api/search";
 
 // 1안. react-infinite-scroll-component 라이브러리 사용 - 젤 쉬울거같음
 // 2안. 직접 구현 - 귀찮음
 // 3안. Intersection Observer사용 - 젤 괜찮은 것 같음
 
-export default function SearchResult() {
+interface IProps {
+  handleSearch: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+}
+export default function SearchResult({ handleSearch }: IProps) {
   const [data, setData] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [groupdata, setGroupdata] = useState<SearchData>({
+    result: "success",
+    [`group-list`]: [],
+  });
+
+  async function getSearchData() {
+    try {
+      const data = await fetchSearchData(searchValue, 0);
+      setGroupdata(data);
+      console.log(data);
+      console.log(data[`group-list`]);
+    } catch (error) {
+      console.log("Error occurred while fetching search data:", error);
+    }
+  }
+  // const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  //   if (event.key === "Enter") {
+  //     getSearchData();
+
+  //     setSearchValue("");
+  //   }
+  // };
 
   useEffect(() => {
     // 초기 데이터 로드
@@ -58,13 +86,13 @@ export default function SearchResult() {
   };
 
   return (
-    <div>
+    <>
       {data.map((item, index) => (
         <div key={index}>{item}</div>
       ))}
-
-      <div ref={sentinelRef}></div>  {/* intersectino observer가 감지할 요소 참조 */}
+      <div ref={sentinelRef}></div>{" "}
+      {/* intersectino observer가 감지할 요소 참조 */}
       {loading && <h4>Loading...</h4>}
-    </div>
+    </>
   );
 }

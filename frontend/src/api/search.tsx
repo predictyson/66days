@@ -5,6 +5,7 @@ export async function fetchSearchData(searchContent: string, pgNo: number) {
     const res = await api.get(
       `/api/v1/main-service/group/search?searchContent=${searchContent}&pgNo=${pgNo}`
     );
+    console.log(res.data);
     if (res.status === 200) {
       return res.data;
     }
