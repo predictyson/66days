@@ -15,6 +15,8 @@ import com.ssafy._66days.mainservice.user.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,22 +50,22 @@ public class GroupService {
     private final String MEMBER = "MEMBER";
     private final String DROP = "DROP";
 
-    public List<GroupSearchPageResponseDTO> searchGroup(String searchContent, String filterBy) {
+    public List<GroupSearchPageResponseDTO> searchGroup(String searchContent, int pgNo) {
         User user = userRepository.findByNickname(searchContent).orElse(null);
-        List<Group> groups = null;
+        Page<Group> groups = null;
+        PageRequest pageRequest = PageRequest.of(pgNo, 9);
         if(user == null) {
-           groups  = groupRepository.findAllByGroupNameContains(searchContent);
+           groups  = groupRepository.findAllByGroupNameContains(searchContent, pageRequest);
         } else {
-            groups = groupRepository.findAllByGroupNameContainsOrOwnerId(searchContent, user.getUserId());
+            groups = groupRepository.findAllByGroupNameContainsOrOwnerId(searchContent, user.getUserId(),pageRequest);
         }
+        List<Group> groupList = groups.getContent();
         // TODO: categories 리스트 추후, 챌린지 구현 후 추가
-        // TODO: categories 릿스트는 filterBy로 찾기
         List<GroupSearchPageResponseDTO> groupDTOList = new ArrayList<>();
-        for (Group group:groups) {
+        for (Group group:groupList) {
             GroupSearchPageResponseDTO pageResponseDTO = GroupSearchPageResponseDTO.of(group, user);
             Long memberCount = groupMemberRepository.countByGroupAndIsDeleted(group, false);
             pageResponseDTO.setMemberCounts(memberCount);
-
 
             groupDTOList.add(pageResponseDTO);
         }
@@ -156,13 +158,22 @@ public class GroupService {
         groupApplyRepository.save(groupApply);
     }
 
-    public void createGroup(GroupCreateDTO groupCreateDTO, MultipartFile image) throws IOException {
+    public void createGroup(UUID userId, GroupCreateDTO groupCreateDTO, MultipartFile image) throws Exception {
         if (groupCreateDTO == null || image.isEmpty()) {
             throw new InputMismatchException("필요한 값이 들어오지 않았습니다.");
         }
         String savePath = fileUtil.fileUpload(image, groupImageFilePath);
         groupCreateDTO.setImage(savePath);
         log.info("GroupService -- groupCreateDTO: {}", groupCreateDTO);
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
+
+        if(groupRepository.findByOwnerId(userId).isPresent()){
+            throw new InputMismatchException("사용자가 이미 소유한 그룹이 있습니다.");
+        }
+
+        Long groupSize = groupMemberRepository.countByUserAndIsDeleted(user, false);
+        if(groupSize > 5L) throw new InputMismatchException("사용자의 가입한 그룹 수가 한도 초과했습니다");
 
         groupRepository.save(groupCreateDTO.toEntity(groupCreateDTO));
     }

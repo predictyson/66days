@@ -33,7 +33,7 @@ public class GroupController {
     @GetMapping("/search")
     public ResponseEntity<Map<String, Object>> searchGroup(
             @RequestHeader(value = "Authorization") String token,
-            @RequestParam String searchContent, @RequestParam String filterBy
+            @RequestParam String searchContent, @RequestParam int pgNo
     ) {
         Map<String, Object> resultMap = new HashMap<>();
 
@@ -41,7 +41,7 @@ public class GroupController {
         UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group search, USER ID : {}", userId);
 
-        List<GroupSearchPageResponseDTO> groupList = groupService.searchGroup(searchContent, filterBy);
+        List<GroupSearchPageResponseDTO> groupList = groupService.searchGroup(searchContent, pgNo);
 
         resultMap.put("group-list", groupList);
 
@@ -213,9 +213,10 @@ public class GroupController {
         log.info("Group create, USER ID : {}", userId);
 
         try {
-            groupService.createGroup(groupCreateDTO, groupImage);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            groupService.createGroup(userId, groupCreateDTO, groupImage);
+        } catch (Exception e) {
+            resultMap.put(RESULT, e.getMessage());
+            return new ResponseEntity<>(resultMap, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         resultMap.put(RESULT, SUCCESS);
