@@ -1,5 +1,6 @@
 package com.ssafy._66days.mainservice.group.controller;
 
+import com.ssafy._66days.mainservice.group.model.dto.GroupAchievementDetailResponseDTO;
 import com.ssafy._66days.mainservice.group.model.dto.GroupCreateDTO;
 import com.ssafy._66days.mainservice.group.model.dto.GroupSearchPageResponseDTO;
 import com.ssafy._66days.mainservice.group.model.service.GroupService;
@@ -224,5 +225,32 @@ public class GroupController {
 
         return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
+
+    @GetMapping("/{group_id}/challenge/{challenge_id}")
+    @ApiOperation(value="그룹 업적 상세 조회 API", notes =" 업적 클릭 시 그룹 내 해당 챌린지 성공 실패 히스토리 정보 반환")
+    public ResponseEntity<Map<String, Object>> getGroupAchievementDetail(
+            @RequestHeader(value = "Authorization") String token,
+            @PathVariable("group_id") Long groupId,
+            @PathVariable("challenge_id") Long challengeId
+    ) {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        log.info("Group apply/status, USER ID : {}", userId);
+
+        try {
+            List<GroupAchievementDetailResponseDTO> GroupAchievementDetailResponseDTO = groupService.getGroupAchievementDetail(groupId, challengeId);
+            resultMap.put("GroupAchievementDetailResponseDTO", GroupAchievementDetailResponseDTO);
+            return ResponseEntity.ok().body(resultMap);
+        } catch (Exception e){
+            resultMap.put(RESULT, e.getMessage());
+            return new ResponseEntity<>(resultMap, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+//        resultMap.put(RESULT, SUCCESS);
+//
+//        return new ResponseEntity<>(resultMap, HttpStatus.OK);
+    }
+
 }
 

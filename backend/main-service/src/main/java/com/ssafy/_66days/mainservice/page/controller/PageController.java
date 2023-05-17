@@ -4,6 +4,7 @@ import com.ssafy._66days.mainservice.article.model.dto.responseDto.ArticleRespon
 import com.ssafy._66days.mainservice.article.model.service.ArticleService;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.GroupChallengeResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.service.GroupChallengeService;
+import com.ssafy._66days.mainservice.group.model.dto.GroupAchievementResponseDTO;
 import com.ssafy._66days.mainservice.group.model.service.GroupService;
 import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
 import com.ssafy._66days.mainservice.user.model.dto.UserDetailDTO;
@@ -105,11 +106,12 @@ public class PageController {
         log.info("Group Page, USER ID : {}", userId);
 
         String groupName = groupService.getGroupName(groupId);
+        List<GroupAchievementResponseDTO> groupAchievements = groupService.getGroupAchievement(userId, groupId);
         List<GroupChallengeResponseDTO> groupChallenges = groupChallengeService.getGroupChallenges(userId, groupId);
         List<ArticleResponseDTO> articleList = articleService.getArticleList(userId, groupId, 0);
 
         resultMap.put("group-name", groupName);
-        resultMap.put("badges", new ArrayList<>());
+        resultMap.put("achievements", groupAchievements);
         resultMap.put("challenges", groupChallenges);
         resultMap.put("articles", articleList);
 
