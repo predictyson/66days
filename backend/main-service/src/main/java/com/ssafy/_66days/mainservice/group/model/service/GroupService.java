@@ -109,6 +109,8 @@ public class GroupService {
             // 매니저 인원 수: 최대 3명
             Long managerSize = groupMemberRepository.countByGroupAndAuthorityAndIsDeleted(group, MANAGER, false);
             if(managerSize >= 3L) throw new InputMismatchException("설정 가능한 매니저 수가 초과했습니다");
+        } else if(state.equals(DROP)) {
+            groupMember.updateIsDeleted(true);
         }
         log.info("group member state BEFORE: {}", groupMember.getAuthority());
         groupMember.updateAuthority(state);
@@ -130,7 +132,23 @@ public class GroupService {
         log.info("group apply state BEFORE: {}", groupApply.getState());
 //        groupApply.setState(state);
         groupApply.updateGroupApply(state);
-
+        if(state.equals(ACCEPTED)) {
+            GroupMember groupMember = groupMemberRepository.findByUserAndIsDeleted(user, true).orElse(null);
+            log.info("group apply add groupmember: {}", groupMember);
+            if (groupMember != null) {
+                groupMember.updateIsDeleted(false);
+                groupMember.updateAuthority(MEMBER);
+            } else {
+                groupMember = GroupMember.builder()
+                                .user(user)
+                                .group(group)
+                                .authority(MEMBER)
+                                .createdAt(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                                .build();
+                log.info("group apply new groupmember: {}", groupMember);
+                groupMemberRepository.save(groupMember);
+            }
+        }
         log.info("group apply state AFTER: {}", groupApply.getState());
     }
 

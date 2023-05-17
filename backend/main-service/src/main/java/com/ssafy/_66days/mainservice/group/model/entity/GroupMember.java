@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.TimeZone;
 
 @IdClass(GroupMemberId.class)
 @Table(name="group_member")
@@ -49,5 +51,9 @@ public class GroupMember {
     public void updateAuthority(String authority){
         this.authority = authority;
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void updateIsDeleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }
