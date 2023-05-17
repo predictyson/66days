@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -31,14 +31,16 @@ export default function CreateChallengeModal(props: PropsType) {
   const [step, setStep] = useState<number>(1);
   const [loading, setLoading] = useState(false);
 
-  // const challengeTitleRef = useRef<HTMLInputElement>(null);
-  // const challengeMemberCntRef = useRef<HTMLInputElement>(null);
-  // const challengeDescRef = useRef<HTMLTextAreaElement>(null);
-  // const startDateRef = useRef<HTMLInputElement>(null);
+  const [title, setTitle] = useState<string>("");
+  const [cnt, setCnt] = useState<number>();
+  const [desc, setDesc] = useState<string>();
+  const [startDate, setStartDate] = useState<Date>();
 
-  function onChangeTitle(e: Event) {
-    // const inputTitle = e.target?.value;
-  }
+  // function onChangeTitle(e: React.ChangeEvent<HTMLInputElement>) {
+  //   setTitle(e.target.value);
+  // }
+
+  // function
 
   const FirstStepContent = () => {
     return (
@@ -68,7 +70,8 @@ export default function CreateChallengeModal(props: PropsType) {
           <Input
             className="input-font"
             placeholder="챌린지 명을 입력해주세요"
-            // onChange={onChangeTitle}
+            onChange={(event) => setTitle(event.target.value)}
+            value={title}
           />
         </ChallengeTitleBox>
         <ChallengeCountBox>
