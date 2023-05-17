@@ -21,7 +21,7 @@ public class MyChallengeResponseDTO {
     public static MyChallengeResponseDTO of(MyChallenge myChallenge) {
         return MyChallengeResponseDTO.builder()
                 .myChallengeId(myChallenge.getMyChallengeId())
-                .imagePath(myChallenge.getChallenge().getBadge().getImagePath())
+                .imagePath(myChallenge.getChallenge().getBadgeImage())
                 .challengeName(myChallenge.getChallengeName())
                 .content(myChallenge.getContent())
                 .startAt(myChallenge.getStartAt())

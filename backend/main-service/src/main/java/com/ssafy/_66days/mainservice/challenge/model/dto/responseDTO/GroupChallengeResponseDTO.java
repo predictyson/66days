@@ -30,7 +30,7 @@ public class GroupChallengeResponseDTO {
         return GroupChallengeResponseDTO.builder()
                 .groupChallengeId(groupChallenge.getGroupChallengeId())
                 .challengeId(groupChallenge.getChallenge().getChallengeId())
-                .imagePath(groupChallenge.getChallenge().getBadge().getImagePath())
+                .imagePath(groupChallenge.getChallenge().getBadgeImage())
                 .challengeName(groupChallenge.getChallengeName())
                 .startAt(startAt)
                 .maxMemberCount(groupChallenge.getMaxMemberCount())
