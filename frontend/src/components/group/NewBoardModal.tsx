@@ -3,11 +3,30 @@ import { Content } from "antd/es/layout/layout";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { useRef } from "react";
-import { postBoard } from "../../api/group";
+import { fetchBoardListByPage, postBoard } from "../../api/group";
+
+interface ArticleType {
+  articleDTO: {
+    articleId: number;
+    title: string;
+    content: string;
+    createdAt: Date;
+    userId: string;
+    nickname: string;
+    groupId: number;
+    role: string;
+  };
+}
+
+interface BoardType {
+  articles: ArticleType[];
+  pageNo: number;
+}
 
 interface PropsType {
   open: boolean;
   toggleModal: () => void;
+  setBoardDataList: React.Dispatch<React.SetStateAction<BoardType | undefined>>;
 }
 
 interface Board {
@@ -32,11 +51,19 @@ export default function NewBoardModal(props: PropsType) {
         titleInputRef.current.value = "";
         contentInputRef.current.value = "";
         // TODO: API 나온 후 게시판 리렌더링하기
+        fetchAndSetNewBoardList(0);
         props.toggleModal();
       }
     } else {
       console.log("미작성된 부분이 있음");
     }
+  }
+
+  async function fetchAndSetNewBoardList(page: number) {
+    // TODO: group page api 완성되면 1대신 groupId 전송
+    const newBoardList = await fetchBoardListByPage(1, page);
+    newBoardList.pgNo = 0;
+    props.setBoardDataList(newBoardList);
   }
 
   return (

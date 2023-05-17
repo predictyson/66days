@@ -410,6 +410,7 @@ export default function Group() {
       <NewBoardModal
         open={isOpenNewBoardModal}
         toggleModal={() => setOpenNewBoardModal((prev) => !prev)}
+        setBoardDataList={setBoardDataList}
       />
       <BoardModal
         open={isOpenBoardModal}
