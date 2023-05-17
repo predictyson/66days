@@ -25,8 +25,6 @@ public class GroupChallenge {
     @Column(name = "group_challenge_id")
     private Long groupChallengeId;
 
-
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
@@ -36,7 +34,6 @@ public class GroupChallenge {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
-
 
     @NotBlank
     @Column(name = "challenge_name")

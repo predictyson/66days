@@ -91,10 +91,12 @@ public class UserController {
 	public ResponseEntity<Void> signup(@RequestHeader("Authorization") String authorization,
 									   @RequestBody UserSignUpRequestDTO userSignUpRequestDTO) {
 		try {
-			ResponseEntity<UUID> response = authServiceClient.extractUUIDFromToken(authorization);
-			UUID userId = response.getBody();
+//			ResponseEntity<UUID> response = authServiceClient.extractUUIDFromToken(authorization);
+//			UUID userId = response.getBody();
+			UUID userId = authServiceClient.extractUUID(UUID.fromString(authorization)).getBody();
+
 			userService.signup(userId, userSignUpRequestDTO);
-			authServiceClient.signup(authorization);
+//			authServiceClient.signup(authorization);
 		} catch (FeignException e) {
 			log.error(e.getMessage());
 		}
@@ -103,8 +105,9 @@ public class UserController {
 
 	@GetMapping
 	public ResponseEntity<UserDetailResponseDTO> getUserDetail(@RequestHeader("Authorization") String token) {
-		ResponseEntity<UUID> response = authServiceClient.extractUUIDFromToken(token);
-		UUID userId = response.getBody();
+//		ResponseEntity<UUID> response = authServiceClient.extractUUIDFromToken(token);
+//		UUID userId = response.getBody();
+		UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
 		UserDetailResponseDTO userDetailResponseDTO = userService.getUserDetail(userId);
 		return ResponseEntity.ok(userDetailResponseDTO);
 	}

@@ -3,6 +3,7 @@ package com.ssafy._66days.mainservice.challenge.model.service;
 import com.ssafy._66days.mainservice.badge.model.repository.BadgeRepository;
 import com.ssafy._66days.mainservice.challenge.model.dto.MyChallengeHistoryDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
+import com.ssafy._66days.mainservice.challenge.model.dto.requestDTO.StreakRequestDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.AvailableMyChallengeResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.MyChallengeDetailResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
@@ -15,13 +16,15 @@ import com.ssafy._66days.mainservice.challenge.model.reposiotry.*;
 import com.ssafy._66days.mainservice.group.model.repository.GroupRepository;
 import com.ssafy._66days.mainservice.user.model.entity.User;
 import com.ssafy._66days.mainservice.user.model.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,6 +33,7 @@ import static java.time.LocalDateTime.now;
 
 @Service("MyChallengeService")
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 @Slf4j
 public class MyChallengeService {
     private final MyChallengeRepository myChallengeRepository;
@@ -41,26 +45,6 @@ public class MyChallengeService {
     private final GroupChallengeMemberRepository groupChallengeMemberRepository;
     private final PersonalChallengeLogRepository personalChallengeLogRepository;
 
-
-    public MyChallengeService(
-            UserRepository userRepository,
-            MyChallengeRepository myChallengeRepository,
-            ChallengeRepository challengeRepository,
-            BadgeRepository badgeRepository,
-            GroupChallengeRepository groupChallengeRepository,
-            GroupRepository groupRepository,
-            GroupChallengeMemberRepository groupChallengeMemberRepository,
-            PersonalChallengeLogRepository personalChallengeLogRepository
-    ) {
-        this.myChallengeRepository = myChallengeRepository;
-        this.userRepository = userRepository;
-        this.challengeRepository = challengeRepository;
-        this.badgeRepository = badgeRepository;
-        this.groupChallengeRepository = groupChallengeRepository;
-        this.groupRepository = groupRepository;
-        this.groupChallengeMemberRepository = groupChallengeMemberRepository;
-        this.personalChallengeLogRepository = personalChallengeLogRepository;
-    }
 
     @Transactional
     public boolean createMyChallenge(UUID userId, MyChallengeRequestDTO myChallengeRequestDTO) {
@@ -118,9 +102,7 @@ public class MyChallengeService {
         return myChallengeRepository.save(myChallenge) != null;
     }
 
-    public List<MyChallengeResponseDTO> getMyChallenges(    // 개인 챌린지 목록
-                                                            UUID userId
-    ) {
+    public List<MyChallengeResponseDTO> getMyChallenges(UUID userId) {
 
         User user = userRepository.findById(userId)                         // 유저 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
@@ -220,20 +202,31 @@ public class MyChallengeService {
         return MyChallengeDetailResponseDTO.of(myChallenge, myChallengeHistoryDTOs);                // 해당 챌린지의 정보와 챌린지 히스토리로 상세페이지 정보 DTO 만들어서 반환
     }
 
+    @Transactional
+
     public boolean checkPrivateStreak(
             UUID userId,
-            Long myChallengeId,
-            Date today
+            Long myChallengeId
     ) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));    // 유저 유무 체크
+        MyChallenge myChallenge = myChallengeRepository.findByMyChallengeIdAndState(myChallengeId, "ACTIVATED")
+                .orElseThrow(() -> new IllegalArgumentException("진행 중인 챌린지가 아닙니다"));  // 개인 챌린지 존재 유무 체크
+        if (!myChallenge.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인의 개인 챌린지가 아닙니다");                 // 해당 개인 챌린지가 해당 유저의 것인지 체크
+        }
 
-        PersonalChallengeLog perSonalChallengeLog = PersonalChallengeLog.builder()          // 몽고DB에 로그 작성
-                .personalChallengeId(myChallengeId)
-                .time(today)
+        LocalDate time = LocalDate.now(ZoneOffset.UTC);                                                   // 오늘 날짜
+        PersonalChallengeLog todayPersonalChallengeLog = personalChallengeLogRepository.findByMyChallengeIdAndTime(myChallengeId, time); // 오늘 날짜 스트릭 로그 조회
+        if (todayPersonalChallengeLog != null) {                                            // 스트릭 존재한다면
+            throw new IllegalArgumentException("이미 금일 스트릭을 채우셨습니다");                // 예외처리
+        }
+        PersonalChallengeLog personalChallengeLog = PersonalChallengeLog.builder()          // 금일 스트릭 로그 없다면 몽고DB에 로그 작성
+                .myChallengeId(myChallengeId)
+                .time(time)
                 .build();
 
-        return personalChallengeLogRepository.save(perSonalChallengeLog) != null;
+        return personalChallengeLogRepository.save(personalChallengeLog) != null;
     }
 }
 

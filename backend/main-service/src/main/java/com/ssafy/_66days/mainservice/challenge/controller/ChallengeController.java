@@ -3,6 +3,7 @@ package com.ssafy._66days.mainservice.challenge.controller;
 import com.ssafy._66days.mainservice.challenge.model.dto.requestDTO.GroupChallengeRequestDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.requestDTO.ManageApplicationRequestDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
+import com.ssafy._66days.mainservice.challenge.model.dto.requestDTO.StreakRequestDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.*;
 import com.ssafy._66days.mainservice.challenge.model.service.GroupChallengeService;
 import com.ssafy._66days.mainservice.challenge.model.service.MyChallengeService;
@@ -185,8 +186,6 @@ public class ChallengeController {
     }
 
     // 그룹 챌린지 가입 신청
-    // ? 관련 DB가 없음
-    // ? 5개 챌린지를 참여중이거나 동일한 챌린지 참여중이라면 신청 불가
     @PostMapping("/{group_challenge_id}")
     @ApiOperation(value = "그룹 챌린지 가입 신청 API", notes = "그룹 참여자가 시작하지 않은 챌린지에 가입 신청을 할 수 있다")
     public ResponseEntity<Map<String, Object>> challengeApplication(
@@ -195,25 +194,30 @@ public class ChallengeController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
-
+            UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+            log.info("Group Page, USER ID : {}", userId);
+            boolean isApplied = groupChallengeService.challengeApplication(userId, groupChallengeId);
+            resultMap.put("isApplied", isApplied);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
 
         } catch (Exception e) {
             e.printStackTrace();
+            resultMap.put("isApplied", false);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
     }
+    // ? 챌린지 신청자 목록 반환
+    // ! 챌린지 신청자 목록 반환
     // 그룹장 혹은 매니저 자신이 만든 챌린지 가입 신청 승인 or 거절
     // 참가인원이 맥스 인원을 넘기면 안된다
-    // ? 관련 DB가 없음
 
-    @PatchMapping("/group/{group_id}/group_challenge/{group_challenge_id}")
+    @PatchMapping("/group_challenge/{group_challenge_id}/{nickname}/{state}")
     @ApiOperation(value = "챌린지 가입 승인 or 거절 API", notes = "챌린지를 생성한 매니저 혹은 그룹장이 승인 or 거절 할 수 있다")
     public ResponseEntity<Map<String, Object>> manageSubscriptionApplication(
             @RequestHeader(value = "Authorization") String token,
-            @PathVariable("group_id") Long groupId,
             @PathVariable("group_challenge_id") Long groupChallengeId,
-            @RequestBody ManageApplicationRequestDTO manageApplicationRequestDTO
+            @PathVariable("nickname") String nickname,
+            @PathVariable("state") String state
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -225,12 +229,17 @@ public class ChallengeController {
             UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
             log.info("Group Page, USER ID : {}", userId);
 
+            boolean isManaged = groupChallengeService.manageSubscriptionApplication(userId, groupChallengeId, nickname, state);
+            resultMap.put("isManaged", isManaged);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
         } catch (Exception e) {
             e.printStackTrace();
+            resultMap.put("isManaged", false);
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
     }
+
 
     // ? 그룹 챌린지 목록(그룹 들어갔을때) 반환 -->  페이지API로 대체
     @GetMapping("/{group_id}")
@@ -287,12 +296,12 @@ public class ChallengeController {
         }
     }
 
-    // ? 개인 스트릭 찍기 mongoDB쪽이라 유보
-    @PostMapping("/{my_challenge_id}")
+    // 개인 스트릭 찍기
+    @PostMapping("/streak/{my_challenge_id}")
+    @ApiOperation(value="개인 챌린지 당일 스트릭 찍기 API", notes="개인 챌린지 상세 화면에서 스트릭을 찍는다")
     public ResponseEntity<Map<String, Object>> checkPrivateStreak(
             @RequestHeader(value = "Authorization") String token,
-            @PathVariable("my_challenge_id") Long myChallengeId,
-            @PathVariable("today") Date today
+            @PathVariable("my_challenge_id") Long myChallengeId
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -304,22 +313,24 @@ public class ChallengeController {
             UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
             log.info("Group Page, USER ID : {}", userId);
 
-            boolean isChecked = myChallengeService.checkPrivateStreak(userId, myChallengeId, today);
+            boolean isChecked = myChallengeService.checkPrivateStreak(userId, myChallengeId);
             resultMap.put("isChecked", isChecked);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
         } catch (Exception e) {
             e.printStackTrace();
+            resultMap.put("isChecked", false);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
     }
 
 
-    // ? 그룹 챌린지 찍기 mongoDB쪽이라 유보
-    @PostMapping("/{group_challenge_id}/{today}")
+    // 그룹 챌린지 찍기
+    @PostMapping("/group_streak/{group_challenge_id}/{nickname}")
+    @ApiOperation(value="그룹 챌린지에서 개인 당일 스트릭 찍기 API", notes="그룹 챌린지 상세 화면에서 스트릭을 찍는다")
     public ResponseEntity<Map<String, Object>> checkGroupStreak(
             @RequestHeader(value = "Authorization") String token,
             @PathVariable("group_challenge_id") Long groupChallengeId,
-            @PathVariable("today") Date today
+            @PathVariable("nickname") String nickname
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
@@ -331,7 +342,7 @@ public class ChallengeController {
             UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
             log.info("Group Page, USER ID : {}", userId);
 
-            boolean isChecked = groupChallengeService.checkGroupStreak(userId, groupChallengeId, today);
+            boolean isChecked = groupChallengeService.checkGroupStreak(userId, groupChallengeId, nickname);
             resultMap.put("isChecked", isChecked);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
         } catch (Exception e) {
@@ -339,6 +350,7 @@ public class ChallengeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
     }
+
     // ? 개인 챌린지 스트릭 정보
     // ? 그룹 챌린지 스트릭 정보
     // ? 챌린지 끝났을 때 챌린지 상태값, 종료일 update mongoDB인가?

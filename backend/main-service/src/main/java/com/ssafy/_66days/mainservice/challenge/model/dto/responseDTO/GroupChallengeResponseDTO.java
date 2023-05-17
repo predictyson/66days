@@ -13,6 +13,7 @@ import java.util.List;
 @ToString
 public class GroupChallengeResponseDTO {
     private Long groupChallengeId;
+    private Long challengeId;
     private String imagePath;
     private String challengeName;
     private Date startAt;
@@ -28,6 +29,7 @@ public class GroupChallengeResponseDTO {
     ) {
         return GroupChallengeResponseDTO.builder()
                 .groupChallengeId(groupChallenge.getGroupChallengeId())
+                .challengeId(groupChallenge.getChallenge().getChallengeId())
                 .imagePath(groupChallenge.getChallenge().getBadge().getImagePath())
                 .challengeName(groupChallenge.getChallengeName())
                 .startAt(startAt)
