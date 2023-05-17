@@ -1,9 +1,9 @@
-import { SendOutlined } from "@ant-design/icons";
-import { Button, Input, Space } from "antd";
+// import { SendOutlined } from "@ant-design/icons";
+import { Input, Space } from "antd";
 import styled from "styled-components";
 import { mockMessages } from "../../mock/challenge";
 import Message from "./Message";
-import useChat from "../../hooks/useChat";
+// import useChat from "../../hooks/useChat";
 import { useEffect, useRef } from "react";
 
 interface PropsType {
@@ -11,7 +11,7 @@ interface PropsType {
 }
 
 export default function Chat(props: PropsType) {
-  const { sendMessage } = useChat();
+  // const { sendMessage } = useChat();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -31,9 +31,9 @@ export default function Chat(props: PropsType) {
       <div ref={messagesEndRef}></div>
       <Space.Compact>
         <Input placeholder="메시지를 입력해주세요..." />
-        <Button type="primary" icon={<SendOutlined />} onClick={sendMessage}>
+        {/* <Button type="primary" icon={<SendOutlined />} onClick={sendMessage}>
           Send
-        </Button>
+        </Button> */}
       </Space.Compact>
     </StyledChat>
   );

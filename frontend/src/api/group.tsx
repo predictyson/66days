@@ -23,9 +23,10 @@ async function fetchGroupPageData(id = 1) {
 async function fetchGroupMembers(id = 1) {
   try {
     const res = await api.get(
-      `/api/v2/main-service/group/${id}/manage/members`
+      `/api/v1/main-service/group/${id}/manage/members`
     );
     if (res.status === 200) {
+      console.log(res.data);
       return res.data;
     }
 

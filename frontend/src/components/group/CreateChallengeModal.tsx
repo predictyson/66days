@@ -4,10 +4,16 @@ import type { InputRef } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { mockCategories } from "../../mock/group";
+import TextArea from "antd/es/input/TextArea";
+import dayjs, { Dayjs } from "dayjs";
 
 interface PropsType {
   open: boolean;
   toggleModal: () => void;
+}
+
+interface TextAreaRef extends HTMLTextAreaElement {
+  resizableTextArea: any;
 }
 
 interface CategoryType {
@@ -23,8 +29,11 @@ export default function CreateChallengeModal(props: PropsType) {
 
   const titleRef = useRef<InputRef | null>(null);
   const cntRef = useRef<InputRef | null>(null);
-  const descRef = useRef<InputRef | null>(null);
-  const startDateRef = useRef<InputRef | null>(null);
+  const descRef = useRef<TextAreaRef | null>(null);
+  // const startDateRef = useRef<InputRef | null>(null);
+  const [startDate, setStartDate] = useState<Date>();
+
+  const dateFormat = "YYYY-MM-DD";
 
   const FirstStepContent = () => {
     return (
@@ -71,7 +80,7 @@ export default function CreateChallengeModal(props: PropsType) {
           <div className="sub-title">
             챌린지 설명<span className="essential">*</span>
           </div>
-          <Input
+          <TextArea
             className="input-font input-desc"
             showCount
             maxLength={50}
@@ -83,7 +92,12 @@ export default function CreateChallengeModal(props: PropsType) {
             <div className="sub-title">
               시작 날짜<span className="essential">*</span>
             </div>
-            <DatePicker className="date-picker" />
+            <DatePicker
+              className="date-picker"
+              onChange={handleDateValue}
+              value={dayjs("2015-06-06", dateFormat)}
+              // disabled={[false, true]}
+            />
           </div>
           {/* 시간이 남을 경우 프론트 단에서 예상 종료 날짜 띄워주기 */}
           {/* <div className="date-box">
@@ -106,11 +120,11 @@ export default function CreateChallengeModal(props: PropsType) {
     } else if (step === 2) {
       // TODO: submit handle
       // console.log(challengeTitleRef.current?.value);
+      handleCreateChallenge();
       setLoading(true);
       setTimeout(() => {
         setLoading(false);
       }, 1500);
-      handleCreateChallenge();
     }
   }
 
@@ -118,8 +132,13 @@ export default function CreateChallengeModal(props: PropsType) {
   function handleCreateChallenge() {
     console.log(titleRef.current?.input?.value);
     console.log(cntRef.current?.input?.value);
-    console.log(descRef.current?.input);
-    console.log(startDateRef);
+    console.log(descRef.current?.resizableTextArea.textArea?.value);
+    console.log(startDate);
+  }
+
+  function handleDateValue(dateObject: Dayjs | null, dateString: string) {
+    console.log(dateObject);
+    setStartDate(new Date(dateString));
   }
 
   function changeCategory(idx: number) {
@@ -278,7 +297,7 @@ const ChallengeInfoWrapper = styled.div`
   }
 
   .input-desc {
-    height: 8rem;
+    /* height: 8rem; */
   }
 
   .essential {
