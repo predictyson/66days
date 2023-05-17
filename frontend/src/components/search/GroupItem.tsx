@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Modal } from "antd";
 import { SearchGroupData } from "../../types/search";
 import Category from "../../styles/CategoryTheme";
+import { putGroupApply } from "../../api/search";
 
 interface IProps {
   group: SearchGroupData;
@@ -19,6 +20,8 @@ export default function GroupItem({ group }: IProps) {
   };
 
   const handleOk = () => {
+    //FIXME: group_id 받아와야함
+    putGroupApply(1, "APPLIED");
     setIsModalOpen(false);
   };
 
