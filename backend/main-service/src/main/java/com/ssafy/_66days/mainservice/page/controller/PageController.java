@@ -4,7 +4,7 @@ import com.ssafy._66days.mainservice.article.model.dto.responseDto.ArticleRespon
 import com.ssafy._66days.mainservice.article.model.service.ArticleService;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.GroupChallengeResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.service.GroupChallengeService;
-import com.ssafy._66days.mainservice.group.model.repository.GroupAchievementResponseDTO;
+import com.ssafy._66days.mainservice.group.model.dto.GroupAchievementResponseDTO;
 import com.ssafy._66days.mainservice.group.model.service.GroupService;
 import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
 import com.ssafy._66days.mainservice.user.model.dto.UserDetailDTO;

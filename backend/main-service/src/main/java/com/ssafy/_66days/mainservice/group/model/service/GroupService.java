@@ -1,6 +1,12 @@
 package com.ssafy._66days.mainservice.group.model.service;
 
+import com.ssafy._66days.mainservice.challenge.model.entity.Challenge;
+import com.ssafy._66days.mainservice.challenge.model.entity.GroupChallenge;
+import com.ssafy._66days.mainservice.challenge.model.reposiotry.ChallengeRepository;
+import com.ssafy._66days.mainservice.challenge.model.reposiotry.GroupChallengeRepository;
 import com.ssafy._66days.mainservice.global.util.FileUtil;
+import com.ssafy._66days.mainservice.group.model.dto.GroupAchievementDetailResponseDTO;
+import com.ssafy._66days.mainservice.group.model.dto.GroupAchievementResponseDTO;
 import com.ssafy._66days.mainservice.group.model.dto.GroupCreateDTO;
 import com.ssafy._66days.mainservice.group.model.dto.GroupSearchPageResponseDTO;
 import com.ssafy._66days.mainservice.group.model.entity.Group;
@@ -8,7 +14,6 @@ import com.ssafy._66days.mainservice.group.model.entity.GroupAchievement;
 import com.ssafy._66days.mainservice.group.model.entity.GroupApply;
 import com.ssafy._66days.mainservice.group.model.entity.GroupMember;
 import com.ssafy._66days.mainservice.group.model.repository.GroupAchievementRepository;
-import com.ssafy._66days.mainservice.group.model.repository.GroupAchievementResponseDTO;
 import com.ssafy._66days.mainservice.group.model.repository.GroupApplyRepository;
 import com.ssafy._66days.mainservice.group.model.repository.GroupMemberRepository;
 import com.ssafy._66days.mainservice.group.model.repository.GroupRepository;
@@ -40,6 +45,8 @@ public class GroupService {
     private final GroupApplyRepository groupApplyRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final GroupAchievementRepository groupAchievementRepository;
+    private final GroupChallengeRepository groupChallengeRepository;
+    private final ChallengeRepository challengeRepository;
     private final FileUtil fileUtil;
 
     @Value("${file.path.upload-images-groups}")
@@ -214,13 +221,43 @@ public class GroupService {
     }
 
     public List<GroupAchievementResponseDTO> getGroupAchievement(UUID userId, Long groupId) {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(userId)                                         // 유저 객체 받아오기
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
-        Group group = groupRepository.findById(groupId)
+        Group group = groupRepository.findById(groupId)                                     // 그룹 객체 받아오기
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 그룹입니다"));
-        GroupMember groupMember = groupMemberRepository.findByGroupAndUserAndIsDeleted(group, user, false)
+        GroupMember groupMember = groupMemberRepository.findByGroupAndUserAndIsDeleted(group, user, false)  // 그룹멤버 객체 받아오기
                 .orElseThrow(() -> new NoSuchElementException("그룹에 속하지 않는 유저입니다"));
-        List<GroupAchievement> groupAchievements = groupAchievementRepository.findByGroup(group);
-        if
+        List<GroupAchievement> groupAchievements = groupAchievementRepository.findByGroup(group);               // 그룹의 업적 객체 받아오기
+        List<GroupAchievementResponseDTO> GroupAchievementResponseDTOs = new ArrayList<>();
+        if (groupAchievements != null) {
+            for (int i = 0; i < groupAchievements.size(); i++) {
+                GroupAchievement tempGroupAchievement = groupAchievements.get(i);
+                GroupAchievementResponseDTO groupAchievementResponseDTO = GroupAchievementResponseDTO.of(tempGroupAchievement);
+                GroupAchievementResponseDTOs.add(groupAchievementResponseDTO);
+            }
+        }
+        return GroupAchievementResponseDTOs;
+    }
+
+    public List<GroupAchievementDetailResponseDTO> getGroupAchievementDetail(Long groupId, Long challengeId) {
+        Group group = groupRepository.findById(groupId)                                     // 그룹 객체 받아오기
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 그룹입니다"));
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 챌린지입니다"));
+        List<GroupAchievementDetailResponseDTO> GroupAchievementDetailResponseDTOs = new ArrayList<>();
+        List<String> stateList = new ArrayList<>();
+        stateList.add("SUCCESSFUL");
+        stateList.add("FAILED");
+        for (String state : stateList) {
+            List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, state);
+            if (groupChallenges != null) {
+                for (int i = 0; i < groupChallenges.size(); i++) {
+                    GroupChallenge groupChallenge = groupChallenges.get(i);
+                    GroupAchievementDetailResponseDTO achievementDetailDTO = GroupAchievementDetailResponseDTO.of(groupChallenge);
+                    GroupAchievementDetailResponseDTOs.add(achievementDetailDTO);
+                }
+            }
+        }
+        return GroupAchievementDetailResponseDTOs;
     }
 }

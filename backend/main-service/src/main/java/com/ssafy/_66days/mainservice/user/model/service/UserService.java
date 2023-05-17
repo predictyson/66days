@@ -141,7 +141,7 @@ public class UserService {
             List<Badge> badges = new ArrayList<>();
             for (Challenge challenge : challenges) {
                 // Optional 변경 필요
-                GroupChallenge groupChallenge =
+                List<GroupChallenge> groupChallenge =
                         groupChallengeRepository
                                 .findByGroupAndChallengeAndState(group, challenge, "SUCCESSFUL");
                 if (groupChallenge != null) {

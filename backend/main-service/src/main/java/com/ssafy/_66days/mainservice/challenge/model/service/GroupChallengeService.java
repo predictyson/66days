@@ -98,16 +98,19 @@ public class GroupChallengeService {
             state = "WAITING";
         }
 
-        GroupChallenge groupChallenge = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, state); // 현재 진행 중인 챌린지가 있는지 찾아온다
+        List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, "ACTIVATED"); // 현재 진행 중인 챌린지가 있는지 찾아온다
         if (ChronoUnit.DAYS.between(today, startAt) > 30) {                                              //  시작날짜가 오늘 날짜에서 30일 초과한 날짜인지 확인
             throw new IllegalArgumentException("챌린지는 최대 30일 이내에 시작해야 합니다");
         }
-        if (groupChallenge != null && groupChallenge.getEndAt().isAfter(startAt)) { // 같은 챌린지가 해당 그룹내에서 진행중인지 확인(시작날짜가 진행 중 챌린지 endAt보다 전인지 확인)
-            throw new IllegalArgumentException("동일한 챌린지가 그룹 내에서 진행 중인 날짜에는 챌린지를 시작할 수 없습니다");
+        if (groupChallenges != null && groupChallenges.size() == 1) {
+            GroupChallenge groupChallenge = groupChallenges.get(0);
+            if (groupChallenge.getEndAt().isAfter(startAt)) {                                           // 같은 챌린지가 해당 그룹내에서 진행중인지 확인(시작날짜가 진행 중 챌린지 endAt보다 전인지 확인)
+                throw new IllegalArgumentException("동일한 챌린지가 그룹 내에서 진행 중인 날짜에는 챌린지를 시작할 수 없습니다");
+            }
         }
 
 
-        String status = "ACTIVATED";                                                                     // 새로 시작할 챌린지 상태값
+        String status = state;                                                                           // 새로 시작할 챌린지 상태값
         int availableFreezingCount = 0;                                                                  // 사용가능 프리징 수 기본값
         GroupChallenge newGroupChallenge = GroupChallenge.builder()
                 .group(group)
