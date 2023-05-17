@@ -58,9 +58,8 @@ export default function CustomHeader() {
             </Dropdown>
           ) : (
             <a
-              href={`${
-                import.meta.env.VITE_SERVER_DOMAIN
-              }/oauth2/authorization/kakao`}
+              // FIXME: href={`${ import.meta.env.VITE_SERVER_DOMAIN }/oauth2/authorization/kakao`}
+              href="http://localhost:8080/oauth2/authorization/kakao"
             >
               <LoginOutlined /> login
             </a>

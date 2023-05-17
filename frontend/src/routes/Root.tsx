@@ -13,9 +13,9 @@ export default function Root() {
   /**
    * Whenever a user is logged in, logged out, or update User info
    */
-  useEffect(() => {
-    user !== null && navigate("/", { replace: true });
-  }, [user]);
+  // useEffect(() => {
+  //   user !== null && navigate("/", { replace: true });
+  // }, [user]);
 
   return (
     <StyledLayout>
