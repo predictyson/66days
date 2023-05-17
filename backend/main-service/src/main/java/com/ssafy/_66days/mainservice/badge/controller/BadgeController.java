@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/badge")
@@ -32,9 +33,9 @@ public class BadgeController {
             @PathVariable("gourp_id") Long groupId
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-
+        UUID userId = UUID.fromString("f1629861-f09b-11ed-a26b-0242ac110003");
         try {
-            List<BadgeListResponseDTO> badgeList = badgeService.getGroupBadgeList(groupId);
+            List<BadgeListResponseDTO> badgeList = badgeService.getGroupBadgeList(userId, groupId);
             resultMap.put("groupBadgeList", badgeList);
             return ResponseEntity.ok().body(resultMap);
         } catch (Exception e) {

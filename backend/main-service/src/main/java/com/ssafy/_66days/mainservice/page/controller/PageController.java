@@ -2,6 +2,8 @@ package com.ssafy._66days.mainservice.page.controller;
 
 import com.ssafy._66days.mainservice.article.model.dto.responseDto.ArticleResponseDTO;
 import com.ssafy._66days.mainservice.article.model.service.ArticleService;
+import com.ssafy._66days.mainservice.badge.model.dto.ResponseDTO.BadgeMyPageDTO;
+import com.ssafy._66days.mainservice.badge.model.service.BadgeService;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.GroupChallengeResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.service.GroupChallengeService;
 import com.ssafy._66days.mainservice.group.model.dto.GroupAchievementResponseDTO;
@@ -34,6 +36,8 @@ public class PageController {
     private final GroupChallengeService groupChallengeService;
     private final UserService userService;
     private final GroupService groupService;
+    private final BadgeService badgeService;
+
     private final AuthServiceClient authServiceClient;
 
     @ApiOperation(value = "홈 화면", notes = "로그인 후 연결 되는 첫 페이지")
@@ -66,14 +70,17 @@ public class PageController {
 
         try {
             UserDetailDTO userDetailDTO = userService.findUserById(userId);
-            resultMap.put("user-info", userDetailDTO);
+            resultMap.put("userInfo", userDetailDTO);
         } catch (Exception e) {
             resultMap.put(RESULT, e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
         }
 
 //        resultMap.put("member-info", member);
-        resultMap.put("badges", new ArrayList<>());
+
+        List<BadgeMyPageDTO> badgeMyPageDTOList = badgeService.getMyPageBadgeList(userId);
+        resultMap.put("badges", badgeMyPageDTOList);
+
         resultMap.put("streak", new ArrayList<>());
         resultMap.put("challenge", new ArrayList<>());
 
