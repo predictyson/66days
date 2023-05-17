@@ -1,12 +1,11 @@
 import api from "./api";
 
-export async function fetchSearchData(searchContent: string, filterBy: string) {
+export async function fetchSearchData(searchContent: string, pgNo: number) {
   try {
     const res = await api.get(
-      `/api/v1/main-service​/group​/search=${searchContent}&filterBy=${filterBy}`
+      `/api/v1/main-service/group/search?searchContent=${searchContent}&pgNo=${pgNo}`
     );
     if (res.status === 200) {
-      console.log(res.data);
       return res.data;
     }
 

@@ -5,15 +5,20 @@ import GroupItem from "../components/search/GroupItem";
 // import { getSearchData } from "../api/search";
 import { SearchData } from "../types/search";
 import { fetchSearchData } from "../api/search";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 export default function SearchPage() {
   const [searchValue, setSearchValue] = useState<string>("");
-  
+  const [groupdata, setGroupdata] = useState<SearchData>({
+    result: "success",
+    [`group-list`]: [],
+  });
   //FIXME: CORS error
   async function getSearchData() {
     try {
-      const data = await fetchSearchData(searchValue, "알고리즘");
+      const data = await fetchSearchData(searchValue, 0);
+      setGroupdata(data);
       console.log(data);
+      console.log(data[`group-list`]);
     } catch (error) {
       console.log("Error occurred while fetching search data:", error);
     }
@@ -21,6 +26,8 @@ export default function SearchPage() {
   const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       getSearchData();
+
+      setSearchValue("");
     }
   };
 
@@ -48,15 +55,15 @@ export default function SearchPage() {
       >
         <BreadCrumb />
       </div>
-
       <ItemContainer>
-        {DUMMY_DATA_SEARCH.groupList.map((data, idx) => {
-          return (
-            <div key={idx} style={{ marginTop: "6rem" }}>
-              <GroupItem key={idx} group={data} />
-            </div>
-          );
-        })}
+        {groupdata[`group-list`] &&
+          groupdata[`group-list`].map((data, idx) => {
+            return (
+              <div key={idx} style={{ marginTop: "6rem" }}>
+                <GroupItem key={idx} group={data} />
+              </div>
+            );
+          })}
       </ItemContainer>
     </Container>
   );
@@ -109,108 +116,3 @@ const ItemContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(33%, 1fr));
   justify-content: space-between;
 `;
-
-const DUMMY_DATA_SEARCH: SearchData = {
-  result: "success",
-  groupList: [
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 66,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "블로깅"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-  ],
-};
