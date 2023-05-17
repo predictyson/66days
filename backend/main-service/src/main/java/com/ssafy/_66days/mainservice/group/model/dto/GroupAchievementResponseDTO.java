@@ -16,7 +16,7 @@ public class GroupAchievementResponseDTO {
 
     public static GroupAchievementResponseDTO of(GroupAchievement groupAchievement) {
         return GroupAchievementResponseDTO.builder()
-                .imagePath(groupAchievement.getChallenge().getBadge().getImagePath())
+                .imagePath(groupAchievement.getChallenge().getBadgeImage())
                 .challengeName(groupAchievement.getChallenge().getTopic())
                 .challengeId(groupAchievement.getChallenge().getChallengeId())
                 .achievementCount(groupAchievement.getAchievementCount())

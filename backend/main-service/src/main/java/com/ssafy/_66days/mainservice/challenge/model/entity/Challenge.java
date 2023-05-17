@@ -31,4 +31,7 @@ public class Challenge {    // 챌린지 메타 데이터
     @Column(name = "topic")
     private String topic;
 
+    @NotBlank
+    @Column(name = "badgeImage")
+    private String badgeImage;
 }
