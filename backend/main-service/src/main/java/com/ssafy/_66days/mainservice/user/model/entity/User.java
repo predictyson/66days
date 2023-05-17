@@ -7,10 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.ColumnDefault;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,42 +25,50 @@ import lombok.NoArgsConstructor;
 public class User {
 
 	@Id
-	@Column(columnDefinition = "BINARY(16)", updatable = false)
+	@Column(name = "user_id", columnDefinition = "BINARY(16)", updatable = false)
 	private UUID userId;
 
 	@NotNull
+	@Column(name = "animal_id")
 	private Long animalId;
 
 	@NotNull
+	@Column(name = "tier_id")
 	private Long tierId;
 
 	@Email
 	@NotBlank
+	@Column(name = "email", length = 320)
 	private String email;
 
+	@NotBlank
+	@Column(name = "profile_image_path", length = 320)
 	private String profileImagePath;
 
 	@Size(max = 12)
 	@NotBlank
+	@Column(name = "nickname")
 	private String nickname;
 
 	@NotNull
-	@Min(0)
+	@Column(name = "exp")
+	@ColumnDefault("0")
 	private Long exp;
 
 	@NotNull
-	@Min(0)
+	@Column(name = "point")
+	@ColumnDefault("0")
 	private Long point;
 
-	@Column(length = 260)
+	@Column(name = "github_url", length = 260)
 	private String githubUrl;
 
-	@Column(length = 260)
+	@Column(name = "blog_url", length = 260)
 	private String blogUrl;
 
 	@Builder
 	public User(UUID userId, Long animalId, Long tierId, String email, String profileImagePath,
-			    String nickname, Long exp, Long point, String githubUrl, String blogUrl) {
+				String nickname, Long exp, Long point, String githubUrl, String blogUrl) {
 		this.userId = userId;
 		this.animalId = animalId;
 		this.tierId = tierId;

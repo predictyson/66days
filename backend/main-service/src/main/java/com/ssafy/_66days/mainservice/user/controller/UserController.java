@@ -1,11 +1,11 @@
 package com.ssafy._66days.mainservice.user.controller;
 
-import com.ssafy._66days.mainservice.global.util.FileUtil;
 import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
+import com.ssafy._66days.mainservice.user.model.dto.UserDetailResponseDTO;
+import com.ssafy._66days.mainservice.user.model.dto.UserSignUpRequestDTO;
 import com.ssafy._66days.mainservice.user.model.service.UserService;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -86,11 +87,25 @@ public class UserController {
 		return ResponseEntity.ok(!isAvailable);
 	}
 
-//	@GetMapping()
-//	public ResponseEntity<UserDetailResponseDTO> getUserDetail(@RequestHeader("Authorization") String token) {
-//		// get UUID from token
-//		//UserDetailResponseDTO userDetailResponseDTO = userService.getUserDetail(uuid);
-//		//return ResponseEntity.ok(userDetailResponseDTO);
-//		return ResponseEntity.ok().build();
-//	}
+	@PostMapping("/signup/nickname")
+	public ResponseEntity<Void> signup(@RequestHeader("Authorization") String authorization,
+									   @RequestBody UserSignUpRequestDTO userSignUpRequestDTO) {
+		try {
+			ResponseEntity<UUID> response = authServiceClient.extractUUIDFromToken(authorization);
+			UUID userId = response.getBody();
+			userService.signup(userId, userSignUpRequestDTO);
+			authServiceClient.signup(authorization);
+		} catch (FeignException e) {
+			log.error(e.getMessage());
+		}
+		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping
+	public ResponseEntity<UserDetailResponseDTO> getUserDetail(@RequestHeader("Authorization") String token) {
+		ResponseEntity<UUID> response = authServiceClient.extractUUIDFromToken(token);
+		UUID userId = response.getBody();
+		UserDetailResponseDTO userDetailResponseDTO = userService.getUserDetail(userId);
+		return ResponseEntity.ok(userDetailResponseDTO);
+	}
 }
