@@ -84,7 +84,7 @@ public class SecurityConfig {
 		CorsConfiguration configuration = new CorsConfiguration();
 		configuration.addAllowedOriginPattern("*");
 		configuration.addAllowedOrigin("https://k8a705.p.ssafy.io");
-		configuration.addAllowedOrigin("https://hello66days.word");
+		configuration.addAllowedOrigin("https://hello66days.world");
 		configuration.addAllowedOrigin("https://accounts.kakao.com");
 		configuration.addAllowedHeader("*");
 		configuration.addAllowedMethod("*");
