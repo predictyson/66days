@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -185,15 +186,22 @@ public class GroupChallengeService {
 
         List<GroupChallengeMemberDTO> groupChallengeMemberDTOList = new ArrayList<>();
 
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(ZoneOffset.UTC);
         for (int i = 0; i < groupChallengeMemberList.size(); i++) {                                     // 챌린지 멤버들을 순회
             UUID tempUserId = groupChallengeMemberList.get(i).getUser().getUserId();                   // 챌린지 멤버 userId 받아온다
             GroupChallengeLog groupChallengeLog = groupChallengeLogRepository.findByUserIdAndGroupChallengeIdAndTime(tempUserId, groupChallengeId, today);  // 유저Id, 챌린지Id, 오늘널짜로 로그를 찾아온다
+            if (groupChallengeLog != null) {
+
+                System.out.println(groupChallengeLog.getTime());
+                System.out.println(groupChallengeLog.getUserId());
+            }
             GroupChallengeMemberDTO groupChallengeMemberDTO = GroupChallengeMemberDTO.of(groupChallengeMemberList.get(i), groupChallengeLog != null); // 오늘 안찍은 사람이면 false, 찍은 사람은 true로 DTO에 저장된다
             groupChallengeMemberDTOList.add(groupChallengeMemberDTO);                                   // 각 개인의 정보를 리스트에 넣는다
         }
         return GroupChallengeDetailResponseDTO.of(groupChallenge, groupChallengeMemberDTOList);         // 그룹 챌린지의 이름 등 데이터와 챌린지 멤버들의 정보를 담아서 반환
     }
+
+    @Transactional
 
     public boolean checkGroupStreak(
             UUID userId,
@@ -202,7 +210,7 @@ public class GroupChallengeService {
     ) {
         User user = userRepository.findById(userId)                                             // 유저 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
-        GroupChallenge groupChallenge = groupChallengeRepository.findById(groupChallengeId)
+        GroupChallenge groupChallenge = groupChallengeRepository.findByGroupChallengeIdAndState(groupChallengeId, "ACTIVATED")
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹 챌린지입니다"));  // 그룹 챌린지 존재 유무 체크
         GroupChallengeMember groupChallengeMember = groupChallengeMemberRepository.findByUserAndGroupChallenge(user, groupChallenge)
                 .orElseThrow(() -> new IllegalArgumentException("챌린지에 속한 유저가 아닙니다"));
@@ -210,7 +218,7 @@ public class GroupChallengeService {
             throw new IllegalArgumentException("타인의 스트릭 체크 박스입니다");
         }
 
-        LocalDate time = LocalDate.now();                                                   // 오늘 날짜
+        LocalDate time = LocalDate.now(ZoneOffset.UTC);                                                   // 오늘 날짜
         GroupChallengeLog todayGroupChallengeLog = groupChallengeLogRepository.findByUserIdAndGroupChallengeIdAndTime(userId, groupChallengeId, time); // 오늘 날짜 스트릭 로그 조회
         if (todayGroupChallengeLog != null) {                                               // 스트릭 존재한다면
             throw new IllegalArgumentException("이미 금일 스트릭을 채우셨습니다");                // 예외처리
@@ -218,10 +226,12 @@ public class GroupChallengeService {
         GroupChallengeLog groupChallengeLog = GroupChallengeLog.builder()                  // 유저의 금일 그룹 챌린지 스트릭 로그 저장
                 .groupChallengeId(groupChallengeId)
                 .userId(userId)
-                .time(LocalDate.now())
+                .time(time)
                 .build();
         return groupChallengeLogRepository.save(groupChallengeLog) != null;
     }
+
+    @Transactional
 
     public boolean challengeApplication(
             UUID userId,
@@ -230,7 +240,11 @@ public class GroupChallengeService {
         User user = userRepository.findById(userId)                                               // 유저 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         GroupChallenge groupChallenge = groupChallengeRepository.findById(groupChallengeId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹 챌린지입니다"));  // 그룹 챌린지 존재 유무 체크
+                .orElseThrow(() -> new IllegalArgumentException("신청할 수 없는 챌린지입니다"));    // 그룹 챌린지 존재 유무 체크
+        Group group = groupChallenge.getGroup();                                                // 그룹 객체 받아오기
+        GroupMember groupMember = groupMemberRepository.findByGroupAndUser(group, user)         // 신청한 유저가 그룹에 속한 사람인지 확인
+                .orElseThrow(() -> new IllegalArgumentException("그룹에 속한 유저가 아닙니다"));
+
         List<GroupChallengeMember> memberCount = groupChallengeMemberRepository.findByGroupChallenge(groupChallenge);
         if (memberCount.size() > groupChallenge.getMaxMemberCount()) {                          // 해당 챌린지 현재 참여 가능 인원수 체크
             throw new IllegalArgumentException("해당 챌린지는 최대 참여 가능 인원 수가 다 찼습니다");
@@ -243,6 +257,12 @@ public class GroupChallengeService {
         Long challengeId = groupChallenge.getChallenge().getChallengeId();
         List<Long> temp = new ArrayList<>();                                                      // 하고 있는 챌린지 id 담을 배열
         List<GroupChallengeMember> groupChallengeMemberList = groupChallengeMemberRepository.findByUser(user); // 내가 참여중인 그룹 챌린지들
+        System.out.println("1" + user.getUserId());
+        System.out.println("2" + groupChallengeMemberList.size());
+        for (int i = 0; i < groupChallengeMemberList.size(); i++) {
+            System.out.println(groupChallengeMemberList.get(i).getGroupChallenge().getChallenge().getChallengeId().toString());
+
+        }
 
         if (!groupChallengeMemberList.isEmpty()) {
             for (int i = 0; i < groupChallengeMemberList.size(); i++) {
@@ -255,7 +275,7 @@ public class GroupChallengeService {
                 }
             }
         }
-
+        System.out.println("3" + temp.toString());
         List<MyChallenge> myChallengeList = myChallengeRepository.findByUser(user);                 // 개인 챌린지들을 찾아서
         if (!myChallengeList.isEmpty()) {
             for (int i = 0; i < myChallengeList.size(); i++) {
@@ -266,6 +286,9 @@ public class GroupChallengeService {
                 }
             }
         }
+
+        System.out.println("4" + challengeId);
+        System.out.println("5" + temp.toString());
         if (temp.contains(challengeId)) {                                                               // 신청하려는 챌린지와 내가 진행중인 챌린지를 비교해서
             throw new IllegalArgumentException("이미 진행중인 챌린지는 참가 신청 할 수 없습니다");            // 이미 하고 있는 챌린지면 신청 불가
         }
@@ -279,6 +302,7 @@ public class GroupChallengeService {
         return groupChallengeApplicationRepository.save(groupChallengeApplication) != null;
     }
 
+    @Transactional
     public boolean manageSubscriptionApplication(
             UUID userId,
             Long groupChallengeId,
@@ -290,7 +314,7 @@ public class GroupChallengeService {
         GroupChallenge groupChallenge = groupChallengeRepository.findById(groupChallengeId)         // 그룹 챌린지 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹 챌린지입니다"));
         Group group = groupChallenge.getGroup();                                                    // 그룹 객체 받아오기
-        GroupMember isExecutive = groupMemberRepository.findByGroupAndUserAndDeleted(group, user, false)    // 삭제되지 않은 결정권자 객체를 받아오기
+        GroupMember isExecutive = groupMemberRepository.findByGroupAndUserAndIsDeleted(group, user, false)    // 삭제되지 않은 결정권자 객체를 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("당신은 그룹에 속하지 않았습니다"));
         if (!isExecutive.getAuthority().equals("OWNER") && !isExecutive.getAuthority().equals("MANAGER")) {      // 결정권자가 owner나 manager가 아니라면 권한 문제 발생
             throw new IllegalArgumentException("챌린지 참가 신청 관리에 대한 권한이 없습니다");

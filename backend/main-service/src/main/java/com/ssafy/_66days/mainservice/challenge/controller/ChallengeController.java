@@ -194,6 +194,8 @@ public class ChallengeController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         try {
+            UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+            log.info("Group Page, USER ID : {}", userId);
             boolean isApplied = groupChallengeService.challengeApplication(userId, groupChallengeId);
             resultMap.put("isApplied", isApplied);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
@@ -299,7 +301,7 @@ public class ChallengeController {
     @ApiOperation(value="개인 챌린지 당일 스트릭 찍기 API", notes="개인 챌린지 상세 화면에서 스트릭을 찍는다")
     public ResponseEntity<Map<String, Object>> checkPrivateStreak(
             @RequestHeader(value = "Authorization") String token,
-            @PathVariable("my_challenge_id") Long myChallengeId,
+            @PathVariable("my_challenge_id") Long myChallengeId
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 

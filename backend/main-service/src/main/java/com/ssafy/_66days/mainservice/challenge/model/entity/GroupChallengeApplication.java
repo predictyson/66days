@@ -21,8 +21,8 @@ public class GroupChallengeApplication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "group_challenge_appllication_id")
-    private Long groupChallengeApplicationId;
+    @Column(name = "application_id")
+    private Long applicationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_challenge_id")
