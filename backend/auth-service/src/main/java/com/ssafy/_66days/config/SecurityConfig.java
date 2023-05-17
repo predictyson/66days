@@ -34,6 +34,7 @@ public class SecurityConfig {
 	private final RedisUtil redisUtil;
 
 	private static final String[] PERMIT_URL_ARRAY = {
+			"/**",
 			"**/*",
 			/* swagger v2 */
 			"/v2/api-docs",
