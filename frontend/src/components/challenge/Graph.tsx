@@ -20,7 +20,6 @@ export default function Graph(props: PropsType) {
     const commits = props.commits.concat(
       EMPTY_COMMITS.slice(0, LENGTH_COMMIT - props.commits.length)
     );
-    console.info(commits);
     const cols = Math.ceil(LENGTH_COMMIT / 3);
     const streaks = [];
     for (let i = 0; i < cols; i++) {
@@ -39,7 +38,6 @@ export default function Graph(props: PropsType) {
       }
       streaks.push(<StreakWrapper key={i}>{colStreaks}</StreakWrapper>);
     }
-    console.log("streaks", streaks);
     return streaks;
   };
 

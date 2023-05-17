@@ -12,8 +12,13 @@ import {
 import GroupIntroImage from "../assets/group/group-intro.svg";
 import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
+import { useState } from "react";
+
+// TODO: add an api to ask to join the group
 
 export default function GroupIntro() {
+  const [isApplied] = useState(false); // TODO: figure out whether a user applied or not
+
   return (
     <div style={{ marginInline: "8rem" }}>
       <Typography.Title style={{ fontSize: "3.2rem" }}>
@@ -37,10 +42,11 @@ export default function GroupIntro() {
             }}
           >
             <Card
-              style={{ width: "80%", margin: "auto" }}
+              style={{ width: "80%", margin: "auto", marginTop: "2rem" }}
               bodyStyle={{
                 display: "flex",
                 justifyContent: "space-around",
+                padding: 0,
               }}
             >
               <Typography.Text style={{ fontSize: "2.4rem" }}>
@@ -70,13 +76,13 @@ export default function GroupIntro() {
                 size="large"
                 style={{
                   fontSize: "2rem",
-                  backgroundColor: "black",
+                  backgroundColor: !isApplied ? "black" : "#7A7A7A",
                   height: "inherit",
                   color: "white",
                   marginBottom: "2rem",
                 }}
               >
-                apply
+                {!isApplied ? "그룹 가입 신청" : "신청 취소"}
               </Button>
             </Space>
           </div>
