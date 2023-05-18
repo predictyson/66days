@@ -47,7 +47,7 @@ public class PageController {
     private final MyChallengeService myChallengeService;
     private final BadgeService badgeService;
     private final PageService pageService;
-    private final AuthServiceClient authServiceClient;
+    private final JwtService jwtService;
 
     @ApiOperation(value = "메인 화면", notes = "로그인 후 연결 되는 첫 페이지")
     @GetMapping("/home")
@@ -56,8 +56,8 @@ public class PageController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        //token validation
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -77,8 +77,8 @@ public class PageController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        //token validation
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -99,8 +99,8 @@ public class PageController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        //token validation
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
         String groupName = groupService.getGroupName(groupId);
@@ -126,7 +126,8 @@ public class PageController {
     ) {
         Map<String, Object> resultMap = new HashMap<>();
 
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Intro Page, USER ID : {}", userId);
 
         Group group = groupService.findGroupById(groupId);
