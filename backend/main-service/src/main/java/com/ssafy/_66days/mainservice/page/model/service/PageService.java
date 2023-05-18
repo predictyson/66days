@@ -131,21 +131,53 @@ public class PageService {
         return MainPageResponseDTO.of(userDetailDTO, todayTodos, mainPageMyGroup, mainPageGroup);
     }
 
-    public MyPageResponseDTO getMyPage(UUID userId) {
+    public MyPageResponseDTO getMyPage(UUID userId) {                                    // 개인 프로필정보, 뱃지(업적정보), 참여그룹정보, 진행중 개인 챌린지정보
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));  // 유저 객테 받아오기
         //---------------userDetail-------------------------
-        UserDTO userDTO = UserDTO.myPage(user);
+        UserDTO userDTO = UserDTO.myPage(user);                                         // 유저정보 DTO 생성
         //-------------------badges-------------------------
-        List<MyChallenge> myChallenge = myChallengeRepository.findByUserAndStateIn(user, Arrays.asList("ACTIVATED", "WAITING"));
-
-        List<Object[]> counts = myChallengeRepository.countChallengeByUserAndState(user);
-        for (Object[] count : counts) {
-            Long challengeId = (Long) count[0];
-            int countValue = (int) count[1];
-            Challenge challenge = challengeRepository.findById(challengeId)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다"));
-            MyPageBadgeDTO myPageBadgeDTO = MyPageBadgeDTO.of(challenge, countValue);
+        List<MyPageBadgeDTO> myPageBadges = new ArrayList<>();                          // 뱃지정보 담을 배열
+        for (int i = 1; i < 6; i++) {                                                   // 챌린지 id 1~5까지 순회
+            Long id = Long.valueOf(i);
+            Challenge challenge = challengeRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다")); // 챌린지 객체 받아오기
+            List<MyChallenge> myChallenges =
+                    myChallengeRepository.findByChallengeAndStateIn
+                            (challenge, Arrays.asList("SUCCESSFUL", "FAILED")); // 내 챌린지 중 위의 챌린지 카테고리와 동일하면서 끝난 것들을 가져온다
+            if (myChallenges != null) {                                         // 그런 챌린지들이 있다면
+                MyPageBadgeDTO myPageBadgeDTO = MyPageBadgeDTO.of(challenge, myChallenges.size());  // 뱃지DTO로 면환 후
+                myPageBadges.add(myPageBadgeDTO);                                                   // 리스트에 담는다
+            }
         }
+        // ------------------groups----------------------------
+        List<MyPageGroupsDTO> myPageGroupsDTOs = new ArrayList<>();             // 참여 그룹 정보를 담을 배열
+        List<GroupMember> groupMembers = groupMemberRepository.findByUserAndIsDeleted(user, false); // 내가 참여하고 있는 group정보는 받아온다
+        if (groupMembers != null) {
+            for (int i = 0; i < groupMembers.size(); i++) {
+                Group group = groupMembers.get(i).getGroup();                   // 그룹 객체 받아오기
+                List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndState(group, "ACTIVATED");    // 해당 그룹이 하고 있는 챌린지 받아오기
+                List<String> challengeNames = new ArrayList<>();                // 챌린지의 메타 이름 받을 배열
+                if (groupChallenges != null) {
+                    for (int j = 0; j < groupChallenges.size(); j++) {
+                        String challengeName = groupChallenges.get(j).getChallenge().getTopic();    // 챌린지의 이름 메타데이터 찾아서
+                        challengeNames.add(challengeName);                                          // 넣어준다
+                    }
+                    MyPageGroupsDTO myPageGroupsDTO = MyPageGroupsDTO.of(group, challengeNames);    // DTO로 변환
+                    myPageGroupsDTOs.add(myPageGroupsDTO);                                          // 리스트에 넣는다
+                }
+            }
+        }
+        // ---------------------activateChallenge-----------------
+        List<MyPageChallengeDTO> myPageChallengeDTOs = new ArrayList<>();                           // 진행중인 개인챌린지 담을 배열
+        List<MyChallenge> myChallenges = myChallengeRepository.findByUserAndState(user, "ACTIVATED"); // 내 챌린지 중 진행중인거 받아온다
+        if (myChallenges != null) {
+            for (int i = 0; i < myChallenges.size(); i++) {
+                MyChallenge myChallenge = myChallenges.get(i);                                      // 내 챌린지 각각
+                MyPageChallengeDTO myPageChallengeDTO = MyPageChallengeDTO.of(myChallenge);         // DTO 변환
+                myPageChallengeDTOs.add(myPageChallengeDTO);                                        // 리스트 저장
+            }
+        }
+        return MyPageResponseDTO.of(userDTO, myPageBadges, myPageGroupsDTOs, myPageChallengeDTOs);  // 최종 반환 DTO에 저장하여 반환
     }
 }
