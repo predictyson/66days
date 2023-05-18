@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Button,
   Col,
@@ -12,12 +12,26 @@ import {
 import type { InputRef } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
-import { mockCategories } from "../../mock/group";
 import TextArea from "antd/es/input/TextArea";
+import { getImagePath } from "../../util/common";
+import { createNewChallenge, getNewChallengeList } from "../../api/group";
 
 interface PropsType {
   open: boolean;
   toggleModal: () => void;
+  categories: CategoryType[];
+  setCategories: React.Dispatch<React.SetStateAction<CategoryType[]>>;
+  setChallengeList: React.Dispatch<React.SetStateAction<ChallengeType[]>>;
+}
+
+interface ChallengeType {
+  groupChallengeId: number;
+  imagePath: string; // challenge badge image
+  challengeName: string; // challenge name
+  startAt: Date;
+  maxMemberCount: number;
+  memberCount: number;
+  profileImagePathList: string[];
 }
 
 interface TextAreaRef extends HTMLTextAreaElement {
@@ -25,33 +39,34 @@ interface TextAreaRef extends HTMLTextAreaElement {
 }
 
 interface CategoryType {
-  img: string;
-  title: string;
+  challengeId: number;
+  imagePath: string;
+  topic: string;
   selected: boolean;
 }
 
 export default function CreateChallengeModal(props: PropsType) {
-  const [categories, setCategories] = useState<CategoryType[]>([]);
   const [step, setStep] = useState<number>(1);
   const [loading, setLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<number>(0);
 
   const titleRef = useRef<InputRef | null>(null);
   const cntRef = useRef<InputRef | null>(null);
   const descRef = useRef<TextAreaRef | null>(null);
   // const [startDate, setStartDate] = useState<Date>();
-  let startDate: Date = new Date();
+  let startDate: Date | undefined = undefined;
 
   const FirstStepContent = () => {
     return (
       <StyledCategory gutter={[{ xs: 8, sm: 16, md: 24, lg: 32 }, 16]}>
-        {categories.map((category, index) => (
+        {props.categories.map((category, index) => (
           <Col span={12} key={index}>
             <div
               className={`category ${category.selected ? "active" : ""}`}
               onClick={() => changeCategory(index)}
             >
-              <img src={category.img} />
-              {category.title}
+              <img src={getImagePath(category.imagePath)} />
+              {category.topic}
             </div>
           </Col>
         ))}
@@ -118,14 +133,21 @@ export default function CreateChallengeModal(props: PropsType) {
   function handleNext() {
     if (step === 1) {
       // TODO: 선택 여부 체크하기
-      setStep(2);
+      if (selectedCategory !== 0) {
+        setStep(2);
+      } else {
+        alert("카테고리 선택은 필수입니다.");
+      }
     } else if (step === 2) {
       // TODO: submit handle
-      handleCreateChallenge();
       setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-      }, 1500);
+      const res = handleCreateChallenge();
+      if (res) {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500);
+        props.toggleModal();
+      }
     }
   }
 
@@ -135,6 +157,35 @@ export default function CreateChallengeModal(props: PropsType) {
     console.log(cntRef.current?.input?.value);
     console.log(descRef.current?.resizableTextArea.textArea?.value);
     console.log(startDate);
+    if (
+      titleRef.current?.input?.value !== "" &&
+      cntRef.current?.input?.value !== "" &&
+      descRef.current?.resizableTextArea.textArea?.value !== "" &&
+      startDate !== undefined
+    ) {
+      // TODO: groupId 1로 하드코딩 된거 추후에 수정
+      const res = createNewChallenge(
+        1,
+        selectedCategory,
+        titleRef.current?.input?.value,
+        descRef.current?.resizableTextArea.textArea?.value,
+        Number(cntRef.current?.input?.value),
+        startDate
+      );
+      // TODO: groupId 1로 하드코딩 된거 추후에 수정
+      if (res) {
+        updateNewChallengeList(1);
+        return true;
+      }
+    } else {
+      alert("모든 항목 값을 입력해주세요.");
+      return false;
+    }
+  }
+
+  async function updateNewChallengeList(groupId: number) {
+    const res = await getNewChallengeList(groupId);
+    props.setChallengeList(res.groupChallengeResponseDTOList);
   }
 
   const handleDateValue: DatePickerProps["onChange"] = (date, dateString) => {
@@ -143,16 +194,16 @@ export default function CreateChallengeModal(props: PropsType) {
   };
 
   function changeCategory(idx: number) {
-    const copyCategory = categories;
+    const copyCategory = props.categories;
     copyCategory.map((category: CategoryType, index) => {
       if (index === idx) {
-        // TODO: 추후에 실제 데이터 넘어오면 이미 진행 중인 카테고리라면 true 처리 막기
+        setSelectedCategory(category.challengeId);
         category.selected = true;
       } else {
         category.selected = false;
       }
     });
-    setCategories([...copyCategory]);
+    props.setCategories([...copyCategory]);
   }
 
   function cancelModal() {
@@ -167,11 +218,6 @@ export default function CreateChallengeModal(props: PropsType) {
       setStep(1);
     }
   }
-
-  useEffect(() => {
-    // TODO: 나중에 실제 데이터로 변경
-    setCategories(mockCategories);
-  }, []);
 
   return (
     <Modal
@@ -274,7 +320,7 @@ const StyledCategory = styled(Row)`
   }
 
   .active {
-    border-color: ${theme.colors.mint} !important;
+    border: 2px solid ${theme.colors.mint} !important;
     color: ${theme.colors.mint};
   }
 `;
@@ -282,7 +328,7 @@ const StyledCategory = styled(Row)`
 const ChallengeInfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  transition: all 1s;
+  transition: all 1s ease-in-out;
 
   .sub-title {
     font-size: 2rem;

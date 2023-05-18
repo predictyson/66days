@@ -207,10 +207,10 @@ const mockBadgeList = [
 ];
 
 const mockCategories = [
-  { img: CS, title: "CS 공부", selected: true },
-  { img: Book, title: "개발 서적", selected: false },
-  { img: Blog, title: "블로그 포스팅", selected: false },
-  { img: Lecture, title: "강의 시청", selected: false },
+  { img: CS, title: "CS", selected: true },
+  { img: Book, title: "개발서적", selected: false },
+  { img: Blog, title: "블로깅", selected: false },
+  { img: Lecture, title: "강의", selected: false },
   { img: Algorithms, title: "알고리즘", selected: false },
 ];
 

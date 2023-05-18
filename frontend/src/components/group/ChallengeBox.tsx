@@ -14,7 +14,7 @@ export default function ChallengeBox({ ...props }) {
     <>
       <ChallengeBoxWrapper>
         {props.notStarted ? (
-          props.dueDate == 1 ? (
+          props.dueDate == -1 ? (
             <NotStartedChallengeImg bgImg={props.bgImg}>
               <div className="ending-logo">마감 임박</div>
               <div className="not-started-logo">COMING SOON</div>
@@ -31,7 +31,7 @@ export default function ChallengeBox({ ...props }) {
         <div className="challenge__box-title">
           <div className="challenge-title">{props.title}</div>
           {props.notStarted ? (
-            <div className="due-date red">D-{props.dueDate}</div>
+            <div className="due-date red">D{props.dueDate}</div>
           ) : (
             <div className="due-date blue">D+{props.dueDate}</div>
           )}
@@ -209,7 +209,7 @@ const NotStartedChallengeImg = styled(Content)<ChallengeImgStyled>`
 
     text-overflow: ellipsis;
     overflow: hidden;
-    word-break: break-all;
+    word-break: keep-all;
 
     display: -webkit-box;
     -webkit-line-clamp: 2;

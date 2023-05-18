@@ -73,6 +73,7 @@ export function GroupSettingModal(props: PropsType) {
     // TODO: 1을 groupId로 추후에 수정
     const resp = await handleMember(1, "DROP", nickname);
     if (resp) {
+      alert(`${nickname}님의 강퇴 처리가 완료되었습니다.`);
       fetchAndUpdateGroupMembers();
     }
   }
