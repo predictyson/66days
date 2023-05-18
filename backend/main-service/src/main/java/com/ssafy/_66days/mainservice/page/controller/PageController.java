@@ -89,67 +89,6 @@ public class PageController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
-//        try {
-//            UserDetailDTO userDetailDTO = userService.findUserById(userId);
-//            resultMap.put("userInfo", userDetailDTO);
-//        } catch (Exception e) {
-//            resultMap.put(RESULT, e.getMessage());
-//            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
-//        }
-
-//        resultMap.put("member-info", member);
-
-//        List<BadgeMyPageDTO> badgeMyPageDTOList = badgeService.getMyPageBadgeList(userId);
-//        resultMap.put("badges", badgeMyPageDTOList);
-<<<<<<< HEAD
-
-        resultMap.put("streak", new ArrayList<>());
-
-        try {
-            List<MyChallengeResponseDTO> challengeList = myChallengeService.getMyChallenges(userId,"SUCCESSFUL");
-            resultMap.put("challenge", new ArrayList<>());
-        } catch (Exception e) {
-            resultMap.put(RESULT, e.getMessage());
-            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
-        }
-
-        try {
-            List<GroupMyPageResponseDTO> groupList = groupService.findAllGroups(userId);
-            resultMap.put("groupList", groupList);
-        } catch (Exception e) {
-            resultMap.put(RESULT, e.getMessage());
-            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
-        }
-
-        resultMap.put(RESULT, SUCCESS);
-
-        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
-=======
-//
-//        resultMap.put("streak", new ArrayList<>());
-//
-//        try {
-//            List<MyChallengeResponseDTO> challengeList = myChallengeService.getMyChallenges(userId,"SUCCESSFUL");
-//            resultMap.put("challenge", new ArrayList<>());
-//        } catch (Exception e) {
-//            resultMap.put(RESULT, e.getMessage());
-//            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
-//        }
-//
-//        try {
-//            List<GroupMyPageResponseDTO> groupList = groupService.findAllGroups(userId);
-//            resultMap.put("groupList", groupList);
-//        } catch (Exception e) {
-//            resultMap.put(RESULT, e.getMessage());
-//            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
-//        }
-//
-//
-//
-//        resultMap.put(RESULT, SUCCESS);
-//
-//        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
->>>>>>> b2f795c (be/feat: mypage)
     }
 
     @ApiOperation(value = "그룹 페이지", notes = "그룹페이지의 첫 화면")
