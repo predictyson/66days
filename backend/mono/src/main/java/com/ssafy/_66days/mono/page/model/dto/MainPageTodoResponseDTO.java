@@ -14,6 +14,7 @@ import java.util.Date;
 public class MainPageTodoResponseDTO {
     private Long myChallengeId;
     private Long groupChallengeId;
+    private Long groupId;
     private String challengeName;
     private String imagePath;
     private Date startAt;
@@ -33,6 +34,7 @@ public class MainPageTodoResponseDTO {
         Date startAt = java.sql.Timestamp.valueOf(groupChallenge.getStartAt());
         return MainPageTodoResponseDTO.builder()
                 .groupChallengeId(groupChallenge.getGroupChallengeId())
+                .groupId(groupChallenge.getGroup().getGroupId())
                 .challengeName(groupChallenge.getChallengeName())
                 .imagePath(groupChallenge.getChallenge().getBadgeImage())
                 .startAt(startAt)
