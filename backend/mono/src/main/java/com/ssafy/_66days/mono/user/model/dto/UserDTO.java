@@ -36,4 +36,14 @@ public class UserDTO {
                 .tierId(user.getTierId())
                 .build();
     }
+    public static UserDTO myPage(User user) {
+        return UserDTO.builder()
+                .userId(user.getUserId())
+                .nickname(user.getNickname())
+                .profileImagePath(user.getProfileImagePath())
+                .email(user.getEmail())
+                .exp(user.getExp())
+                .point(user.getPoint())
+                .build();
+    }
 }

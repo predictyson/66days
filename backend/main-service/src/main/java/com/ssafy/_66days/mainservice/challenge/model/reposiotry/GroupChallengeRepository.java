@@ -16,7 +16,9 @@ public interface GroupChallengeRepository extends JpaRepository<GroupChallenge, 
 
     Optional<GroupChallenge> findByGroupChallengeIdAndState(Long groupChallengeId, String State);
 
+
     List<GroupChallenge> findByGroupAndState(Group group, String state);
+
 
     long countByGroupAndStateIn(Group group, List<String> states);
 }

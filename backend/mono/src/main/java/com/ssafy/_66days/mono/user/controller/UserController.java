@@ -1,6 +1,7 @@
 package com.ssafy._66days.mono.user.controller;
 
 import com.ssafy._66days.mono.page.model.dto.MainPageResponseDTO;
+import com.ssafy._66days.mono.page.model.dto.service.PageService;
 import com.ssafy._66days.mono.user.model.dto.UserDetailResponseDTO;
 import com.ssafy._66days.mono.user.model.dto.UserSignUpRequestDTO;
 import com.ssafy._66days.mono.user.model.dto.UserSocialRegistParamDTO;
@@ -29,6 +30,7 @@ public class UserController {
 
 	private final UserService userService;
 	private final JwtService jwtService;
+	private final PageService pageService;
 
 	@PatchMapping("/modify/{nickname}")
 	public ResponseEntity<Boolean> modifyNickname(@RequestHeader("Authorization") String token,
@@ -94,7 +96,7 @@ public class UserController {
 		try {
 			jwtService.validateToken(token);
 			UUID userId = jwtService.getUserId(token);
-			MainPageResponseDTO mainPageResponseDTO = userService.getMainPage(userId);
+			MainPageResponseDTO mainPageResponseDTO = pageService.getMainPage(userId);
 			resultMap.put("mainPageResponseDTO", mainPageResponseDTO);
 			return ResponseEntity.status(HttpStatus.OK).body(resultMap);
 
