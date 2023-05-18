@@ -301,7 +301,14 @@ public class GroupService {
 
     public String getUserAuthorityInGroup(Group group, User user) {
         Optional<GroupMember> groupMember = groupMemberRepository.findByGroupAndUser(group, user);
-        return groupMember.map(member -> member.getAuthority().equals("MEMBER") ? "MEMBER" : "MAINTAINER")
-                .orElse("NOTMEMBER");
+        if (groupMember.isEmpty()) {
+            return "NOTMEMBER";
+        } else if (groupMember.get().getAuthority().equals("MEMBER")) {
+            return "MEMBER";
+        } else if (groupMember.get().getAuthority().equals("OWNER")) {
+            return "OWNER";
+        } else {
+            return "MANAGER";
+        }
     }
 }
