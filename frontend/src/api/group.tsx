@@ -258,6 +258,58 @@ async function deleteBoard(groupId: number, articleId: number) {
   } catch (error) {}
 }
 
+async function fetchChallengeList(groupId: number) {
+  try {
+    const res = await api.get(
+      `/api/v2/main-service/challenge/startGroupChallenge/${groupId}`
+    );
+    if (res.status === 200) {
+      return res.data;
+    }
+
+    throw new Error();
+  } catch (error) {}
+}
+
+async function createNewChallenge(
+  groupId: number,
+  challengeId: number,
+  challengeName: string | undefined,
+  content: string,
+  maxMemberCount: number | undefined,
+  startAt: Date
+) {
+  try {
+    const res = await api.post(
+      `/api/v2/main-service/challenge/group/${groupId}`,
+      {
+        challengeId: challengeId,
+        challengeName: challengeName,
+        content: content,
+        maxMemberCount: maxMemberCount,
+        startAt: startAt,
+      }
+    );
+    if (res.status === 200) {
+      alert("챌린지 생성이 완료되었습니다.");
+      return true;
+    }
+
+    throw new Error();
+  } catch (error) {}
+}
+
+async function getNewChallengeList(groupId: number) {
+  try {
+    const res = await api.get(`/api/v1/main-service/challenge/${groupId}`);
+    if (res.status === 200) {
+      return res.data;
+    }
+
+    throw new Error();
+  } catch (error) {}
+}
+
 export {
   fetchGroupPageData,
   fetchGroupMembers,
@@ -273,4 +325,7 @@ export {
   deleteComment,
   editBoard,
   deleteBoard,
+  fetchChallengeList,
+  createNewChallenge,
+  getNewChallengeList,
 };

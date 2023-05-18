@@ -17,6 +17,7 @@ import NewBoardModal from "../components/group/NewBoardModal";
 import {
   fetchAppliedMembers,
   fetchBoardListByPage,
+  fetchChallengeList,
   fetchGroupBadges,
   fetchGroupMembers,
   fetchGroupPageData,
@@ -104,6 +105,13 @@ interface CommentType {
   createdAt: Date;
 }
 
+interface CategoryType {
+  challengeId: number;
+  imagePath: string;
+  topic: string;
+  selected: boolean;
+}
+
 export default function Group() {
   // const location = useLocation();
   // const groupId = location.state.groupId;
@@ -131,6 +139,7 @@ export default function Group() {
   });
   const [boardData, setBoardData] = useState<ArticleType>();
   const [commentData, setCommentData] = useState<CommentType[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
 
   // 챌린지 리스트 캐러셀
   const ChallengeListCarousel = () => {
@@ -138,6 +147,7 @@ export default function Group() {
     const settings = {
       dots: true,
       infinite: false,
+      arrows: true,
       speed: 500,
       slidesToShow: 5,
       slidesToScroll: 5,
@@ -232,6 +242,15 @@ export default function Group() {
     }
   }
 
+  async function handleClickCreateChallenge(groupId: number) {
+    setOpenNewChallgeModal((prev) => !prev);
+    const fetchedChallengeList = await fetchChallengeList(groupId);
+    fetchedChallengeList.availableGroupChallengeResponseDTOList.forEach(
+      (challenge: CategoryType) => (challenge.selected = false)
+    );
+    setCategories(fetchedChallengeList.availableGroupChallengeResponseDTOList);
+  }
+
   useEffect(() => {
     // 처음 렌더링 시 그룹 페이지 전체 데이터 fetch 메소드
     async function fetchAndSetGroupPageData() {
@@ -323,12 +342,13 @@ export default function Group() {
         <GroupChallenges>
           <div className="title-box">
             <div className="small__title">66 챌린지 목록</div>
+            {/* TODO: 그룹장이랑 매니저만 보이게 하기 */}
             <div className="btn-wrapper">
               <CommonButton
                 color={theme.colors.gray500}
                 font="Kanit-Regular"
                 cursor="true"
-                onClick={() => setOpenNewChallgeModal((prev) => !prev)}
+                onClick={() => handleClickCreateChallenge(1)}
               >
                 챌린지 추가
               </CommonButton>
@@ -411,6 +431,9 @@ export default function Group() {
       <CreateChallengeModal
         open={isOpenNewChallgeModal}
         toggleModal={() => setOpenNewChallgeModal((prev) => !prev)}
+        categories={categories}
+        setCategories={setCategories}
+        setChallengeList={setChallengeList}
       />
       <NewBoardModal
         open={isOpenNewBoardModal}
