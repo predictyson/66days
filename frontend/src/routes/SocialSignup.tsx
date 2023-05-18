@@ -2,7 +2,6 @@ import { Button, Form, Input, Select, Typography, message } from "antd";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import instance from "../api/api";
-import { useAuthStore } from "../stores/useAuthStore";
 
 const { Option } = Select;
 
@@ -17,8 +16,8 @@ const tailLayout = {
 
 export default function SocialSignup() {
   const navigate = useNavigate();
-  const setToken = useAuthStore((state) => state.setToken);
-  const getToken = useAuthStore((state) => state.getToken);
+  // const setToken = useAuthStore((state) => state.setToken);
+  // const getToken = useAuthStore((state) => state.getToken);
   const [form] = Form.useForm();
   const nickName = Form.useWatch("nickName", form);
   const [messageApi, contextHolder] = message.useMessage();
@@ -30,7 +29,7 @@ export default function SocialSignup() {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: getToken(),
+            // Authorization: getToken(),
           },
         }
       );
@@ -55,7 +54,7 @@ export default function SocialSignup() {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: getToken(),
+            // Authorization: getToken(),
           },
         }
       );
@@ -81,15 +80,24 @@ export default function SocialSignup() {
   }
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
+    // "https://hello66days.world/socialsignup?user=UserSocialLoginRespDTO(email%3Dsungeun.kweon@gmail.com,%20nickName%3D%EA%B6%8C%EC%84%B1%EC%9D%80,%20social%3DKAKAO)".split("UserSocialLoginRespDTO(")[1].split(",%20")
+    console.log("search: ", location);
+    const loc = location.href.split("UserSocialLoginRespDTO(")[1].split(",%20");
+    const params: any = {};
+    for (const param of loc) {
+      const keyval = param.split("%3D");
+      params[keyval[0]] = decodeURIComponent(keyval[1].replace(")", ""));
+    }
+    console.log("params: ", params);
+    // const queryParams = new URLSearchParams(location.search);
 
-    const token = queryParams.get("token");
-    token && setToken(token);
-    const email = queryParams.get("email");
+    // const token = queryParams.get("token");
+    // token && setToken(token);
+    const email = params.email;
     email && form.setFieldsValue({ email });
-    const nickName = queryParams.get("nickName");
-    nickName && form.setFieldsValue({ nickname: nickName });
-    const social = queryParams.get("social");
+    const nickName = params.nickName;
+    nickName && form.setFieldsValue({ nickName: nickName });
+    const social = params.social;
     social && form.setFieldsValue({ social });
   }, []);
 
@@ -111,7 +119,7 @@ export default function SocialSignup() {
           rules={[{ required: true }]}
           help="필수값입니다"
         >
-          <Input />
+          <Input disabled />
         </Form.Item>
         <Form.Item
           name="nickName"
