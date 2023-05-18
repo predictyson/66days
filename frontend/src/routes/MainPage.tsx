@@ -18,14 +18,14 @@ export default function MainPage() {
       setData(maindata);
     }
     fetchMainPage();
-    console.log(data);
+    // console.log(data?.todayToto);
   }, []);
   return (
     <>
-      <Banner memberInfo={data?.userDetail} />
-      <Todo challenges={MAIN_DUMMY_DATA.challenge} />
-      <Groups groups={MAIN_DUMMY_DATA.group} />
-      <Ranking ranking={MAIN_DUMMY_DATA.rank} />
+      {data && <Banner memberInfo={data.userDetail} />}
+      {data && <Todo challenges={data.todayToto} />}
+      {/* <Groups groups={MAIN_DUMMY_DATA.group} /> */}
+      {/* <Ranking ranking={MAIN_DUMMY_DATA.rank} /> */}
     </>
   );
 }

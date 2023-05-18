@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import Algo from "../../assets/landing/algoBox.png";
-import { ChallengeData } from "../../types/main";
+import { TodayTodoData } from "../../types/main";
 import Chart from "./Chart";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { Modal } from "antd";
 interface IProps {
-  challenge: ChallengeData;
+  challenge: TodayTodoData;
 }
 export default function TodoItem({ challenge }: IProps) {
   function countDays(startDate: string): number {
@@ -20,10 +20,11 @@ export default function TodoItem({ challenge }: IProps) {
     return diffDays;
   }
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [check, setCheck] = useState<boolean>(false);
+  const [check, setCheck] = useState<boolean>(challenge.todayStreak);
   const handleOk = () => {
     setIsModalOpen(false);
     setCheck(true);
+    //TODO: 챌린지 체크 post api 연결
   };
 
   const handleCancel = () => {
@@ -36,16 +37,17 @@ export default function TodoItem({ challenge }: IProps) {
   return (
     <Container>
       <div className="left">
+        {/** TODO: 챌린지 이미지  */}
         <img src={Algo} alt="algo" />
-        <div className="title">{challenge.name}</div>
+        <div className="title">{challenge.challengeName}</div>
       </div>
       <div className="right">
         {check ? <CustomChecked /> : <CustomUnChecked onClick={showModal} />}
-        <Chart x={countDays(challenge.startDate)} />
-        <p>{countDays(challenge.startDate)} / 66</p>
+        <Chart x={countDays(challenge.startAt)} />
+        <p>{countDays(challenge.startAt)} / 66</p>
       </div>
       <CustomModal open={isModalOpen}>
-        <div className="modal-title">{challenge.name}</div>
+        <div className="modal-title">{challenge.challengeName}</div>
         <div className="modal-sub"> 챌린지를 완료하였습니까?</div>
         <div className="modal-warning">챌린지 확인 후 취소가 불가합니다.</div>
         <ModalButtonWrapper>

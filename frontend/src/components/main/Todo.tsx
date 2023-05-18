@@ -2,7 +2,7 @@ import styled from "styled-components";
 // import Blog from "../../assets/landing/blogBox.png";
 import PrevArrow from "../../assets/main/PrevArrow.png";
 import NextArrow from "../../assets/main/NextArrow.png";
-import { ChallengeData } from "../../types/main";
+import { TodayTodoData } from "../../types/main";
 // slider
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -11,10 +11,11 @@ import TodoItem from "./TodoItem";
 import EmptySign from "../../util/EmptySign";
 
 interface IProps {
-  challenges: ChallengeData[];
+  challenges: TodayTodoData[];
 }
 
 export default function Todo({ challenges }: IProps) {
+  console.log(challenges);
   const settings = {
     centerMode: false,
     dots: false,

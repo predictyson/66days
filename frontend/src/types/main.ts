@@ -14,9 +14,11 @@ export interface TodayTodoData {
   myChallengeId: number | null;
   groupChallengeId: number | null;
   challengeName: string;
+  startAt: string;
+  todayStreak: boolean;
 }
 export interface userDetailData {
-  animalDto: animalDtoData;
+  animalDTO: animalDtoData;
   blogUrl: string;
   email: string;
   exp: number;
@@ -24,7 +26,7 @@ export interface userDetailData {
   nickname: string;
   point: number;
   profileImagePath: string;
-  tierDto: TierDtoData;
+  tierDTO: TierDtoData;
   userId: string;
 }
 export interface TierDtoData {
