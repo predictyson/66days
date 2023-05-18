@@ -6,7 +6,6 @@ import NextArrow from "../../assets/main/NextArrow.png";
 import GroupItem from "./GroupItem";
 import { GroupData, MyGroupData } from "../../types/main";
 import Slider from "react-slick";
-import { useNavigate } from "react-router";
 import { getImagePath } from "../../util/common";
 // slider
 interface IProps {
@@ -16,7 +15,6 @@ interface IProps {
 export default function GroupList({ groups, myGroup }: IProps) {
   console.log(myGroup);
   console.log(groups);
-  const navigate = useNavigate();
 
   const settings = {
     centerMode: false,
@@ -48,7 +46,7 @@ export default function GroupList({ groups, myGroup }: IProps) {
   };
 
   return (
-    <Container >
+    <Container>
       <Title>Groups</Title>
       <GroupContainer>
         {/**TODO: mygroup */}

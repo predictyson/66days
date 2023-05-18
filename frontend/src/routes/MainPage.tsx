@@ -2,7 +2,7 @@ import Banner from "../components/main/Banner";
 import Todo from "../components/main/Todo";
 import Groups from "../components/main/Groups";
 import Ranking from "../components/main/Ranking";
-import { MainData, RankData } from "../types/main";
+import { MainData } from "../types/main";
 import { useAuthStore } from "../stores/useAuthStore";
 import LandingPage from "./LandingPage";
 import { useEffect, useState } from "react";

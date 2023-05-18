@@ -36,6 +36,7 @@ export default function Todo({ challenges }: IProps) {
       },
     ],
   };
+  challenges.map((c) => console.log(c));
   return (
     <Container>
       <Title>Today's todo</Title>
@@ -49,9 +50,11 @@ export default function Todo({ challenges }: IProps) {
           </div>
         ) : (
           <Slider {...settings}>
-            {challenges.map((challenge, idx) => {
-              return <TodoItem key={idx} challenge={challenge} />;
-            })}
+            {challenges
+              .filter((c) => c.length > 0)
+              .map((challenge, idx) => {
+                <TodoItem key={idx} challenge={challenge} />;
+              })}
           </Slider>
         )}
       </TodoContianer>
