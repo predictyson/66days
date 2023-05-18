@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Modal } from "antd";
 import { SearchGroupData } from "../../types/search";
 import Category from "../../styles/CategoryTheme";
+import { putGroupApply } from "../../api/search";
 
 interface IProps {
   group: SearchGroupData;
@@ -19,6 +20,8 @@ export default function GroupItem({ group }: IProps) {
   };
 
   const handleOk = () => {
+    //FIXME: group_id 받아와야함
+    putGroupApply(1, "APPLIED");
     setIsModalOpen(false);
   };
 
@@ -31,7 +34,7 @@ export default function GroupItem({ group }: IProps) {
         <img src={Profile1} />
         <TitleWrapper>
           {group.ownerName}
-          <div className="sub">게으른 {group.animal}</div>
+          <div className="sub">게으른 카피바라</div>
         </TitleWrapper>
       </ProfileWrapper>
       <img src={GroupImg} style={{ height: "18.8rem" }} />
@@ -46,7 +49,7 @@ export default function GroupItem({ group }: IProps) {
           }}
         >
           <div style={{ display: "flex" }}>
-            {group.categories.map((v, idx) => {
+            {group.categories?.map((v, idx) => {
               const category = Category.find((c) => c.title === v); // 해당 title의 category를 찾음
               const col = category ? category.color : "gray";
               return (

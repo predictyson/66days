@@ -1,11 +1,93 @@
 import styled from "styled-components";
 import { theme } from "../styles/theme";
-import BreadCrumb from "../components/search/BreadCrumb";
 import GroupItem from "../components/search/GroupItem";
-// import { getSearchData } from "../api/search";
 import { SearchData } from "../types/search";
+import { fetchSearchData } from "../api/search";
+import { useEffect, useRef, useState } from "react";
+import { Empty } from "antd";
 
 export default function SearchPage() {
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
+  // const sentinelRef = useRef<HTMLDivElement>(null);
+  const [lastElement, setLastElement] = useState<HTMLDivElement | null>();
+  const [groupdata, setGroupdata] = useState<SearchData>({
+    result: "success",
+    groupList: [],
+  });
+  const prevKeyword = useRef<string>("");
+
+  const observer = new IntersectionObserver(handleObserver, {
+    root: null, // 뷰포트 기준
+    rootMargin: "0px",
+    threshold: 1.0, // 1.0 이상이면 요소 전체가 뷰포트 안에 있을 때 감지
+  });
+
+  /**
+   * Search is activated when scrolling or typing keywords
+   */
+  useEffect(() => {
+    let ignore = false;
+    // console.log("prev keyword: ", prevKeyword.current, searchValue);
+    let timeout: NodeJS.Timeout | null = null;
+    if (prevKeyword.current !== searchValue) {
+      timeout = setTimeout(() => {
+        getSearchData();
+      }, 1000);
+    } else {
+      getSearchData();
+    }
+
+    return () => {
+      ignore = true;
+      timeout && clearTimeout(timeout);
+    };
+
+    async function getSearchData() {
+      const data = await fetchSearchData(searchValue, page);
+      if (!ignore)
+        setGroupdata((prev) => ({
+          result: data.result,
+          groupList:
+            page === 0
+              ? [...data[`group-list`]]
+              : [...prev.groupList, ...data[`group-list`]],
+        }));
+    }
+  }, [page, searchValue]);
+
+  /**
+   * Observe the last element
+   */
+  useEffect(() => {
+    if (lastElement) {
+      observer.observe(lastElement);
+    }
+
+    return () => {
+      // 컴포넌트 언마운트 시 Intersection Observer 해제
+      if (lastElement) {
+        observer.unobserve(lastElement);
+      }
+    };
+  }, [lastElement]);
+
+  function handleObserver(entries: IntersectionObserverEntry[]): void {
+    const target = entries[0];
+    if (target.isIntersecting) {
+      if (!loading) {
+        setLoading(true);
+        try {
+          setPage((prev) => prev + 1);
+        } catch (err) {
+          console.log("fetching more data err");
+        }
+        setLoading(false);
+      }
+    }
+  }
+
   return (
     <Container>
       <TitleWrapprer>
@@ -16,6 +98,12 @@ export default function SearchPage() {
       <SearchInput
         type="text"
         placeholder="그룹장 또는 그룹명을 입력해주세요"
+        value={searchValue}
+        onChange={(e) => {
+          prevKeyword.current = searchValue;
+          setSearchValue(e.target.value);
+          setPage(0);
+        }}
       ></SearchInput>
       <div
         style={{
@@ -25,17 +113,31 @@ export default function SearchPage() {
           justifyContent: "flex-end",
         }}
       >
-        <BreadCrumb />
+        {/* <BreadCrumb /> */}
       </div>
 
       <ItemContainer>
-        {DUMMY_DATA_SEARCH.groupList.map((data, idx) => {
-          return (
-            <div key={idx} style={{ marginTop: "6rem" }}>
-              <GroupItem key={idx} group={data} />
-            </div>
-          );
-        })}
+        {groupdata.groupList.length === 0 ? (
+          <Empty />
+        ) : (
+          groupdata.groupList.map((data, idx) => {
+            return idx === groupdata.groupList.length - 1 && !loading ? (
+              <div
+                ref={setLastElement}
+                key={data.groupId}
+                style={{ marginTop: "6rem" }}
+              >
+                <GroupItem key={idx} group={data} />
+              </div>
+            ) : (
+              <div key={idx} style={{ marginTop: "6rem" }}>
+                <GroupItem key={idx} group={data} />
+              </div>
+            );
+          })
+        )}
+        {/* <div ref={setLastElement}></div> */}
+        {loading && <h2>loading.....</h2>}
       </ItemContainer>
     </Container>
   );
@@ -88,108 +190,3 @@ const ItemContainer = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(33%, 1fr));
   justify-content: space-between;
 `;
-
-const DUMMY_DATA_SEARCH: SearchData = {
-  result: "success",
-  groupList: [
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 66,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "블로깅"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-    {
-      ownerImage: "/image/image.jpg",
-      ownerName: "뭉치",
-      image: null,
-      name: "뭉치뭉치똥뭉치네",
-      categories: ["알고리즘", "강의"],
-      description: "같이 함께 개발자 준비해요. 프론트엔드 개발자 환영이요",
-      memberCounts: 33,
-      maxMemberCounts: 66,
-      animal: "카피바라",
-    },
-  ],
-};
