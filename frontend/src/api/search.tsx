@@ -3,7 +3,12 @@ import api from "./api";
 export async function fetchSearchData(searchContent: string, pgNo: number) {
   try {
     const res = await api.get(
-      `/api/v1/main-service/group/search?searchContent=${searchContent}&pgNo=${pgNo}`
+      `/api/v1/main-service/group/search?searchContent=${searchContent}&pgNo=${pgNo}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
     );
     console.log(res.data);
     if (res.status === 200) {
@@ -19,7 +24,12 @@ export async function fetchSearchData(searchContent: string, pgNo: number) {
 export async function putGroupApply(group_id: number, status: string) {
   try {
     const res = await api.put(
-      `/api/v1/main-service/group/${group_id}/apply/${status}`
+      `/api/v1/main-service/group/${group_id}/apply/${status}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
     );
     if (res.status === 200) {
       console.log(res.data);
