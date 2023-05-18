@@ -1,4 +1,3 @@
-import { useAuthStore } from "../stores/useAuthStore";
 import instance from "./api";
 
 export async function expireUserToken() {
@@ -19,18 +18,12 @@ export async function signup(
   profile: string | null
 ) {
   try {
-    const getToken = useAuthStore((state) => state.getToken);
     const res = await instance.post(
       `${import.meta.env.VITE_SERVER_AUTH_URL}/user/signup/nickname`,
       {
         nickname,
         email,
         profileImagePath: profile,
-      },
-      {
-        headers: {
-          Authorization: getToken(),
-        },
       }
     );
 

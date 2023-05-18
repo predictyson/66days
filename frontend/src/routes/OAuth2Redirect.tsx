@@ -3,7 +3,6 @@ import { Spin } from "antd";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import instance from "../api/api";
 
 export default function OAuth2Redirect() {
   const setToken = useAuthStore((state) => state.setToken);
@@ -17,10 +16,7 @@ export default function OAuth2Redirect() {
     } else {
       const queryParams = new URLSearchParams(location.search);
       // console.log(queryParams.get("token"));
-      setToken(`Bearer ${queryParams.get("token")}`);
-      instance.defaults.headers.common.Authorization = `${queryParams.get(
-        "token"
-      )}`;
+      setToken(`${queryParams.get("token")}`);
       navigate("/", { replace: true });
     }
   }, [isLoading]);
