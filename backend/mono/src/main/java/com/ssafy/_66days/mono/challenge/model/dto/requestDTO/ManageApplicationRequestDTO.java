@@ -8,6 +8,6 @@ import lombok.*;
 @Builder
 @ToString
 public class ManageApplicationRequestDTO {
-    private String nickName;
-    private String state;
+	private String nickName;
+	private String state;
 }

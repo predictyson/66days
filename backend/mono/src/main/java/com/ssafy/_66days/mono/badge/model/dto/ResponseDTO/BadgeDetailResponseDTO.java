@@ -9,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class BadgeDetailResponseDTO {
-    private Long badgeId;
+	private Long badgeId;
 }

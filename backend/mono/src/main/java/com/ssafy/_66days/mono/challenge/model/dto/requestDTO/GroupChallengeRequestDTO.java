@@ -10,10 +10,10 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class GroupChallengeRequestDTO {
-    private Long challengeId;
-    private String challengeName;
-    private int maxMemberCount;
-    private String content;
-    private Date startAt;
+	private Long challengeId;
+	private String challengeName;
+	private int maxMemberCount;
+	private String content;
+	private Date startAt;
 
 }

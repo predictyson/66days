@@ -1,16 +1,16 @@
 package com.ssafy._66days.mono.challenge.model.entity.mongodb;
 
-import com.ssafy._66days.mono.challenge.model.entity.GroupChallenge;
-import com.ssafy._66days.mono.user.model.entity.User;
+import java.time.LocalDate;
+import java.util.UUID;
+
+import javax.persistence.Id;
+
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.persistence.Id;
-import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -18,10 +18,10 @@ import java.util.UUID;
 @Builder
 @Document(collection = "groupChallengeLog")
 public class GroupChallengeLog {
-    @Id
-    private Long groupChallengeId;
+	@Id
+	private Long groupChallengeId;
 
-    private UUID userId;
-    private LocalDate time;
+	private UUID userId;
+	private LocalDate time;
 
 }

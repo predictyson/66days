@@ -13,6 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class GroupChallengeMemberId implements Serializable {
-    private UUID user;
-    private Long groupChallenge;
+	private UUID user;
+	private Long groupChallenge;
 }

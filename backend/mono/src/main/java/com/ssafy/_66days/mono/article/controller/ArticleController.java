@@ -1,23 +1,31 @@
 package com.ssafy._66days.mono.article.controller;
 
-import com.ssafy._66days.mono.article.model.dto.responseDto.ArticleResponseDTO;
-import com.ssafy._66days.mono.article.model.dto.responseDto.CommentResponseDTO;
-import com.ssafy._66days.mono.article.model.dto.requestDto.ArticleRequestDTO;
-import com.ssafy._66days.mono.article.model.dto.requestDto.CommentRequestDTO;
-import com.ssafy._66days.mono.article.model.service.ArticleService;
-import com.ssafy._66days.mono.user.model.service.JwtService;
-import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ssafy._66days.mono.article.model.dto.requestDto.ArticleRequestDTO;
+import com.ssafy._66days.mono.article.model.dto.requestDto.CommentRequestDTO;
+import com.ssafy._66days.mono.article.model.dto.responseDto.ArticleResponseDTO;
+import com.ssafy._66days.mono.article.model.dto.responseDto.CommentResponseDTO;
+import com.ssafy._66days.mono.article.model.service.ArticleService;
+
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/article")
@@ -25,7 +33,7 @@ import java.util.UUID;
 @Slf4j
 public class ArticleController {
     private final ArticleService articleService;
-    private final JwtService jwtService;
+    private final AuthServiceClient authServiceClient;
     //게시글 작성 함수
     @PostMapping("/{group_id}")
     @ApiOperation(value = "게시글 작성 API", notes = "그룹 게시판에 게시글 작성")
@@ -36,8 +44,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -60,8 +68,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -85,13 +93,13 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Page, USER ID : {}", userId);
 
         try {
             // groupId, userId, offset 값으로 게시글을 받아온다
-            List<ArticleResponseDTO> articles = articleService.getArticleList(userId, groupId, offset);
+            List<Object> articles = articleService.getArticleList(userId, groupId, offset);
             resultMap.put("articles", articles);
             return ResponseEntity.ok(resultMap);
         } catch (Exception e) {
@@ -111,8 +119,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -134,8 +142,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -159,8 +167,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -182,8 +190,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -205,8 +213,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Page, USER ID : {}", userId);
 
         try {

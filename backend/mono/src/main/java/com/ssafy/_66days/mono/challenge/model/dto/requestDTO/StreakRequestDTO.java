@@ -10,5 +10,5 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 public class StreakRequestDTO {
-    private Date today;
+	private Date today;
 }

@@ -1,7 +1,13 @@
 package com.ssafy._66days.mono.article.model.dto.requestDto;
 
 import com.ssafy._66days.mono.article.model.entity.Article;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Builder
 @Getter
@@ -10,14 +16,14 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class ArticleRequestDTO {
-    private String title;
-    private String content;
+	private String title;
+	private String content;
 
-    public static ArticleRequestDTO of(Article article) {
-        return ArticleRequestDTO.builder()
-                .title(article.getTitle())
-                .content(article.getContent())
-                .build();
-    }
+	public static ArticleRequestDTO of(Article article) {
+		return ArticleRequestDTO.builder()
+				.title(article.getTitle())
+				.content(article.getContent())
+				.build();
+	}
 
 }

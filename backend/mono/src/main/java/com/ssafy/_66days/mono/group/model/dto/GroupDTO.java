@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 public class GroupDTO {
-    private Long groupId;
-    private String groupName;
-    private int maxMemberCount;
-    private String imagePath;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private boolean isDeleted;
+	private Long groupId;
+	private String groupName;
+	private int maxMemberCount;
+	private String imagePath;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
+	private boolean isDeleted;
 
 }

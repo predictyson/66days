@@ -1,6 +1,5 @@
 package com.ssafy._66days.mono.challenge.model.entity;
 
-import com.ssafy._66days.mono.badge.model.entity.Badge;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.ssafy._66days.mono.badge.model.entity.Badge;
+
 @Entity
 @Table(name = "challenge")
 @Getter
@@ -17,18 +18,21 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Builder
 public class Challenge {    // 챌린지 메타 데이터
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "challenge_id")
-    private Long challengeId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "challenge_id")
+	private Long challengeId;
 
-    @NotNull
-    @OneToOne(fetch = FetchType.LAZY)   // 챌린지와 뱃지는 1대1 매핑
-    @JoinColumn(name = "badge_id")
-    private Badge badge;
+	@NotNull
+	@OneToOne   // 챌린지와 뱃지는 1대1 매핑
+	@JoinColumn(name = "badge_id")
+	private Badge badge;
 
-    @NotBlank
-    @Column(name = "topic")
-    private String topic;
+	@NotBlank
+	@Column(name = "topic")
+	private String topic;
 
+	@NotBlank
+	@Column(name = "badge_image")
+	private String badgeImage;
 }

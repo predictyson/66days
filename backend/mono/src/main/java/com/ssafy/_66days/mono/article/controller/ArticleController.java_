@@ -1,11 +1,11 @@
 package com.ssafy._66days.article.controller;
 
-import responseDto.dto.model.article.com.ssafy._66days.mono.ArticleResponseDTO;
-import responseDto.dto.model.article.com.ssafy._66days.mono.CommentResponseDTO;
-import requestDto.dto.model.article.com.ssafy._66days.mono.ArticleRequestDTO;
+import responseDto.dto.model.article.com.ssafy._66days.mainservice.ArticleResponseDTO;
+import responseDto.dto.model.article.com.ssafy._66days.mainservice.CommentResponseDTO;
+import requestDto.dto.model.article.com.ssafy._66days.mainservice.ArticleRequestDTO;
 import com.ssafy._66days.article.model.dto.requestDto.ArticleUpdateRequestDTO;
-import requestDto.dto.model.article.com.ssafy._66days.mono.CommentRequestDTO;
-import service.model.article.com.ssafy._66days.mono.ArticleService;
+import requestDto.dto.model.article.com.ssafy._66days.mainservice.CommentRequestDTO;
+import service.model.article.com.ssafy._66days.mainservice.ArticleService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

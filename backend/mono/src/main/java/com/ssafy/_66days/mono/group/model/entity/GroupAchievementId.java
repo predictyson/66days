@@ -1,16 +1,17 @@
 package com.ssafy._66days.mono.group.model.entity;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.util.UUID;
-
-@Data
+@Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupMemberId implements Serializable {
-	private UUID user;
+public class GroupAchievementId implements Serializable {
 	private Long group;
+	private Long challenge;
 }
