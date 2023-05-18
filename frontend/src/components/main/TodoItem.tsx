@@ -6,6 +6,7 @@ import Chart from "./Chart";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { Modal } from "antd";
+import { postChallenge } from "../../api/main";
 interface IProps {
   challenge: TodayTodoData;
 }
@@ -25,6 +26,7 @@ export default function TodoItem({ challenge }: IProps) {
     setIsModalOpen(false);
     setCheck(true);
     //TODO: 챌린지 체크 post api 연결
+    postChallenge(challenge.myChallengeId);
   };
 
   const handleCancel = () => {

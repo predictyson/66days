@@ -10,6 +10,7 @@ interface IProps {
 }
 
 export default function GroupItem({ group }: IProps) {
+  console.log(group);
   return (
     <BoxWrapper>
       {/* {group.type === "personal" ? (
@@ -22,15 +23,15 @@ export default function GroupItem({ group }: IProps) {
       ) : ( */}
       <ImageWrapper imageUrl={getImagePath(group.imagePath)}>
         <span>
-          {group.name}님의 <br />
+          {group.name}의 <br />
           그룹 챌린지
         </span>
       </ImageWrapper>
       {/* )} */}
       <ChallengeWrapper>
-        {/* {group.badges.map((b) => {
-          <ChallengeBox src={getImagePath(b)} />;
-        })} */}
+        {group.badges.map((b) => {
+          return <ChallengeBox src={getImagePath(b)} />;
+        })}
       </ChallengeWrapper>
     </BoxWrapper>
   );
@@ -41,10 +42,11 @@ const ImageWrapper = styled.div<ImageWrapperProps>`
   width: 100%;
   height: 0;
   padding-bottom: 100%; /* 이미지 비율을 1:1로 유지 */
-  background-image: url(${(props) => props.imageUrl});
-  background-size: cover; /* 이미지를 부모 요소 크기에 맞춤 */
-  background-repeat: no-repeat;
-
+  /* background-image: url(${(props) => props.imageUrl}); */
+  /* background-size: cover; 이미지를 부모 요소 크기에 맞춤 */
+  /* background-repeat: no-repeat; */
+  background-color: lightgray;
+  border-radius: 15px;
   span {
     position: absolute;
     bottom: 0;
@@ -69,7 +71,8 @@ const ChallengeWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-// const ChallengeBox = styled.img`
-//   width: 30%;
-//   cursor: pointer;
-// `;
+const ChallengeBox = styled.img`
+  width: 30%;
+  cursor: pointer;
+  border-radius: 10px;
+`;
