@@ -1,5 +1,5 @@
 import Banner from "../components/main/Banner";
-import Todo from "../components/main/Todo";
+// import Todo from "../components/main/Todo";
 import Groups from "../components/main/Groups";
 import Ranking from "../components/main/Ranking";
 import { MainData } from "../types/main";
@@ -23,8 +23,8 @@ export default function MainPage() {
   return (
     <>
       {data && <Banner memberInfo={data.userDetail} />}
-      {data && <Todo challenges={data.todayTodo} />}
-      {data && <Groups groups={data.group} mygroup={data.myGroup} />}
+      {/* {data && <Todo challenges={data.todayTodo} />} */}
+      {data && <Groups groups={data.group} myGroup={data.myGroup} />}
       <Ranking ranking={MAIN_DUMMY_DATA.rank} />
     </>
   );
@@ -61,7 +61,7 @@ export default function MainPage() {
 //   myBadgeRank: 5,
 //   myBadge: 3,
 // };
-const MAIN_DUMMY_DATA: MainData = {
+const MAIN_DUMMY_DATA = {
   result: "success",
   memberInfo: {
     tier: "bronze",
@@ -140,7 +140,7 @@ const MAIN_DUMMY_DATA: MainData = {
   },
   group: [
     {
-      image: "/image/image.jpg",
+      // image: "/image/image.jpg",
       name: "뭉치뭉치똥뭉치",
       badges: ["알고리즘", "CS"],
       type: "personal",

@@ -50,11 +50,9 @@ export default function Todo({ challenges }: IProps) {
           </div>
         ) : (
           <Slider {...settings}>
-            {challenges
-              .filter((c) => c.length > 0)
-              .map((challenge, idx) => {
-                <TodoItem key={idx} challenge={challenge} />;
-              })}
+            {challenges.map((challenge, idx) => {
+              return <TodoItem key={idx} challenge={challenge} />;
+            })}
           </Slider>
         )}
       </TodoContianer>
