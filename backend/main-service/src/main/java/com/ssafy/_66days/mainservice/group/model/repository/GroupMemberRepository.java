@@ -33,5 +33,7 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, GroupM
     Optional<GroupMember> findByGroupAndUserAndIsDeleted(Group group, User user, boolean state);
 
     Optional<GroupMember> findByUserAndIsDeleted(User user, boolean b);
+
+    Optional<GroupMember> findByUserAndGroupAndIsDeleted(User user, Group group, boolean state);
 }
 
