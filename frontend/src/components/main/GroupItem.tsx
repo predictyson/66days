@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { GroupData } from "../../types/main";
 import { getImagePath } from "../../util/common";
+import { useNavigate } from "react-router";
 interface ImageWrapperProps {
   imageUrl: string;
 }
@@ -11,8 +12,9 @@ interface IProps {
 
 export default function GroupItem({ group }: IProps) {
   console.log(group);
+  const navigate = useNavigate();
   return (
-    <BoxWrapper>
+    <BoxWrapper onClick={() => navigate(`groups/${group.groupId}`)}>
       {/* {group.type === "personal" ? (
         <ImageWrapper imageUrl={getImagePath(group.imagePath)}>
           <span>

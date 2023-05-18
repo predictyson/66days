@@ -6,11 +6,14 @@ import Chart from "./Chart";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { Modal } from "antd";
+import { useNavigate } from "react-router";
 import { postChallenge } from "../../api/main";
 interface IProps {
   challenge: TodayTodoData;
 }
 export default function TodoItem({ challenge }: IProps) {
+  const navigate = useNavigate();
+
   function countDays(startDate: string): number {
     const oneDay = 24 * 60 * 60 * 1000;
     const startDateTime = new Date(startDate).getTime();
@@ -37,7 +40,13 @@ export default function TodoItem({ challenge }: IProps) {
   };
 
   return (
-    <Container>
+    <Container
+      onClick={() =>
+        navigate(
+          `/groups/${challenge.groupChallengeId}/challenges/${challenge.groupChallengeId}`
+        )
+      }
+    >
       <div className="left">
         {/** TODO: 챌린지 이미지  */}
         <img src={Algo} alt="algo" />
