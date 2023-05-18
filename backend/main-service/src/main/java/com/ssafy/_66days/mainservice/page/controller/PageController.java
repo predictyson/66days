@@ -14,6 +14,8 @@ import com.ssafy._66days.mainservice.group.model.dto.GroupMyPageResponseDTO;
 import com.ssafy._66days.mainservice.group.model.entity.Group;
 import com.ssafy._66days.mainservice.group.model.service.GroupService;
 import com.ssafy._66days.mainservice.page.model.dto.MainPageResponseDTO;
+import com.ssafy._66days.mainservice.page.model.dto.MyPageResponseDTO;
+import com.ssafy._66days.mainservice.page.model.service.PageService;
 import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
 import com.ssafy._66days.mainservice.user.model.dto.UserDetailDTO;
 import com.ssafy._66days.mainservice.user.model.dto.UserManageDTO;
@@ -44,10 +46,10 @@ public class PageController {
     private final GroupService groupService;
     private final MyChallengeService myChallengeService;
     private final BadgeService badgeService;
-
+    private final PageService pageService;
     private final AuthServiceClient authServiceClient;
 
-    @ApiOperation(value = "홈 화면", notes = "로그인 후 연결 되는 첫 페이지")
+    @ApiOperation(value = "메인 화면", notes = "로그인 후 연결 되는 첫 페이지")
     @GetMapping("/home")
     public ResponseEntity<Map<String, Object>> getMainPage(
             @RequestHeader(value = "Authorization") String token
@@ -59,10 +61,9 @@ public class PageController {
         log.info("Group Page, USER ID : {}", userId);
 
         try {
-            MainPageResponseDTO mainPage = userService.getMainPage(userId);
+            MainPageResponseDTO mainPage = pageService.getMainPage(userId);
             resultMap.put("mainPage", mainPage);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
-
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
@@ -81,17 +82,26 @@ public class PageController {
         log.info("Group Page, USER ID : {}", userId);
 
         try {
-            UserDetailDTO userDetailDTO = userService.findUserById(userId);
-            resultMap.put("userInfo", userDetailDTO);
+            MyPageResponseDTO myPageResponseDTO = pageService.getMyPage(userId);
+            resultMap.put("myPageResponseDTO", myPageResponseDTO);
+            return ResponseEntity.ok().body(resultMap);
         } catch (Exception e) {
-            resultMap.put(RESULT, e.getMessage());
-            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
+//        try {
+//            UserDetailDTO userDetailDTO = userService.findUserById(userId);
+//            resultMap.put("userInfo", userDetailDTO);
+//        } catch (Exception e) {
+//            resultMap.put(RESULT, e.getMessage());
+//            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
+//        }
 
 //        resultMap.put("member-info", member);
 
 //        List<BadgeMyPageDTO> badgeMyPageDTOList = badgeService.getMyPageBadgeList(userId);
 //        resultMap.put("badges", badgeMyPageDTOList);
+<<<<<<< HEAD
 
         resultMap.put("streak", new ArrayList<>());
 
@@ -114,6 +124,32 @@ public class PageController {
         resultMap.put(RESULT, SUCCESS);
 
         return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+=======
+//
+//        resultMap.put("streak", new ArrayList<>());
+//
+//        try {
+//            List<MyChallengeResponseDTO> challengeList = myChallengeService.getMyChallenges(userId,"SUCCESSFUL");
+//            resultMap.put("challenge", new ArrayList<>());
+//        } catch (Exception e) {
+//            resultMap.put(RESULT, e.getMessage());
+//            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
+//        }
+//
+//        try {
+//            List<GroupMyPageResponseDTO> groupList = groupService.findAllGroups(userId);
+//            resultMap.put("groupList", groupList);
+//        } catch (Exception e) {
+//            resultMap.put(RESULT, e.getMessage());
+//            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
+//        }
+//
+//
+//
+//        resultMap.put(RESULT, SUCCESS);
+//
+//        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+>>>>>>> b2f795c (be/feat: mypage)
     }
 
     @ApiOperation(value = "그룹 페이지", notes = "그룹페이지의 첫 화면")
