@@ -14,6 +14,8 @@ const tailLayout = {
   wrapperCol: { offset: 6, span: 18 },
 };
 
+const LOCALTEST = "https://hello66days.world/api/v2";
+
 export default function SocialSignup() {
   const navigate = useNavigate();
   // const setToken = useAuthStore((state) => state.setToken);
@@ -25,7 +27,7 @@ export default function SocialSignup() {
   async function finishHandler(values: any) {
     try {
       const isUnique = await instance.get(
-        `/main-service/user/check-nickname/${nickName}`,
+        `${LOCALTEST}/user/check-nickname/${nickName}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -34,7 +36,7 @@ export default function SocialSignup() {
         }
       );
 
-      if (isUnique.status !== 200) {
+      if (isUnique.data === true) {
         messageApi.open({
           type: "error",
           content: "This is an error message",
@@ -45,7 +47,7 @@ export default function SocialSignup() {
       const values = form.getFieldsValue();
       // console.log("values: ", form.getFieldsValue());
       const res = await instance.post(
-        `/user/social`,
+        `${LOCALTEST}/user/social`,
         {
           email: values.email,
           nickname: values.nickName,
@@ -71,7 +73,6 @@ export default function SocialSignup() {
         type: "info",
         content: `회원가입에 실패하였습니다`,
       });
-      navigate("/", { replace: true });
     }
   }
 
@@ -124,8 +125,8 @@ export default function SocialSignup() {
         <Form.Item
           name="nickName"
           label="NickName"
-          rules={[{ required: true, len: 10 }]}
-          help="글자수는 10자 이상이어야합니다."
+          rules={[{ required: true, max: 10 }]}
+          help="글자수는 10자 이하이어야합니다."
         >
           <Input />
         </Form.Item>
