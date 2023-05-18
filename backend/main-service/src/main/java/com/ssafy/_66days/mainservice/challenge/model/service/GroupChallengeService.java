@@ -6,10 +6,10 @@ import com.ssafy._66days.mainservice.challenge.model.dto.requestDTO.StreakReques
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.ApplicationListResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.AvailableGroupChallengeResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.GroupChallengeDetailResponseDTO;
+import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.GroupChallengeForGroupIntroPageResDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.GroupChallengeResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.entity.*;
 import com.ssafy._66days.mainservice.challenge.model.entity.mongodb.GroupChallengeLog;
-import com.ssafy._66days.mainservice.challenge.model.entity.mongodb.PersonalChallengeLog;
 import com.ssafy._66days.mainservice.challenge.model.reposiotry.*;
 import com.ssafy._66days.mainservice.group.model.entity.Group;
 import com.ssafy._66days.mainservice.group.model.entity.GroupMember;
@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -127,7 +126,7 @@ public class GroupChallengeService {
         return groupChallengeRepository.save(newGroupChallenge) != null;
     }
 
-    public List<AvailableGroupChallengeResponseDTO>  getAvailableGroupChallengeList(
+    public List<AvailableGroupChallengeResponseDTO> getAvailableGroupChallengeList(
             UUID userId,
             Long groupId
     ) {
@@ -149,6 +148,7 @@ public class GroupChallengeService {
 
         return AvailableGroupChallengeResponseDTOList;
     }
+
     public List<GroupChallengeResponseDTO> getGroupChallenges(
             UUID userId,
             Long groupId
@@ -181,7 +181,7 @@ public class GroupChallengeService {
             }
             groupChallengeResponseDTOList.add(GroupChallengeResponseDTO.of(groupChallenge, startAt, memberCount, challengeMemberImagePathDTOList));
         }
-        log.info("GroupChallengeService --- groupChallengeResponseDTO: {}",groupChallengeResponseDTOList);
+        log.info("GroupChallengeService --- groupChallengeResponseDTO: {}", groupChallengeResponseDTOList);
         return groupChallengeResponseDTOList;
     }
 
@@ -414,5 +414,64 @@ public class GroupChallengeService {
         } else {
             throw new IllegalArgumentException("올바른 상태값이 아닙니다");
         }
+    }
+
+    public long getCountOfSuccessfulGroupChllaenges(Group group) {
+        return groupChallengeRepository.countByGroupAndStateIn(group, List.of("SUCCESSFUL"));
+    }
+
+    public long getCountOfActivatedGroupChllaenges(Group group) {
+        return groupChallengeRepository.countByGroupAndStateIn(group, List.of("ACTIVATED"));
+    }
+
+    public List<GroupChallengeForGroupIntroPageResDTO> getGroupChallengeListByIdAndStates(Group group) {
+        List<GroupChallenge> groupChallengeList = groupChallengeRepository.findByGroupAndStateIn(group, Arrays.asList("ACTIVATED", "WAITING"));
+        List<GroupChallengeForGroupIntroPageResDTO> groupChallengeResponseDTOList = new ArrayList<>();
+
+        for (GroupChallenge groupChallenge : groupChallengeList) {
+            Long groupChallengeId = groupChallenge.getGroupChallengeId();
+            Long challengeId = groupChallenge.getChallenge().getChallengeId();
+            String challengeContent = groupChallenge.getContent();
+            String challengeName = groupChallenge.getChallengeName();
+            String challengeTopic = groupChallenge.getChallenge().getTopic();
+            List<String> profileImagePathList =
+                    groupChallengeMemberRepository
+                            .findByGroupChallenge(groupChallenge)
+                            .stream()
+                            .map(groupChallengeMember -> groupChallengeMember.getUser().getProfileImagePath())
+                            .collect(Collectors.toList());
+            int maxMemberCount = groupChallenge.getMaxMemberCount();
+            int memberCount = profileImagePathList.size();
+            LocalDate startAt = groupChallenge.getStartAt().toLocalDate();
+            LocalDate endAt = groupChallenge.getEndAt().toLocalDate();
+            String dDay;
+
+            LocalDate today = LocalDate.now();
+            long daysDiff = ChronoUnit.DAYS.between(startAt, today);
+            if (daysDiff == 0L) {
+                dDay = "D-DAY";
+            } else if (0 < daysDiff) {
+                dDay = "D + " + daysDiff;
+            } else {
+                dDay = "D - " + daysDiff;
+            }
+
+            groupChallengeResponseDTOList.add(
+                    GroupChallengeForGroupIntroPageResDTO.builder()
+                            .groupChallengeId(groupChallengeId)
+                            .challengeId(challengeId)
+                            .challengeContent(challengeContent)
+                            .challengeName(challengeName)
+                            .challengeTopic(challengeTopic)
+                            .profileImagePathList(profileImagePathList)
+                            .maxMemberCount(maxMemberCount)
+                            .memberCount(memberCount)
+                            .startAt(startAt)
+                            .endAt(endAt)
+                            .dDay(dDay)
+                            .build()
+            );
+        }
+        return groupChallengeResponseDTOList;
     }
 }

@@ -18,4 +18,6 @@ public interface MyChallengeRepository extends JpaRepository<MyChallenge, Long> 
     Optional<MyChallenge> findByMyChallengeIdAndUser(Long myChallengeId, UUID user);
 
     Optional<MyChallenge> findByMyChallengeIdAndState(Long myChallengeId, String state);
+
+    List<MyChallenge> findDistinctChallengeIdByUserAndState(User user, String success);
 }

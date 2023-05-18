@@ -1,6 +1,7 @@
 package com.ssafy._66days.mainservice.challenge.model.service;
 
 import com.ssafy._66days.mainservice.badge.model.repository.BadgeRepository;
+import com.ssafy._66days.mainservice.challenge.model.dto.ChallengeMyPageResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.MyChallengeHistoryDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.requestDTO.StreakRequestDTO;
@@ -102,12 +103,11 @@ public class MyChallengeService {
         return myChallengeRepository.save(myChallenge) != null;
     }
 
-    public List<MyChallengeResponseDTO> getMyChallenges(UUID userId) {
+    public List<MyChallengeResponseDTO> getMyChallenges(UUID userId, String state) {
 
         User user = userRepository.findById(userId)                         // 유저 객체 받아오기
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다"));
         
-        String state = "ACTIVATED";                                         // 개인 챌린지 중 진행중인 것만 받아온다 
         List<MyChallenge> myChallengeList = myChallengeRepository.findByUserAndState(user, state);
         
         List<MyChallengeResponseDTO> myChallengeResponseDTOList = new ArrayList<>();

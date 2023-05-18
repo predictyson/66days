@@ -5,10 +5,7 @@ import com.ssafy._66days.mainservice.challenge.model.entity.GroupChallenge;
 import com.ssafy._66days.mainservice.challenge.model.reposiotry.ChallengeRepository;
 import com.ssafy._66days.mainservice.challenge.model.reposiotry.GroupChallengeRepository;
 import com.ssafy._66days.mainservice.global.util.FileUtil;
-import com.ssafy._66days.mainservice.group.model.dto.GroupAchievementDetailResponseDTO;
-import com.ssafy._66days.mainservice.group.model.dto.GroupAchievementResponseDTO;
-import com.ssafy._66days.mainservice.group.model.dto.GroupCreateDTO;
-import com.ssafy._66days.mainservice.group.model.dto.GroupSearchPageResponseDTO;
+import com.ssafy._66days.mainservice.group.model.dto.*;
 import com.ssafy._66days.mainservice.group.model.entity.Group;
 import com.ssafy._66days.mainservice.group.model.entity.GroupAchievement;
 import com.ssafy._66days.mainservice.group.model.entity.GroupApply;
@@ -275,5 +272,23 @@ public class GroupService {
             }
         }
         return GroupAchievementDetailResponseDTOs;
+    }
+
+    public List<GroupMyPageResponseDTO> findAllGroups(UUID userId) {
+        User user = userRepository.findById(userId)                                         // 유저 객체 받아오기
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
+        List<GroupMember> groupMembers = groupMemberRepository.findAllByUser(user);
+        List<GroupMyPageResponseDTO> groupMyPageResponseDTOList = new ArrayList<>();
+        for (int i = 0; i < groupMembers.size(); i++) {
+            Group group = groupMembers.get(i).getGroup();
+            List<Challenge> challenges = groupChallengeRepository.findAllByGroup(group);
+            groupMyPageResponseDTOList.add(GroupMyPageResponseDTO.of(group, challenges));
+        }
+
+        return groupMyPageResponseDTOList;
+    }
+
+    public Group findGroupById(Long groupId) {
+        return groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 그룹입니다."));
     }
 }

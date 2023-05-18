@@ -5,9 +5,11 @@ import com.ssafy._66days.mainservice.user.model.entity.User;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Builder
+@ToString
 public class UserManageDTO {
     private String image;
     private String nickname;
