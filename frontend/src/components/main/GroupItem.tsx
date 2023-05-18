@@ -1,9 +1,6 @@
 import styled from "styled-components";
-import Moongchi from "../../assets/main/moongchi.png";
-import Algo from "../../assets/landing/algoBox.png";
-import Blog from "../../assets/landing/blogBox.png";
-import CS from "../../assets/landing/csBox.png";
 import { GroupData } from "../../types/main";
+import { getImagePath } from "../../util/common";
 interface ImageWrapperProps {
   imageUrl: string;
 }
@@ -15,25 +12,25 @@ interface IProps {
 export default function GroupItem({ group }: IProps) {
   return (
     <BoxWrapper>
-      {group.type === "personal" ? (
-        <ImageWrapper imageUrl={Moongchi}>
+      {/* {group.type === "personal" ? (
+        <ImageWrapper imageUrl={getImagePath(group.imagePath)}>
           <span>
             {group.name}님의 <br />
             개인 챌린지
           </span>
         </ImageWrapper>
-      ) : (
-        <ImageWrapper imageUrl={Moongchi}>
-          <span>
-            {group.name}님의 <br />
-            그룹 챌린지
-          </span>
-        </ImageWrapper>
-      )}
+      ) : ( */}
+      <ImageWrapper imageUrl={getImagePath(group.imagePath)}>
+        <span>
+          {group.name}님의 <br />
+          그룹 챌린지
+        </span>
+      </ImageWrapper>
+      {/* )} */}
       <ChallengeWrapper>
-        <ChallengeBox src={Algo} />
-        <ChallengeBox src={Blog} />
-        <ChallengeBox src={CS} />
+        {group.badges.map((b) => {
+          <ChallengeBox src={getImagePath(b)} />;
+        })}
       </ChallengeWrapper>
     </BoxWrapper>
   );

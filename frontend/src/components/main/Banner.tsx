@@ -1,22 +1,19 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Capibara from "../../assets/main/Capibara.png";
-import Badge from "../../assets/main/Bronze.png";
 import CoinIcon from "../../assets/main/Coin.png";
 import { theme } from "../../styles/theme";
-import { MemberInfoData } from "../../types/main";
+import { userDetailData } from "../../types/main";
 import CountUp from "react-countup";
 import { useNavigate } from "react-router";
 import TierInfoModal from "./TierInfoModal";
-
+import { getImagePath } from "../../util/common";
 interface IProps {
-  memberInfo: MemberInfoData;
+  memberInfo: userDetailData;
 }
 export default function Banner({ memberInfo }: IProps) {
   const navigate = useNavigate();
 
   const [isOpenTierModal, setTierModal] = useState(false);
-
   return (
     <>
       <TierInfoModal
@@ -27,19 +24,19 @@ export default function Banner({ memberInfo }: IProps) {
         <LeftWrapper>
           <Info>
             <img
-              src={Badge}
+              src={getImagePath(memberInfo.tierDTO.imagePath)}
               alt="badge"
+              style={{ width: "4rem", cursor: "pointer" }}
               onClick={() => setTierModal((prev) => !prev)}
             />
             <div className="email">{memberInfo.email}</div>
           </Info>
           <Nickname>
-            게으른 <br /> {memberInfo.animal}
+            {memberInfo.tierDTO.title} <br /> {memberInfo.animalDTO.animalName}
           </Nickname>
           <MoreInfo>
             <div className="exp">
-              <CountUp end={memberInfo.exp} duration={5} />
-              EXP
+              <CountUp end={memberInfo.exp} duration={5} /> EXP
             </div>
             <div className="button" onClick={() => navigate("/mypage")}>
               한눈에 보기
@@ -53,7 +50,10 @@ export default function Banner({ memberInfo }: IProps) {
           </Coin>
         </LeftWrapper>
         <ImageWrapper>
-          <img src={Capibara} alt="capibara" />
+          <img
+            src={getImagePath(memberInfo.animalDTO.imagePath)}
+            alt="capibara"
+          />
         </ImageWrapper>
       </Container>
     </>
