@@ -8,16 +8,18 @@ import { Modal } from "antd";
 import { SearchGroupData } from "../../types/search";
 import Category from "../../styles/CategoryTheme";
 import { putGroupApply } from "../../api/search";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   group: SearchGroupData;
 }
 export default function GroupItem({ group }: IProps) {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
+  // const showModal = () => {
+  //   setIsModalOpen(true);
+  // };
 
   const handleOk = () => {
     //FIXME: group_id 받아와야함
@@ -29,7 +31,7 @@ export default function GroupItem({ group }: IProps) {
     setIsModalOpen(false);
   };
   return (
-    <Container>
+    <Container onClick={() => navigate(`/groups/${group.groupId}`)}>
       <ProfileWrapper>
         <img src={Profile1} />
         <TitleWrapper>
@@ -68,7 +70,7 @@ export default function GroupItem({ group }: IProps) {
         </div>
         <div className="content">{group.description}</div>
       </MaterialWrapper>
-      <ButtonWrapper>
+      {/* <ButtonWrapper>
         {group.memberCounts} / {group.maxMemberCounts}
         {group.memberCounts === group.maxMemberCounts ? (
           <div
@@ -90,7 +92,7 @@ export default function GroupItem({ group }: IProps) {
             Apply
           </div>
         )}
-      </ButtonWrapper>
+      </ButtonWrapper> */}
       <CustomModal open={isModalOpen}>
         <div className="modal-title">{group.name}</div>
         <div className="modal-sub">그룹에 가입 신청을 요청하시겠습니까?</div>
@@ -239,52 +241,52 @@ const MaterialWrapper = styled.div`
     font-weight: ${theme.fontWeight.semibold};
   }
 `;
-const ButtonWrapper = styled.div`
-  padding: 1.6rem;
-  height: 7.2rem;
-  display: flex;
-  margin-top: auto;
-  align-items: center;
-  justify-content: space-between;
-  font-weight: ${theme.fontWeight.semibold};
-  font-size: 1.6rem;
-  color: ${theme.colors.gray500};
+// const ButtonWrapper = styled.div`
+//   padding: 1.6rem;
+//   height: 7.2rem;
+//   display: flex;
+//   margin-top: auto;
+//   align-items: center;
+//   justify-content: space-between;
+//   font-weight: ${theme.fontWeight.semibold};
+//   font-size: 1.6rem;
+//   color: ${theme.colors.gray500};
 
-  .disable-button {
-    width: 11rem;
-    height: 4rem;
-    border-radius: 155px;
-    color: white;
-    background-color: red;
-    text-align: center;
-    padding: 0.5rem 1.6rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* &:hover {
-      color: gray;
-      background-color: white;
-      border: solid 1px gray;
-    } */
-  }
-  .button {
-    width: 11rem;
-    height: 4rem;
-    border-radius: 155px;
-    color: white;
-    background-color: ${theme.colors.mint};
-    text-align: center;
-    padding: 0.5rem 1.6rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    &:hover {
-      color: gray;
-      background-color: white;
-      border: solid 1px gray;
-    }
-  }
-`;
+//   .disable-button {
+//     width: 11rem;
+//     height: 4rem;
+//     border-radius: 155px;
+//     color: white;
+//     background-color: red;
+//     text-align: center;
+//     padding: 0.5rem 1.6rem;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     /* &:hover {
+//       color: gray;
+//       background-color: white;
+//       border: solid 1px gray;
+//     } */
+//   }
+//   .button {
+//     width: 11rem;
+//     height: 4rem;
+//     border-radius: 155px;
+//     color: white;
+//     background-color: ${theme.colors.mint};
+//     text-align: center;
+//     padding: 0.5rem 1.6rem;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     &:hover {
+//       color: gray;
+//       background-color: white;
+//       border: solid 1px gray;
+//     }
+//   }
+// `;
 interface CategoryItemProps {
   color: string;
 }

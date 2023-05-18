@@ -146,9 +146,9 @@ export default function Group() {
     return (
       <div className="carousel">
         <Slider {...settings}>
-          {challengeList.map((challenge: ChallengeType, index: number) => (
+          {challengeList.map((challenge: ChallengeType) => (
             <ChallengeBox
-              key={index}
+              key={challenge.groupChallengeId}
               bgImg={getImagePath(challenge.imagePath)}
               notStarted={calcDueDate(challenge.startAt) < 0 ? true : false}
               title={challenge.challengeName}
@@ -159,7 +159,7 @@ export default function Group() {
             />
           ))}
           {[...Array(10 - challengeList.length)].map((index: number) => (
-            <NoChallengeBox key={index} />
+            <NoChallengeBox key={index + 1} />
           ))}
         </Slider>
       </div>

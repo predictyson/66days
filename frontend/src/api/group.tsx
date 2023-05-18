@@ -14,6 +14,7 @@ async function fetchGroupPageData(id = 1) {
 
     throw new Error();
   } catch (error) {
+    console.error(error);
     // login error -> login  page
     // unauthorized -> unauthorized error
   }
