@@ -18,7 +18,7 @@ export default function OAuth2Redirect() {
       const queryParams = new URLSearchParams(location.search);
       // console.log(queryParams.get("token"));
       setToken(`Bearer ${queryParams.get("token")}`);
-      instance.defaults.headers.common.Authorization = `Bearer ${queryParams.get(
+      instance.defaults.headers.common.Authorization = `${queryParams.get(
         "token"
       )}`;
       navigate("/", { replace: true });
