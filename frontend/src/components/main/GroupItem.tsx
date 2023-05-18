@@ -28,9 +28,9 @@ export default function GroupItem({ group }: IProps) {
       </ImageWrapper>
       {/* )} */}
       <ChallengeWrapper>
-        {group.badges.map((b) => {
+        {/* {group.badges.map((b) => {
           <ChallengeBox src={getImagePath(b)} />;
-        })}
+        })} */}
       </ChallengeWrapper>
     </BoxWrapper>
   );
@@ -69,7 +69,7 @@ const ChallengeWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-const ChallengeBox = styled.img`
-  width: 30%;
-  cursor: pointer;
-`;
+// const ChallengeBox = styled.img`
+//   width: 30%;
+//   cursor: pointer;
+// `;
