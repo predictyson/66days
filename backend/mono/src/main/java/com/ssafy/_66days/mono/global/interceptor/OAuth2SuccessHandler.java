@@ -50,8 +50,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 			if (user != null) {
 				String accessToken = jwtService.createAccessToken(user.getUserId());
 				return UriComponentsBuilder.fromUriString("/oauth")
-		                .queryParam("access-token", accessToken)
-		                .queryParam("user", UserLoginRespDTO.of(user))
+		                .queryParam("token", accessToken)
+//		                .queryParam("user", UserLoginRespDTO.of(user))
 		                .build()
 		                .encode()
 		                .toUriString();
