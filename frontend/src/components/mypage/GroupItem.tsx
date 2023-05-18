@@ -25,9 +25,9 @@ export default function GroupITem({ group }: IProps) {
           })}
         </TagWrapper>
         <TitleWrapper>{group.name} </TitleWrapper>
-        <div className="group-type">
+        {/* <div className="group-type">
           <span>{group.type === "personal" ? "개인 그룹" : "그룹"}</span>
-        </div>
+        </div> */}
       </div>
     </Container>
   );
