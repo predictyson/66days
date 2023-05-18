@@ -12,7 +12,8 @@ import java.util.List;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<Article> findByGroupAndIsDeleted(Group group, boolean isDeleted, Pageable pageable);
 
-//    Optional<Article> findByArticleIdAndUser(Long groupId, UUID userId);
+    //    Optional<Article> findByArticleIdAndUser(Long groupId, UUID userId);
+    List<Article> findByGroupAndIsDeleted(Group group, boolean isDeleted);
 
 
 }

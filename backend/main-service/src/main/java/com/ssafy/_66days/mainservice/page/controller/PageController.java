@@ -108,7 +108,7 @@ public class PageController {
         String groupName = groupService.getGroupName(groupId);
         List<GroupAchievementResponseDTO> groupAchievements = groupService.getGroupAchievement(userId, groupId);
         List<GroupChallengeResponseDTO> groupChallenges = groupChallengeService.getGroupChallenges(userId, groupId);
-        List<ArticleResponseDTO> articleList = articleService.getArticleList(userId, groupId, 0);
+        List<Object> articleList = articleService.getArticleList(userId, groupId, 0);
 
         resultMap.put("group-name", groupName);
         resultMap.put("achievements", groupAchievements);
