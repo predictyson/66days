@@ -1,4 +1,4 @@
-package com.ssafy._66days.mono.page.model.dto;
+package com.ssafy._66days.mainservice.page.model.dto;
 
 import lombok.*;
 

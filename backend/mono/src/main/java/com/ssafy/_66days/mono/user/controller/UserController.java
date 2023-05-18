@@ -1,22 +1,24 @@
-package com.ssafy._66days.mono.user.controller;
+package com.ssafy._66days.mainservice.user.controller;
 
-import com.ssafy._66days.mono.page.model.dto.MainPageResponseDTO;
-import com.ssafy._66days.mono.user.model.dto.UserDetailResponseDTO;
-import com.ssafy._66days.mono.user.model.dto.UserSignUpRequestDTO;
-import com.ssafy._66days.mono.user.model.dto.UserSocialRegistParamDTO;
-import com.ssafy._66days.mono.user.model.service.JwtService;
-import com.ssafy._66days.mono.user.model.service.UserService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import com.ssafy._66days.mainservice.page.model.dto.MainPageResponseDTO;
+import com.ssafy._66days.mainservice.page.model.service.PageService;
+import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
+import com.ssafy._66days.mainservice.user.model.dto.UserDetailResponseDTO;
+import com.ssafy._66days.mainservice.user.model.dto.UserSignUpRequestDTO;
+import com.ssafy._66days.mainservice.user.model.service.UserService;
+import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+//import com.ssafy._66days.user.model.dto.UserDetailResponseDTO;
+//import com.ssafy._66days.user.model.dto.UserSignUpRequestDTO;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -28,15 +30,27 @@ import java.util.UUID;
 public class UserController {
 
 	private final UserService userService;
-	private final JwtService jwtService;
+	private final AuthServiceClient authServiceClient;
+	private final PageService pageService;
 
+	@GetMapping("/uuid/{uuid}")
+	public ResponseEntity<UUID> extractUUIDFromToken(@PathVariable UUID uuid) {
+		log.info("User-service UserController: {}",uuid);
+		ResponseEntity<UUID> response = null;
+		try {
+			response = authServiceClient.extractUUID(uuid);
+		} catch (FeignException e){
+			log.error(e.getMessage());
+		}
+		return ResponseEntity.ok(response.getBody());
+	}
 	@PatchMapping("/modify/{nickname}")
 	public ResponseEntity<Boolean> modifyNickname(@RequestHeader("Authorization") String token,
 											  @RequestParam(value = "nickname") String nickname
 											  ) {
 
-		jwtService.validateToken(token);
-		UUID userId = jwtService.getUserId(token);
+		// get UUID from token?
+		UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
 		log.info("Modify nickname userId: {}",userId);
 
 		try {
@@ -54,8 +68,8 @@ public class UserController {
 												  @RequestPart(value = "image") MultipartFile image
 	) {
 
-		jwtService.validateToken(token);
-		UUID userId = jwtService.getUserId(token);
+		// get UUID from token?
+		UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
 		log.info("Modify nickname userId: {}",userId);
 
 		try {
@@ -69,22 +83,30 @@ public class UserController {
 	}
 
 	@GetMapping("/check-nickname/{nickname}")
-	public ResponseEntity<Boolean> isNicknameAvailable(@PathVariable String nickname) {
+	public ResponseEntity<Boolean> isNicknameAvailable(@RequestHeader("Authorization") String token,
+													   @PathVariable String nickname) {
+		//token validation
+		// get UUID from token?
+		UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+		// userService.
 		boolean isAvailable = userService.isNicknameAvailable(nickname);
 		return ResponseEntity.ok(!isAvailable);
 	}
 
-	@ApiOperation(value = "소셜 회원가입", notes = "소셜 회원의 회원가입을 진행합니다.")
-	@PostMapping("/social")
-	public ResponseEntity<Map<String, String>> socialRegistration(
-			@RequestBody @ApiParam(required = true) UserSocialRegistParamDTO userDTO
-	) {
+	@PostMapping("/signup/nickname")
+	public ResponseEntity<Void> signup(@RequestHeader("Authorization") String authorization,
+									   @RequestBody UserSignUpRequestDTO userSignUpRequestDTO) {
+		try {
+//			ResponseEntity<UUID> response = authServiceClient.extractUUIDFromToken(authorization);
+//			UUID userId = response.getBody();
+			UUID userId = authServiceClient.extractUUID(UUID.fromString(authorization)).getBody();
 
-		log.info("Social Regist Info : {}", userDTO);
-		Map<String, String> resultMap = new HashMap<String, String>();
-
-		userService.socialRegist(userDTO);
-		return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.OK);
+			userService.signup(userId, userSignUpRequestDTO);
+//			authServiceClient.signup(authorization);
+		} catch (FeignException e) {
+			log.error(e.getMessage());
+		}
+		return ResponseEntity.ok().build();
 	}
 
 	@GetMapping()
@@ -92,9 +114,8 @@ public class UserController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		try {
-			jwtService.validateToken(token);
-			UUID userId = jwtService.getUserId(token);
-			MainPageResponseDTO mainPageResponseDTO = userService.getMainPage(userId);
+			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			MainPageResponseDTO mainPageResponseDTO = pageService.getMainPage(userId);
 			resultMap.put("mainPageResponseDTO", mainPageResponseDTO);
 			return ResponseEntity.status(HttpStatus.OK).body(resultMap);
 

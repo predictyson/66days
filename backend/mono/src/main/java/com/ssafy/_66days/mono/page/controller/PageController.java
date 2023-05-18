@@ -1,21 +1,25 @@
-package com.ssafy._66days.mono.page.controller;
+package com.ssafy._66days.mainservice.page.controller;
 
-import com.ssafy._66days.mono.article.model.service.ArticleService;
-import com.ssafy._66days.mono.badge.model.service.BadgeService;
-import com.ssafy._66days.mono.challenge.model.dto.responseDTO.GroupChallengeForGroupIntroPageResDTO;
-import com.ssafy._66days.mono.challenge.model.dto.responseDTO.GroupChallengeResponseDTO;
-import com.ssafy._66days.mono.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
-import com.ssafy._66days.mono.challenge.model.service.GroupChallengeService;
-import com.ssafy._66days.mono.challenge.model.service.MyChallengeService;
-import com.ssafy._66days.mono.group.model.dto.GroupAchievementResponseDTO;
-import com.ssafy._66days.mono.group.model.dto.GroupMyPageResponseDTO;
-import com.ssafy._66days.mono.group.model.entity.Group;
-import com.ssafy._66days.mono.group.model.service.GroupService;
-import com.ssafy._66days.mono.page.model.dto.MainPageResponseDTO;
-import com.ssafy._66days.mono.user.model.dto.UserDetailDTO;
-import com.ssafy._66days.mono.user.model.dto.UserManageDTO;
-import com.ssafy._66days.mono.user.model.service.JwtService;
-import com.ssafy._66days.mono.user.model.service.UserService;
+import com.ssafy._66days.mainservice.article.model.dto.responseDto.ArticleResponseDTO;
+import com.ssafy._66days.mainservice.article.model.service.ArticleService;
+import com.ssafy._66days.mainservice.badge.model.dto.ResponseDTO.BadgeMyPageDTO;
+import com.ssafy._66days.mainservice.badge.model.service.BadgeService;
+import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.GroupChallengeForGroupIntroPageResDTO;
+import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.GroupChallengeResponseDTO;
+import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
+import com.ssafy._66days.mainservice.challenge.model.service.GroupChallengeService;
+import com.ssafy._66days.mainservice.challenge.model.service.MyChallengeService;
+import com.ssafy._66days.mainservice.group.model.dto.GroupAchievementResponseDTO;
+import com.ssafy._66days.mainservice.group.model.dto.GroupMyPageResponseDTO;
+import com.ssafy._66days.mainservice.group.model.entity.Group;
+import com.ssafy._66days.mainservice.group.model.service.GroupService;
+import com.ssafy._66days.mainservice.page.model.dto.MainPageResponseDTO;
+import com.ssafy._66days.mainservice.page.model.dto.MyPageResponseDTO;
+import com.ssafy._66days.mainservice.page.model.service.PageService;
+import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
+import com.ssafy._66days.mainservice.user.model.dto.UserDetailDTO;
+import com.ssafy._66days.mainservice.user.model.dto.UserManageDTO;
+import com.ssafy._66days.mainservice.user.model.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -42,25 +46,24 @@ public class PageController {
     private final GroupService groupService;
     private final MyChallengeService myChallengeService;
     private final BadgeService badgeService;
+    private final PageService pageService;
+    private final AuthServiceClient authServiceClient;
 
-    private final JwtService jwtService;
-
-    @ApiOperation(value = "홈 화면", notes = "로그인 후 연결 되는 첫 페이지")
+    @ApiOperation(value = "메인 화면", notes = "로그인 후 연결 되는 첫 페이지")
     @GetMapping("/home")
     public ResponseEntity<Map<String, Object>> getMainPage(
             @RequestHeader(value = "Authorization") String token
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Page, USER ID : {}", userId);
 
         try {
-            MainPageResponseDTO mainPage = userService.getMainPage(userId);
+            MainPageResponseDTO mainPage = pageService.getMainPage(userId);
             resultMap.put("mainPage", mainPage);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
-
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
@@ -74,44 +77,18 @@ public class PageController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Page, USER ID : {}", userId);
 
         try {
-            UserDetailDTO userDetailDTO = userService.findUserById(userId);
-            resultMap.put("userInfo", userDetailDTO);
+            MyPageResponseDTO myPageResponseDTO = pageService.getMyPage(userId);
+            resultMap.put("myPageResponseDTO", myPageResponseDTO);
+            return ResponseEntity.ok().body(resultMap);
         } catch (Exception e) {
-            resultMap.put(RESULT, e.getMessage());
-            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
-
-//        resultMap.put("member-info", member);
-
-//        List<BadgeMyPageDTO> badgeMyPageDTOList = badgeService.getMyPageBadgeList(userId);
-//        resultMap.put("badges", badgeMyPageDTOList);
-
-        resultMap.put("streak", new ArrayList<>());
-
-        try {
-            List<MyChallengeResponseDTO> challengeList = myChallengeService.getMyChallenges(userId,"SUCCESSFUL");
-            resultMap.put("challenge", new ArrayList<>());
-        } catch (Exception e) {
-            resultMap.put(RESULT, e.getMessage());
-            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
-        }
-
-        try {
-            List<GroupMyPageResponseDTO> groupList = groupService.findAllGroups(userId);
-            resultMap.put("groupList", groupList);
-        } catch (Exception e) {
-            resultMap.put(RESULT, e.getMessage());
-            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
-        }
-
-        resultMap.put(RESULT, SUCCESS);
-
-        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
     }
 
     @ApiOperation(value = "그룹 페이지", notes = "그룹페이지의 첫 화면")
@@ -122,8 +99,8 @@ public class PageController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Page, USER ID : {}", userId);
 
         String groupName = groupService.getGroupName(groupId);
@@ -149,8 +126,7 @@ public class PageController {
     ) {
         Map<String, Object> resultMap = new HashMap<>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
         log.info("Group Intro Page, USER ID : {}", userId);
 
         Group group = groupService.findGroupById(groupId);

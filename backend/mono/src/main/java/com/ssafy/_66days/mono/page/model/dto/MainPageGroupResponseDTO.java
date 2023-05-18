@@ -1,6 +1,6 @@
-package com.ssafy._66days.mono.page.model.dto;
+package com.ssafy._66days.mainservice.page.model.dto;
 
-import com.ssafy._66days.mono.group.model.entity.Group;
+import com.ssafy._66days.mainservice.group.model.entity.Group;
 import lombok.*;
 
 import java.util.List;

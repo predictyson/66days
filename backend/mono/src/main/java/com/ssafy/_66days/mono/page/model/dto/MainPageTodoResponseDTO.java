@@ -1,7 +1,7 @@
-package com.ssafy._66days.mono.page.model.dto;
+package com.ssafy._66days.mainservice.page.model.dto;
 
-import com.ssafy._66days.mono.challenge.model.entity.GroupChallenge;
-import com.ssafy._66days.mono.challenge.model.entity.MyChallenge;
+import com.ssafy._66days.mainservice.challenge.model.entity.GroupChallenge;
+import com.ssafy._66days.mainservice.challenge.model.entity.MyChallenge;
 import lombok.*;
 
 import java.util.Date;

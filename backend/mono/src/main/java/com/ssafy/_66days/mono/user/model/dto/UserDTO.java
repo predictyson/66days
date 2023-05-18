@@ -1,6 +1,6 @@
-package com.ssafy._66days.mono.user.model.dto;
+package com.ssafy._66days.mainservice.user.model.dto;
 
-import com.ssafy._66days.mono.user.model.entity.User;
+import com.ssafy._66days.mainservice.user.model.entity.User;
 import lombok.*;
 
 import java.util.UUID;
@@ -34,6 +34,17 @@ public class UserDTO {
                 .blogUrl(user.getBlogUrl())
                 .animalId(user.getAnimalId())
                 .tierId(user.getTierId())
+                .build();
+    }
+
+    public static UserDTO myPage(User user) {
+        return UserDTO.builder()
+                .userId(user.getUserId())
+                .nickname(user.getNickname())
+                .profileImagePath(user.getProfileImagePath())
+                .email(user.getEmail())
+                .exp(user.getExp())
+                .point(user.getPoint())
                 .build();
     }
 }
