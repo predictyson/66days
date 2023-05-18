@@ -17,11 +17,11 @@ import com.ssafy._66days.mainservice.group.model.service.GroupService;
 import com.ssafy._66days.mainservice.page.model.dto.MainPageResponseDTO;
 import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
 import com.ssafy._66days.mainservice.user.model.dto.UserDetailDTO;
-<<<<<<< HEAD
+//<<<<<<< HEAD
 import com.ssafy._66days.mainservice.user.model.dto.UserManageDTO;
-=======
+//=======
 import com.ssafy._66days.mainservice.user.model.dto.UserDetailResponseDTO;
->>>>>>> 719ef97 (be/feat: 메인 페이지 랭킹 제외 완성)
+//>>>>>>> 719ef97 (be/feat: 메인 페이지 랭킹 제외 완성)
 import com.ssafy._66days.mainservice.user.model.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

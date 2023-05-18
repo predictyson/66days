@@ -12,14 +12,14 @@ import java.util.List;
 @ToString
 public class MainPageResponseDTO {
     private UserDetailDTO userDetail;
-    private List<MainPageTodoResponseDTO> todayTodo;
+    private List<Object> todayTodo;
     private MainPageMyGroupResponseDTO myGroup;
     private List<MainPageGroupResponseDTO> Group;
 
 
     public static MainPageResponseDTO of(
             UserDetailDTO userDetail,
-            List<MainPageTodoResponseDTO> todayTodo,
+            List<Object> todayTodo,
             MainPageMyGroupResponseDTO myGroup,
             List<MainPageGroupResponseDTO> Group
     ) {
