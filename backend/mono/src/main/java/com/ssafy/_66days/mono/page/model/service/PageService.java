@@ -1,4 +1,4 @@
-package com.ssafy._66days.mono.page.model.dto.service;
+package com.ssafy._66days.mono.page.model.service;
 
 import com.ssafy._66days.mono.animal.model.dto.AnimalDTO;
 import com.ssafy._66days.mono.animal.model.entity.Animal;
