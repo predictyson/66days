@@ -66,6 +66,7 @@ async function fetchGroupBadges(id = 1) {
   }
 }
 
+// TODO: 하드코딩된 groupId 추후에 수정
 async function fetchBoardListByPage(groupId: number = 1, page: number) {
   try {
     const res = await api.get(
@@ -181,6 +182,7 @@ async function handleGroupApplication(
 }
 
 async function postComment(
+  // TODO: 하드코딩된 groupId 추후에 수정
   groupId: number = 1,
   articleId: number,
   content: string
@@ -192,6 +194,71 @@ async function postComment(
     );
     if (res.status === 200) {
       alert("댓글 작성이 완료되었습니다.");
+      return true;
+    }
+
+    throw new Error();
+  } catch (error) {
+    console.log(error);
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
+
+// TODO: 댓글 삭제 405 에러 해결
+async function deleteComment(articleId: number, commentId: number) {
+  try {
+    const res = await api.delete(
+      `/api/v1/main-service/article/${articleId}/${commentId}`
+    );
+    if (res.status === 200) {
+      alert("댓글 삭제가 완료되었습니다.");
+      return true;
+    }
+
+    throw new Error();
+  } catch (error) {
+    console.log(error);
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
+
+async function editBoard(
+  groupId: number,
+  articleId: number,
+  title: string,
+  content: string
+) {
+  try {
+    const res = await api.patch(
+      `/api/v1/main-service/article/${groupId}/modify/${articleId}`,
+      {
+        title: title,
+        content: content,
+      }
+    );
+    if (res.status === 200) {
+      alert("게시글 수정이 완료되었습니다.");
+      return true;
+    }
+
+    throw new Error();
+  } catch (error) {
+    console.log(error);
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
+
+// TODO: 게시글 삭제 405 에러 해결
+async function deleteBoard(groupId: number, articleId: number) {
+  try {
+    const res = await api.delete(
+      `/api/v1/main-service/article/${groupId}/delete/${articleId}`
+    );
+    if (res.status === 200) {
+      alert("게시글 삭제가 완료되었습니다.");
       return true;
     }
 
@@ -211,4 +278,7 @@ export {
   handleMember,
   handleGroupApplication,
   postComment,
+  deleteComment,
+  editBoard,
+  deleteBoard,
 };

@@ -7,7 +7,6 @@ import ErrorPage from "./error-page";
 import Root from "./routes/Root";
 import LandingPage from "./routes/LandingPage";
 import Group from "./routes/Group";
-import GroupIntro from "./routes/GroupIntro";
 import Challenge from "./routes/Challenge";
 import MainPage from "./routes/MainPage";
 import SearchPage from "./routes/SearchPage";
@@ -24,8 +23,7 @@ export default createBrowserRouter(
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/socialsignup" element={<SocialSignup />} />
         <Route path="/groups" element={<SearchPage />} />
-        <Route path="/groups/me" index element={<Group />} />
-        <Route path="/groups/:groupId" index element={<GroupIntro />} />
+        <Route path="/groups/:groupId" index element={<Group />} />
         <Route path="/groups/:groupId/c/:challengeId" element={<Challenge />} />
         <Route path="/group" index element={<Group />} />
         <Route
