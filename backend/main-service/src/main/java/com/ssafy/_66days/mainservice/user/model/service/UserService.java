@@ -1,25 +1,23 @@
 package com.ssafy._66days.mainservice.user.model.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 
+import com.ssafy._66days.mainservice.challenge.model.entity.MyChallenge;
+import com.ssafy._66days.mainservice.challenge.model.entity.mongodb.PersonalChallengeLog;
+import com.ssafy._66days.mainservice.challenge.model.reposiotry.*;
+import com.ssafy._66days.mainservice.page.model.dto.MainPageMyGroupResponseDTO;
+import com.ssafy._66days.mainservice.page.model.dto.MainPageTodoResponseDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ctc.wstx.shaded.msv_core.reader.xmlschema.GroupState;
 import com.ssafy._66days.mainservice.animal.model.dto.AnimalMainPageResponseDTO;
 import com.ssafy._66days.mainservice.animal.model.entity.Animal;
 import com.ssafy._66days.mainservice.animal.model.repository.AnimalRepository;
 import com.ssafy._66days.mainservice.badge.model.entity.Badge;
 import com.ssafy._66days.mainservice.challenge.model.entity.Challenge;
 import com.ssafy._66days.mainservice.challenge.model.entity.GroupChallenge;
-import com.ssafy._66days.mainservice.challenge.model.entity.GroupChallengeMember;
-import com.ssafy._66days.mainservice.challenge.model.reposiotry.ChallengeRepository;
-import com.ssafy._66days.mainservice.challenge.model.reposiotry.GroupChallengeMemberRepository;
-import com.ssafy._66days.mainservice.challenge.model.reposiotry.GroupChallengeRepository;
-import com.ssafy._66days.mainservice.group.model.dto.GroupMainPageResponseDTO;
+import com.ssafy._66days.mainservice.page.model.dto.MainPageGroupResponseDTO;
 import com.ssafy._66days.mainservice.group.model.entity.Group;
 import com.ssafy._66days.mainservice.group.model.entity.GroupMember;
 import com.ssafy._66days.mainservice.group.model.repository.GroupMemberRepository;
@@ -40,9 +38,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -54,6 +49,9 @@ public class UserService {
     private final GroupMemberRepository groupMemberRepository;
     private final ChallengeRepository challengeRepository;
     private final GroupChallengeRepository groupChallengeRepository;
+    private final MyChallengeRepository myChallengeRepository;
+    private final PersonalChallengeLogRepository personalChallengeLogRepository;
+    private final GroupChallengeMemberRepository groupChallengeMemberRepository;
     private final FileUtil fileUtil;
     @Value("${file.path.upload-images-users}")
     private String userImageFilePath;
@@ -121,12 +119,98 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDetailResponseDTO getUserDetail(UUID uuid) {
-        User user = userRepository.findById(uuid).orElseThrow(RuntimeException::new);
-        Tier tier = tierRepository.findByTierId(user.getTierId()).orElseThrow(RuntimeException::new);
-        Animal animal = animalRepository.findById(user.getAnimalId()).orElseThrow(RuntimeException::new);
-        List<GroupMainPageResponseDTO> groups = new ArrayList<>();
-        GroupMainPageResponseDTO myGroup = null;
+    public UserDetailResponseDTO getMainPage(UUID userId) {
+
+        // -------------------- userDetail -------------------------------------
+        Map<String, Object> userInfo = new HashMap<>();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new InputMismatchException("존재하지 않는 유저입니다"));
+        Tier tier = tierRepository.findByTierId(user.getTierId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 티어 정보입니다"));
+        Animal animal = animalRepository.findById(user.getAnimalId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 동물 정보입니다"));
+
+        AnimalDTO animalDTO = AnimalDTO.of(animal);
+        TierDTO tierDTO = TierDTO.of(tier);
+        UserDetailDTO userDetailDTO = UserDetailDTO.of(user, animalDTO, tierDTO);
+        userInfo.put("userInfo", userDetailDTO);                                                        // ! userDetailDTO
+        // ----------------------today's t0d0-------------------------------------
+        Map<String, Object> todoInfo = new HashMap<>();
+        List<MainPageTodoResponseDTO> todayTodos = new ArrayList<>();
+        List<MyChallenge> myChallenges = myChallengeRepository.findByUserAndState(user, "ACTIVATED");
+        if (myChallenges != null) {
+            for (int i = 0; i < myChallenges.size(); i++) {
+                MyChallenge myChallenge = myChallenges.get(i);
+                Long myChallengeId = myChallenge.getMyChallengeId();
+                LocalDate today = LocalDate.now();
+                PersonalChallengeLog todayStreak = personalChallengeLogRepository.findByMyChallengeIdAndTime(myChallengeId, today);
+                boolean state = false;
+                if (todayStreak != null) {
+                    state = true;
+                }
+                MainPageTodoResponseDTO todayTodoDTO = MainPageTodoResponseDTO.of(myChallenge, state);
+                todayTodos.add(todayTodoDTO);
+            }
+        }
+        todoInfo.put("todayTodoInfo", todayTodos);                                                  // ! todaytodo 정보
+        //-----------------Groups--------------------------------------------
+        Map<String, Object> groups = new HashMap<String, Object>();                             // 그룹 정보 담을 배열
+        //----------------MyGroup-------------------------------------------
+        String profileImagePath = user.getProfileImagePath();                                   // 유저 프로필사진
+        List<String> challengeImagePaths = new ArrayList<>();                                   // 개인 챌린지 이미지 담을 배열
+        if (myChallenges != null) {
+            for (int i = 0; i < myChallenges.size(); i++) {
+                challengeImagePaths.add(myChallenges.get(i).getChallenge().getBadgeImage());    // 챌린지 이미지 담는다
+            }
+        }
+        MainPageMyGroupResponseDTO mainPageMyGroup = MainPageMyGroupResponseDTO.of(profileImagePath, challengeImagePaths);
+        groups.put("myGroupInfo", mainPageMyGroup);                                                     // ! 개인 그룹DTO
+        //---------------Group----------------------------------
+        List<MainPageGroupResponseDTO> mainPageGroup = new ArrayList<>();                                       // 그룹 정보 담을 배열
+        List<GroupMember> groupMemberList = groupMemberRepository.findByUserAndIsDeleted(user, false);      // 내가 참여중인 그룹들
+        List<String> groupImagePath = new ArrayList<>();                                                        // 각 그룹의 진행중인 챌린지 이미지담을 배열
+        for (int i = 0; i < groupMemberList.size(); i++) {
+            Group group = groupMemberList.get(i).getGroup();
+            List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndState(group, "ACTIVATED");
+            for (int j = 0; j < groupChallenges.size(); j++) {
+                String image = groupChallenges.get(j).getChallenge().getBadgeImage();
+                groupImagePath.add(image);
+            }
+            MainPageGroupResponseDTO mainPageGroupResponseDTO = MainPageGroupResponseDTO.of(group, groupImagePath);
+            mainPageGroup.add(mainPageGroupResponseDTO);
+        }
+        groups.put("groupInfo", mainPageGroup);                                                         // ! 그룹정보 DTO
+
+
+
+
+
+
+
+
+        if (!groupChallengeMemberList.isEmpty()) {
+            for (int i = 0; i < groupChallengeMemberList.size(); i++) {
+
+                GroupChallenge groupChallenge = groupChallengeRepository.findById(groupChallengeMemberList.get(i).getGroupChallenge().getGroupChallengeId()) // 그룹챌린지를 찾아서
+                        .orElseThrow(() -> new IllegalArgumentException("알수없는 에러"));
+                if (groupChallenge.getState().equals("ACTIVATED")) {                                 // 진행중인 챌린지라면
+                    Long challengeId = groupChallenge.getChallenge().getChallengeId();          // 그것의 챌린지 아이디를 찾는다
+                    temp.add(challengeId);                                                      // 그룹에서 참여하고 있는 challenge들의 id값을 temp에 저장
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+        MainPageGroupResponseDTO myGroup = null;
 
         List<GroupMember> groupMembers = groupMemberRepository.findAllByUser(user);
         if (groupMembers.isEmpty()) {
@@ -137,18 +221,16 @@ public class UserService {
 
         for (GroupMember groupMember : groupMembers) {
             Group group = groupMember.getGroup();
-            GroupMainPageResponseDTO groupDTO = Group.toGroupMainPageResponseDTO(group);
+            MainPageGroupResponseDTO groupDTO = Group.toGroupMainPageResponseDTO(group);
             List<Badge> badges = new ArrayList<>();
             for (Challenge challenge : challenges) {
                 // Optional 변경 필요
-                List<GroupChallenge> groupChallenge =
-                        groupChallengeRepository
-                                .findByGroupAndChallengeAndState(group, challenge, "SUCCESSFUL");
+                List<GroupChallenge> groupChallenge = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, "SUCCESSFUL"); // 성공한게 아니고 진행중인거 가져와야함
                 if (groupChallenge != null) {
                     badges.add(challenge.getBadge());
                 }
             }
-            List<String> badgeImagePathList = new ArrayList<>();
+            List<String> badgeImagePathList = new ArrayList<>();        // 뱃지 이미지는 챌린지에서 바로 받을 수 잇음
             for (Badge badge : badges) {
                 badgeImagePathList.add(badge.getImagePath());
             }
@@ -159,6 +241,7 @@ public class UserService {
                 groups.add(groupDTO);
             }
         }
+
 
         return UserDetailResponseDTO.builder()
                 .userId(user.getUserId())

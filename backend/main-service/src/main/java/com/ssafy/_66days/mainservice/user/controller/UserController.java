@@ -104,11 +104,11 @@ public class UserController {
 	}
 
 	@GetMapping
-	public ResponseEntity<UserDetailResponseDTO> getUserDetail(@RequestHeader("Authorization") String token) {
+	public ResponseEntity<UserDetailResponseDTO> getMainPage(@RequestHeader("Authorization") String token) {
 //		ResponseEntity<UUID> response = authServiceClient.extractUUIDFromToken(token);
 //		UUID userId = response.getBody();
 		UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
-		UserDetailResponseDTO userDetailResponseDTO = userService.getUserDetail(userId);
+		UserDetailResponseDTO userDetailResponseDTO = userService.getMainPage(userId);
 		return ResponseEntity.ok(userDetailResponseDTO);
 	}
 }

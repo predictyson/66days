@@ -141,7 +141,7 @@ public class GroupService {
 //        groupApply.setState(state);
         groupApply.updateGroupApply(state);
         if(state.equals(ACCEPTED)) {
-            GroupMember groupMember = groupMemberRepository.findByUserAndIsDeleted(user, true).orElse(null);
+            GroupMember groupMember = groupMemberRepository.findByUserAndGroupAndIsDeleted(user, group,true).orElse(null);
             log.info("group apply add groupmember: {}", groupMember);
             if (groupMember != null) {
                 groupMember.updateIsDeleted(false);

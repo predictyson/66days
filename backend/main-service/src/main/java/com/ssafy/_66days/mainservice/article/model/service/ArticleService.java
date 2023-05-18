@@ -10,6 +10,7 @@ import com.ssafy._66days.mainservice.article.model.repository.CommentRepository;
 import com.ssafy._66days.mainservice.global.util.CheckUserUtil;
 import com.ssafy._66days.mainservice.group.model.entity.Group;
 import com.ssafy._66days.mainservice.article.model.repository.ArticleRepository;
+import com.ssafy._66days.mainservice.group.model.entity.GroupMember;
 import com.ssafy._66days.mainservice.group.model.repository.GroupMemberRepository;
 import com.ssafy._66days.mainservice.group.model.repository.GroupRepository;
 import com.ssafy._66days.mainservice.user.model.repository.UserRepository;
@@ -84,14 +85,11 @@ public class ArticleService {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
 
-        boolean isUserInGroup = checkUserUtil.isUserInGroup(group, user);
-        if (!isUserInGroup) {
-            throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
-        }
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다"));
-        String role = groupMemberRepository.findByUser(user).getAuthority();
-
+        GroupMember groupMember = groupMemberRepository.findByGroupAndUserAndIsDeleted(group, user, false)
+                .orElseThrow(() -> new IllegalArgumentException("그룹에 속한 유저가 아닙니다"));
+        String role = groupMember.getAuthority();
         return ArticleResponseDTO.of(article, role);
     }
 
