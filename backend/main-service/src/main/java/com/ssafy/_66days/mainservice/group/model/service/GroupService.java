@@ -1,5 +1,6 @@
 package com.ssafy._66days.mainservice.group.model.service;
 
+import com.ssafy._66days.mainservice.challenge.model.dto.ChallengeMyPageResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.entity.Challenge;
 import com.ssafy._66days.mainservice.challenge.model.entity.GroupChallenge;
 import com.ssafy._66days.mainservice.challenge.model.reposiotry.ChallengeRepository;
@@ -279,10 +280,17 @@ public class GroupService {
                 .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
         List<GroupMember> groupMembers = groupMemberRepository.findAllByUser(user);
         List<GroupMyPageResponseDTO> groupMyPageResponseDTOList = new ArrayList<>();
+        List<Challenge> challenges = null;
         for (int i = 0; i < groupMembers.size(); i++) {
             Group group = groupMembers.get(i).getGroup();
-            List<Challenge> challenges = groupChallengeRepository.findAllByGroup(group);
-            groupMyPageResponseDTOList.add(GroupMyPageResponseDTO.of(group, challenges));
+            List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndState(group, "ACTIVATED");
+            log.info("group challenge get challenge : {}", groupChallenges.get(i).getChallenge().getChallengeId());
+            challenges = new ArrayList<>();
+            for (int j = 0; j < groupChallenges.size(); j++) {
+                challenges.add(groupChallenges.get(i).getChallenge());
+            }
+            List<ChallengeMyPageResponseDTO> challengeMyPageResponseDTOS = challenges.stream().map(c -> ChallengeMyPageResponseDTO.of(c)).collect(Collectors.toList());
+            groupMyPageResponseDTOList.add(GroupMyPageResponseDTO.of(group, challengeMyPageResponseDTOS));
         }
 
         return groupMyPageResponseDTOList;

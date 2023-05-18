@@ -90,8 +90,8 @@ public class PageController {
 
 //        resultMap.put("member-info", member);
 
-        List<BadgeMyPageDTO> badgeMyPageDTOList = badgeService.getMyPageBadgeList(userId);
-        resultMap.put("badges", badgeMyPageDTOList);
+//        List<BadgeMyPageDTO> badgeMyPageDTOList = badgeService.getMyPageBadgeList(userId);
+//        resultMap.put("badges", badgeMyPageDTOList);
 
         resultMap.put("streak", new ArrayList<>());
 
@@ -110,8 +110,6 @@ public class PageController {
             resultMap.put(RESULT, e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
         }
-
-
 
         resultMap.put(RESULT, SUCCESS);
 
