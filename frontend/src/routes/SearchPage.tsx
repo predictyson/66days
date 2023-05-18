@@ -9,26 +9,35 @@ export default function SearchPage() {
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  // const [lastElement, setLastElement] = useState<HTMLDivElement | null>();
   const [groupdata, setGroupdata] = useState<SearchData>({
     result: "success",
-    [`group-list`]: [],
+    groupList: [],
   });
 
-  async function getSearchData(page: number) {
-    try {
+  useEffect(() => {
+    console.log("group data: ", groupdata);
+  }, [groupdata]);
+
+  useEffect(() => {
+    console.log("page in effect: ", page);
+    // if (page > 0) getSearchData();
+
+    let ignore = false;
+    getSearchData();
+    return () => {
+      ignore = true;
+    };
+
+    async function getSearchData() {
       const data = await fetchSearchData(searchValue, page);
-      console.log(page);
-      // setGroupdata(data);
-      setGroupdata((prev) => ({
-        result: data.result,
-        [`group-list`]: [...prev[`group-list`], ...data[`group-list`]],
-      }));
-      console.log(data);
-      console.log(data[`group-list`]);
-    } catch (error) {
-      console.log("Error occurred while fetching search data:", error);
+      if (!ignore)
+        setGroupdata((prev) => ({
+          result: data.result,
+          groupList: [...prev.groupList, ...data[`group-list`]],
+        }));
     }
-  }
+  }, [page]);
 
   useEffect(() => {
     // getSearchData(page);
@@ -41,6 +50,14 @@ export default function SearchPage() {
     if (sentinelRef.current) {
       observer.observe(sentinelRef.current);
     }
+
+    // getSearchData();
+    // const data = await fetchSearchData(searchValue, page);
+    // setGroupdata((prev) => ({
+    //   result: data.result,
+    //   groupList: [...prev.groupList, ...data[`group-list`]],
+    // }));
+
     return () => {
       // 컴포넌트 언마운트 시 Intersection Observer 해제
       if (sentinelRef.current) {
@@ -49,28 +66,45 @@ export default function SearchPage() {
     };
   }, []);
 
-  const handleObserver: IntersectionObserverCallback = (entries) => {
+  function handleObserver(entries: IntersectionObserverEntry[]): void {
     const target = entries[0];
     if (target.isIntersecting) {
-      fetchMoreData();
-    }
-  };
-
-  async function fetchMoreData() {
-    if (!loading) {
-      setLoading(true);
-      try {
-        await getSearchData(page + 1);
-        setPage((prev) => prev + 1);
-      } catch (err) {
-        console.log("fetching more data err");
+      // fetchMoreData();
+      if (!loading) {
+        setLoading(true);
+        try {
+          // console.log("page is: ", page);
+          // getSearchData(page + 1);
+          // getSearchData();
+          setPage((prev) => prev + 1);
+        } catch (err) {
+          console.log("fetching more data err");
+        }
+        setLoading(false);
       }
-      setLoading(false);
     }
   }
+
+  // async function getSearchData() {
+  //   try {
+  //     console.log("********************************");
+  //     const data = await fetchSearchData(searchValue, page);
+  //     // console.log("page and data: ", page, data);
+  //     // setGroupdata(data);
+  //     setGroupdata((prev) => ({
+  //       result: data.result,
+  //       groupList: [...prev.groupList, ...data[`group-list`]],
+  //     }));
+  //     console.log(data);
+  //     console.log(data[`group-list`]);
+  //   } catch (error) {
+  //     console.log("Error occurred while fetching search data:", error);
+  //   }
+  // }
+
   const handleSearch = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      searchValue !== "" && (await getSearchData(page));
+      // TODO: searchValue !== "" && (await getSearchData());
       setSearchValue("");
     }
   };
@@ -101,14 +135,13 @@ export default function SearchPage() {
       </div>
 
       <ItemContainer>
-        {groupdata[`group-list`] &&
-          groupdata[`group-list`].map((data, idx) => {
-            return (
-              <div key={idx} style={{ marginTop: "6rem" }}>
-                <GroupItem key={idx} group={data} />
-              </div>
-            );
-          })}
+        {groupdata.groupList.map((data, idx) => {
+          return (
+            <div key={idx} style={{ marginTop: "6rem" }}>
+              <GroupItem key={idx} group={data} />
+            </div>
+          );
+        })}
         <div ref={sentinelRef}></div>
         {loading && <h2>loading.....</h2>}
       </ItemContainer>

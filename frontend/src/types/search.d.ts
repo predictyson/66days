@@ -1,9 +1,10 @@
 export interface SearchData {
   result: string;
-  [`group-list`]: SearchGroupData[];
+  groupList: SearchGroupData[];
 }
 
 export interface SearchGroupData {
+  groupId: number;
   ownerImage: string;
   ownerName: string;
   image: string | null;
