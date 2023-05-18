@@ -11,14 +11,18 @@ import { fetchMainPageData } from "../api/main";
 export default function MainPage() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   if (!isLoggedIn()) return <LandingPage />;
-  const [data, setData] = useState(null);
-  fetchMainPageData();
-  // useEffect(() => {
-  //   fetchMainPageData();
-  // }, []);
+  const [data, setData] = useState<MainData | null>(null);
+  useEffect(() => {
+    async function fetchMainPage() {
+      const maindata = await fetchMainPageData();
+      setData(maindata);
+    }
+    fetchMainPage();
+    console.log(data);
+  }, []);
   return (
     <>
-      <Banner memberInfo={MAIN_DUMMY_DATA.memberInfo} />
+      <Banner memberInfo={data?.userDetail} />
       <Todo challenges={MAIN_DUMMY_DATA.challenge} />
       <Groups groups={MAIN_DUMMY_DATA.group} />
       <Ranking ranking={MAIN_DUMMY_DATA.rank} />

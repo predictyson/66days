@@ -1,27 +1,44 @@
 export interface MainData {
-  result: string;
-  memberInfo: MemberInfoData;
-  challenge: ChallengeData[];
-  rank: RankData;
   group: GroupData[];
+  myGroup: MyGroupData[];
+  todayToto: TodayTodoData[];
+  userDetail: userDetailData;
 }
 
-export interface MemberInfoData {
-  tier: string;
+export interface MyGroupData {
+  challengeImagePath: string[];
+  profileImagePath: string;
+}
+
+export interface TodayTodoData {
+  myChallengeId: number | null;
+  groupChallengeId: number | null;
+  challengeName: string;
+}
+export interface userDetailData {
+  animalDto: animalDtoData;
+  blogUrl: string;
   email: string;
   exp: number;
+  githubUrl: string;
+  nickname: string;
   point: number;
-  image: string;
-  animal: string;
+  profileImagePath: string;
+  tierDto: TierDtoData;
+  userId: string;
 }
-export interface ChallengeData {
-  image: string;
+export interface TierDtoData {
+  imagePath: string;
   name: string;
-  participants: string[];
-  startDate: string;
-  status: boolean;
+  requiredExp: number;
+  tierId: number;
+  title: string;
 }
-
+export interface animalDtoData {
+  animalId: number;
+  animalName: string;
+  imagePath: string;
+}
 export interface RankData {
   badgeRank: BadgeRankData[];
   expRank: ExpRankData[];
@@ -49,8 +66,8 @@ export interface ExpRankData {
 }
 
 export interface GroupData {
-  image: string;
+  imagePath: string;
   name: string;
   badges: string[];
-  type: string;
+  groupId: number;
 }

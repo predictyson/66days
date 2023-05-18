@@ -3,8 +3,8 @@ export async function fetchMainPageData() {
   try {
     const res = await api.get(`/api/v1/page/home`);
     if (res.status === 200) {
-      console.log(res.data);
-      return res.data;
+      console.log(res.data.mainPage);
+      return res.data.mainPage;
     }
 
     throw new Error();
