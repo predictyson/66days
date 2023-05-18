@@ -18,7 +18,7 @@ public class AvailableMyChallengeResponseDTO {
         return AvailableMyChallengeResponseDTO.builder()
                 .challengeId(challenge.getChallengeId())
                 .challengeName(challenge.getTopic())
-                .imagePath(challenge.getBadge().getImagePath())
+                .imagePath(challenge.getBadgeImage())
                 .available(isAvailable)
                 .build();
     }

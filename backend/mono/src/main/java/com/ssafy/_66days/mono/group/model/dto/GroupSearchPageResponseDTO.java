@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 @Builder
 public class GroupSearchPageResponseDTO {
+    private Long groupId;
     private String ownerImage;
     private String ownerName;
     private String image;
@@ -21,6 +22,7 @@ public class GroupSearchPageResponseDTO {
 
     public static GroupSearchPageResponseDTO of(Group group, User user) {
         return GroupSearchPageResponseDTO.builder()
+                .groupId(group.getGroupId())
                 .ownerImage(user.getProfileImagePath())
                 .ownerName(user.getNickname())
                 .image(group.getImagePath())

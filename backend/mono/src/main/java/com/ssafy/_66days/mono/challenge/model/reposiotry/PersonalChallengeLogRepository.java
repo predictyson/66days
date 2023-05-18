@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.time.LocalDate;
 
 public interface PersonalChallengeLogRepository extends MongoRepository<PersonalChallengeLog, Long> {
-    PersonalChallengeLog findByMyChallengeIdAndTime(Long myChallengeId, LocalDate tiem);
+    PersonalChallengeLog findByMyChallengeIdAndTime(Long myChallengeId, LocalDate time);
 }

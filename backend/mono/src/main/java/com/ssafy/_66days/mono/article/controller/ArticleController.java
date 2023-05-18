@@ -1,9 +1,9 @@
 package com.ssafy._66days.mono.article.controller;
 
-import com.ssafy._66days.mono.article.model.dto.responseDto.ArticleResponseDTO;
-import com.ssafy._66days.mono.article.model.dto.responseDto.CommentResponseDTO;
 import com.ssafy._66days.mono.article.model.dto.requestDto.ArticleRequestDTO;
 import com.ssafy._66days.mono.article.model.dto.requestDto.CommentRequestDTO;
+import com.ssafy._66days.mono.article.model.dto.responseDto.ArticleResponseDTO;
+import com.ssafy._66days.mono.article.model.dto.responseDto.CommentResponseDTO;
 import com.ssafy._66days.mono.article.model.service.ArticleService;
 import com.ssafy._66days.mono.user.model.service.JwtService;
 import io.swagger.annotations.ApiOperation;
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +90,7 @@ public class ArticleController {
 
         try {
             // groupId, userId, offset 값으로 게시글을 받아온다
-            List<ArticleResponseDTO> articles = articleService.getArticleList(userId, groupId, offset);
+            List<Object> articles = articleService.getArticleList(userId, groupId, offset);
             resultMap.put("articles", articles);
             return ResponseEntity.ok(resultMap);
         } catch (Exception e) {

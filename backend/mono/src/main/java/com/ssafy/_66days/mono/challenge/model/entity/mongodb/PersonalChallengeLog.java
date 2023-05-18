@@ -1,6 +1,5 @@
 package com.ssafy._66days.mono.challenge.model.entity.mongodb;
 
-import com.ssafy._66days.mono.challenge.model.entity.MyChallenge;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

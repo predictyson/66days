@@ -9,10 +9,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GroupChallengeRepository extends JpaRepository<GroupChallenge, Long> {
-    GroupChallenge findByGroupAndChallengeAndState(Group group, Challenge challenge, String state);
+    List<GroupChallenge> findByGroupAndChallengeAndState(Group group, Challenge challenge, String state);
+
 
     List<GroupChallenge> findByGroupAndStateIn(Group group, List<String> states);
 
     Optional<GroupChallenge> findByGroupChallengeIdAndState(Long groupChallengeId, String State);
 
+    List<GroupChallenge> findByGroupAndState(Group group, String state);
+
+    long countByGroupAndStateIn(Group group, List<String> states);
 }

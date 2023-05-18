@@ -1,16 +1,14 @@
 package com.ssafy._66days.mono.group.model.entity;
 
+import com.ssafy._66days.mono.page.model.dto.MainPageGroupResponseDTO;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
-import com.ssafy._66days.mono.group.model.dto.GroupMainPageResponseDTO;
 
 @Entity
 @Table(name="group")
@@ -50,8 +48,8 @@ public class Group {
     @ColumnDefault("false")
     private boolean isDeleted;
 
-    public static GroupMainPageResponseDTO toGroupMainPageResponseDTO(Group group) {
-        return GroupMainPageResponseDTO.builder()
+    public static MainPageGroupResponseDTO toGroupMainPageResponseDTO(Group group) {
+        return MainPageGroupResponseDTO.builder()
                 .groupId(group.getGroupId())
                 .name(group.getGroupName())
                 .imagePath(group.getImagePath())

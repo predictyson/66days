@@ -21,7 +21,7 @@ public class MyChallengeDetailResponseDTO {
         return MyChallengeDetailResponseDTO.builder()
                 .challengeName(myChallenge.getChallengeName())
                 .content(myChallenge.getContent())
-                .imagePath(myChallenge.getChallenge().getBadge().getImagePath())
+                .imagePath(myChallenge.getChallenge().getBadgeImage())
                 .MyChallengeHistoryDTOS(myChallengeHistoryDTOs)
                 .build();
     }

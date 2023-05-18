@@ -23,7 +23,7 @@ public class Challenge {    // 챌린지 메타 데이터
     private Long challengeId;
 
     @NotNull
-    @OneToOne(fetch = FetchType.LAZY)   // 챌린지와 뱃지는 1대1 매핑
+    @OneToOne   // 챌린지와 뱃지는 1대1 매핑
     @JoinColumn(name = "badge_id")
     private Badge badge;
 
@@ -31,4 +31,7 @@ public class Challenge {    // 챌린지 메타 데이터
     @Column(name = "topic")
     private String topic;
 
+    @NotBlank
+    @Column(name = "badge_image")
+    private String badgeImage;
 }

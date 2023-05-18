@@ -1,19 +1,20 @@
 package com.ssafy._66days.mono.article.model.service;
 
+import com.ssafy._66days.mono.article.model.dto.requestDto.ArticleRequestDTO;
 import com.ssafy._66days.mono.article.model.dto.requestDto.CommentRequestDTO;
 import com.ssafy._66days.mono.article.model.dto.responseDto.ArticleResponseDTO;
-import com.ssafy._66days.mono.article.model.dto.requestDto.ArticleRequestDTO;
 import com.ssafy._66days.mono.article.model.dto.responseDto.CommentResponseDTO;
 import com.ssafy._66days.mono.article.model.entity.Article;
 import com.ssafy._66days.mono.article.model.entity.Comment;
+import com.ssafy._66days.mono.article.model.repository.ArticleRepository;
 import com.ssafy._66days.mono.article.model.repository.CommentRepository;
 import com.ssafy._66days.mono.global.util.CheckUserUtil;
 import com.ssafy._66days.mono.group.model.entity.Group;
-import com.ssafy._66days.mono.article.model.repository.ArticleRepository;
+import com.ssafy._66days.mono.group.model.entity.GroupMember;
 import com.ssafy._66days.mono.group.model.repository.GroupMemberRepository;
 import com.ssafy._66days.mono.group.model.repository.GroupRepository;
-import com.ssafy._66days.mono.user.model.repository.UserRepository;
 import com.ssafy._66days.mono.user.model.entity.User;
+import com.ssafy._66days.mono.user.model.repository.UserRepository;
 import com.ssafy._66days.mono.user.model.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -84,19 +85,16 @@ public class ArticleService {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다"));
 
-        boolean isUserInGroup = checkUserUtil.isUserInGroup(group, user);
-        if (!isUserInGroup) {
-            throw new IllegalArgumentException("그룹에서 탈퇴한 유저입니다");
-        }
         Article article = articleRepository.findById(articleId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 게시글입니다"));
-        String role = groupMemberRepository.findByUser(user).getAuthority();
-
+        GroupMember groupMember = groupMemberRepository.findByGroupAndUserAndIsDeleted(group, user, false)
+                .orElseThrow(() -> new IllegalArgumentException("그룹에 속한 유저가 아닙니다"));
+        String role = groupMember.getAuthority();
         return ArticleResponseDTO.of(article, role);
     }
 
 
-    public List<ArticleResponseDTO> getArticleList(
+    public List<Object> getArticleList(
             UUID userId,
             Long groupId,
             int offset
@@ -113,7 +111,9 @@ public class ArticleService {
         }
         Pageable pageable = PageRequest.of(offset, 3);
         // offset 값과 limit 값을 이용해 최근 게시글 3개를 가져온다
+        int articleNumber = articleRepository.findByGroupAndIsDeleted(group, false).size();
         List<Article> articleList = articleRepository.findByGroupAndIsDeleted(group, false, pageable);
+        List<Object> articleResponse = new ArrayList<>();
         List<ArticleResponseDTO> articleResponseDTOList = new ArrayList<>();
         // 가져온 게시글을 ArticleDTO 리스트로 변환한다
         for (int i = 0; i < articleList.size(); i++) {
@@ -123,7 +123,9 @@ public class ArticleService {
             String role = groupMemberRepository.findByGroupAndUser(articleGroup, articleUser).get().getAuthority();
             articleResponseDTOList.add(ArticleResponseDTO.of(articleList.get(i), role));
         }
-        return articleResponseDTOList;
+        articleResponse.add(articleResponseDTOList);
+        articleResponse.add(articleNumber);
+        return articleResponse;
     }
 
     public ArticleResponseDTO updateArticle(
@@ -152,7 +154,7 @@ public class ArticleService {
         if (article.isDeleted()) {
             throw new IllegalArgumentException("삭제된 글입니다");
         }
-        if (articleUpdateRequestDTO.getTitle() != null) {
+        if (!articleUpdateRequestDTO.getTitle().equals(article.getTitle())) {
             throw new IllegalArgumentException("제목은 수정할 수 없습니다");
         }
         if (articleUpdateRequestDTO.getContent() == null) {

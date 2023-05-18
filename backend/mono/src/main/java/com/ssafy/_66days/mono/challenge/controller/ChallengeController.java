@@ -87,7 +87,7 @@ public class ChallengeController {
             UUID userId = jwtService.getUserId(token);
             log.info("Group Page, USER ID : {}", userId);
 
-            List<MyChallengeResponseDTO> MyChallengeDTOList = myChallengeService.getMyChallenges(userId);
+            List<MyChallengeResponseDTO> MyChallengeDTOList = myChallengeService.getMyChallenges(userId, "ACTIVATED");
             resultMap.put("MyChallengeDTOList", MyChallengeDTOList);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
         } catch (Exception e) {
@@ -175,10 +175,10 @@ public class ChallengeController {
             @PathVariable("group_challenge_id") Long groupChallengeId
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
-        log.info("Group Page, USER ID : {}", userId);
         try {
+            jwtService.validateToken(token);
+            UUID userId = jwtService.getUserId(token);
+            log.info("Group Page, USER ID : {}", userId);
             boolean isApplied = groupChallengeService.challengeApplication(userId, groupChallengeId);
             resultMap.put("isApplied", isApplied);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
@@ -189,8 +189,29 @@ public class ChallengeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
     }
+
     // ? 챌린지 신청자 목록 반환
     // ! 챌린지 신청자 목록 반환
+    @GetMapping("/group_challenge/{group_challenge_id}/application_list")
+    @ApiOperation(value = "그룹 챌린지 신청자 리스트 API", notes = "그룹 챌린지를 참여 신청한 사람들을 관리할 수 있는 라스트")
+    public ResponseEntity<Map<String, Object>> getChallengeApplicationList(
+            @RequestHeader(value = "Authorization") String token,
+            @PathVariable("group_challenge_id") Long groupChallengeId
+    ) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+
+        try {
+            jwtService.validateToken(token);
+            UUID userId = jwtService.getUserId(token);
+            log.info("Group Page, USER ID : {}", userId);
+            List<ApplicationListResponseDTO> ApplicationListResponseDTOs = groupChallengeService.getChallengeApplicationList(userId, groupChallengeId);
+            resultMap.put("ApplicationListResponseDTOs", ApplicationListResponseDTOs);
+            return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
+    }
     // 그룹장 혹은 매니저 자신이 만든 챌린지 가입 신청 승인 or 거절
     // 참가인원이 맥스 인원을 넘기면 안된다
 
@@ -204,10 +225,10 @@ public class ChallengeController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
-        log.info("Group Page, USER ID : {}", userId);
         try {
+            jwtService.validateToken(token);
+            UUID userId = jwtService.getUserId(token);
+            log.info("Group Page, USER ID : {}", userId);
 
             boolean isManaged = groupChallengeService.manageSubscriptionApplication(userId, groupChallengeId, nickname, state);
             resultMap.put("isManaged", isManaged);
@@ -230,10 +251,10 @@ public class ChallengeController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
-        log.info("Group Page, USER ID : {}", userId);
         try {
+            jwtService.validateToken(token);
+            UUID userId = jwtService.getUserId(token);
+            log.info("Group Page, USER ID : {}", userId);
 
             List<GroupChallengeResponseDTO> groupChallengeResponseDTOList = groupChallengeService.getGroupChallenges(userId, groupId);
             resultMap.put("groupChallengeResponseDTOList", groupChallengeResponseDTOList);
@@ -255,10 +276,10 @@ public class ChallengeController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
-        log.info("Group Page, USER ID : {}", userId);
         try {
+            jwtService.validateToken(token);
+            UUID userId = jwtService.getUserId(token);
+            log.info("Group Page, USER ID : {}", userId);
 
             GroupChallengeDetailResponseDTO groupChallengeDetailResponseDTO = groupChallengeService.getGroupChallengeDetail(userId, groupId, groupChallengeId);
             resultMap.put("groupChallengeDetailResponseDTO", groupChallengeDetailResponseDTO);
@@ -279,10 +300,10 @@ public class ChallengeController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
-        log.info("Group Page, USER ID : {}", userId);
         try{
+            jwtService.validateToken(token);
+            UUID userId = jwtService.getUserId(token);
+            log.info("Group Page, USER ID : {}", userId);
 
             boolean isChecked = myChallengeService.checkPrivateStreak(userId, myChallengeId);
             resultMap.put("isChecked", isChecked);
@@ -305,10 +326,11 @@ public class ChallengeController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        jwtService.validateToken(token);
-        UUID userId = jwtService.getUserId(token);
-        log.info("Group Page, USER ID : {}", userId);
         try{
+            jwtService.validateToken(token);
+            UUID userId = jwtService.getUserId(token);
+            log.info("Group Page, USER ID : {}", userId);
+
             boolean isChecked = groupChallengeService.checkGroupStreak(userId, groupChallengeId, nickname);
             resultMap.put("isChecked", isChecked);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);

@@ -1,11 +1,17 @@
 package com.ssafy._66days.mono.group.model.service;
 
+import com.ssafy._66days.mono.challenge.model.dto.ChallengeMyPageResponseDTO;
+import com.ssafy._66days.mono.challenge.model.entity.Challenge;
+import com.ssafy._66days.mono.challenge.model.entity.GroupChallenge;
+import com.ssafy._66days.mono.challenge.model.reposiotry.ChallengeRepository;
+import com.ssafy._66days.mono.challenge.model.reposiotry.GroupChallengeRepository;
 import com.ssafy._66days.mono.global.util.FileUtil;
-import com.ssafy._66days.mono.group.model.dto.GroupCreateDTO;
-import com.ssafy._66days.mono.group.model.dto.GroupSearchPageResponseDTO;
+import com.ssafy._66days.mono.group.model.dto.*;
 import com.ssafy._66days.mono.group.model.entity.Group;
+import com.ssafy._66days.mono.group.model.entity.GroupAchievement;
 import com.ssafy._66days.mono.group.model.entity.GroupApply;
 import com.ssafy._66days.mono.group.model.entity.GroupMember;
+import com.ssafy._66days.mono.group.model.repository.GroupAchievementRepository;
 import com.ssafy._66days.mono.group.model.repository.GroupApplyRepository;
 import com.ssafy._66days.mono.group.model.repository.GroupMemberRepository;
 import com.ssafy._66days.mono.group.model.repository.GroupRepository;
@@ -35,6 +41,9 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final GroupApplyRepository groupApplyRepository;
     private final GroupMemberRepository groupMemberRepository;
+    private final GroupAchievementRepository groupAchievementRepository;
+    private final GroupChallengeRepository groupChallengeRepository;
+    private final ChallengeRepository challengeRepository;
     private final FileUtil fileUtil;
 
     @Value("${file.path.upload-images-groups}")
@@ -132,7 +141,7 @@ public class GroupService {
 //        groupApply.setState(state);
         groupApply.updateGroupApply(state);
         if(state.equals(ACCEPTED)) {
-            GroupMember groupMember = groupMemberRepository.findByUserAndIsDeleted(user, true).orElse(null);
+            GroupMember groupMember = groupMemberRepository.findByUserAndGroupAndIsDeleted(user, group,true).orElse(null);
             log.info("group apply add groupmember: {}", groupMember);
             if (groupMember != null) {
                 groupMember.updateIsDeleted(false);
@@ -206,5 +215,87 @@ public class GroupService {
     public String getGroupName(Long groupId) {
         Group group = groupRepository.findById(groupId).orElseThrow(()->new NoSuchElementException("해당하는 그룹이 없습니다"));
         return group.getGroupName();
+    }
+
+    public List<GroupAchievementResponseDTO> getGroupAchievement(UUID userId, Long groupId) {
+        User user = userRepository.findById(userId)                                         // 유저 객체 받아오기
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
+        Group group = groupRepository.findById(groupId)                                     // 그룹 객체 받아오기
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 그룹입니다"));
+        GroupMember groupMember = groupMemberRepository.findByGroupAndUserAndIsDeleted(group, user, false)  // 그룹멤버 객체 받아오기
+                .orElseThrow(() -> new NoSuchElementException("그룹에 속하지 않는 유저입니다"));
+
+        List<Long> temp = new ArrayList<>();                                                                    // 그룹에 업적이 있는지 없는지 구별할 빈 배열
+        List<Challenge> challenges = challengeRepository.findAll();                                             // 챌린지 메타정보 객체 받아오기
+        for (int i = 0; i < challenges.size(); i++) {                                                           // 챌린지 id들을 temp에 담는다
+            temp.add(challenges.get(i).getChallengeId());
+        }
+
+        List<GroupAchievement> groupAchievements = groupAchievementRepository.findByGroup(group);               // 그룹의 업적 객체 받아오기
+        List<GroupAchievementResponseDTO> GroupAchievementResponseDTOs = new ArrayList<>();                     // 업적 정보 저장할 빈 배열
+        if (groupAchievements != null) {                                                                        // 그룹에 업적이 있다면
+            for (int i = 0; i < groupAchievements.size(); i++) {                                                // 업적 정보를 DTO로 변환하여
+                GroupAchievement tempGroupAchievement = groupAchievements.get(i);
+                GroupAchievementResponseDTO groupAchievementResponseDTO = GroupAchievementResponseDTO.of(tempGroupAchievement);
+                GroupAchievementResponseDTOs.add(groupAchievementResponseDTO);                                  // 배열에 담는다
+                temp.remove(tempGroupAchievement.getChallenge().getChallengeId());                              // 나온 업적들은 temp에서 하나씩 지운다
+            }
+        }
+        for (int j = 0; j < temp.size(); j++) {                                                                 // temp에 남은 challengeId = 그룹에게 하나도 없는 업적
+            Long challengeId = temp.get(j);
+            Challenge challenge = challengeRepository.findById(challengeId)                                     // 챌린지 객체를 가져와서
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다"));
+            GroupAchievementResponseDTO groupAchievementResponseDTO = GroupAchievementResponseDTO.from(challenge);  // 객체로 만든다 이때 업적 갯수 0으로
+            GroupAchievementResponseDTOs.add(groupAchievementResponseDTO);                                      // 반환 list에 추가한다
+
+        }
+        return GroupAchievementResponseDTOs;
+    }
+
+    public List<GroupAchievementDetailResponseDTO> getGroupAchievementDetail(Long groupId, Long challengeId) {
+        Group group = groupRepository.findById(groupId)                                     // 그룹 객체 받아오기
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 그룹입니다"));
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 챌린지입니다"));
+        List<GroupAchievementDetailResponseDTO> GroupAchievementDetailResponseDTOs = new ArrayList<>();
+        List<String> stateList = new ArrayList<>();
+        stateList.add("SUCCESSFUL");
+        stateList.add("FAILED");
+        for (String state : stateList) {
+            List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, state);
+            if (groupChallenges != null) {
+                for (int i = 0; i < groupChallenges.size(); i++) {
+                    GroupChallenge groupChallenge = groupChallenges.get(i);
+                    GroupAchievementDetailResponseDTO achievementDetailDTO = GroupAchievementDetailResponseDTO.of(groupChallenge);
+                    GroupAchievementDetailResponseDTOs.add(achievementDetailDTO);
+                }
+            }
+        }
+        return GroupAchievementDetailResponseDTOs;
+    }
+
+    public List<GroupMyPageResponseDTO> findAllGroups(UUID userId) {
+        User user = userRepository.findById(userId)                                         // 유저 객체 받아오기
+                .orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
+        List<GroupMember> groupMembers = groupMemberRepository.findAllByUser(user);
+        List<GroupMyPageResponseDTO> groupMyPageResponseDTOList = new ArrayList<>();
+        List<Challenge> challenges = null;
+        for (int i = 0; i < groupMembers.size(); i++) {
+            Group group = groupMembers.get(i).getGroup();
+            List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndState(group, "ACTIVATED");
+            log.info("group challenge get challenge : {}", groupChallenges.get(i).getChallenge().getChallengeId());
+            challenges = new ArrayList<>();
+            for (int j = 0; j < groupChallenges.size(); j++) {
+                challenges.add(groupChallenges.get(i).getChallenge());
+            }
+            List<ChallengeMyPageResponseDTO> challengeMyPageResponseDTOS = challenges.stream().map(c -> ChallengeMyPageResponseDTO.of(c)).collect(Collectors.toList());
+            groupMyPageResponseDTOList.add(GroupMyPageResponseDTO.of(group, challengeMyPageResponseDTOS));
+        }
+
+        return groupMyPageResponseDTOList;
+    }
+
+    public Group findGroupById(Long groupId) {
+        return groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 그룹입니다."));
     }
 }

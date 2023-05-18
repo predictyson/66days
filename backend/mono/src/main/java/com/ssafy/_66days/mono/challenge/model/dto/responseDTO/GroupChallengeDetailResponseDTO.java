@@ -23,7 +23,7 @@ public class GroupChallengeDetailResponseDTO {
                 .groupChallengeId(groupChallenge.getGroupChallengeId())
                 .groupChallengeName(groupChallenge.getChallengeName())
                 .content(groupChallenge.getContent())
-                .imagePath(groupChallenge.getChallenge().getBadge().getImagePath())
+                .imagePath(groupChallenge.getChallenge().getBadgeImage())
                 .memberDetail(groupChallengeMemberDTOList)
                 .build();
 

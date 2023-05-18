@@ -16,7 +16,7 @@ public class AvailableGroupChallengeResponseDTO {
     public static AvailableGroupChallengeResponseDTO of(Challenge challenge) {
         return AvailableGroupChallengeResponseDTO.builder()
                 .challengeId(challenge.getChallengeId())
-                .imagePath(challenge.getBadge().getImagePath())
+                .imagePath(challenge.getBadgeImage())
                 .topic(challenge.getTopic())
                 .build();
     }
