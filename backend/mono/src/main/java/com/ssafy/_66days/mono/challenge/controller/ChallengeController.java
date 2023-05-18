@@ -138,6 +138,7 @@ public class ChallengeController {
             return ResponseEntity.ok().body(resultMap);
         } catch (Exception e) {
             e.printStackTrace();
+            resultMap.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
     }
@@ -162,7 +163,7 @@ public class ChallengeController {
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
         } catch (Exception e) {
             e.printStackTrace();
-            resultMap.put("isCreated", false);
+            resultMap.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
     }
@@ -185,7 +186,7 @@ public class ChallengeController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            resultMap.put("isApplied", false);
+            resultMap.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
         }
     }

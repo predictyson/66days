@@ -93,14 +93,16 @@ public class GroupChallengeService {
             state = "WAITING";
         }
 
-        List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, "ACTIVATED"); // 현재 진행 중인 챌린지가 있는지 찾아온다
+        List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndChallengeAndStateIn(group, challenge, Arrays.asList("ACTIVATED", "WAITING")); // 현재 진행 중인 챌린지가 있는지 찾아온다
         if (ChronoUnit.DAYS.between(today, startAt) > 30) {                                              //  시작날짜가 오늘 날짜에서 30일 초과한 날짜인지 확인
             throw new IllegalArgumentException("챌린지는 최대 30일 이내에 시작해야 합니다");
         }
-        if (groupChallenges != null && groupChallenges.size() == 1) {
-            GroupChallenge groupChallenge = groupChallenges.get(0);
-            if (groupChallenge.getEndAt().isAfter(startAt)) {                                           // 같은 챌린지가 해당 그룹내에서 진행중인지 확인(시작날짜가 진행 중 챌린지 endAt보다 전인지 확인)
-                throw new IllegalArgumentException("동일한 챌린지가 그룹 내에서 진행 중인 날짜에는 챌린지를 시작할 수 없습니다");
+        if (groupChallenges != null) {
+            for (int i = 0; i < groupChallenges.size(); i++) {
+                GroupChallenge groupChallenge = groupChallenges.get(i);
+                if (groupChallenge.getEndAt().isAfter(startAt)) {                                           // 같은 챌린지가 해당 그룹내에서 진행중인지 확인(시작날짜가 진행 중 챌린지 endAt보다 전인지 확인)
+                    throw new IllegalArgumentException("동일한 챌린지가 그룹 내에서 진행 중인 날짜에는 챌린지를 시작할 수 없습니다");
+                }
             }
         }
 
