@@ -1,7 +1,6 @@
 package com.ssafy._66days.mainservice.rank.model.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import javax.persistence.Id;
@@ -25,7 +24,7 @@ public class ExpRank {
 
 	@Indexed
 	@Id
-	private UUID id;
+	private UUID userId;
 
 	private String nickname;
 
@@ -38,11 +37,11 @@ public class ExpRank {
 	@Builder
 	public ExpRank(
 			LocalDate date, Integer rank,
-			UUID id, String nickname, String tierName,
+			UUID userId, String nickname, String tierName,
 			String animalName, Long exp) {
 		this.date = date;
 		this.rank = rank;
-		this.id = id;
+		this.userId = userId;
 		this.nickname = nickname;
 		this.tierName = tierName;
 		this.animalName = animalName;

@@ -81,4 +81,7 @@ public class SwaggerConfig {
     @Bean
     public Docket page() { return getDocket("Page", true, "page"); }
 
+    @Bean
+    public Docket rank() { return getDocket("Rank", true, "rank"); }
+
 }

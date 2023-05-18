@@ -68,7 +68,7 @@ public class RankService {
             ExpRank expRank = ExpRank.builder()
                     .date(today)
                     .rank(rank)
-                    .id(user.getUserId())
+                    .userId(user.getUserId())
                     .nickname(user.getNickname())
                     .tierName(tierNameMap.get(user.getTierId()))
                     .animalName(animalNameMap.get(user.getAnimalId()))

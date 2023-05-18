@@ -24,7 +24,7 @@ public class BadgeRank {
 
 	@Indexed
 	@Id
-	private UUID id;
+	private UUID userId;
 
 	private String nickname;
 
@@ -37,11 +37,11 @@ public class BadgeRank {
 	@Builder
 	public BadgeRank(
 			LocalDateTime date, Integer rank,
-			UUID id, String nickname, String tierName,
+			UUID userId, String nickname, String tierName,
 			String animalName, Integer badgeCount) {
 		this.date = date;
 		this.rank = rank;
-		this.id = id;
+		this.userId = userId;
 		this.nickname = nickname;
 		this.tierName = tierName;
 		this.animalName = animalName;
