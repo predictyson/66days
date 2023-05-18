@@ -15,6 +15,8 @@ async function fetchGroupPageData(id = 1) {
     throw new Error();
   } catch (error) {
     console.error(error);
+    alert("그룹 접근 권한이 없습니다.");
+    return false;
     // login error -> login  page
     // unauthorized -> unauthorized error
   }
@@ -255,20 +257,28 @@ async function deleteBoard(groupId: number, articleId: number) {
     }
 
     throw new Error();
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
 }
 
 async function fetchChallengeList(groupId: number) {
   try {
     const res = await api.get(
-      `/api/v2/main-service/challenge/startGroupChallenge/${groupId}`
+      `/api/v1/challenge/startGroupChallenge/${groupId}`
     );
     if (res.status === 200) {
       return res.data;
     }
 
     throw new Error();
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
 }
 
 async function createNewChallenge(
@@ -280,34 +290,42 @@ async function createNewChallenge(
   startAt: Date
 ) {
   try {
-    const res = await api.post(
-      `/api/v2/main-service/challenge/group/${groupId}`,
-      {
-        challengeId: challengeId,
-        challengeName: challengeName,
-        content: content,
-        maxMemberCount: maxMemberCount,
-        startAt: startAt,
-      }
-    );
+    const res = await api.post(`/api/v1/challenge/group/${groupId}`, {
+      challengeId: challengeId,
+      challengeName: challengeName,
+      content: content,
+      maxMemberCount: maxMemberCount,
+      startAt: startAt,
+    });
     if (res.status === 200) {
       alert("챌린지 생성이 완료되었습니다.");
       return true;
     }
 
     throw new Error();
-  } catch (error) {}
+  } catch (error) {
+    alert(
+      "챌린지를 생성할 수 없습니다. 시작 날짜에 동일 챌린지가 예약돼있거나 최대 30일 이내의 챌린지만 예약이 가능합니다."
+    );
+    return false;
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
 }
 
 async function getNewChallengeList(groupId: number) {
   try {
-    const res = await api.get(`/api/v1/main-service/challenge/${groupId}`);
+    const res = await api.get(`/api/v1/challenge/${groupId}`);
     if (res.status === 200) {
       return res.data;
     }
 
     throw new Error();
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
 }
 
 export {

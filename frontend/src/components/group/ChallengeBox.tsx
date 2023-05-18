@@ -14,7 +14,7 @@ export default function ChallengeBox({ ...props }) {
     <>
       <ChallengeBoxWrapper>
         {props.notStarted ? (
-          props.dueDate == 1 ? (
+          props.dueDate == -1 ? (
             <NotStartedChallengeImg bgImg={props.bgImg}>
               <div className="ending-logo">마감 임박</div>
               <div className="not-started-logo">COMING SOON</div>

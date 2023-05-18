@@ -141,11 +141,13 @@ export default function CreateChallengeModal(props: PropsType) {
     } else if (step === 2) {
       // TODO: submit handle
       setLoading(true);
-      handleCreateChallenge();
-      setTimeout(() => {
-        setLoading(false);
-      }, 1500);
-      props.toggleModal();
+      const res = handleCreateChallenge();
+      if (res) {
+        setTimeout(() => {
+          setLoading(false);
+        }, 1500);
+        props.toggleModal();
+      }
     }
   }
 
@@ -162,7 +164,7 @@ export default function CreateChallengeModal(props: PropsType) {
       startDate !== undefined
     ) {
       // TODO: groupId 1로 하드코딩 된거 추후에 수정
-      createNewChallenge(
+      const res = createNewChallenge(
         1,
         selectedCategory,
         titleRef.current?.input?.value,
@@ -171,15 +173,19 @@ export default function CreateChallengeModal(props: PropsType) {
         startDate
       );
       // TODO: groupId 1로 하드코딩 된거 추후에 수정
-      updateNewChallengeList(1);
+      if (res) {
+        updateNewChallengeList(1);
+        return true;
+      }
     } else {
       alert("모든 항목 값을 입력해주세요.");
+      return false;
     }
   }
 
   async function updateNewChallengeList(groupId: number) {
     const res = await getNewChallengeList(groupId);
-    console.log(res);
+    props.setChallengeList(res.groupChallengeResponseDTOList);
   }
 
   const handleDateValue: DatePickerProps["onChange"] = (date, dateString) => {
