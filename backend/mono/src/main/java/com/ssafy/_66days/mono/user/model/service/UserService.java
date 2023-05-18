@@ -160,4 +160,8 @@ public class UserService {
             throw new InvalidInputException("닉네임 입력값이 올바르지 않습니다.");
         }
     }
+
+	public User getUserById(UUID userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
+	}
 }

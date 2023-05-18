@@ -13,6 +13,7 @@ import com.ssafy._66days.mono.page.model.dto.MainPageResponseDTO;
 import com.ssafy._66days.mono.page.model.dto.MyPageResponseDTO;
 import com.ssafy._66days.mono.page.model.service.PageService;
 import com.ssafy._66days.mono.user.model.dto.UserManageDTO;
+import com.ssafy._66days.mono.user.model.entity.User;
 import com.ssafy._66days.mono.user.model.service.JwtService;
 import com.ssafy._66days.mono.user.model.service.UserService;
 import io.swagger.annotations.Api;
@@ -92,25 +93,31 @@ public class PageController {
             @RequestHeader(value = "Authorization") String token,
             @PathVariable("group_id") @ApiParam(required = true) Long groupId
     ) {
-        Map<String, Object> resultMap = new HashMap<String, Object>();
+        Map<String, Object> resultMap = new HashMap<>();
 
         jwtService.validateToken(token);
         UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
-        String groupName = groupService.getGroupName(groupId);
+        User user = userService.getUserById(userId);
+        Group group = groupService.findGroupById(groupId);
+        String groupName = group.getGroupName();
+        String authority = groupService.getUserAuthorityInGroup(group, user);
+
+        resultMap.put("group-name", groupName);
+        resultMap.put("authority", authority);
+
         List<GroupAchievementResponseDTO> groupAchievements = groupService.getGroupAchievement(userId, groupId);
         List<GroupChallengeResponseDTO> groupChallenges = groupChallengeService.getGroupChallenges(userId, groupId);
         List<Object> articleList = articleService.getArticleList(userId, groupId, 0);
 
-        resultMap.put("group-name", groupName);
         resultMap.put("achievements", groupAchievements);
         resultMap.put("challenges", groupChallenges);
         resultMap.put("articles", articleList);
 
         resultMap.put(RESULT, SUCCESS);
 
-        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+        return new ResponseEntity<>(resultMap, HttpStatus.OK);
     }
 
     @ApiOperation(value = "그룹 인트로 페이지", notes = "그룹 인트로 페이지")
