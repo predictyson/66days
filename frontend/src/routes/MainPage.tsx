@@ -5,11 +5,17 @@ import Ranking from "../components/main/Ranking";
 import { MainData } from "../types/main";
 import { useAuthStore } from "../stores/useAuthStore";
 import LandingPage from "./LandingPage";
+import { useEffect, useState } from "react";
+import { fetchMainPageData } from "../api/main";
 
 export default function MainPage() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   if (!isLoggedIn()) return <LandingPage />;
-
+  const [data, setData] = useState(null);
+  fetchMainPageData();
+  // useEffect(() => {
+  //   fetchMainPageData();
+  // }, []);
   return (
     <>
       <Banner memberInfo={MAIN_DUMMY_DATA.memberInfo} />

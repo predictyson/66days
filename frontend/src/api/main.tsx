@@ -1,7 +1,5 @@
 import api from "./api";
-
-// main page data 불러오기
-export async function getMainPagedData() {
+export async function fetchMainPageData() {
   try {
     const res = await api.get(`/api/v1/page/home`);
     if (res.status === 200) {
@@ -11,6 +9,6 @@ export async function getMainPagedData() {
 
     throw new Error();
   } catch (error) {
-    console.log("mypage get data err");
+    console.log("fetch main page data error");
   }
 }
