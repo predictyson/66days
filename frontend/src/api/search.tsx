@@ -3,7 +3,7 @@ import api from "./api";
 export async function fetchSearchData(searchContent: string, pgNo: number) {
   try {
     const res = await api.get(
-      `/api/v2/main-service/group/search?searchContent=${searchContent}&pgNo=${pgNo}`
+      `/api/v1/main-service/group/search?searchContent=${searchContent}&pgNo=${pgNo}`
     );
     console.log(res.data);
     if (res.status === 200) {
@@ -19,7 +19,7 @@ export async function fetchSearchData(searchContent: string, pgNo: number) {
 export async function putGroupApply(group_id: number, status: string) {
   try {
     const res = await api.put(
-      `/api/v2/main-service/group/${group_id}/apply/${status}`
+      `/api/v1/main-service/group/${group_id}/apply/${status}`
     );
     if (res.status === 200) {
       console.log(res.data);
