@@ -12,8 +12,8 @@ import com.ssafy._66days.mainservice.challenge.model.service.MyChallengeService;
 import com.ssafy._66days.mainservice.group.model.dto.GroupAchievementResponseDTO;
 import com.ssafy._66days.mainservice.group.model.dto.GroupMyPageResponseDTO;
 import com.ssafy._66days.mainservice.group.model.entity.Group;
-import com.ssafy._66days.mainservice.group.model.entity.GroupMember;
 import com.ssafy._66days.mainservice.group.model.service.GroupService;
+import com.ssafy._66days.mainservice.page.model.dto.MainPageResponseDTO;
 import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
 import com.ssafy._66days.mainservice.user.model.dto.UserDetailDTO;
 import com.ssafy._66days.mainservice.user.model.dto.UserManageDTO;
@@ -50,18 +50,23 @@ public class PageController {
     @ApiOperation(value = "홈 화면", notes = "로그인 후 연결 되는 첫 페이지")
     @GetMapping("/home")
     public ResponseEntity<Map<String, Object>> getMainPage(
-//            @RequestHeader(value = "Authorization") String token
+            @RequestHeader(value = "Authorization") String token
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-//        resultMap.put("member-info", member);
-//        resultMap.put("challenge", cList);
-//        resultMap.put("group", gList);
-//        resultMap.put("rank", rank);
+        //token validation
+        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        log.info("Group Page, USER ID : {}", userId);
 
-        resultMap.put(RESULT, SUCCESS);
+        try {
+            MainPageResponseDTO mainPage = userService.getMainPage(userId);
+            resultMap.put("mainPage", mainPage);
+            return ResponseEntity.status(HttpStatus.OK).body(resultMap);
 
-        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
     }
 
     @ApiOperation(value = "마이페이지", notes = "내 프로필 화면")

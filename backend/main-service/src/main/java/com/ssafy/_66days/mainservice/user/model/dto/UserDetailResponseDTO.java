@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.ssafy._66days.mainservice.animal.model.dto.AnimalMainPageResponseDTO;
-import com.ssafy._66days.mainservice.group.model.dto.GroupMainPageResponseDTO;
+import com.ssafy._66days.mainservice.page.model.dto.MainPageGroupResponseDTO;
 import com.ssafy._66days.mainservice.tier.model.dto.TierMainPageResponseDTO;
 
 import lombok.Builder;
@@ -27,15 +27,15 @@ public class UserDetailResponseDTO {
 
 	private AnimalMainPageResponseDTO animal;
 
-	private GroupMainPageResponseDTO myGroup;
+	private MainPageGroupResponseDTO myGroup;
 
-	private List<GroupMainPageResponseDTO> groups;
+	private List<MainPageGroupResponseDTO> groups;
 
 	@Builder
 	public UserDetailResponseDTO(UUID userId, String email, String nickname, Long exp,
 								 Long point, String profileImagePath, TierMainPageResponseDTO tier,
-								 AnimalMainPageResponseDTO animal, GroupMainPageResponseDTO myGroup,
-								 List<GroupMainPageResponseDTO> groups) {
+								 AnimalMainPageResponseDTO animal, MainPageGroupResponseDTO myGroup,
+								 List<MainPageGroupResponseDTO> groups) {
 		this.userId = userId;
 		this.email = email;
 		this.nickname = nickname;
