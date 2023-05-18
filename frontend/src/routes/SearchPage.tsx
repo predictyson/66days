@@ -3,7 +3,7 @@ import { theme } from "../styles/theme";
 import GroupItem from "../components/search/GroupItem";
 import { SearchData } from "../types/search";
 import { fetchSearchData } from "../api/search";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function SearchPage() {
   const [searchValue, setSearchValue] = useState<string>("");
@@ -15,6 +15,7 @@ export default function SearchPage() {
     result: "success",
     groupList: [],
   });
+  const prevKeyword = useRef<string>("");
 
   const observer = new IntersectionObserver(handleObserver, {
     root: null, // 뷰포트 기준
@@ -23,17 +24,20 @@ export default function SearchPage() {
   });
 
   useEffect(() => {
-    console.log("group data: ", groupdata);
-  }, [groupdata]);
-
-  useEffect(() => {
-    // console.log("page in effect: ", page);
-    // if (page > 0) getSearchData();
-
     let ignore = false;
-    getSearchData();
+    // console.log("prev keyword: ", prevKeyword.current, searchValue);
+    let timeout: NodeJS.Timeout | null = null;
+    if (prevKeyword.current !== searchValue) {
+      timeout = setTimeout(() => {
+        getSearchData();
+      }, 1000);
+    } else {
+      getSearchData();
+    }
+
     return () => {
       ignore = true;
+      timeout && clearTimeout(timeout);
     };
 
     async function getSearchData() {
@@ -47,7 +51,7 @@ export default function SearchPage() {
               : [...prev.groupList, ...data[`group-list`]],
         }));
     }
-  }, [page]);
+  }, [page, searchValue]);
 
   useEffect(() => {
     if (lastElement) {
@@ -77,36 +81,6 @@ export default function SearchPage() {
     }
   }
 
-  // async function getSearchData() {
-  //   try {
-  //     console.log("********************************");
-  //     const data = await fetchSearchData(searchValue, page);
-  //     // console.log("page and data: ", page, data);
-  //     // setGroupdata(data);
-  //     setGroupdata((prev) => ({
-  //       result: data.result,
-  //       groupList: [...prev.groupList, ...data[`group-list`]],
-  //     }));
-  //     console.log(data);
-  //     console.log(data[`group-list`]);
-  //   } catch (error) {
-  //     console.log("Error occurred while fetching search data:", error);
-  //   }
-  // }
-
-  // FIXME: search is not working
-  const handleSearch = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && searchValue !== "") {
-      setPage(0);
-      // const data = await fetchSearchData(searchValue, page);
-      // setGroupdata((prev) => ({
-      //   result: data.result,
-      //   groupList: [...prev.groupList, ...data[`group-list`]],
-      // }));
-      setSearchValue("");
-    }
-  };
-
   return (
     <Container>
       <TitleWrapprer>
@@ -118,8 +92,10 @@ export default function SearchPage() {
         type="text"
         placeholder="그룹장 또는 그룹명을 입력해주세요"
         value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-        onKeyDown={handleSearch}
+        onChange={(e) => {
+          prevKeyword.current = searchValue;
+          setSearchValue(e.target.value);
+        }}
       ></SearchInput>
       <div
         style={{
