@@ -1,7 +1,7 @@
 export interface MainData {
   group: GroupData[];
   myGroup: MyGroupData;
-  todayToto: TodayTodoData[];
+  todayTodo: TodayTodoData[];
   userDetail: userDetailData;
 }
 
