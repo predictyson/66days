@@ -2,6 +2,7 @@ import { Button, Form, Input, Select, Typography, message } from "antd";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import instance from "../api/api";
+import { useAuthStore } from "../stores/useAuthStore";
 
 const { Option } = Select;
 
@@ -16,6 +17,8 @@ const tailLayout = {
 
 export default function SocialSignup() {
   const navigate = useNavigate();
+  const setToken = useAuthStore((state) => state.setToken);
+  const getToken = useAuthStore((state) => state.getToken);
   const [form] = Form.useForm();
   const nickName = Form.useWatch("nickName", form);
   const [messageApi, contextHolder] = message.useMessage();
@@ -23,7 +26,13 @@ export default function SocialSignup() {
   async function finishHandler(values: any) {
     try {
       const isUnique = await instance.get(
-        `/main-service/user/check-nickname/${nickName}`
+        `/main-service/user/check-nickname/${nickName}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: getToken(),
+          },
+        }
       );
 
       if (isUnique.status !== 200) {
@@ -34,10 +43,36 @@ export default function SocialSignup() {
         return;
       }
 
-      // TODO: const res = await instance.post()
-      // navigate("/", { replace: true });
+      const values = form.getFieldsValue();
+      // console.log("values: ", form.getFieldsValue());
+      const res = await instance.post(
+        `/user/social`,
+        {
+          email: values.email,
+          nickname: values.nickName,
+          social: values.social,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: getToken(),
+          },
+        }
+      );
+      if (res.status === 200) {
+        messageApi.open({
+          type: "success",
+          content: "Success",
+        });
+        navigate("/", { replace: true });
+      }
     } catch (error) {
-      console.log(values);
+      console.error(values);
+      messageApi.open({
+        type: "info",
+        content: `회원가입에 실패하였습니다`,
+      });
+      navigate("/", { replace: true });
     }
   }
 
@@ -48,9 +83,8 @@ export default function SocialSignup() {
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
 
-    // TODO:
-    // const token = queryParams.get("token");
-    // token && form.setFieldsValue({ : "Hi, man!" });
+    const token = queryParams.get("token");
+    token && setToken(token);
     const email = queryParams.get("email");
     email && form.setFieldsValue({ email });
     const nickName = queryParams.get("nickName");
@@ -58,41 +92,6 @@ export default function SocialSignup() {
     const social = queryParams.get("social");
     social && form.setFieldsValue({ social });
   }, []);
-
-  // const handleSignup = async () => {
-  //   // 소셜로그인 시 받은 닉네임이 유효하다면
-  //   if (socialNicknameErr) {
-  //     setInputs({
-  //       ...inputs,
-  //       nickname: socialNickname,
-  //     });
-  //   }
-
-  //   await axios
-  //     .post(
-  //       `${BACKEND_URL}/user/social`, // 소셜 로그인 POST api 주소
-  //       {
-  //         email: email,
-  //         nickname: nickname,
-  //         gender: genderStr,
-  //         birth: birth,
-  //         address: address,
-  //         regionCode: sigunguCode,
-  //         social: social,
-  //       },
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     )
-  //     .then((res) => {
-  //       navigate("/socialsuccess", { state: { isGranted: true } });
-  //     })
-  //     .catch((err) => {
-  //       alert("소셜 회원가입을 처리하던 중 문제가 발생하였습니다.");
-  //     });
-  // };
 
   return (
     <>
