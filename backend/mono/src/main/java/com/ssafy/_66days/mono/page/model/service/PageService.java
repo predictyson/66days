@@ -143,8 +143,8 @@ public class PageService {
             Challenge challenge = challengeRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 챌린지입니다")); // 챌린지 객체 받아오기
             List<MyChallenge> myChallenges =
-                    myChallengeRepository.findByChallengeAndStateIn
-                            (challenge, Arrays.asList("SUCCESSFUL", "FAILED")); // 내 챌린지 중 위의 챌린지 카테고리와 동일하면서 끝난 것들을 가져온다
+                    myChallengeRepository.findByUserAndChallengeAndStateIn
+                            (user, challenge, Arrays.asList("SUCCESSFUL", "FAILED")); // 내 챌린지 중 위의 챌린지 카테고리와 동일하면서 끝난 것들을 가져온다
             if (myChallenges != null) {                                         // 그런 챌린지들이 있다면
                 MyPageBadgeDTO myPageBadgeDTO = MyPageBadgeDTO.of(challenge, myChallenges.size());  // 뱃지DTO로 면환 후
                 myPageBadges.add(myPageBadgeDTO);                                                   // 리스트에 담는다
