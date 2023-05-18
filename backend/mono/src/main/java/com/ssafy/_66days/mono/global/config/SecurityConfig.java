@@ -1,5 +1,8 @@
 package com.ssafy._66days.mono.global.config;
 
+import com.ssafy._66days.mono.global.interceptor.OAuth2FailureHandler;
+import com.ssafy._66days.mono.global.interceptor.OAuth2SuccessHandler;
+import com.ssafy._66days.mono.user.model.service.UserOAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +19,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig {
+    private final UserOAuth2Service userOauth2Service;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -24,7 +30,19 @@ public class SecurityConfig {
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
                 .authorizeRequests()
-                .antMatchers(PERMIT_URL_ARRAY).permitAll();
+                .antMatchers(PERMIT_URL_ARRAY).permitAll()
+                .and()
+                .oauth2Login() // OAuth2 로그인 설정 시작 지점
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization")
+                .and()
+                .redirectionEndpoint().baseUri("/oauth2/code/**")
+                .and()
+                .userInfoEndpoint() //OAuth2 로그인 후 사용자 정보를 가져올 때의 설정 담당
+                .userService(userOauth2Service)
+                .and()
+                .successHandler(oAuth2SuccessHandler)
+                .failureHandler(oAuth2FailureHandler);
         return http.build();
     }
 
