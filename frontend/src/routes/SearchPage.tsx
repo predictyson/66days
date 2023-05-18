@@ -4,6 +4,7 @@ import GroupItem from "../components/search/GroupItem";
 import { SearchData } from "../types/search";
 import { fetchSearchData } from "../api/search";
 import { useEffect, useRef, useState } from "react";
+import { Empty } from "antd";
 
 export default function SearchPage() {
   const [searchValue, setSearchValue] = useState<string>("");
@@ -23,6 +24,9 @@ export default function SearchPage() {
     threshold: 1.0, // 1.0 이상이면 요소 전체가 뷰포트 안에 있을 때 감지
   });
 
+  /**
+   * Search is activated when scrolling or typing keywords
+   */
   useEffect(() => {
     let ignore = false;
     // console.log("prev keyword: ", prevKeyword.current, searchValue);
@@ -53,6 +57,9 @@ export default function SearchPage() {
     }
   }, [page, searchValue]);
 
+  /**
+   * Observe the last element
+   */
   useEffect(() => {
     if (lastElement) {
       observer.observe(lastElement);
@@ -95,6 +102,7 @@ export default function SearchPage() {
         onChange={(e) => {
           prevKeyword.current = searchValue;
           setSearchValue(e.target.value);
+          setPage(0);
         }}
       ></SearchInput>
       <div
@@ -109,21 +117,25 @@ export default function SearchPage() {
       </div>
 
       <ItemContainer>
-        {groupdata.groupList.map((data, idx) => {
-          return idx === groupdata.groupList.length - 1 && !loading ? (
-            <div
-              ref={setLastElement}
-              key={data.groupId}
-              style={{ marginTop: "6rem" }}
-            >
-              <GroupItem key={idx} group={data} />
-            </div>
-          ) : (
-            <div key={idx} style={{ marginTop: "6rem" }}>
-              <GroupItem key={idx} group={data} />
-            </div>
-          );
-        })}
+        {groupdata.groupList.length === 0 ? (
+          <Empty />
+        ) : (
+          groupdata.groupList.map((data, idx) => {
+            return idx === groupdata.groupList.length - 1 && !loading ? (
+              <div
+                ref={setLastElement}
+                key={data.groupId}
+                style={{ marginTop: "6rem" }}
+              >
+                <GroupItem key={idx} group={data} />
+              </div>
+            ) : (
+              <div key={idx} style={{ marginTop: "6rem" }}>
+                <GroupItem key={idx} group={data} />
+              </div>
+            );
+          })
+        )}
         {/* <div ref={setLastElement}></div> */}
         {loading && <h2>loading.....</h2>}
       </ItemContainer>
