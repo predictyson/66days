@@ -29,7 +29,7 @@ public class UserSocialRegistParamDTO {
 				.animalId(randomNumber)
 				.exp(0L)
 				.point(0L)
-				.profileImagePath("tobe")
+				.profileImagePath("/users/basic_profile.png")
 				.tierId(1L)
 				.social(ProviderType.KAKAO)
 				.roleType(RoleType.USER)
