@@ -96,7 +96,7 @@ public class ChallengeController {
             UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
             log.info("Group Page, USER ID : {}", userId);
 
-            List<MyChallengeResponseDTO> MyChallengeDTOList = myChallengeService.getMyChallenges(userId);
+            List<MyChallengeResponseDTO> MyChallengeDTOList = myChallengeService.getMyChallenges(userId, "ACTIVATED"");
             resultMap.put("MyChallengeDTOList", MyChallengeDTOList);
             return ResponseEntity.status(HttpStatus.OK).body(resultMap);
         } catch (Exception e) {

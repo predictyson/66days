@@ -4,9 +4,14 @@ import com.ssafy._66days.mainservice.article.model.dto.responseDto.ArticleRespon
 import com.ssafy._66days.mainservice.article.model.service.ArticleService;
 import com.ssafy._66days.mainservice.badge.model.dto.ResponseDTO.BadgeMyPageDTO;
 import com.ssafy._66days.mainservice.badge.model.service.BadgeService;
+import com.ssafy._66days.mainservice.challenge.model.dto.ChallengeMyPageResponseDTO;
 import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.GroupChallengeResponseDTO;
+import com.ssafy._66days.mainservice.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
+import com.ssafy._66days.mainservice.challenge.model.reposiotry.MyChallengeRepository;
 import com.ssafy._66days.mainservice.challenge.model.service.GroupChallengeService;
+import com.ssafy._66days.mainservice.challenge.model.service.MyChallengeService;
 import com.ssafy._66days.mainservice.group.model.dto.GroupAchievementResponseDTO;
+import com.ssafy._66days.mainservice.group.model.dto.GroupMyPageResponseDTO;
 import com.ssafy._66days.mainservice.group.model.service.GroupService;
 import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
 import com.ssafy._66days.mainservice.user.model.dto.UserDetailDTO;
@@ -36,6 +41,7 @@ public class PageController {
     private final GroupChallengeService groupChallengeService;
     private final UserService userService;
     private final GroupService groupService;
+    private final MyChallengeService myChallengeService;
     private final BadgeService badgeService;
 
     private final AuthServiceClient authServiceClient;
@@ -82,12 +88,18 @@ public class PageController {
         resultMap.put("badges", badgeMyPageDTOList);
 
         resultMap.put("streak", new ArrayList<>());
-        resultMap.put("challenge", new ArrayList<>());
 
         try {
-//            groupService.findAllGroups(userId);
-//            resultMap.put("user-info", userDetailDTO);
-//        resultMap.put("group", gList);
+            List<MyChallengeResponseDTO> challengeList = myChallengeService.getMyChallenges(userId,"SUCCESSFUL");
+            resultMap.put("challenge", new ArrayList<>());
+        } catch (Exception e) {
+            resultMap.put(RESULT, e.getMessage());
+            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
+        }
+
+        try {
+            List<GroupMyPageResponseDTO> groupList = groupService.findAllGroups(userId);
+            resultMap.put("groupList", groupList);
         } catch (Exception e) {
             resultMap.put(RESULT, e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
