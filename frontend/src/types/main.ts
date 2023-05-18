@@ -1,6 +1,6 @@
 export interface MainData {
   group: GroupData[];
-  myGroup: MyGroupData[];
+  myGroup: MyGroupData;
   todayToto: TodayTodoData[];
   userDetail: userDetailData;
 }
