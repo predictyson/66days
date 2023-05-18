@@ -287,4 +287,8 @@ public class GroupService {
 
         return groupMyPageResponseDTOList;
     }
+
+    public Group findGroupById(Long groupId) {
+        return groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 그룹입니다."));
+    }
 }
