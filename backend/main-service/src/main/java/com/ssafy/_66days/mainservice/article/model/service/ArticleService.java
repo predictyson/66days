@@ -152,7 +152,7 @@ public class ArticleService {
         if (article.isDeleted()) {
             throw new IllegalArgumentException("삭제된 글입니다");
         }
-        if (articleUpdateRequestDTO.getTitle() != null) {
+        if (articleUpdateRequestDTO.getTitle().equals(article.getTitle())) {
             throw new IllegalArgumentException("제목은 수정할 수 없습니다");
         }
         if (articleUpdateRequestDTO.getContent() == null) {
