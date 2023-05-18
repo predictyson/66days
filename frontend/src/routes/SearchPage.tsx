@@ -3,16 +3,23 @@ import { theme } from "../styles/theme";
 import GroupItem from "../components/search/GroupItem";
 import { SearchData } from "../types/search";
 import { fetchSearchData } from "../api/search";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+
 export default function SearchPage() {
   const [searchValue, setSearchValue] = useState<string>("");
   const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(false);
-  const sentinelRef = useRef<HTMLDivElement>(null);
-  // const [lastElement, setLastElement] = useState<HTMLDivElement | null>();
+  // const sentinelRef = useRef<HTMLDivElement>(null);
+  const [lastElement, setLastElement] = useState<HTMLDivElement | null>();
   const [groupdata, setGroupdata] = useState<SearchData>({
     result: "success",
     groupList: [],
+  });
+
+  const observer = new IntersectionObserver(handleObserver, {
+    root: null, // 뷰포트 기준
+    rootMargin: "0px",
+    threshold: 1.0, // 1.0 이상이면 요소 전체가 뷰포트 안에 있을 때 감지
   });
 
   useEffect(() => {
@@ -20,7 +27,7 @@ export default function SearchPage() {
   }, [groupdata]);
 
   useEffect(() => {
-    console.log("page in effect: ", page);
+    // console.log("page in effect: ", page);
     // if (page > 0) getSearchData();
 
     let ignore = false;
@@ -34,48 +41,33 @@ export default function SearchPage() {
       if (!ignore)
         setGroupdata((prev) => ({
           result: data.result,
-          groupList: [...prev.groupList, ...data[`group-list`]],
+          groupList:
+            page === 0
+              ? [...data[`group-list`]]
+              : [...prev.groupList, ...data[`group-list`]],
         }));
     }
   }, [page]);
 
   useEffect(() => {
-    // getSearchData(page);
-    // Intersection Observer 생성
-    const observer = new IntersectionObserver(handleObserver, {
-      root: null, // 뷰포트 기준
-      rootMargin: "0px",
-      threshold: 1.0, // 1.0 이상이면 요소 전체가 뷰포트 안에 있을 때 감지
-    });
-    if (sentinelRef.current) {
-      observer.observe(sentinelRef.current);
+    if (lastElement) {
+      observer.observe(lastElement);
     }
-
-    // getSearchData();
-    // const data = await fetchSearchData(searchValue, page);
-    // setGroupdata((prev) => ({
-    //   result: data.result,
-    //   groupList: [...prev.groupList, ...data[`group-list`]],
-    // }));
 
     return () => {
       // 컴포넌트 언마운트 시 Intersection Observer 해제
-      if (sentinelRef.current) {
-        observer.unobserve(sentinelRef.current);
+      if (lastElement) {
+        observer.unobserve(lastElement);
       }
     };
-  }, []);
+  }, [lastElement]);
 
   function handleObserver(entries: IntersectionObserverEntry[]): void {
     const target = entries[0];
     if (target.isIntersecting) {
-      // fetchMoreData();
       if (!loading) {
         setLoading(true);
         try {
-          // console.log("page is: ", page);
-          // getSearchData(page + 1);
-          // getSearchData();
           setPage((prev) => prev + 1);
         } catch (err) {
           console.log("fetching more data err");
@@ -102,9 +94,15 @@ export default function SearchPage() {
   //   }
   // }
 
+  // FIXME: search is not working
   const handleSearch = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      // TODO: searchValue !== "" && (await getSearchData());
+    if (event.key === "Enter" && searchValue !== "") {
+      setPage(0);
+      // const data = await fetchSearchData(searchValue, page);
+      // setGroupdata((prev) => ({
+      //   result: data.result,
+      //   groupList: [...prev.groupList, ...data[`group-list`]],
+      // }));
       setSearchValue("");
     }
   };
@@ -136,13 +134,21 @@ export default function SearchPage() {
 
       <ItemContainer>
         {groupdata.groupList.map((data, idx) => {
-          return (
+          return idx === groupdata.groupList.length - 1 && !loading ? (
+            <div
+              ref={setLastElement}
+              key={data.groupId}
+              style={{ marginTop: "6rem" }}
+            >
+              <GroupItem key={idx} group={data} />
+            </div>
+          ) : (
             <div key={idx} style={{ marginTop: "6rem" }}>
               <GroupItem key={idx} group={data} />
             </div>
           );
         })}
-        <div ref={sentinelRef}></div>
+        {/* <div ref={setLastElement}></div> */}
         {loading && <h2>loading.....</h2>}
       </ItemContainer>
     </Container>
