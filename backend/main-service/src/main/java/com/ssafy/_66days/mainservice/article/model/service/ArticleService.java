@@ -96,7 +96,7 @@ public class ArticleService {
     }
 
 
-    public List<ArticleResponseDTO> getArticleList(
+    public List<Object> getArticleList(
             UUID userId,
             Long groupId,
             int offset
@@ -113,7 +113,9 @@ public class ArticleService {
         }
         Pageable pageable = PageRequest.of(offset, 3);
         // offset 값과 limit 값을 이용해 최근 게시글 3개를 가져온다
+        int articleNumber = articleRepository.findByGroupAndIsDeleted(group, false).size();
         List<Article> articleList = articleRepository.findByGroupAndIsDeleted(group, false, pageable);
+        List<Object> articleResponse = new ArrayList<>();
         List<ArticleResponseDTO> articleResponseDTOList = new ArrayList<>();
         // 가져온 게시글을 ArticleDTO 리스트로 변환한다
         for (int i = 0; i < articleList.size(); i++) {
@@ -123,7 +125,9 @@ public class ArticleService {
             String role = groupMemberRepository.findByGroupAndUser(articleGroup, articleUser).get().getAuthority();
             articleResponseDTOList.add(ArticleResponseDTO.of(articleList.get(i), role));
         }
-        return articleResponseDTOList;
+        articleResponse.add(articleResponseDTOList);
+        articleResponse.add(articleNumber);
+        return articleResponse;
     }
 
     public ArticleResponseDTO updateArticle(
@@ -152,7 +156,7 @@ public class ArticleService {
         if (article.isDeleted()) {
             throw new IllegalArgumentException("삭제된 글입니다");
         }
-        if (articleUpdateRequestDTO.getTitle().equals(article.getTitle())) {
+        if (!articleUpdateRequestDTO.getTitle().equals(article.getTitle())) {
             throw new IllegalArgumentException("제목은 수정할 수 없습니다");
         }
         if (articleUpdateRequestDTO.getContent() == null) {

@@ -92,7 +92,7 @@ public class ArticleController {
 
         try {
             // groupId, userId, offset 값으로 게시글을 받아온다
-            List<ArticleResponseDTO> articles = articleService.getArticleList(userId, groupId, offset);
+            List<Object> articles = articleService.getArticleList(userId, groupId, offset);
             resultMap.put("articles", articles);
             return ResponseEntity.ok(resultMap);
         } catch (Exception e) {
