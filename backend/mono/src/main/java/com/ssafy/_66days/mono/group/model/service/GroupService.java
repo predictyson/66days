@@ -298,4 +298,10 @@ public class GroupService {
     public Group findGroupById(Long groupId) {
         return groupRepository.findById(groupId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 그룹입니다."));
     }
+
+    public String getUserAuthorityInGroup(Group group, User user) {
+        Optional<GroupMember> groupMember = groupMemberRepository.findByGroupAndUser(group, user);
+        return groupMember.map(member -> member.getAuthority().equals("MEMBER") ? "MEMBER" : "MAINTAINER")
+                .orElse("NOTMEMBER");
+    }
 }
