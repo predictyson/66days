@@ -73,11 +73,6 @@ public class UserController {
 		return ResponseEntity.ok(!isAvailable);
 	}
 
-	/***
-	 * Social User Registration
-	 * @param UserSocialRegistParamDTO
-	 * @return status 200, 400, 409
-	 */
 	@ApiOperation(value = "소셜 회원가입", notes = "소셜 회원의 회원가입을 진행합니다.")
 	@PostMapping("/social")
 	public ResponseEntity<Map<String, String>> socialRegistration(

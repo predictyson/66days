@@ -1,8 +1,22 @@
 package com.ssafy._66days.mono.challenge.model.service;
 
+import com.ssafy._66days.mono.badge.model.repository.BadgeRepository;
+import com.ssafy._66days.mono.challenge.model.dto.MyChallengeHistoryDTO;
+import com.ssafy._66days.mono.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
+import com.ssafy._66days.mono.challenge.model.dto.responseDTO.AvailableMyChallengeResponseDTO;
+import com.ssafy._66days.mono.challenge.model.dto.responseDTO.MyChallengeDetailResponseDTO;
+import com.ssafy._66days.mono.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
+import com.ssafy._66days.mono.challenge.model.entity.Challenge;
+import com.ssafy._66days.mono.challenge.model.entity.GroupChallenge;
+import com.ssafy._66days.mono.challenge.model.entity.GroupChallengeMember;
+import com.ssafy._66days.mono.challenge.model.entity.MyChallenge;
+import com.ssafy._66days.mono.challenge.model.entity.mongodb.PersonalChallengeLog;
+import com.ssafy._66days.mono.challenge.model.reposiotry.*;
+import com.ssafy._66days.mono.group.model.repository.GroupRepository;
+import com.ssafy._66days.mono.user.model.entity.User;
+import com.ssafy._66days.mono.user.model.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,19 +29,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
-
-import com.ssafy._66days.mono.challenge.model.dto.MyChallengeHistoryDTO;
-import com.ssafy._66days.mono.challenge.model.dto.responseDTO.AvailableMyChallengeResponseDTO;
-import com.ssafy._66days.mono.challenge.model.dto.responseDTO.MyChallengeDetailResponseDTO;
-import com.ssafy._66days.mono.challenge.model.entity.Challenge;
-import com.ssafy._66days.mono.challenge.model.entity.GroupChallenge;
-import com.ssafy._66days.mono.challenge.model.entity.GroupChallengeMember;
-import com.ssafy._66days.mono.challenge.model.entity.MyChallenge;
-import com.ssafy._66days.mono.challenge.model.entity.mongodb.PersonalChallengeLog;
-import com.ssafy._66days.mono.challenge.model.reposiotry.ChallengeRepository;
-import com.ssafy._66days.mono.challenge.model.reposiotry.MyChallengeRepository;
-import com.ssafy._66days.mono.user.model.entity.User;
-import com.ssafy._66days.mono.user.model.repository.UserRepository;
 
 @Service("MyChallengeService")
 @Transactional(readOnly = true)

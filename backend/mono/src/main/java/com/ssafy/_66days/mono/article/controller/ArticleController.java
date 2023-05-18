@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.ssafy._66days.mono.user.model.service.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ArticleController {
     private final ArticleService articleService;
-    private final AuthServiceClient authServiceClient;
+    private final JwtService jwtService;
     //게시글 작성 함수
     @PostMapping("/{group_id}")
     @ApiOperation(value = "게시글 작성 API", notes = "그룹 게시판에 게시글 작성")
@@ -44,8 +45,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        //token validation
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -68,8 +69,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        //token validation
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -93,8 +94,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        //token validation
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -119,8 +120,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        //token validation
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -142,8 +143,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        //token validation
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -167,8 +168,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-        //token validation
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -190,8 +191,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<>();
 
-        //token validation
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
         try {
@@ -213,8 +214,8 @@ public class ArticleController {
     ) {
         Map<String, Object> resultMap = new HashMap<>();
 
-        //token validation
-        UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
         log.info("Group Page, USER ID : {}", userId);
 
         try {

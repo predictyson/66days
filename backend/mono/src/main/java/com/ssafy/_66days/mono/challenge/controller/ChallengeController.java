@@ -1,20 +1,22 @@
-package com.ssafy._66days.mainservice.challenge.controller;
+package com.ssafy._66days.mono.challenge.controller;
 
+import com.ssafy._66days.mono.challenge.model.dto.requestDTO.GroupChallengeRequestDTO;
+import com.ssafy._66days.mono.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
+import com.ssafy._66days.mono.challenge.model.dto.responseDTO.*;
+import com.ssafy._66days.mono.challenge.model.service.GroupChallengeService;
+import com.ssafy._66days.mono.challenge.model.service.MyChallengeService;
+import com.ssafy._66days.mono.user.model.service.JwtService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-
-import com.ssafy._66days.mono.challenge.model.dto.requestDTO.MyChallengeRequestDTO;
-import com.ssafy._66days.mono.challenge.model.dto.responseDTO.AvailableMyChallengeResponseDTO;
-import com.ssafy._66days.mono.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
-import com.ssafy._66days.mono.challenge.model.service.GroupChallengeService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/challenge")
@@ -23,7 +25,7 @@ import com.ssafy._66days.mono.challenge.model.service.GroupChallengeService;
 public class ChallengeController {
 	private final GroupChallengeService groupChallengeService;
 	private final MyChallengeService myChallengeService;
-	private final AuthServiceClient authServiceClient;
+	private final JwtService jwtService;
 
 	// 개인 챌린지 시작 가능 목록 반환
 	@GetMapping("/startMyChallenge")
@@ -34,11 +36,8 @@ public class ChallengeController {
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
-			// auth서버로 인증 요청
-			// AuthenticateUtil authenticateUtil = new AuthenticateUtil();
-			// UUID userId = authenticateUtil.getUserId(accessToken);
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 
 			List<AvailableMyChallengeResponseDTO> availableMyChallengeResponseDTOList = myChallengeService.getAvailableMyChallengeList(
@@ -62,11 +61,8 @@ public class ChallengeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		try {
-			// auth서버로 인증 요청
-			// AuthenticateUtil authenticateUtil = new AuthenticateUtil();
-			// UUID userId = authenticateUtil.getUserId(accessToken);
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 
 			boolean isSuccess = myChallengeService.createMyChallenge(userId, myChallengeRequestDTO);
@@ -88,11 +84,8 @@ public class ChallengeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		try {
-			// auth서버로 인증 요청
-			// AuthenticateUtil authenticateUtil = new AuthenticateUtil();
-			// UUID userId = authenticateUtil.getUserId(accessToken);
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 
 			List<MyChallengeResponseDTO> MyChallengeDTOList = myChallengeService.getMyChallenges(userId, "ACTIVATED");
@@ -114,11 +107,8 @@ public class ChallengeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		try {
-			// auth서버로 인증 요청
-			// AuthenticateUtil authenticateUtil = new AuthenticateUtil();
-			// UUID userId = authenticateUtil.getUserId(accessToken);
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 
 			MyChallengeDetailResponseDTO myChallengeDetailResponseDTO = myChallengeService.getMyChallengeDetail(userId,
@@ -141,11 +131,8 @@ public class ChallengeController {
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
-			// auth서버로 인증 요청
-			// AuthenticateUtil authenticateUtil = new AuthenticateUtil();
-			// UUID userId = authenticateUtil.getUserId(accessToken);
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 
 			List<AvailableGroupChallengeResponseDTO> availableGroupChallengeResponseDTOList = groupChallengeService.getAvailableGroupChallengeList(
@@ -169,11 +156,8 @@ public class ChallengeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		try {
-			// auth서버로 인증 요청
-			// AuthenticateUtil authenticateUtil = new AuthenticateUtil();
-			// UUID userId = authenticateUtil.getUserId(accessToken);
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 
 			boolean isCreated = groupChallengeService.createGroupChallenge(userId, groupId, groupChallengeRequestDTO);
@@ -195,7 +179,8 @@ public class ChallengeController {
 	) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		try {
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 			boolean isApplied = groupChallengeService.challengeApplication(userId, groupChallengeId);
 			resultMap.put("isApplied", isApplied);
@@ -219,8 +204,8 @@ public class ChallengeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		try {
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 			List<ApplicationListResponseDTO> ApplicationListResponseDTOs = groupChallengeService.getChallengeApplicationList(
 					userId, groupChallengeId);
@@ -245,11 +230,8 @@ public class ChallengeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		try {
-			// auth서버로 인증 요청
-			// AuthenticateUtil authenticateUtil = new AuthenticateUtil();
-			// UUID userId = authenticateUtil.getUserId(accessToken);
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 
 			boolean isManaged = groupChallengeService.manageSubscriptionApplication(userId, groupChallengeId, nickname,
@@ -274,11 +256,8 @@ public class ChallengeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		try {
-			// auth서버로 인증 요청
-			// AuthenticateUtil authenticateUtil = new AuthenticateUtil();
-			// UUID userId = authenticateUtil.getUserId(accessToken);
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 
 			List<GroupChallengeResponseDTO> groupChallengeResponseDTOList = groupChallengeService.getGroupChallenges(
@@ -303,11 +282,8 @@ public class ChallengeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		try {
-			// auth서버로 인증 요청
-			// AuthenticateUtil authenticateUtil = new AuthenticateUtil();
-			// UUID userId = authenticateUtil.getUserId(accessToken);
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 
 			GroupChallengeDetailResponseDTO groupChallengeDetailResponseDTO = groupChallengeService.getGroupChallengeDetail(
@@ -331,11 +307,8 @@ public class ChallengeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		try {
-			//            // auth서버로 인증 요청
-			//            // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
-			//            // UUID userId = authenticateUtil.getUserId(accessToken);
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 
 			boolean isChecked = myChallengeService.checkPrivateStreak(userId, myChallengeId);
@@ -359,11 +332,8 @@ public class ChallengeController {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
 		try {
-			//            // auth서버로 인증 요청
-			//            // AuthenticateUtil authenticateUtil = new AuthenticateUtil();
-			//            // UUID userId = authenticateUtil.getUserId(accessToken);
-			//token validation
-			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
 			log.info("Group Page, USER ID : {}", userId);
 
 			boolean isChecked = groupChallengeService.checkGroupStreak(userId, groupChallengeId, nickname);
