@@ -3,7 +3,7 @@ import api from "./api";
 // my page 정보 가져오기
 export async function getMyPageInfo() {
   try {
-    const res = await api.get(`/api/v1/main-service/page/me`);
+    const res = await api.get(`/api/v1/page/me`);
     if (res.status === 200) {
       console.log(res.data);
       return res.data;
@@ -18,7 +18,7 @@ export async function getMyPageInfo() {
 // 닉네임 수정
 export async function patchNickname(nickname: string) {
   try {
-    const res = await api.patch(`/api/v1/main-service/user/modify/${nickname}`);
+    const res = await api.patch(`/api/v1/user/modify/${nickname}`);
     if (res.status === 200) {
       // console.log(res.data);
       return res.data;
@@ -32,9 +32,7 @@ export async function patchNickname(nickname: string) {
 // 닉네임 중복 체크
 export async function checkNickname(nickname: string) {
   try {
-    const res = await api.get(
-      `/api/v1/main-service/user/check-nickname/${nickname}`
-    );
+    const res = await api.get(`/api/v1/user/check-nickname/${nickname}`);
     if (res.status === 200) {
       // console.log(res.data);
       return res.data;
@@ -48,7 +46,7 @@ export async function checkNickname(nickname: string) {
 //TODO: 프로필 이미지 수정
 // export async function patchImage(image: string) {
 //   try {
-//     const res = await api.get(`/api/v1/main-service/user/image`);
+//     const res = await api.get(`/api/v1/user/image`);
 //     if (res.status === 200) {
 //       // console.log(res.data);
 //       return res.data;

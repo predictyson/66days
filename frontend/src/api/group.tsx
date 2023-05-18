@@ -7,7 +7,7 @@ interface Board {
 
 async function fetchGroupPageData(id = 1) {
   try {
-    const res = await api.get(`/api/v1/main-service/page/groups/${id}`);
+    const res = await api.get(`/api/v1/page/groups/${id}`);
     if (res.status === 200) {
       return res.data;
     }
@@ -22,9 +22,7 @@ async function fetchGroupPageData(id = 1) {
 // 그룹 관리 or 그룹원 보기 모달의 그룹원 리스트 데이터 fetch
 async function fetchGroupMembers(id = 1) {
   try {
-    const res = await api.get(
-      `/api/v1/main-service/group/${id}/manage/members`
-    );
+    const res = await api.get(`/api/v1/group/${id}/manage/members`);
     if (res.status === 200) {
       console.log(res.data);
       return res.data;
@@ -40,7 +38,7 @@ async function fetchGroupMembers(id = 1) {
 // 그룹 가입 신청원 리스트 데이터 fetch
 async function fetchAppliedMembers(id = 1) {
   try {
-    const res = await api.get(`/api/v1/main-service/group/${id}/manage/apply`);
+    const res = await api.get(`/api/v1/group/${id}/manage/apply`);
     if (res.status === 200) {
       return res.data;
     }
@@ -54,7 +52,7 @@ async function fetchAppliedMembers(id = 1) {
 
 async function fetchGroupBadges(id = 1) {
   try {
-    const res = await api.get(`/api/v1/main-service/badge/list/${id}`);
+    const res = await api.get(`/api/v1/badge/list/${id}`);
     if (res.status === 200) {
       return res.data;
     }
@@ -70,7 +68,7 @@ async function fetchGroupBadges(id = 1) {
 async function fetchBoardListByPage(groupId: number = 1, page: number) {
   try {
     const res = await api.get(
-      `/api/v1/main-service/article/${groupId}/articles?offset=${page}`
+      `/api/v1/article/${groupId}/articles?offset=${page}`
     );
     if (res.status === 200) {
       return res.data;
@@ -85,9 +83,7 @@ async function fetchBoardListByPage(groupId: number = 1, page: number) {
 
 async function fetchBoardData(groupId: number, articleId: number) {
   try {
-    const res = await api.get(
-      `/api/v1/main-service/article/${groupId}/${articleId}`
-    );
+    const res = await api.get(`/api/v1/article/${groupId}/${articleId}`);
     if (res.status === 200) {
       return res.data;
     }
@@ -102,7 +98,7 @@ async function fetchBoardData(groupId: number, articleId: number) {
 async function fetchCommentData(articleId: number, page: number) {
   try {
     const res = await api.get(
-      `/api/v1/main-service/article/${articleId}/comments?offset=${page}`
+      `/api/v1/article/${articleId}/comments?offset=${page}`
     );
     if (res.status === 200) {
       return res.data;
@@ -117,10 +113,7 @@ async function fetchCommentData(articleId: number, page: number) {
 
 async function postBoard(groupId: number, board: Board) {
   try {
-    const res = await api.post(
-      `/api/v1/main-service/article/${groupId}`,
-      board
-    );
+    const res = await api.post(`/api/v1/article/${groupId}`, board);
     if (res.status === 200) {
       alert("게시글 작성이 완료되었습니다.");
       return true;
@@ -137,7 +130,7 @@ async function postBoard(groupId: number, board: Board) {
 async function handleMember(groupId: number, status: string, userName: string) {
   try {
     const res = await api.patch(
-      `/api/v1/main-service/group/${groupId}/manage/members/${status}?user_name=${userName}`
+      `/api/v1/group/${groupId}/manage/members/${status}?user_name=${userName}`
     );
     if (res.status === 200) {
       if (status === "MANAGER") {
@@ -162,7 +155,7 @@ async function handleGroupApplication(
 ) {
   try {
     const res = await api.post(
-      `/api/v1/main-service/group/${groupId}/manage/apply/${status}?user_name=${userName}`
+      `/api/v1/group/${groupId}/manage/apply/${status}?user_name=${userName}`
     );
     if (res.status === 200) {
       if (status === "ACCEPTED") {
@@ -189,7 +182,7 @@ async function postComment(
 ) {
   try {
     const res = await api.post(
-      `/api/v1/main-service/article/${groupId}/${articleId}/comment`,
+      `/api/v1/article/${groupId}/${articleId}/comment`,
       { content: content }
     );
     if (res.status === 200) {
@@ -208,9 +201,7 @@ async function postComment(
 // TODO: 댓글 삭제 405 에러 해결
 async function deleteComment(articleId: number, commentId: number) {
   try {
-    const res = await api.patch(
-      `/api/v1/main-service/article/${articleId}/${commentId}`
-    );
+    const res = await api.patch(`/api/v1/article/${articleId}/${commentId}`);
     if (res.status === 200) {
       alert("댓글 삭제가 완료되었습니다.");
       return true;
@@ -232,7 +223,7 @@ async function editBoard(
 ) {
   try {
     const res = await api.patch(
-      `/api/v1/main-service/article/${groupId}/modify/${articleId}`,
+      `/api/v1/article/${groupId}/modify/${articleId}`,
       {
         title: title,
         content: content,
@@ -255,7 +246,7 @@ async function editBoard(
 async function deleteBoard(groupId: number, articleId: number) {
   try {
     const res = await api.patch(
-      `/api/v1/main-service/article/${groupId}/delete/${articleId}`
+      `/api/v1/article/${groupId}/delete/${articleId}`
     );
     if (res.status === 200) {
       alert("게시글 삭제가 완료되었습니다.");
