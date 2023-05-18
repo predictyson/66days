@@ -68,11 +68,7 @@ public class UserController {
 	}
 
 	@GetMapping("/check-nickname/{nickname}")
-	public ResponseEntity<Boolean> isNicknameAvailable(@RequestHeader("Authorization") String token,
-													   @PathVariable String nickname) {
-		jwtService.validateToken(token);
-		UUID userId = jwtService.getUserId(token);
-		// userService.
+	public ResponseEntity<Boolean> isNicknameAvailable(@PathVariable String nickname) {
 		boolean isAvailable = userService.isNicknameAvailable(nickname);
 		return ResponseEntity.ok(!isAvailable);
 	}
