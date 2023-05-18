@@ -25,7 +25,7 @@ export default function MainPage() {
       {data && <Banner memberInfo={data.userDetail} />}
       {data && <Todo challenges={data.todayToto} />}
       {data && <Groups groups={data.group} mygroup={data.myGroup} />}
-      <Ranking ranking={MAIN_DUMMY_DATA.rank} />
+      <Ranking ranking={DUMMY_RANK} />
     </>
   );
 }
@@ -60,73 +60,4 @@ const DUMMY_RANK: RankData = {
   myExp: 600,
   myBadgeRank: 5,
   myBadge: 3,
-};
-const MAIN_DUMMY_DATA = {
-  challenge: [
-    // {
-    //   image: "/image/image.jpg",
-    //   name: "김영한의 스프링 강의 정복",
-    //   participants: ["뽀삐", "뭉치", "해피"],
-    //   startDate: "2023-05-03",
-    //   status: false,
-    // },
-  ],
-  rank: {
-    expRank: [
-      {
-        image: "/image/image.jpg",
-        name: "뭉치",
-        animal: "카피바라",
-        tier: "브론즈",
-        exp: 1400,
-        badge: 10,
-      },
-      {
-        image: "/image/image.jpg",
-        name: "해피",
-        animal: "무너",
-        tier: "브론즈",
-        exp: 1000,
-        badge: 13,
-      },
-      {
-        image: "/image/image.jpg",
-        name: "뽀삐",
-        animal: "미니언즈",
-        tier: "브론즈",
-        exp: 800,
-        badge: 12,
-      },
-    ],
-    badgeRank: [
-      {
-        image: "/image/image.jpg",
-        name: "해피",
-        animal: "무너",
-        tier: "브론즈",
-        exp: 1000,
-        badge: 13,
-      },
-      {
-        image: "/image/image.jpg",
-        name: "뽀삐",
-        animal: "미니언즈",
-        tier: "브론즈",
-        exp: 800,
-        badge: 12,
-      },
-      {
-        image: "/image/image.jpg",
-        name: "뭉치",
-        animal: "카피바라",
-        tier: "브론즈",
-        exp: 1400,
-        badge: 10,
-      },
-    ],
-    myExpRank: 4,
-    myExp: 600,
-    myBadgeRank: 5,
-    myBadge: 3,
-  },
 };
