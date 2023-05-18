@@ -208,7 +208,7 @@ async function postComment(
 // TODO: 댓글 삭제 405 에러 해결
 async function deleteComment(articleId: number, commentId: number) {
   try {
-    const res = await api.delete(
+    const res = await api.patch(
       `/api/v2/main-service/article/${articleId}/${commentId}`
     );
     if (res.status === 200) {
@@ -254,7 +254,7 @@ async function editBoard(
 // TODO: 게시글 삭제 405 에러 해결
 async function deleteBoard(groupId: number, articleId: number) {
   try {
-    const res = await api.delete(
+    const res = await api.patch(
       `/api/v2/main-service/article/${groupId}/delete/${articleId}`
     );
     if (res.status === 200) {

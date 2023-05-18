@@ -175,8 +175,6 @@ export function BoardModal(props: PropsType) {
     props.toggleModal();
   }
 
-  console.log(props.boardData);
-
   return (
     <>
       {onEditMode ? (
