@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
 	@Query(value = "SELECT u FROM User u ORDER BY u.exp DESC")
 	List<User> findAllOrderByExp();
+
+	Optional<User> findByUserId(UUID userId);
 }

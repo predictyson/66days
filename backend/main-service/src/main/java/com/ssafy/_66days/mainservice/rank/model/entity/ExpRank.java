@@ -1,6 +1,10 @@
 package com.ssafy._66days.mainservice.rank.model.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
+
+import javax.persistence.Id;
 
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -15,27 +19,33 @@ import lombok.NoArgsConstructor;
 @CompoundIndex(name = "date_rank_index", def = "{ 'date': -1, 'rank': 1 }")
 public class ExpRank {
 
-	private LocalDateTime date;
-	private Integer rank;
-	@Indexed
+	private LocalDate date;
 
-	private String email;
+	private Integer rank;
+
+	@Indexed
+	@Id
+	private UUID id;
+
 	private String nickname;
+
 	private String tierName;
+
 	private String animalName;
-	private Integer badgeCount;
+
+	private Long exp;
 
 	@Builder
 	public ExpRank(
-			LocalDateTime date, Integer rank,
-			String email, String nickname, String tierName,
-			String animalName, Integer badgeCount) {
+			LocalDate date, Integer rank,
+			UUID id, String nickname, String tierName,
+			String animalName, Long exp) {
 		this.date = date;
 		this.rank = rank;
-		this.email = email;
+		this.id = id;
 		this.nickname = nickname;
 		this.tierName = tierName;
 		this.animalName = animalName;
-		this.badgeCount = badgeCount;
+		this.exp = exp;
 	}
 }
