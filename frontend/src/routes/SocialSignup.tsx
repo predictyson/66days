@@ -15,7 +15,7 @@ const tailLayout = {
 };
 
 // TODO: replace this url with SERVER_DOMAIN
-const LOCALTEST = "https://hello66days.world/api/v2";
+const LOCALTEST = "https://hello66days.world/api/v1";
 
 export default function SocialSignup() {
   const navigate = useNavigate();
