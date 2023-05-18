@@ -14,12 +14,11 @@ const tailLayout = {
   wrapperCol: { offset: 6, span: 18 },
 };
 
+// TODO: replace this url with SERVER_DOMAIN
 const LOCALTEST = "https://hello66days.world/api/v2";
 
 export default function SocialSignup() {
   const navigate = useNavigate();
-  // const setToken = useAuthStore((state) => state.setToken);
-  // const getToken = useAuthStore((state) => state.getToken);
   const [form] = Form.useForm();
   const nickName = Form.useWatch("nickName", form);
   const [messageApi, contextHolder] = message.useMessage();
@@ -39,7 +38,7 @@ export default function SocialSignup() {
       if (isUnique.data === true) {
         messageApi.open({
           type: "error",
-          content: "This is an error message",
+          content: "닉네임 중복입니다",
         });
         return;
       }
@@ -64,8 +63,10 @@ export default function SocialSignup() {
         messageApi.open({
           type: "success",
           content: "Success",
+          onClose: () => {
+            navigate("/", { replace: true });
+          },
         });
-        navigate("/", { replace: true });
       }
     } catch (error) {
       console.error(values);
@@ -81,19 +82,14 @@ export default function SocialSignup() {
   }
 
   useEffect(() => {
-    // "https://hello66days.world/socialsignup?user=UserSocialLoginRespDTO(email%3Dsungeun.kweon@gmail.com,%20nickName%3D%EA%B6%8C%EC%84%B1%EC%9D%80,%20social%3DKAKAO)".split("UserSocialLoginRespDTO(")[1].split(",%20")
-    console.log("search: ", location);
     const loc = location.href.split("UserSocialLoginRespDTO(")[1].split(",%20");
     const params: any = {};
     for (const param of loc) {
       const keyval = param.split("%3D");
       params[keyval[0]] = decodeURIComponent(keyval[1].replace(")", ""));
     }
-    console.log("params: ", params);
-    // const queryParams = new URLSearchParams(location.search);
+    // console.log("params: ", params);
 
-    // const token = queryParams.get("token");
-    // token && setToken(token);
     const email = params.email;
     email && form.setFieldsValue({ email });
     const nickName = params.nickName;
