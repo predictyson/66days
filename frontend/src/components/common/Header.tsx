@@ -9,10 +9,21 @@ import { CreateGroupModal } from "../group/CreateGroupModal";
 import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { expireUserToken } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function CustomHeader() {
+  const navigate = useNavigate();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const removeToken = useAuthStore((state) => state.removeToken);
   const [isOpenCreateGroupModal, setOpenCreateGroupModal] = useState(false);
+
+  function logoutHandler() {
+    removeToken();
+    navigate("/", { replace: true });
+    expireUserToken();
+    // const resetUser = useAuthStore((state) => state.resetUser);
+    // resetUser();
+  }
 
   const items: MenuProps["items"] = [
     {
@@ -23,13 +34,7 @@ export default function CustomHeader() {
       key: "2",
       danger: true,
       label: (
-        <a
-          onClick={() => {
-            expireUserToken();
-            const resetUser = useAuthStore((state) => state.resetUser);
-            resetUser();
-          }}
-        >
+        <a onClick={logoutHandler}>
           <LogoutOutlined /> logout
         </a>
       ),

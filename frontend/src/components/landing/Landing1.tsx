@@ -18,7 +18,15 @@ export default function Landing1() {
           <div className="subcontent">
             이제 <a>66days</a>가 도와줄게요 !
           </div>
-          <JoinButton>66days 시작하기</JoinButton>
+          <JoinButton
+            onClick={() => {
+              location.href = `${
+                import.meta.env.VITE_SERVER_DOMAIN
+              }/oauth2/authorization/kakao`;
+            }}
+          >
+            66days 시작하기
+          </JoinButton>
         </LeftWrapper>
         <GifWrapper>
           <img src={LandingGif1} alt="landing1" />

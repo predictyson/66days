@@ -7,6 +7,7 @@ const instance = axios.create({
   baseURL: import.meta.env.VITE_SERVER_DOMAIN,
   timeout: 1000,
   headers: {
+    // FIXME: replaec this with Bearer token
     Authorization: `f1629861-f09b-11ed-a26b-0242ac110003`,
   },
 });

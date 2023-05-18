@@ -5,11 +5,9 @@ import { useAuthStore } from "../stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
 
 export default function OAuth2Redirect() {
-  const getToken = useAuthStore((state) => state.getToken);
   const setToken = useAuthStore((state) => state.setToken);
   const navigate = useNavigate();
 
-  const token = getToken();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -17,13 +15,11 @@ export default function OAuth2Redirect() {
       setIsLoading(false);
     } else {
       const queryParams = new URLSearchParams(location.search);
-      setToken(queryParams.get("token"));
+      // console.log(queryParams.get("token"));
+      setToken(`Bearer ${queryParams.get("token")}`);
+      navigate("/", { replace: true });
     }
   }, [isLoading]);
-
-  useEffect(() => {
-    token && navigate("/", { replace: true });
-  }, [token]);
 
   return <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />;
 }
