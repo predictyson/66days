@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { Layout } from "antd";
 import styled from "styled-components";
 import {
@@ -9,13 +8,8 @@ import {
   LeftCircleFilled,
 } from "@ant-design/icons";
 import { theme } from "../styles/theme";
-import Algorithms from "../assets/algorithm_badge.png";
-import CS from "../assets/cs_badge.png";
-import Blog from "../assets/blog_badge.png";
-import Lecture from "../assets/lecture_badge.png";
-import Book from "../assets/book_badge.jpeg";
+
 import ChallengeBox from "../components/group/ChallengeBox";
-import { BoardBox } from "../components/group/BoardBox";
 import CreateChallengeModal from "../components/group/CreateChallengeModal";
 import MemberModal from "../components/group/MemberModal";
 import BadgeModal from "../components/group/BadgeModal";
@@ -34,7 +28,10 @@ import { BoardModal } from "../components/group/BoardModal";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { getImagePath } from "../util/common";
+import BoardBox from "../components/group/BoardBox";
 
+// const navigate = useNavigate();
 const { Content } = Layout;
 
 // FIXME: 타입이 아직 명확히 설정되지 않았습니다
@@ -54,9 +51,10 @@ interface MemberType {
 }
 
 interface BadgePreviewType {
-  image: string;
-  category: "알고리즘" | "CS" | "블로깅" | "강의" | "개발서적";
-  count: number;
+  imagePath: string;
+  challengeName: "알고리즘" | "CS" | "블로깅" | "강의" | "개발서적";
+  challengeId: number;
+  achievementCount: number;
 }
 
 interface BadgeType {
@@ -93,7 +91,6 @@ interface ArticleType {
 
 interface BoardType {
   articles: ArticleType[];
-  pageNo: number;
 }
 
 interface CommentType {
@@ -108,6 +105,10 @@ interface CommentType {
 }
 
 export default function Group() {
+  // const location = useLocation();
+  // const groupId = location.state.groupId;
+  // console.log(groupId);
+
   const [isOpenMemberModal, setOpenMemberModal] = useState(false);
   const [isOpenMemberSettingModal, setOpenMemberSettingModal] = useState(false);
   const [isOpenBadgeModal, setOpenBadgeModal] = useState(false);
@@ -116,6 +117,7 @@ export default function Group() {
   const [isOpenBoardModal, setOpenBoardModal] = useState(false);
 
   const [boardPage, setBoardPage] = useState<number>(0);
+  const [totalPage, setTotalPage] = useState<number>(0);
   const [groupName, setGroupName] = useState<string>("");
 
   const [badgePreview, setBadgePreview] = useState<BadgePreviewType[]>([]);
@@ -124,7 +126,9 @@ export default function Group() {
   const [appliedList, setAppliedList] = useState<MemberType[]>([]);
   const [badgeList, setBadgeList] = useState<BadgeType[]>([]);
   const [filteredBadgeList, setFilteredBadgeList] = useState<BadgeType[]>([]);
-  const [boardDataList, setBoardDataList] = useState<BoardType>();
+  const [boardDataList, setBoardDataList] = useState<BoardType>({
+    articles: [],
+  });
   const [boardData, setBoardData] = useState<ArticleType>();
   const [commentData, setCommentData] = useState<CommentType[]>([]);
 
@@ -145,7 +149,7 @@ export default function Group() {
           {challengeList.map((challenge: ChallengeType, index: number) => (
             <ChallengeBox
               key={index}
-              bgImg={challenge.imagePath}
+              bgImg={getImagePath(challenge.imagePath)}
               notStarted={calcDueDate(challenge.startAt) < 0 ? true : false}
               title={challenge.challengeName}
               dueDate={calcDueDate(challenge.startAt)}
@@ -176,21 +180,6 @@ export default function Group() {
     }
   }
 
-  // dummy 연결 해제 후 삭제 예정
-  function getCategoryImage(category: string) {
-    if (category === "알고리즘") {
-      return Algorithms;
-    } else if (category === "CS") {
-      return CS;
-    } else if (category === "블로깅") {
-      return Blog;
-    } else if (category === "강의") {
-      return Lecture;
-    } else if (category === "개발서적") {
-      return Book;
-    }
-  }
-
   function calcDueDate(dueDate: Date) {
     const today = new Date();
     const startDate = new Date(dueDate);
@@ -215,40 +204,44 @@ export default function Group() {
 
   async function fetchAndSetNewBoardList(page: number) {
     // TODO: group page api 완성되면 1대신 groupId 전송
-    const newBoardList = await fetchBoardListByPage(1, page);
-    newBoardList.pgNo = boardPage - 1;
-    setBoardDataList(newBoardList);
+    const newObj = await fetchBoardListByPage(1, page);
+    console.log(newObj.articles);
+    setTotalPage(Math.ceil(newObj.articles[1] / 3) - 1);
+    console.log(newObj.articles[0]);
+    setBoardDataList({ articles: newObj.articles[0] });
   }
 
   function handleClickLeft() {
     // 첫번째 페이지가 아니면
     if (boardPage > 0) {
-      setBoardPage(boardPage - 1);
+      const curPage = boardPage;
+      console.log(curPage - 1);
+      setBoardPage(curPage - 1);
       // 이전 페이지 게시글 리스트 호출
-      fetchAndSetNewBoardList(boardPage - 1);
-      // setBoardDataList(newBoardList);
+      fetchAndSetNewBoardList(curPage - 1);
     }
   }
 
   function handleClickRight() {
-    // 마지막 페이지라면
-    // TODO: group page api 완성되면 5대신 게시글 전체 갯수 넣기
-    if (boardPage < Math.ceil(5 / 3)) {
-      setBoardPage(boardPage + 1);
+    // 마지막 페이지가 아니라면
+    if (boardPage < totalPage) {
+      const curPage = boardPage;
+      setBoardPage(curPage + 1);
       // 이후 페이지 게시글 리스트 호출
-      fetchAndSetNewBoardList(boardPage + 1);
+      fetchAndSetNewBoardList(curPage + 1);
     }
   }
 
   useEffect(() => {
+    // 처음 렌더링 시 그룹 페이지 전체 데이터 fetch 메소드
     async function fetchAndSetGroupPageData() {
       const data = await fetchGroupPageData();
       console.log(data);
       setGroupName(data["group-name"]);
-      setBadgePreview(data.badges);
+      setBadgePreview(data.achievements);
       setChallengeList(data.challenges);
-      const boardList = { articles: data.articles, pageNo: 0 };
-      setBoardDataList(boardList);
+      setBoardDataList({ articles: data.articles[0] });
+      setTotalPage(Math.ceil(data.articles[1] / 3) - 1);
     }
 
     async function fetchAndSetGroupSettingData() {
@@ -303,21 +296,25 @@ export default function Group() {
             </div>
           </div>
           <BadgesContainer>
-            {badgePreview.map((badge, index) => (
+            {badgePreview?.map((badge, index) => (
               <BadgeBox key={index}>
-                <div className="badge-cnt">x{badge.count}</div>
+                <div className="badge-cnt">
+                  {badge.achievementCount > 0
+                    ? `x${badge.achievementCount}`
+                    : 0}
+                </div>
                 <CommonButton
-                  color={getCategoryColor(badge.category)}
+                  color={getCategoryColor(badge.challengeName)}
                   font="Kanit-Bold"
                   fontWeight={700}
                   margin="0 0 1rem 0"
                 >
-                  {badge.category}
+                  {badge.challengeName}
                 </CommonButton>
                 <img
                   className="badge-img"
-                  src={getCategoryImage(badge.category)}
-                  onClick={() => clickBadgeCategory(badge.category)}
+                  src={getImagePath(badge.imagePath)}
+                  onClick={() => clickBadgeCategory(badge.challengeName)}
                 />
               </BadgeBox>
             ))}
@@ -354,15 +351,22 @@ export default function Group() {
             </div>
           </div>
           <BoardList>
-            {boardDataList?.articles?.map((article, index) => (
-              <BoardBox
-                key={index}
-                data={article}
-                setBoardData={setBoardData}
-                setCommentData={setCommentData}
-                setBoardModal={setOpenBoardModal}
-              />
-            ))}
+            {boardDataList.articles ? (
+              boardDataList.articles.map(
+                (article: ArticleType, index: number) => (
+                  <BoardBox
+                    key={index}
+                    data={article}
+                    setBoardData={setBoardData}
+                    setCommentData={setCommentData}
+                    setBoardModal={setOpenBoardModal}
+                  />
+                )
+              )
+            ) : (
+              <div>게시글 목록이 없습니다.</div>
+            )}
+            {}
           </BoardList>
           <div className="pagination-bar-container">
             {boardPage === 0 ? (
@@ -374,7 +378,7 @@ export default function Group() {
               />
             )}
             {/* TODO: 추후에 group page api 완성된 후 board 전체 갯수를 3으로 나누기 */}
-            {boardPage === Math.ceil(5 / 3) ? (
+            {boardPage === totalPage ? (
               <RightCircleFilled className="invisible-arrow" />
             ) : (
               <RightCircleFilled
@@ -396,6 +400,7 @@ export default function Group() {
         memberList={memberList}
         setMemberList={setMemberList}
         appliedList={appliedList}
+        setAppliedList={setAppliedList}
       />
 
       <BadgeModal
@@ -411,12 +416,19 @@ export default function Group() {
         open={isOpenNewBoardModal}
         toggleModal={() => setOpenNewBoardModal((prev) => !prev)}
         setBoardDataList={setBoardDataList}
+        setTotalPage={setTotalPage}
+        setBoardPage={setBoardPage}
       />
       <BoardModal
         open={isOpenBoardModal}
         toggleModal={() => setOpenBoardModal((prev) => !prev)}
         boardData={boardData}
+        setBoardData={setBoardData}
+        setBoardDataList={setBoardDataList}
         commentData={commentData}
+        setCommentData={setCommentData}
+        setTotalPage={setTotalPage}
+        setBoardPage={setBoardPage}
       />
     </div>
   );

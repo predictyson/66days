@@ -20,13 +20,14 @@ interface ArticleType {
 
 interface BoardType {
   articles: ArticleType[];
-  pageNo: number;
 }
 
 interface PropsType {
   open: boolean;
   toggleModal: () => void;
-  setBoardDataList: React.Dispatch<React.SetStateAction<BoardType | undefined>>;
+  setBoardDataList: React.Dispatch<React.SetStateAction<BoardType>>;
+  setTotalPage: React.Dispatch<React.SetStateAction<number>>;
+  setBoardPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface Board {
@@ -62,8 +63,10 @@ export default function NewBoardModal(props: PropsType) {
   async function fetchAndSetNewBoardList(page: number) {
     // TODO: group page api 완성되면 1대신 groupId 전송
     const newBoardList = await fetchBoardListByPage(1, page);
-    newBoardList.pgNo = 0;
-    props.setBoardDataList(newBoardList);
+    console.log(newBoardList);
+    props.setBoardDataList({ articles: newBoardList.articles[0] });
+    props.setTotalPage(Math.ceil(newBoardList.articles[1] / 3) - 1);
+    props.setBoardPage(0);
   }
 
   return (
