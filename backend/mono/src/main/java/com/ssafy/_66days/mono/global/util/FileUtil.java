@@ -1,17 +1,16 @@
 package com.ssafy._66days.mono.global.util;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.UUID;
-
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class FileUtil {
 			String originalFileName = image.getOriginalFilename();
 			String today = new SimpleDateFormat("yyMMdd").format(new Date());
 			String saveFolder = path + File.separator + today;
-
+			
 			File folder = new File(saveFolder);
 			if (!folder.exists())
 				folder.mkdirs();
@@ -51,7 +50,7 @@ public class FileUtil {
 			throw new InputMismatchException("비어있는 파일입니다.");
 		}
 	}
-
+	
 	/***
 	 * File delete logic
 	 * @param dbSaveImage : DB에 저장되어있는 image 경로

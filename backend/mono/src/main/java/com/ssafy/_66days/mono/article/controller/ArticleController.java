@@ -1,32 +1,22 @@
 package com.ssafy._66days.mono.article.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import com.ssafy._66days.mono.user.model.service.JwtService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.ssafy._66days.mono.article.model.dto.requestDto.ArticleRequestDTO;
 import com.ssafy._66days.mono.article.model.dto.requestDto.CommentRequestDTO;
 import com.ssafy._66days.mono.article.model.dto.responseDto.ArticleResponseDTO;
 import com.ssafy._66days.mono.article.model.dto.responseDto.CommentResponseDTO;
 import com.ssafy._66days.mono.article.model.service.ArticleService;
-
+import com.ssafy._66days.mono.user.model.service.JwtService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/article")

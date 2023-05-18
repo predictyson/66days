@@ -1,5 +1,6 @@
 package com.ssafy._66days.mono.user.controller;
 
+import com.ssafy._66days.mono.page.model.dto.MainPageResponseDTO;
 import com.ssafy._66days.mono.user.model.dto.UserDetailResponseDTO;
 import com.ssafy._66days.mono.user.model.dto.UserSignUpRequestDTO;
 import com.ssafy._66days.mono.user.model.dto.UserSocialRegistParamDTO;
@@ -86,12 +87,21 @@ public class UserController {
 		return new ResponseEntity<Map<String, String>>(resultMap, HttpStatus.OK);
 	}
 
-	@GetMapping
-	public ResponseEntity<UserDetailResponseDTO> getUserDetail(@RequestHeader("Authorization") String token) {
+	@GetMapping()
+	public ResponseEntity<Map<String, Object>> getMainPage(@RequestHeader("Authorization") String token) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 
-		jwtService.validateToken(token);
-		UUID userId = jwtService.getUserId(token);
-		UserDetailResponseDTO userDetailResponseDTO = userService.getUserDetail(userId);
-		return ResponseEntity.ok(userDetailResponseDTO);
+		try {
+			jwtService.validateToken(token);
+			UUID userId = jwtService.getUserId(token);
+			MainPageResponseDTO mainPageResponseDTO = userService.getMainPage(userId);
+			resultMap.put("mainPageResponseDTO", mainPageResponseDTO);
+			return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+		}
 	}
 }

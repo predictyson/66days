@@ -1,11 +1,17 @@
 package com.ssafy._66days.mono.page.controller;
 
 import com.ssafy._66days.mono.article.model.service.ArticleService;
+import com.ssafy._66days.mono.badge.model.service.BadgeService;
 import com.ssafy._66days.mono.challenge.model.dto.responseDTO.GroupChallengeForGroupIntroPageResDTO;
 import com.ssafy._66days.mono.challenge.model.dto.responseDTO.GroupChallengeResponseDTO;
+import com.ssafy._66days.mono.challenge.model.dto.responseDTO.MyChallengeResponseDTO;
 import com.ssafy._66days.mono.challenge.model.service.GroupChallengeService;
+import com.ssafy._66days.mono.challenge.model.service.MyChallengeService;
+import com.ssafy._66days.mono.group.model.dto.GroupAchievementResponseDTO;
+import com.ssafy._66days.mono.group.model.dto.GroupMyPageResponseDTO;
 import com.ssafy._66days.mono.group.model.entity.Group;
 import com.ssafy._66days.mono.group.model.service.GroupService;
+import com.ssafy._66days.mono.page.model.dto.MainPageResponseDTO;
 import com.ssafy._66days.mono.user.model.dto.UserDetailDTO;
 import com.ssafy._66days.mono.user.model.dto.UserManageDTO;
 import com.ssafy._66days.mono.user.model.service.JwtService;
@@ -34,23 +40,31 @@ public class PageController {
     private final GroupChallengeService groupChallengeService;
     private final UserService userService;
     private final GroupService groupService;
+    private final MyChallengeService myChallengeService;
+    private final BadgeService badgeService;
+
     private final JwtService jwtService;
 
     @ApiOperation(value = "홈 화면", notes = "로그인 후 연결 되는 첫 페이지")
     @GetMapping("/home")
     public ResponseEntity<Map<String, Object>> getMainPage(
-//            @RequestHeader(value = "Authorization") String token
+            @RequestHeader(value = "Authorization") String token
     ) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
 
-//        resultMap.put("member-info", member);
-//        resultMap.put("challenge", cList);
-//        resultMap.put("group", gList);
-//        resultMap.put("rank", rank);
+        jwtService.validateToken(token);
+        UUID userId = jwtService.getUserId(token);
+        log.info("Group Page, USER ID : {}", userId);
 
-        resultMap.put(RESULT, SUCCESS);
+        try {
+            MainPageResponseDTO mainPage = userService.getMainPage(userId);
+            resultMap.put("mainPage", mainPage);
+            return ResponseEntity.status(HttpStatus.OK).body(resultMap);
 
-        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+        }
     }
 
     @ApiOperation(value = "마이페이지", notes = "내 프로필 화면")
@@ -66,27 +80,34 @@ public class PageController {
 
         try {
             UserDetailDTO userDetailDTO = userService.findUserById(userId);
-            resultMap.put("user-info", userDetailDTO);
+            resultMap.put("userInfo", userDetailDTO);
         } catch (Exception e) {
             resultMap.put(RESULT, e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
         }
 
 //        resultMap.put("member-info", member);
-        resultMap.put("badges", new ArrayList<>());
+
+//        List<BadgeMyPageDTO> badgeMyPageDTOList = badgeService.getMyPageBadgeList(userId);
+//        resultMap.put("badges", badgeMyPageDTOList);
+
         resultMap.put("streak", new ArrayList<>());
-        resultMap.put("challenge", new ArrayList<>());
 
         try {
-//            groupService.findAllGroups(userId);
-//            resultMap.put("user-info", userDetailDTO);
-//        resultMap.put("group", gList);
+            List<MyChallengeResponseDTO> challengeList = myChallengeService.getMyChallenges(userId,"SUCCESSFUL");
+            resultMap.put("challenge", new ArrayList<>());
         } catch (Exception e) {
             resultMap.put(RESULT, e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
         }
 
-
+        try {
+            List<GroupMyPageResponseDTO> groupList = groupService.findAllGroups(userId);
+            resultMap.put("groupList", groupList);
+        } catch (Exception e) {
+            resultMap.put(RESULT, e.getMessage());
+            return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.NO_CONTENT);
+        }
 
         resultMap.put(RESULT, SUCCESS);
 
@@ -106,11 +127,12 @@ public class PageController {
         log.info("Group Page, USER ID : {}", userId);
 
         String groupName = groupService.getGroupName(groupId);
+        List<GroupAchievementResponseDTO> groupAchievements = groupService.getGroupAchievement(userId, groupId);
         List<GroupChallengeResponseDTO> groupChallenges = groupChallengeService.getGroupChallenges(userId, groupId);
         List<Object> articleList = articleService.getArticleList(userId, groupId, 0);
 
         resultMap.put("group-name", groupName);
-        resultMap.put("badges", new ArrayList<>());
+        resultMap.put("achievements", groupAchievements);
         resultMap.put("challenges", groupChallenges);
         resultMap.put("articles", articleList);
 
