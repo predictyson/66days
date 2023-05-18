@@ -1,6 +1,7 @@
 package com.ssafy._66days.mainservice.user.controller;
 
 import com.ssafy._66days.mainservice.page.model.dto.MainPageResponseDTO;
+import com.ssafy._66days.mainservice.page.model.service.PageService;
 import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
 import com.ssafy._66days.mainservice.user.model.dto.UserDetailResponseDTO;
 import com.ssafy._66days.mainservice.user.model.dto.UserSignUpRequestDTO;
@@ -30,6 +31,7 @@ public class UserController {
 
 	private final UserService userService;
 	private final AuthServiceClient authServiceClient;
+	private final PageService pageService;
 
 	@GetMapping("/uuid/{uuid}")
 	public ResponseEntity<UUID> extractUUIDFromToken(@PathVariable UUID uuid) {
@@ -113,7 +115,7 @@ public class UserController {
 
 		try {
 			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
-			MainPageResponseDTO mainPageResponseDTO = userService.getMainPage(userId);
+			MainPageResponseDTO mainPageResponseDTO = pageService.getMainPage(userId);
 			resultMap.put("mainPageResponseDTO", mainPageResponseDTO);
 			return ResponseEntity.status(HttpStatus.OK).body(resultMap);
 
