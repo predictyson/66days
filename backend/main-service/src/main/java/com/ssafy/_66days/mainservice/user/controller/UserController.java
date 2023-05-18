@@ -1,11 +1,13 @@
 package com.ssafy._66days.mainservice.user.controller;
 
+import com.ssafy._66days.mainservice.page.model.dto.MainPageResponseDTO;
 import com.ssafy._66days.mainservice.user.feign.AuthServiceClient;
 import com.ssafy._66days.mainservice.user.model.dto.UserDetailResponseDTO;
 import com.ssafy._66days.mainservice.user.model.dto.UserSignUpRequestDTO;
 import com.ssafy._66days.mainservice.user.model.service.UserService;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -103,12 +107,20 @@ public class UserController {
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping
-	public ResponseEntity<UserDetailResponseDTO> getMainPage(@RequestHeader("Authorization") String token) {
-//		ResponseEntity<UUID> response = authServiceClient.extractUUIDFromToken(token);
-//		UUID userId = response.getBody();
-		UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
-		UserDetailResponseDTO userDetailResponseDTO = userService.getMainPage(userId);
-		return ResponseEntity.ok(userDetailResponseDTO);
+	@GetMapping()
+	public ResponseEntity<Map<String, Object>> getMainPage(@RequestHeader("Authorization") String token) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+
+		try {
+			UUID userId = authServiceClient.extractUUID(UUID.fromString(token)).getBody();
+			MainPageResponseDTO mainPageResponseDTO = userService.getMainPage(userId);
+			resultMap.put("mainPageResponseDTO", mainPageResponseDTO);
+			return ResponseEntity.status(HttpStatus.OK).body(resultMap);
+
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resultMap);
+		}
 	}
 }

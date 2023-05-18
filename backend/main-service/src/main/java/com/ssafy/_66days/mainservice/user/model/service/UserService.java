@@ -7,7 +7,9 @@ import com.ssafy._66days.mainservice.challenge.model.entity.MyChallenge;
 import com.ssafy._66days.mainservice.challenge.model.entity.mongodb.PersonalChallengeLog;
 import com.ssafy._66days.mainservice.challenge.model.reposiotry.*;
 import com.ssafy._66days.mainservice.page.model.dto.MainPageMyGroupResponseDTO;
+import com.ssafy._66days.mainservice.page.model.dto.MainPageResponseDTO;
 import com.ssafy._66days.mainservice.page.model.dto.MainPageTodoResponseDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +43,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -119,150 +122,60 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public UserDetailResponseDTO getMainPage(UUID userId) {
-
+    public MainPageResponseDTO getMainPage(UUID userId) {
         // -------------------- userDetail -------------------------------------
-        Map<String, Object> userInfo = new HashMap<>();
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new InputMismatchException("존재하지 않는 유저입니다"));
+                .orElseThrow(() -> new InputMismatchException("존재하지 않는 유저입니다"));                // 유저 객체 받아오기
         Tier tier = tierRepository.findByTierId(user.getTierId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 티어 정보입니다"));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 티어 정보입니다"));         // 티어 객체 받아오기
         Animal animal = animalRepository.findById(user.getAnimalId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 동물 정보입니다"));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 동물 정보입니다"));         // 동물 객체 받아오기
 
-        AnimalDTO animalDTO = AnimalDTO.of(animal);
-        TierDTO tierDTO = TierDTO.of(tier);
-        UserDetailDTO userDetailDTO = UserDetailDTO.of(user, animalDTO, tierDTO);
-        userInfo.put("userInfo", userDetailDTO);                                                        // ! userDetailDTO
+        AnimalDTO animalDTO = AnimalDTO.of(animal);                                                   // 동물 DTO로 변환
+        TierDTO tierDTO = TierDTO.of(tier);                                                           // 티어 DTO로 변환
+        UserDetailDTO userDetailDTO = UserDetailDTO.of(user, animalDTO, tierDTO);                     // 유저 정보 DTO로 변환
         // ----------------------today's t0d0-------------------------------------
-        Map<String, Object> todoInfo = new HashMap<>();
-        List<MainPageTodoResponseDTO> todayTodos = new ArrayList<>();
-        List<MyChallenge> myChallenges = myChallengeRepository.findByUserAndState(user, "ACTIVATED");
+        List<MainPageTodoResponseDTO> todayTodos = new ArrayList<>();                                 // todaystodoResponstDTO 담을 배열
+        List<MyChallenge> myChallenges = myChallengeRepository.findByUserAndState(user, "ACTIVATED");   // 진행중인 내 챌린지 받아오기
         if (myChallenges != null) {
-            for (int i = 0; i < myChallenges.size(); i++) {
-                MyChallenge myChallenge = myChallenges.get(i);
-                Long myChallengeId = myChallenge.getMyChallengeId();
-                LocalDate today = LocalDate.now();
-                PersonalChallengeLog todayStreak = personalChallengeLogRepository.findByMyChallengeIdAndTime(myChallengeId, today);
+            for (int i = 0; i < myChallenges.size(); i++) {                                           // 순회하며
+                MyChallenge myChallenge = myChallenges.get(i);                                        // 내 챌린지 하나
+                Long myChallengeId = myChallenge.getMyChallengeId();                                  // id값 추출
+                LocalDate today = LocalDate.now();                                                    // 오늘 스트릭 찍었는지 비교하기 위한 today값
+                PersonalChallengeLog todayStreak = personalChallengeLogRepository.findByMyChallengeIdAndTime(myChallengeId, today); // 오늘의 스트릭 정보 받아오기
                 boolean state = false;
                 if (todayStreak != null) {
-                    state = true;
+                    state = true;                                                                    // 스트릭 찍었으면 true, 안찍었으면 false
                 }
-                MainPageTodoResponseDTO todayTodoDTO = MainPageTodoResponseDTO.of(myChallenge, state);
-                todayTodos.add(todayTodoDTO);
+                MainPageTodoResponseDTO todayTodoDTO = MainPageTodoResponseDTO.of(myChallenge, state); // todayDTO로 변환
+                todayTodos.add(todayTodoDTO);                                                        // 리스트에 저장
             }
         }
-        todoInfo.put("todayTodoInfo", todayTodos);                                                  // ! todaytodo 정보
         //-----------------Groups--------------------------------------------
-        Map<String, Object> groups = new HashMap<String, Object>();                             // 그룹 정보 담을 배열
         //----------------MyGroup-------------------------------------------
-        String profileImagePath = user.getProfileImagePath();                                   // 유저 프로필사진
-        List<String> challengeImagePaths = new ArrayList<>();                                   // 개인 챌린지 이미지 담을 배열
+        String profileImagePath = user.getProfileImagePath();                                        // 유저 프로필사진
+        List<String> challengeImagePaths = new ArrayList<>();                                        // 개인 챌린지 이미지 담을 배열
         if (myChallenges != null) {
             for (int i = 0; i < myChallenges.size(); i++) {
-                challengeImagePaths.add(myChallenges.get(i).getChallenge().getBadgeImage());    // 챌린지 이미지 담는다
+                challengeImagePaths.add(myChallenges.get(i).getChallenge().getBadgeImage());         // 챌린지 이미지 담는다
             }
         }
         MainPageMyGroupResponseDTO mainPageMyGroup = MainPageMyGroupResponseDTO.of(profileImagePath, challengeImagePaths);
-        groups.put("myGroupInfo", mainPageMyGroup);                                                     // ! 개인 그룹DTO
         //---------------Group----------------------------------
         List<MainPageGroupResponseDTO> mainPageGroup = new ArrayList<>();                                       // 그룹 정보 담을 배열
         List<GroupMember> groupMemberList = groupMemberRepository.findByUserAndIsDeleted(user, false);      // 내가 참여중인 그룹들
-        List<String> groupImagePath = new ArrayList<>();                                                        // 각 그룹의 진행중인 챌린지 이미지담을 배열
         for (int i = 0; i < groupMemberList.size(); i++) {
             Group group = groupMemberList.get(i).getGroup();
-            List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndState(group, "ACTIVATED");
+            List<String> groupImagePath = new ArrayList<>();                                                   // 각 그룹의 진행중인 챌린지 이미지담을 배열
+            List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndState(group, "ACTIVATED"); // 각 그룹에서 진행 중인 챌린지 가져오기
             for (int j = 0; j < groupChallenges.size(); j++) {
-                String image = groupChallenges.get(j).getChallenge().getBadgeImage();
-                groupImagePath.add(image);
+                String image = groupChallenges.get(j).getChallenge().getBadgeImage();                          // 해당 챌린지의 이미지 받아와서
+                groupImagePath.add(image);                                                                     // 이미지 배열에 저장
             }
-            MainPageGroupResponseDTO mainPageGroupResponseDTO = MainPageGroupResponseDTO.of(group, groupImagePath);
-            mainPageGroup.add(mainPageGroupResponseDTO);
-        }
-        groups.put("groupInfo", mainPageGroup);                                                         // ! 그룹정보 DTO
-
-
-
-
-
-
-
-
-        if (!groupChallengeMemberList.isEmpty()) {
-            for (int i = 0; i < groupChallengeMemberList.size(); i++) {
-
-                GroupChallenge groupChallenge = groupChallengeRepository.findById(groupChallengeMemberList.get(i).getGroupChallenge().getGroupChallengeId()) // 그룹챌린지를 찾아서
-                        .orElseThrow(() -> new IllegalArgumentException("알수없는 에러"));
-                if (groupChallenge.getState().equals("ACTIVATED")) {                                 // 진행중인 챌린지라면
-                    Long challengeId = groupChallenge.getChallenge().getChallengeId();          // 그것의 챌린지 아이디를 찾는다
-                    temp.add(challengeId);                                                      // 그룹에서 참여하고 있는 challenge들의 id값을 temp에 저장
-                }
-            }
+            MainPageGroupResponseDTO mainPageGroupResponseDTO = MainPageGroupResponseDTO.of(group, groupImagePath); // 그룹 정보 DTS로 변환
+            mainPageGroup.add(mainPageGroupResponseDTO);                                                        // 리스트에 저장
         }
 
-
-
-
-
-
-
-
-
-
-
-        MainPageGroupResponseDTO myGroup = null;
-
-        List<GroupMember> groupMembers = groupMemberRepository.findAllByUser(user);
-        if (groupMembers.isEmpty()) {
-            throw new RuntimeException();
-        }
-
-        List<Challenge> challenges = challengeRepository.findAll();
-
-        for (GroupMember groupMember : groupMembers) {
-            Group group = groupMember.getGroup();
-            MainPageGroupResponseDTO groupDTO = Group.toGroupMainPageResponseDTO(group);
-            List<Badge> badges = new ArrayList<>();
-            for (Challenge challenge : challenges) {
-                // Optional 변경 필요
-                List<GroupChallenge> groupChallenge = groupChallengeRepository.findByGroupAndChallengeAndState(group, challenge, "SUCCESSFUL"); // 성공한게 아니고 진행중인거 가져와야함
-                if (groupChallenge != null) {
-                    badges.add(challenge.getBadge());
-                }
-            }
-            List<String> badgeImagePathList = new ArrayList<>();        // 뱃지 이미지는 챌린지에서 바로 받을 수 잇음
-            for (Badge badge : badges) {
-                badgeImagePathList.add(badge.getImagePath());
-            }
-            groupDTO.setBadges(badgeImagePathList);
-            if (groupMember.getUser().equals(user)) {
-                myGroup = groupDTO;
-            } else {
-                groups.add(groupDTO);
-            }
-        }
-
-
-        return UserDetailResponseDTO.builder()
-                .userId(user.getUserId())
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .exp(user.getExp())
-                .point(user.getPoint())
-                .profileImagePath(user.getProfileImagePath())
-                .tier(
-                        TierMainPageResponseDTO.builder()
-                                .imagePath(tier.getImagePath())
-                                .title(tier.getTitle())
-                                .build()
-                ).animal(
-                        AnimalMainPageResponseDTO.builder()
-                                .animalId(animal.getAnimalId())
-                                .name(animal.getAnimalName())
-                                .imagePath(animal.getImagePath())
-                                .build()
-                ).myGroup(myGroup)
-                .groups(groups)
-                .build();
+        return MainPageResponseDTO.of(userDetailDTO, todayTodos, mainPageMyGroup, mainPageGroup);
     }
 }
