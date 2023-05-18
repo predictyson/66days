@@ -60,13 +60,11 @@ export default function TierInfoModal(props: PropsType) {
           <div className="modal-title">티어 설명</div>
           <TierInfoContainer>
             {tierList.map((tier) => (
-              <>
-                <TierBox>
-                  <div className="tier__name">{tier.tier}</div>
-                  <img src={tier.tierImg} className="tier__img" />
-                  <div className="tier__exp">{tier.exp} EXP</div>
-                </TierBox>
-              </>
+              <TierBox key={tier.exp}>
+                <div className="tier__name">{tier.tier}</div>
+                <img src={tier.tierImg} className="tier__img" />
+                <div className="tier__exp">{tier.exp} EXP</div>
+              </TierBox>
             ))}
           </TierInfoContainer>
         </RankInfoWrapper>
