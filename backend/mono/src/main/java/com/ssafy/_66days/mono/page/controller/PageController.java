@@ -11,7 +11,7 @@ import com.ssafy._66days.mono.group.model.entity.Group;
 import com.ssafy._66days.mono.group.model.service.GroupService;
 import com.ssafy._66days.mono.page.model.dto.MainPageResponseDTO;
 import com.ssafy._66days.mono.page.model.dto.MyPageResponseDTO;
-import com.ssafy._66days.mono.page.model.dto.service.PageService;
+import com.ssafy._66days.mono.page.model.service.PageService;
 import com.ssafy._66days.mono.user.model.dto.UserManageDTO;
 import com.ssafy._66days.mono.user.model.service.JwtService;
 import com.ssafy._66days.mono.user.model.service.UserService;

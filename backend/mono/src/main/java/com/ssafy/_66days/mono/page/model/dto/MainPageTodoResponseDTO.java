@@ -15,6 +15,7 @@ public class MainPageTodoResponseDTO {
     private Long myChallengeId;
     private Long groupChallengeId;
     private String challengeName;
+    private String imagePath;
     private Date startAt;
     private boolean todayStreak;
 
@@ -23,6 +24,7 @@ public class MainPageTodoResponseDTO {
         return MainPageTodoResponseDTO.builder()
                 .myChallengeId(myChallenge.getMyChallengeId())
                 .challengeName(myChallenge.getChallengeName())
+                .imagePath(myChallenge.getChallenge().getBadgeImage())
                 .startAt(startAt)
                 .todayStreak(state)
                 .build();
@@ -32,6 +34,7 @@ public class MainPageTodoResponseDTO {
         return MainPageTodoResponseDTO.builder()
                 .groupChallengeId(groupChallenge.getGroupChallengeId())
                 .challengeName(groupChallenge.getChallengeName())
+                .imagePath(groupChallenge.getChallenge().getBadgeImage())
                 .startAt(startAt)
                 .todayStreak(state)
                 .build();

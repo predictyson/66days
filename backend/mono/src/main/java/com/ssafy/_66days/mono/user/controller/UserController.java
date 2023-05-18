@@ -1,9 +1,7 @@
 package com.ssafy._66days.mono.user.controller;
 
 import com.ssafy._66days.mono.page.model.dto.MainPageResponseDTO;
-import com.ssafy._66days.mono.page.model.dto.service.PageService;
-import com.ssafy._66days.mono.user.model.dto.UserDetailResponseDTO;
-import com.ssafy._66days.mono.user.model.dto.UserSignUpRequestDTO;
+import com.ssafy._66days.mono.page.model.service.PageService;
 import com.ssafy._66days.mono.user.model.dto.UserSocialRegistParamDTO;
 import com.ssafy._66days.mono.user.model.service.JwtService;
 import com.ssafy._66days.mono.user.model.service.UserService;
