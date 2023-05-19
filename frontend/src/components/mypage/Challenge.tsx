@@ -2,11 +2,13 @@ import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { MyChallengeData } from "../../types/mypage";
 import Category from "../../styles/CategoryTheme";
-
+import { useNavigate } from "react-router";
 interface IProps {
   challenge: MyChallengeData;
 }
 export default function Challenge({ challenge }: IProps) {
+  console.log(challenge);
+  const navigate = useNavigate();
   function countDays(startDate: string): number {
     const oneDay = 24 * 60 * 60 * 1000; // 1일을 밀리초로 계산
     const startDateTime = new Date(startDate).getTime(); // 시작일을 밀리초로 변환
@@ -22,13 +24,14 @@ export default function Challenge({ challenge }: IProps) {
         Category.find((category) => category.title === challenge.category)
           ?.color
       }
+      onClick={() =>
+        navigate(`/groups/1/challenges/${challenge.myChallengeId}`)
+      }
     >
       <div className="left-box"></div>
       <div className="right-box">
         <TagWrapper>
-          <DateTag>
-            {countDays(challenge.startDate.substring(0, 10))}일째
-          </DateTag>
+          <DateTag>{countDays(challenge.startAt.substring(0, 10))}일째</DateTag>
           <Tag
             color={
               Category.find((category) => category.title === challenge.category)

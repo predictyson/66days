@@ -8,45 +8,48 @@ import { theme } from "../styles/theme";
 import Line from "../assets/mypage/Line.png";
 import { useEffect, useState } from "react";
 import { getMyPageInfo } from "../api/mypage";
-import EditProfile from "../components/mypage/EditProfile";
+// import EditProfile from "../components/mypage/EditProfile";
 
 // // 프로필 수정시
 export default function MyPage() {
   // const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
   // TODO:  마이페이지 데이터 api 연결
-  // const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
+  const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
 
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  // const [isEdit, setIsEdit] = useState<boolean>(false);
 
   useEffect(() => {
-    getMyPageInfo();
+    async function fetchMypage() {
+      const data = await getMyPageInfo();
+      console.log(data);
+      setMyPageInfo(data);
+    }
+    fetchMypage();
   }, []);
-  const handleEdit = (state: boolean) => {
-    setIsEdit(state);
-  };
-
+  // const handleEdit = (state: boolean) => {
+  //   setIsEdit(state);
+  // };
   const length = 66;
   return (
     <Container>
       <div className="left">
-        {!isEdit ? (
+        {mypageInfo && <Profile myInfo={mypageInfo.userDetail} date={33} />}
+        {/* {!isEdit ? (
           <Profile
             handleEdit={handleEdit}
-            myInfo={DUMMY_DATA_MYPAGE.memberInfo}
+            myInfo={mypageInfo.userDetail}
             date={DUMMY_DATA_MYPAGE.streak.length}
           />
         ) : (
           <EditProfile handleEdit={handleEdit} />
-        )}
-        <Badge />
+        )} */}
+        {mypageInfo && <Badge badges={mypageInfo.badges} />}
       </div>
       <div className="right">
         <div className="streak-wrapper">
           <Title>
             My 챌린지 그래프
-            <div className="accum">
-              누적 {DUMMY_DATA_MYPAGE.streak.length}일
-            </div>
+            <div className="accum">누적 30일</div>
           </Title>
           <StreakGraph
             commits={DUMMY_DATA_MYPAGE.streak.map((item) => item.count)}
@@ -77,10 +80,12 @@ export default function MyPage() {
             style={{ margin: "3.2rem auto 2rem auto", width: "100%" }}
           />
         </div>
-        <Group
-          groups={DUMMY_DATA_MYPAGE.group}
-          challenges={DUMMY_DATA_MYPAGE.challenge}
-        />
+        {mypageInfo && (
+          <Group
+            groups={mypageInfo.groups}
+            challenges={mypageInfo.challenges}
+          />
+        )}
       </div>
     </Container>
   );
@@ -163,7 +168,7 @@ const Container = styled.div`
   }
 `;
 
-const DUMMY_DATA_MYPAGE: MyPageData = {
+const DUMMY_DATA_MYPAGE = {
   badges: [
     {
       image: "/image/image.jpg",
@@ -347,127 +352,135 @@ const DUMMY_DATA_MYPAGE: MyPageData = {
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
+    },
+    {
+      date: "2023-05-09",
+      count: 0,
+    },
+    {
+      date: "2023-05-09",
+      count: 0,
     },
   ],
   group: [
