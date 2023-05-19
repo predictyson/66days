@@ -36,6 +36,7 @@ export default function Todo({ challenges }: IProps) {
       },
     ],
   };
+  challenges.map((c) => console.log(c));
   return (
     <Container>
       <Title>Today's todo</Title>

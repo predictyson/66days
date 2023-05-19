@@ -1,17 +1,20 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
-import { GroupData } from "../../types/main";
+import { MyGroupData } from "../../types/mypage";
 import Category from "../../styles/CategoryTheme";
+import { useNavigate } from "react-router";
 interface IProps {
-  group: GroupData;
+  group: MyGroupData;
 }
 export default function GroupITem({ group }: IProps) {
+  console.log(group);
+  const navigate = useNavigate();
   return (
-    <Container>
+    <Container onClick={() => navigate(`/groups/${group.groupId}`)}>
       <div className="left-box"></div>
       <div className="right-box">
         <TagWrapper>
-          {group.badges.map((data, idx) => {
+          {group.challenges.map((data, idx) => {
             return (
               <Tag
                 key={idx}

@@ -1,28 +1,32 @@
 import styled from "styled-components";
-import ProfileImg from "../../assets/main/Profile3.png";
 import Bronze from "../../assets/main/Bronze.png";
+import Silver from "../../assets/silver.png";
 import Coin from "../../assets/main/Coin.png";
 import { Progress } from "antd";
 import { theme } from "../../styles/theme";
-import { MyPageMemberData } from "../../types/mypage";
-
+import { MyUserData } from "../../types/mypage";
+import { getImagePath } from "../../util/common";
 interface IProps {
-  myInfo: MyPageMemberData;
+  myInfo: MyUserData;
   date: number;
-  handleEdit: (state: boolean) => void;
+  // handleEdit: (state: boolean) => void;
 }
-export default function Profile({ myInfo, date, handleEdit }: IProps) {
+export default function Profile({ myInfo, date }: IProps) {
   return (
     <Container>
-      <img className="profile-img" src={ProfileImg} alt="profile-img" />
+      <img
+        className="profile-img"
+        src={getImagePath(myInfo.profileImagePath)}
+        alt="profile-img"
+      />
       <img className="badge-img" src={Bronze} alt="badge" />
       <Nickname>{myInfo.nickname}</Nickname>
       <Email>{myInfo.email}</Email>
-      <EditButton onClick={() => handleEdit(true)}>edit</EditButton>
+      {/* <EditButton onClick={() => handleEdit(true)}>edit</EditButton> */}
       <ProgressWrapper>
         <ImageWrapper>
           <img src={Bronze} alt="current-badge" />
-          <img src={Bronze} alt="next-badge" />
+          <img src={Silver} alt="next-badge" />
         </ImageWrapper>
         <CustomProgress percent={(date / 66) * 100} />
       </ProgressWrapper>
@@ -61,6 +65,7 @@ const Container = styled.div`
     width: 18rem;
     height: 18rem;
     margin-top: 4.8rem;
+    border-radius: 50%;
   }
   .badge-img {
     position: absolute;
@@ -98,25 +103,25 @@ const Email = styled.div`
   margin-top: 1.8rem;
 `;
 
-const EditButton = styled.div`
-  width: 60%;
-  height: 3.2rem;
-  border-radius: 5px;
-  font-size: 1.6rem;
-  font-weight: ${theme.fontWeight.semibold};
-  background-color: ${theme.colors.purple};
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1.6rem;
-  cursor: pointer;
-  :hover {
-    background-color: white;
-    border: solid 3px ${theme.colors.purple};
-    color: ${theme.colors.purple};
-  }
-`;
+// const EditButton = styled.div`
+//   width: 60%;
+//   height: 3.2rem;
+//   border-radius: 5px;
+//   font-size: 1.6rem;
+//   font-weight: ${theme.fontWeight.semibold};
+//   background-color: ${theme.colors.purple};
+//   color: white;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   margin-top: 1.6rem;
+//   cursor: pointer;
+//   :hover {
+//     background-color: white;
+//     border: solid 3px ${theme.colors.purple};
+//     color: ${theme.colors.purple};
+//   }
+// `;
 
 const ProgressWrapper = styled.div`
   margin-top: 1.4rem;

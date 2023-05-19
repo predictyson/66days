@@ -6,10 +6,16 @@ import Chart from "./Chart";
 import { CheckCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { Modal } from "antd";
+import { useNavigate } from "react-router";
+import { postChallenge } from "../../api/main";
 interface IProps {
   challenge: TodayTodoData;
 }
 export default function TodoItem({ challenge }: IProps) {
+  const navigate = useNavigate();
+  console.log(challenge);
+  const ch = challenge[0];
+  console.log(ch);
   function countDays(startDate: string): number {
     const oneDay = 24 * 60 * 60 * 1000;
     const startDateTime = new Date(startDate).getTime();
@@ -20,11 +26,13 @@ export default function TodoItem({ challenge }: IProps) {
     return diffDays;
   }
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [check, setCheck] = useState<boolean>(challenge.todayStreak);
+  // const [check, setCheck] = useState<boolean>(challenge[0].todayStreak);
+  const [check, setCheck] = useState<boolean>(false);
   const handleOk = () => {
     setIsModalOpen(false);
     setCheck(true);
     //TODO: 챌린지 체크 post api 연결
+    postChallenge(ch.myChallengeId);
   };
 
   const handleCancel = () => {
@@ -35,19 +43,25 @@ export default function TodoItem({ challenge }: IProps) {
   };
 
   return (
-    <Container>
+    <Container
+      onClick={() =>
+        navigate(
+          `/groups/${ch.groupChallengeId}/challenges/${ch.groupChallengeId}`
+        )
+      }
+    >
       <div className="left">
         {/** TODO: 챌린지 이미지  */}
         <img src={Algo} alt="algo" />
-        <div className="title">{challenge.challengeName}</div>
+        <div className="title">{ch.challengeName}</div>
       </div>
       <div className="right">
         {check ? <CustomChecked /> : <CustomUnChecked onClick={showModal} />}
-        <Chart x={countDays(challenge.startAt)} />
-        <p>{countDays(challenge.startAt)} / 66</p>
+        <Chart x={countDays(ch.startAt)} />
+        <p>{countDays(ch.startAt)} / 66</p>
       </div>
       <CustomModal open={isModalOpen}>
-        <div className="modal-title">{challenge.challengeName}</div>
+        <div className="modal-title">{ch.challengeName}</div>
         <div className="modal-sub"> 챌린지를 완료하였습니까?</div>
         <div className="modal-warning">챌린지 확인 후 취소가 불가합니다.</div>
         <ModalButtonWrapper>

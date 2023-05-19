@@ -1,17 +1,17 @@
 import styled from "styled-components";
-import Algo from "../../assets/landing/algoBox.png";
-import Blog from "../../assets/landing/csBox.png";
-import CS from "../../assets/landing/blogBox.png";
-import Lecture from "../../assets/landing/lectureBox.png";
-export default function Badge() {
+import { BadgeData } from "../../types/mypage";
+import { getImagePath } from "../../util/common";
+interface IProps {
+  badges: BadgeData[];
+}
+export default function Badge({ badges }: IProps) {
   return (
     <Container>
       <div className="title">Badges</div>
       <BadgeWrapper>
-        <img src={Algo} />
-        <img src={Blog} />
-        <img src={CS} />
-        <img src={Lecture} />
+        {badges.slice(0, 4).map((b, idx) => {
+          return <img key={idx} src={getImagePath(b.imagePath)} />;
+        })}
       </BadgeWrapper>
     </Container>
   );
@@ -40,6 +40,6 @@ const BadgeWrapper = styled.div`
   margin-top: 1rem;
   img {
     width: 23%;
-    cursor: pointer;
+    border-radius: 10px;
   }
 `;

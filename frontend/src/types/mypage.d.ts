@@ -1,32 +1,53 @@
+import { userDetailData } from "./main";
 export interface MyPageData {
-  badges: ImageData[];
-  result: string;
-  memberInfo: MyPageMemberData;
-  challenge: MyChallengeData[];
-  streak: StreakData[];
-  group: GroupData[];
+  badges: BadgeData[];
+  userDetail: MyUserData;
+  challenges: MyChallengeData[];
+  // streak: StreakData[];
+  groups: MyGroupData[];
 }
 
-export interface ImageData {
-  image: string;
+export interface BadgeData {
+  challengeId: number;
+  imagePath: string;
+  number: number;
 }
 
-export interface MyPageMemberData {
-  image: string;
-  nickname: stirng;
-  tier: string;
+// export interface MyPageMemberData {
+//   image: string;
+//   nickname: stirng;
+//   tier: string;
+//   email: string;
+//   currentExp: number;
+//   nextTierExp: number;
+//   point: number;
+// }
+
+export interface MyUserData {
+  animalId: number | null;
+  blogUrl: number | null;
   email: string;
-  currentExp: number;
-  nextTierExp: number;
+  exp: number;
+  githubUrl: string | null;
+  nickname: string;
   point: number;
+  profileImagePath: string;
+  tierId: number | null;
+  userId: number;
 }
-
 export interface MyChallengeData {
   category: string;
+  myChallengeId: number;
   name: string;
-  startDate: string;
+  startAt: string;
 }
 export interface StreakData {
   date: string;
   count: number;
+}
+
+export interface MyGroupData {
+  challenges: string[];
+  groupId: number;
+  name: string;
 }

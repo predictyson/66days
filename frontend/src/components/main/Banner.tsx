@@ -124,7 +124,7 @@ const ImageWrapper = styled.div`
   img {
     display: flex;
     margin-top: 5rem;
-    width: 100%;
+    width: 90%;
     animation: float 6s ease-in-out infinite;
 
     @keyframes float {
