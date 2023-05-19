@@ -4,12 +4,12 @@ import BreadCrumb from "./BreadCrumb";
 import GroupItem from "../../components/mypage/GroupItem";
 import { useState } from "react";
 import { GroupData } from "../../types/main";
-import { MyChallengeData } from "../../types/mypage";
+import { MyChallengeData, MyGroupData } from "../../types/mypage";
 import Challenge from "../../components/mypage/Challenge";
 import Slider from "react-slick";
 import EmptySign from "../../util/EmptySign";
 interface IProps {
-  groups: GroupData[];
+  groups: MyGroupData[];
   challenges: MyChallengeData[];
 }
 export default function Group({ groups, challenges }: IProps) {
@@ -17,7 +17,8 @@ export default function Group({ groups, challenges }: IProps) {
   const handleBread = (idx: number) => {
     setActiveItem(idx);
   };
-
+  console.log(groups);
+  console.log(challenges);
   const settings = {
     centerMode: false,
     dots: false,

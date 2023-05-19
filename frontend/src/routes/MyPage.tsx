@@ -33,7 +33,7 @@ export default function MyPage() {
   return (
     <Container>
       <div className="left">
-        {mypageInfo && <Profile myInfo={mypageInfo.userDetail} date={30} />}
+        {mypageInfo && <Profile myInfo={mypageInfo.userDetail} date={33} />}
         {/* {!isEdit ? (
           <Profile
             handleEdit={handleEdit}
@@ -43,9 +43,9 @@ export default function MyPage() {
         ) : (
           <EditProfile handleEdit={handleEdit} />
         )} */}
-        <Badge badges={mypageInfo.badges} />
+        {mypageInfo && <Badge badges={mypageInfo.badges} />}
       </div>
-      {/* <div className="right">
+      <div className="right">
         <div className="streak-wrapper">
           <Title>
             My 챌린지 그래프
@@ -82,11 +82,13 @@ export default function MyPage() {
             style={{ margin: "3.2rem auto 2rem auto", width: "100%" }}
           />
         </div>
-        <Group
-          groups={DUMMY_DATA_MYPAGE.group}
-          challenges={DUMMY_DATA_MYPAGE.challenge}
-        />
-      </div> */}
+        {mypageInfo && (
+          <Group
+            groups={mypageInfo.groups}
+            challenges={mypageInfo.challenges}
+          />
+        )}
+      </div>
     </Container>
   );
 }

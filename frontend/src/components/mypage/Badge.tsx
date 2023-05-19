@@ -1,8 +1,5 @@
 import styled from "styled-components";
-import Algo from "../../assets/landing/algoBox.png";
-import Blog from "../../assets/landing/csBox.png";
-import CS from "../../assets/landing/blogBox.png";
-import Lecture from "../../assets/landing/lectureBox.png";
+
 import { getImagePath } from "../../util/common";
 interface IProps {
   badges: BadgeData[];
@@ -12,8 +9,8 @@ export default function Badge({ badges }: IProps) {
     <Container>
       <div className="title">Badges</div>
       <BadgeWrapper>
-        {badges.slice(0, 4).map((b) => {
-          return <img src={getImagePath(b.imagePath)} />;
+        {badges.slice(0, 4).map((b, idx) => {
+          return <img key={idx} src={getImagePath(b.imagePath)} />;
         })}
       </BadgeWrapper>
     </Container>
