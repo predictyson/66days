@@ -15,7 +15,6 @@ interface IProps {
 }
 
 export default function Todo({ challenges }: IProps) {
-  console.log(challenges);
   const settings = {
     centerMode: false,
     dots: false,

@@ -12,9 +12,6 @@ interface IProps {
   myGroup?: MyGroupData;
 }
 export default function GroupList({ groups, myGroup }: IProps) {
-  console.log(myGroup);
-  console.log(groups);
-
   const settings = {
     centerMode: false,
     dots: false,

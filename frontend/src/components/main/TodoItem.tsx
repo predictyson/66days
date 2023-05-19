@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Modal } from "antd";
 import { useNavigate } from "react-router";
 import { postChallenge } from "../../api/main";
+import { getImagePath } from "../../util/common";
 interface IProps {
   challenge: TodayTodoData;
 }
@@ -16,6 +17,10 @@ export default function TodoItem({ challenge }: IProps) {
   console.log(challenge);
   const ch = challenge[0];
   console.log(ch);
+  const id =
+    ch.groupChallengeId === null ? ch.myChallengeId : ch.groupChallengeId;
+  console.log(id);
+
   function countDays(startDate: string): number {
     const oneDay = 24 * 60 * 60 * 1000;
     const startDateTime = new Date(startDate).getTime();
@@ -43,16 +48,17 @@ export default function TodoItem({ challenge }: IProps) {
   };
 
   return (
-    <Container
-      onClick={() =>
-        navigate(
-          `/groups/${ch.groupChallengeId}/challenges/${ch.groupChallengeId}`
-        )
-      }
-    >
+    <Container>
       <div className="left">
         {/** TODO: 챌린지 이미지  */}
-        <img src={Algo} alt="algo" />
+        <img
+          src={getImagePath(ch.imagePath)}
+          style={{ borderRadius: "15px", cursor: "pointer" }}
+          alt="algo"
+          onClick={() =>
+            navigate(`/groups/${id}/challenges/${ch.groupChallengeId}`)
+          }
+        />
         <div className="title">{ch.challengeName}</div>
       </div>
       <div className="right">

@@ -11,7 +11,6 @@ interface IProps {
 }
 
 export default function GroupItem({ group }: IProps) {
-  console.log(group);
   const navigate = useNavigate();
   return (
     <BoxWrapper onClick={() => navigate(`groups/${group.groupId}`)}>
@@ -31,8 +30,8 @@ export default function GroupItem({ group }: IProps) {
       </ImageWrapper>
       {/* )} */}
       <ChallengeWrapper>
-        {group.badges.map((b) => {
-          return <ChallengeBox src={getImagePath(b)} />;
+        {group.badges.map((b, idx) => {
+          return <ChallengeBox key={idx} src={getImagePath(b)} />;
         })}
       </ChallengeWrapper>
     </BoxWrapper>
@@ -44,9 +43,9 @@ const ImageWrapper = styled.div<ImageWrapperProps>`
   width: 100%;
   height: 0;
   padding-bottom: 100%; /* 이미지 비율을 1:1로 유지 */
-  /* background-image: url(${(props) => props.imageUrl}); */
-  /* background-size: cover; 이미지를 부모 요소 크기에 맞춤 */
-  /* background-repeat: no-repeat; */
+  background-image: url(${(props) => props.imageUrl});
+  background-size: cover;
+  background-repeat: no-repeat;
   background-color: lightgray;
   border-radius: 15px;
   span {

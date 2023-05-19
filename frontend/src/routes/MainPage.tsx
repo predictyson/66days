@@ -1,5 +1,5 @@
 import Banner from "../components/main/Banner";
-// import Todo from "../components/main/Todo";
+import Todo from "../components/main/Todo";
 import Groups from "../components/main/Groups";
 import Ranking from "../components/main/Ranking";
 import { MainData } from "../types/main";
@@ -23,7 +23,7 @@ export default function MainPage() {
   return (
     <>
       {data && <Banner memberInfo={data.userDetail} />}
-      {/* {data && <Todo challenges={data.todayTodo} />} */}
+      {data && <Todo challenges={data.todayTodo} />}
       {data && <Groups groups={data.group} myGroup={data.myGroup} />}
       <Ranking ranking={MAIN_DUMMY_DATA.rank} />
     </>
