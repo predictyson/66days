@@ -31,7 +31,7 @@ export default function GroupItem({ group }: IProps) {
     setIsModalOpen(false);
   };
   return (
-    <Container onClick={() => navigate(`/groups/${group.groupId}`)}>
+    <Container onClick={() => navigate(`/groupIntro`)}>
       <ProfileWrapper>
         <img src={Profile1} />
         <TitleWrapper>

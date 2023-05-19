@@ -13,12 +13,12 @@ import GroupIntroImage from "../assets/group/group-intro.svg";
 import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
 import styled from "styled-components";
 import { useState } from "react";
-
+import { useNavigate } from "react-router";
 // TODO: add an api to ask to join the group
 
 export default function GroupIntro() {
   const [isApplied] = useState(false); // TODO: figure out whether a user applied or not
-
+  const navigate = useNavigate();
   return (
     <div style={{ marginInline: "8rem" }}>
       <Typography.Title style={{ fontSize: "3.2rem" }}>
@@ -46,18 +46,18 @@ export default function GroupIntro() {
               bodyStyle={{
                 display: "flex",
                 justifyContent: "space-around",
-                padding: 0,
+                padding: 5,
               }}
             >
-              <Typography.Text style={{ fontSize: "2.4rem" }}>
+              <Typography.Text style={{ fontSize: "2.2rem" }}>
                 그룹원
                 <br /> 80명
               </Typography.Text>
-              <Typography.Text style={{ fontSize: "2.4rem" }}>
+              <Typography.Text style={{ fontSize: "2.2rem" }}>
                 진행중
                 <br /> 3건
               </Typography.Text>
-              <Typography.Text style={{ fontSize: "2.4rem" }}>
+              <Typography.Text style={{ fontSize: "2.2rem" }}>
                 완료
                 <br /> 10건
               </Typography.Text>
@@ -81,6 +81,7 @@ export default function GroupIntro() {
                   color: "white",
                   marginBottom: "2rem",
                 }}
+                onClick={() => navigate(`/groups/3`)}
               >
                 {!isApplied ? "그룹 가입 신청" : "신청 취소"}
               </Button>
@@ -101,114 +102,412 @@ export default function GroupIntro() {
             size="large"
             style={{ display: "flex", padding: "4rem" }}
           >
-            {new Array(4).fill(null).map((_, idx) => (
-              <Card
-                key={idx}
-                headStyle={{ border: 0 }}
-                title={
-                  <Space
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <Typography.Text style={{ fontSize: "2rem" }}>
-                      1일 1백준 풀어봅시다.
-                    </Typography.Text>
-                    <Typography.Text type="danger" style={{ fontSize: "2rem" }}>
-                      D-3
-                    </Typography.Text>
-                  </Space>
-                }
-                bodyStyle={{ display: "flex", flexDirection: "column" }}
+            <Card
+              headStyle={{ border: 0 }}
+              title={
+                <Space
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography.Text style={{ fontSize: "2rem" }}>
+                    1일 1백준 풀어봅시다.
+                  </Typography.Text>
+                  <Typography.Text type="danger" style={{ fontSize: "2rem" }}>
+                    D-3
+                  </Typography.Text>
+                </Space>
+              }
+              bodyStyle={{ display: "flex", flexDirection: "column" }}
+              style={{
+                background: "#F6F6F6",
+                boxShadow: "0px 4px 10px 2px rgba(0, 0, 0, 0.15)",
+              }}
+            >
+              <Avatar.Group
+                maxCount={3}
+                size="large"
+                maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+              >
+                <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=3" />
+                <Avatar style={{ backgroundColor: "#f56a00" }}>K</Avatar>
+                <Avatar style={{ backgroundColor: "#f56a00" }}>J</Avatar>
+              </Avatar.Group>
+              <Space
                 style={{
-                  background: "#F6F6F6",
-                  boxShadow: "0px 4px 10px 2px rgba(0, 0, 0, 0.15)",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  paddingTop: "1rem",
                 }}
               >
-                <Avatar.Group
-                  maxCount={2}
-                  size="large"
-                  maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+                <Tag
+                  color="#5F6F94"
+                  style={{ fontSize: "1.6rem", padding: "1rem 2rem" }}
                 >
-                  <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=3" />
-                  <Avatar style={{ backgroundColor: "#f56a00" }}>K</Avatar>
-                  <Tooltip title="Ant User" placement="top">
-                    <Avatar
-                      style={{ backgroundColor: "#87d068" }}
-                      icon={<UserOutlined />}
-                    />
-                  </Tooltip>
-                  <Avatar
-                    style={{ backgroundColor: "#1890ff" }}
-                    icon={<AntDesignOutlined />}
-                  />
-                  <Avatar
-                    style={{ backgroundColor: "#1890ff" }}
-                    icon={<AntDesignOutlined />}
-                  />
-                  <Avatar
-                    style={{ backgroundColor: "#1890ff" }}
-                    icon={<AntDesignOutlined />}
-                  />
-                </Avatar.Group>
-                <Space
+                  12 /30 명
+                </Tag>
+                <Tag
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    paddingTop: "1rem",
+                    backgroundColor: "transparent",
+                    color: "#6CD3C0",
+                    border: "2px solid #6CD3C0",
+                    fontSize: "1.6rem",
+                    padding: "1rem 2rem",
+                    fontWeight: "bold",
                   }}
+                  color="#6CD3C0"
                 >
-                  <Tag
-                    color="#5F6F94"
-                    style={{ fontSize: "1.6rem", padding: "1rem 2rem" }}
-                  >
-                    12 /30 명
-                  </Tag>
-                  <Tag
-                    style={{
-                      backgroundColor: "transparent",
-                      color: "#6CD3C0",
-                      border: "1px solid #6CD3C0",
-                      fontSize: "1.6rem",
-                      padding: "1rem 2rem",
-                    }}
-                    color="#6CD3C0"
-                  >
-                    알고리즘
-                  </Tag>
+                  알고리즘
+                </Tag>
+              </Space>
+            </Card>
+
+            {/** 2 */}
+            <Card
+              headStyle={{ border: 0 }}
+              title={
+                <Space
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography.Text style={{ fontSize: "2rem" }}>
+                    같이 기술 블로그 포스팅해요
+                  </Typography.Text>
+                  <Typography.Text type="danger" style={{ fontSize: "2rem" }}>
+                    D-5
+                  </Typography.Text>
                 </Space>
-              </Card>
-            ))}
+              }
+              bodyStyle={{ display: "flex", flexDirection: "column" }}
+              style={{
+                background: "#F6F6F6",
+                boxShadow: "0px 4px 10px 2px rgba(0, 0, 0, 0.15)",
+              }}
+            >
+              {" "}
+              <Avatar.Group
+                maxCount={2}
+                size="large"
+                maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+              >
+                <Avatar style={{ backgroundColor: "green" }}>G</Avatar>
+
+                <Avatar style={{ backgroundColor: "blue" }}>S</Avatar>
+                <Tooltip title="Ant User" placement="top">
+                  <Avatar
+                    style={{ backgroundColor: "#87d068" }}
+                    icon={<UserOutlined />}
+                  />
+                </Tooltip>
+                <Avatar
+                  style={{ backgroundColor: "#1890ff" }}
+                  icon={<AntDesignOutlined />}
+                />
+                <Avatar
+                  style={{ backgroundColor: "#1890ff" }}
+                  icon={<AntDesignOutlined />}
+                />
+                <Avatar
+                  style={{ backgroundColor: "#1890ff" }}
+                  icon={<AntDesignOutlined />}
+                />
+              </Avatar.Group>
+              <Space
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  paddingTop: "1rem",
+                }}
+              >
+                <Tag
+                  color="#5F6F94"
+                  style={{ fontSize: "1.6rem", padding: "1rem 2rem" }}
+                >
+                  6/30 명
+                </Tag>
+                <Tag
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "#F37F3A",
+                    border: "2px solid #F37F3A",
+                    fontSize: "1.6rem",
+                    padding: "1rem 2rem",
+                    fontWeight: "bold",
+                  }}
+                  color="#F37F3A"
+                >
+                  기술 블로그
+                </Tag>
+              </Space>
+            </Card>
+            {/*3/ */}
+            <Card
+              headStyle={{ border: 0 }}
+              title={
+                <Space
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography.Text style={{ fontSize: "2rem" }}>
+                    인프런 완주하실분
+                  </Typography.Text>
+                  <Typography.Text type="danger" style={{ fontSize: "2rem" }}>
+                    D-1
+                  </Typography.Text>
+                </Space>
+              }
+              bodyStyle={{ display: "flex", flexDirection: "column" }}
+              style={{
+                background: "#F6F6F6",
+                boxShadow: "0px 4px 10px 2px rgba(0, 0, 0, 0.15)",
+              }}
+            >
+              <Avatar.Group
+                maxCount={3}
+                size="large"
+                maxStyle={{ color: "#f56a00", backgroundColor: "#fde3cf" }}
+              >
+                <Avatar style={{ backgroundColor: "yellow" }}>B</Avatar>
+                <Avatar style={{ backgroundColor: "green" }}>L</Avatar>
+                <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=3" />
+              </Avatar.Group>
+              <Space
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  paddingTop: "1rem",
+                }}
+              >
+                <Tag
+                  color="#5F6F94"
+                  style={{ fontSize: "1.6rem", padding: "1rem 2rem" }}
+                >
+                  28 /30 명
+                </Tag>
+                <Tag
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "#B8A9FB",
+                    border: "2px solid #B8A9FB",
+                    fontSize: "1.6rem",
+                    padding: "1rem 2rem",
+                    fontWeight: "bold",
+                  }}
+                  color="#B8A9FB"
+                >
+                  강의 시청
+                </Tag>
+              </Space>
+            </Card>
           </Space>
         </StyledChallenge>
         <StyledMember>
           <Row gutter={[4, 4]}>
-            {new Array(8).fill(null).map((_, idx) => (
-              <Col key={idx} span={12}>
-                <Space
-                  direction="vertical"
+            <Col span={12}>
+              <Space
+                direction="vertical"
+                style={{
+                  width: "100%",
+                  aspectRatio: "1/1",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  background: "#F6F6F6",
+                }}
+              >
+                <Avatar
+                  size={80}
                   style={{
-                    width: "100%",
-                    aspectRatio: "1/1",
-                    justifyContent: "center",
+                    backgroundColor: "#6CD3C0",
+                    display: "flex",
                     alignItems: "center",
-                    background: "#F6F6F6",
                   }}
                 >
-                  <Avatar
-                    size={100}
-                    src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=3"
-                  />
-                  <Typography.Text
-                    ellipsis={{
-                      tooltip:
-                        "@barabara;alskdjflk;asfjsadl;fjasdkl;jflk;asjdklf;jaslk;djfdlks;aj",
-                    }}
-                    style={{ width: 100, fontSize: "2.4rem" }}
-                  >
-                    @barabara;alskdjflk;asfjsadl;fjasdkl;jflk;asjdklf;jaslk;djfdlks;aj
-                  </Typography.Text>
-                </Space>
-              </Col>
-            ))}
+                  <h1>M</h1>
+                </Avatar>
+                <Typography.Text style={{ width: 100, fontSize: "2.4rem" }}>
+                  moonchi
+                </Typography.Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space
+                direction="vertical"
+                style={{
+                  width: "100%",
+                  aspectRatio: "1/1",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  background: "#F6F6F6",
+                }}
+              >
+                <Avatar
+                  size={80}
+                  style={{
+                    backgroundColor: "#B8A9FB",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <h1>예</h1>
+                </Avatar>
+                <Typography.Text style={{ width: 100, fontSize: "2.4rem" }}>
+                  예지
+                </Typography.Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space
+                direction="vertical"
+                style={{
+                  width: "100%",
+                  aspectRatio: "1/1",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  background: "#F6F6F6",
+                }}
+              >
+                <Avatar
+                  size={80}
+                  style={{
+                    backgroundColor: "orange",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <h1>P</h1>
+                </Avatar>
+                <Typography.Text style={{ width: 100, fontSize: "2.4rem" }}>
+                  PPoppi
+                </Typography.Text>
+              </Space>
+            </Col>
+
+            <Col span={12}>
+              <Space
+                direction="vertical"
+                style={{
+                  width: "100%",
+                  aspectRatio: "1/1",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  background: "#F6F6F6",
+                }}
+              >
+                <Avatar
+                  size={80}
+                  style={{
+                    backgroundColor: "#FF8383",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <h2>둥둥</h2>
+                </Avatar>
+                <Typography.Text style={{ width: 100, fontSize: "2.4rem" }}>
+                  둥둥이
+                </Typography.Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space
+                direction="vertical"
+                style={{
+                  width: "100%",
+                  aspectRatio: "1/1",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  background: "#F6F6F6",
+                }}
+              >
+                <Avatar
+                  size={80}
+                  style={{
+                    backgroundColor: "skyblue",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <h1>H</h1>
+                </Avatar>
+                <Typography.Text style={{ width: 100, fontSize: "2.4rem" }}>
+                  Happy
+                </Typography.Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space
+                direction="vertical"
+                style={{
+                  width: "100%",
+                  aspectRatio: "1/1",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  background: "#F6F6F6",
+                }}
+              >
+                <Avatar
+                  size={80}
+                  style={{
+                    backgroundColor: "##FBA9D6",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <h1>C</h1>
+                </Avatar>
+                <Typography.Text style={{ width: 100, fontSize: "2.4rem" }}>
+                  Choco
+                </Typography.Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space
+                direction="vertical"
+                style={{
+                  width: "100%",
+                  aspectRatio: "1/1",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  background: "#F6F6F6",
+                }}
+              >
+                <Avatar
+                  size={80}
+                  style={{
+                    backgroundColor: "lightgreen",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <h1>코</h1>
+                </Avatar>
+                <Typography.Text style={{ width: 100, fontSize: "2.4rem" }}>
+                  코코
+                </Typography.Text>
+              </Space>
+            </Col>
+            <Col span={12}>
+              <Space
+                direction="vertical"
+                style={{
+                  width: "100%",
+                  aspectRatio: "1/1",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  background: "#F6F6F6",
+                }}
+              >
+                <Avatar
+                  size={80}
+                  style={{
+                    backgroundColor: "lightgray",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <h1>빈</h1>
+                </Avatar>
+                <Typography.Text style={{ width: 100, fontSize: "2.4rem" }}>
+                  빈지노
+                </Typography.Text>
+              </Space>
+            </Col>
           </Row>
         </StyledMember>
       </StyledContainer>
