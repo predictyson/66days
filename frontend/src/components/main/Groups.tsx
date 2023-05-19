@@ -4,14 +4,14 @@ import styled from "styled-components";
 import PrevArrow from "../../assets/main/PrevArrow.png";
 import NextArrow from "../../assets/main/NextArrow.png";
 import GroupItem from "./GroupItem";
-import { GroupData, MyGroupData } from "../../types/main";
+import { GroupData } from "../../types/main";
 import Slider from "react-slick";
 // slider
 interface IProps {
   groups?: GroupData[];
-  myGroup?: MyGroupData;
+  // myGroup?: MyGroupData;
 }
-export default function GroupList({ groups, myGroup }: IProps) {
+export default function GroupList({ groups }: IProps) {
   const settings = {
     centerMode: false,
     dots: false,

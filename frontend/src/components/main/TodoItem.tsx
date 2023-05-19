@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
-import Algo from "../../assets/landing/algoBox.png";
 import { TodayTodoData } from "../../types/main";
 import Chart from "./Chart";
 import { CheckCircleOutlined } from "@ant-design/icons";

@@ -24,7 +24,7 @@ export default function MainPage() {
     <>
       {data && <Banner memberInfo={data.userDetail} />}
       {data && <Todo challenges={data.todayTodo} />}
-      {data && <Groups groups={data.group} myGroup={data.myGroup} />}
+      {data && <Groups groups={data.group} />}
       <Ranking ranking={MAIN_DUMMY_DATA.rank} />
     </>
   );
