@@ -3,7 +3,6 @@ import BreadCrumb from "./BreadCrumb";
 // import Challenge from "./Challenge";
 import GroupItem from "../../components/mypage/GroupItem";
 import { useState } from "react";
-import { GroupData } from "../../types/main";
 import { MyChallengeData, MyGroupData } from "../../types/mypage";
 import Challenge from "../../components/mypage/Challenge";
 import Slider from "react-slick";

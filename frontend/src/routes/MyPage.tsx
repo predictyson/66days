@@ -8,7 +8,7 @@ import { theme } from "../styles/theme";
 import Line from "../assets/mypage/Line.png";
 import { useEffect, useState } from "react";
 import { getMyPageInfo } from "../api/mypage";
-import EditProfile from "../components/mypage/EditProfile";
+// import EditProfile from "../components/mypage/EditProfile";
 
 // // 프로필 수정시
 export default function MyPage() {
@@ -29,7 +29,7 @@ export default function MyPage() {
   // const handleEdit = (state: boolean) => {
   //   setIsEdit(state);
   // };
-  const length = 30;
+  const length = 66;
   return (
     <Container>
       <div className="left">
@@ -354,127 +354,135 @@ const DUMMY_DATA_MYPAGE = {
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
     },
     {
       date: "2023-05-09",
-      count: 3,
+      count: 0,
+    },
+    {
+      date: "2023-05-09",
+      count: 0,
+    },
+    {
+      date: "2023-05-09",
+      count: 0,
     },
   ],
   group: [
