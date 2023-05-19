@@ -37,7 +37,7 @@ export default function BoardBox({ ...props }) {
   return (
     <>
       <BoardBoxWrapper onClick={onClickBoardBox}>
-        {props.data.role !== "MEMBER" ? (
+        {props.data.role !== "OWNER" ? (
           <Popover content={adminDescContent}>
             <NotificationFilled className="admin" />
           </Popover>

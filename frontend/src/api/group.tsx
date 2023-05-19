@@ -5,7 +5,7 @@ interface Board {
   content: string;
 }
 
-async function fetchGroupPageData(id = 1) {
+async function fetchGroupPageData(id = 3) {
   try {
     const res = await api.get(`/api/v1/page/groups/${id}`);
     if (res.status === 200) {
@@ -23,7 +23,7 @@ async function fetchGroupPageData(id = 1) {
 }
 
 // 그룹 관리 or 그룹원 보기 모달의 그룹원 리스트 데이터 fetch
-async function fetchGroupMembers(id = 1) {
+async function fetchGroupMembers(id = 3) {
   try {
     const res = await api.get(`/api/v1/group/${id}/manage/members`);
     if (res.status === 200) {
@@ -39,7 +39,7 @@ async function fetchGroupMembers(id = 1) {
 }
 
 // 그룹 가입 신청원 리스트 데이터 fetch
-async function fetchAppliedMembers(id = 1) {
+async function fetchAppliedMembers(id = 3) {
   try {
     const res = await api.get(`/api/v1/group/${id}/manage/apply`);
     if (res.status === 200) {
@@ -53,7 +53,7 @@ async function fetchAppliedMembers(id = 1) {
   }
 }
 
-async function fetchGroupBadges(id = 1) {
+async function fetchGroupBadges(id = 3) {
   try {
     const res = await api.get(`/api/v1/badge/list/${id}`);
     if (res.status === 200) {
@@ -68,7 +68,7 @@ async function fetchGroupBadges(id = 1) {
 }
 
 // TODO: 하드코딩된 groupId 추후에 수정
-async function fetchBoardListByPage(groupId: number = 1, page: number) {
+async function fetchBoardListByPage(groupId: number = 3, page: number) {
   try {
     const res = await api.get(
       `/api/v1/article/${groupId}/articles?offset=${page}`
@@ -179,7 +179,7 @@ async function handleGroupApplication(
 
 async function postComment(
   // TODO: 하드코딩된 groupId 추후에 수정
-  groupId: number = 1,
+  groupId: number = 3,
   articleId: number,
   content: string
 ) {

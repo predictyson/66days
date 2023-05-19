@@ -165,7 +165,7 @@ export default function CreateChallengeModal(props: PropsType) {
     ) {
       // TODO: groupId 1로 하드코딩 된거 추후에 수정
       const res = createNewChallenge(
-        1,
+        3,
         selectedCategory,
         titleRef.current?.input?.value,
         descRef.current?.resizableTextArea.textArea?.value,
@@ -174,7 +174,7 @@ export default function CreateChallengeModal(props: PropsType) {
       );
       // TODO: groupId 1로 하드코딩 된거 추후에 수정
       if (res) {
-        updateNewChallengeList(1);
+        updateNewChallengeList(3);
         return true;
       }
     } else {
