@@ -1,6 +1,7 @@
 import { Layout, Avatar } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
+import { useNavigate } from "react-router-dom";
 
 const { Content } = Layout;
 
@@ -10,9 +11,10 @@ interface ChallengeImgStyled {
 }
 
 export default function ChallengeBox({ ...props }) {
+  const navigate = useNavigate();
   return (
     <>
-      <ChallengeBoxWrapper>
+      <ChallengeBoxWrapper onClick={() => navigate("/groups/3/c/1")}>
         {props.notStarted ? (
           props.dueDate == -1 ? (
             <NotStartedChallengeImg bgImg={props.bgImg}>
@@ -56,11 +58,11 @@ export default function ChallengeBox({ ...props }) {
             {props.memberCnt} / {props.maxCnt} 명
           </div>
         </div>
-        {/* {props.notStarted ? (
+        {props.notStarted ? (
           <button className="sign-in__challenge-btn">챌린지 신청하기</button>
         ) : (
           <></>
-        )} */}
+        )}
       </ChallengeBoxWrapper>
     </>
   );

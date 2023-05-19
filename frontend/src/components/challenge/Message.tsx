@@ -21,18 +21,21 @@ export default function Message(props: PropsType) {
         <Avatar icon={<UserOutlined />} />
       )}
       <Space direction="vertical" style={{ marginInline: "1rem" }}>
-        <Typography.Text style={{ fontWeight: "bold" }}>
+        <Typography.Text style={{ fontWeight: "bold", fontSize: "1.6rem" }}>
           {props.message.nickname}
         </Typography.Text>
         <TextArea
-          style={{ width: "100%" }}
+          style={{ width: "100%", fontSize: "1.6rem" }}
           size="large"
           autoSize
           value={props.message.value}
           disabled
         />
       </Space>
-      <Typography.Text type="secondary" style={{ marginTop: "auto" }}>
+      <Typography.Text
+        type="secondary"
+        style={{ marginTop: "auto", fontSize: "1.2rem" }}
+      >
         {props.message.date}
       </Typography.Text>
     </div>

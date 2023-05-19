@@ -48,14 +48,21 @@ export default function Graph(props: PropsType) {
         <Typography.Text
           style={{
             color: "#b8a9fb",
+            fontSize: "1.6rem",
+            paddingLeft: "1rem",
           }}
         >
           35
         </Typography.Text>
-        <Typography.Text type="secondary">일째</Typography.Text>
+        <Typography.Text type="secondary" style={{ fontSize: "1.6rem" }}>
+          일째
+        </Typography.Text>
       </Typography.Title>
       <div style={{ display: "flex" }}>
         <div className="graph">{renderStreaks()}</div>
+        <div style={{ fontSize: "2rem", fontWeight: 700, paddingLeft: "1rem" }}>
+          FINISH
+        </div>
         <img className="flag" src={FlagIcon} />
       </div>
     </StyledGraph>

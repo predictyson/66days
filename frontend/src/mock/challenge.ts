@@ -21,7 +21,7 @@ const mockMessages = [
   {
     nickname: "성다여니니",
     profile: "https://xsgames.co/randomusers/avatar.php?g=pixel&key=2",
-    value: "피그마는 어때요?",
+    value: "강의는 좀 어때요?",
     date: "오후 8:30",
     me: false,
   },
@@ -49,7 +49,7 @@ const mockMessages = [
   {
     nickname: "뭉치",
     profile: "",
-    value: "나 권성은 할 수 있다!",
+    value: "뭉치 can do everything!",
     date: "오후 8:30",
     me: true,
   },
@@ -78,7 +78,11 @@ const mockStreak = [
   },
   {
     date: "2023-05-09",
-    count: 2,
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
   },
   {
     date: "2023-05-09",
@@ -90,63 +94,59 @@ const mockStreak = [
   },
   {
     date: "2023-05-09",
-    count: 2,
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
+  },
+  {
+    date: "2023-05-09",
+    count: 3,
   },
   {
     date: "2023-05-09",
     count: 1,
-  },
-  {
-    date: "2023-05-09",
-    count: 1,
-  },
-  {
-    date: "2023-05-09",
-    count: 3,
-  },
-  {
-    date: "2023-05-09",
-    count: 3,
-  },
-  {
-    date: "2023-05-09",
-    count: 1,
-  },
-  {
-    date: "2023-05-09",
-    count: 3,
-  },
-  {
-    date: "2023-05-09",
-    count: 3,
-  },
-  {
-    date: "2023-05-09",
-    count: 3,
-  },
-  {
-    date: "2023-05-09",
-    count: 3,
-  },
-  {
-    date: "2023-05-09",
-    count: 3,
-  },
-  {
-    date: "2023-05-09",
-    count: 3,
-  },
-  {
-    date: "2023-05-09",
-    count: 3,
-  },
-  {
-    date: "2023-05-09",
-    count: 3,
-  },
-  {
-    date: "2023-05-09",
-    count: 3,
   },
   {
     date: "2023-05-09",
