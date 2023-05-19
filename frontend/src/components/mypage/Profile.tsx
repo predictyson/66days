@@ -103,25 +103,25 @@ const Email = styled.div`
   margin-top: 1.8rem;
 `;
 
-const EditButton = styled.div`
-  width: 60%;
-  height: 3.2rem;
-  border-radius: 5px;
-  font-size: 1.6rem;
-  font-weight: ${theme.fontWeight.semibold};
-  background-color: ${theme.colors.purple};
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1.6rem;
-  cursor: pointer;
-  :hover {
-    background-color: white;
-    border: solid 3px ${theme.colors.purple};
-    color: ${theme.colors.purple};
-  }
-`;
+// const EditButton = styled.div`
+//   width: 60%;
+//   height: 3.2rem;
+//   border-radius: 5px;
+//   font-size: 1.6rem;
+//   font-weight: ${theme.fontWeight.semibold};
+//   background-color: ${theme.colors.purple};
+//   color: white;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   margin-top: 1.6rem;
+//   cursor: pointer;
+//   :hover {
+//     background-color: white;
+//     border: solid 3px ${theme.colors.purple};
+//     color: ${theme.colors.purple};
+//   }
+// `;
 
 const ProgressWrapper = styled.div`
   margin-top: 1.4rem;

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import { BadgeData } from "../../types/mypage";
 import { getImagePath } from "../../util/common";
 interface IProps {
   badges: BadgeData[];
