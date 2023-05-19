@@ -251,3 +251,64 @@ const StyledMember = styled.section`
   flex: 1;
   background-color: ${(props) => props.theme.colors.gray300};
 `;
+const DUMMY_INTRO = {
+  "group-name": "18반",
+  "challenge-list": [
+    {
+      groupChallengeId: 5,
+      challengeId: 3,
+      challengeContent: "3번그룹의 알고리즘 챌린지",
+      challengeName: "알고알고",
+      challengeTopic: "강의",
+      profileImagePathList: ["imageimage", "imageputput"],
+      maxMemberCount: 66,
+      memberCount: 2,
+      startAt: "2023-05-15",
+      endAt: "2023-07-20",
+      dday: "D + 4",
+    },
+    {
+      groupChallengeId: 6,
+      challengeId: 1,
+      challengeContent: "알고아록아로고",
+      challengeName: "알고하고싶어",
+      challengeTopic: "알고리즘",
+      profileImagePathList: [],
+      maxMemberCount: 5,
+      memberCount: 0,
+      startAt: "2023-05-15",
+      endAt: "2023-07-20",
+      dday: "D + 4",
+    },
+  ],
+  "group-image-path": "/groups/group.jpg",
+  progress: 2,
+  "group-members": [
+    {
+      image: "tobe",
+      nickname: "jingo1042",
+      badge: 0,
+      authority: "OWNER",
+    },
+    {
+      image: "/users/basic_profile.png",
+      nickname: "dzzxcvs",
+      badge: 0,
+      authority: "MANAGER",
+    },
+    {
+      image: "/users/basic_profile.png",
+      nickname: "권성은",
+      badge: 0,
+      authority: "MEMBER",
+    },
+    {
+      image: "imageputput",
+      nickname: "test",
+      badge: 0,
+      authority: "MANAGER",
+    },
+  ],
+  completed: 0,
+  "group-members-count": 4,
+};
