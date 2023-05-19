@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
 import { Layout, Modal, Button } from "antd";
-import { changeDateFormat } from "../../util/common";
+import { changeDateFormat, getImagePath } from "../../util/common";
 import { SendOutlined } from "@ant-design/icons";
 import { useState, useRef } from "react";
 import {
@@ -47,6 +47,7 @@ interface CommentType {
 interface PropsType {
   open: boolean;
   toggleModal: () => void;
+  groupId: number;
   boardData: ArticleType | undefined;
   setBoardData: React.Dispatch<React.SetStateAction<ArticleType | undefined>>;
   setBoardDataList: React.Dispatch<React.SetStateAction<BoardType>>;
@@ -76,7 +77,7 @@ export function BoardModal(props: PropsType) {
             <div className="writer-profile-box">
               <img
                 className="comment-writer-profile"
-                src={comment.profileImagePath}
+                src={getImagePath(comment.profileImagePath)}
               />
             </div>
             <div className="writer-info-box">
@@ -301,7 +302,7 @@ export function BoardModal(props: PropsType) {
                   onClick={() =>
                     props.boardData &&
                     handleUploadComment(
-                      1,
+                      props.groupId,
                       props.boardData?.articleDTO.articleId
                     )
                   }

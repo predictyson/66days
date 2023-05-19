@@ -19,6 +19,7 @@ import { createNewChallenge, getNewChallengeList } from "../../api/group";
 interface PropsType {
   open: boolean;
   toggleModal: () => void;
+  groupId: number;
   categories: CategoryType[];
   setCategories: React.Dispatch<React.SetStateAction<CategoryType[]>>;
   setChallengeList: React.Dispatch<React.SetStateAction<ChallengeType[]>>;
@@ -163,9 +164,8 @@ export default function CreateChallengeModal(props: PropsType) {
       descRef.current?.resizableTextArea.textArea?.value !== "" &&
       startDate !== undefined
     ) {
-      // TODO: groupId 1로 하드코딩 된거 추후에 수정
       const res = createNewChallenge(
-        1,
+        props.groupId,
         selectedCategory,
         titleRef.current?.input?.value,
         descRef.current?.resizableTextArea.textArea?.value,

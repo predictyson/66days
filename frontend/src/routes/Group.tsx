@@ -18,7 +18,6 @@ import {
   fetchAppliedMembers,
   fetchBoardListByPage,
   fetchChallengeList,
-  fetchGroupBadges,
   fetchGroupMembers,
   fetchGroupPageData,
 } from "../api/group";
@@ -267,7 +266,7 @@ export default function Group() {
   useEffect(() => {
     // 처음 렌더링 시 그룹 페이지 전체 데이터 fetch 메소드
     async function fetchAndSetGroupPageData() {
-      const data = await fetchGroupPageData();
+      const data = await fetchGroupPageData(groupId);
       if (data === false) {
         navigate(`/groupintro/${groupId}`);
         return;
@@ -281,21 +280,23 @@ export default function Group() {
     }
 
     async function fetchAndSetGroupSettingData() {
-      const membersData = await fetchGroupMembers();
+      if (authority !== "OWNER") {
+        return;
+      }
+      const membersData = await fetchGroupMembers(groupId);
       setMemberList(membersData["member-list"]);
-      const appliedData = await fetchAppliedMembers();
+      const appliedData = await fetchAppliedMembers(groupId);
       setAppliedList(appliedData["apply-list"]);
     }
 
-    async function fetchAndSetGroupBadgesData() {
-      const badgesData = await fetchGroupBadges();
-      // dummy data 길이가 불충분하여 임시로 데이터 이어붙임
-      setBadgeList(badgesData);
-    }
+    // async function fetchAndSetGroupBadgesData() {
+    //   const badgesData = await fetchGroupBadges(groupId);
+    //   setBadgeList(badgesData);
+    // }
 
     fetchAndSetGroupPageData();
     fetchAndSetGroupSettingData();
-    fetchAndSetGroupBadgesData();
+    // fetchAndSetGroupBadgesData();
   }, []);
 
   return (
@@ -309,7 +310,7 @@ export default function Group() {
         </div>
         <GroupBadges>
           <div className="title-box">
-            <div className="small__title ellipsis">
+            {/* <div className="small__title ellipsis">
               {groupName} 의 업적
               <TrophyFilled className="badge-icon" />
             </div>
@@ -325,8 +326,8 @@ export default function Group() {
                 </CommonButton>
               ) : (
                 <></>
-              )}
-              {/* 
+              )} */}
+            {/* 
               <CommonButton
                 color={theme.colors.gray500}
                 cursor="true"
@@ -334,9 +335,9 @@ export default function Group() {
               >
                 그룹원 보기
               </CommonButton> */}
-            </div>
+            {/* </div> */}
           </div>
-          <BadgesContainer>
+          {/* <BadgesContainer>
             {badgePreview?.map((badge, index) => (
               <BadgeBox key={index}>
                 <div className="badge-cnt">
@@ -359,7 +360,7 @@ export default function Group() {
                 />
               </BadgeBox>
             ))}
-          </BadgesContainer>
+          </BadgesContainer> */}
         </GroupBadges>
         <GroupChallenges>
           <div className="title-box">
@@ -457,6 +458,7 @@ export default function Group() {
       <CreateChallengeModal
         open={isOpenNewChallgeModal}
         toggleModal={() => setOpenNewChallgeModal((prev) => !prev)}
+        groupId={groupId}
         categories={categories}
         setCategories={setCategories}
         setChallengeList={setChallengeList}
@@ -471,6 +473,7 @@ export default function Group() {
       <BoardModal
         open={isOpenBoardModal}
         toggleModal={() => setOpenBoardModal((prev) => !prev)}
+        groupId={groupId}
         boardData={boardData}
         setBoardData={setBoardData}
         setBoardDataList={setBoardDataList}
