@@ -8,7 +8,6 @@ import { mockMessages } from "../mock/challenge";
 import { useEffect, useState } from "react";
 import Graph from "../components/challenge/Graph";
 import { DesktopOutlined } from "@ant-design/icons";
-import { theme } from "../styles/theme";
 
 const TEMP_TOTAL_PARTICIPANTS = 3;
 export default function Challenge() {
