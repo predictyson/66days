@@ -39,7 +39,7 @@ export interface MyChallengeData {
   category: string;
   myChallengeId: number;
   name: string;
-  startDate: string;
+  startAt: string;
 }
 export interface StreakData {
   date: string;

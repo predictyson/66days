@@ -9,9 +9,9 @@ import { getImagePath } from "../../util/common";
 interface IProps {
   myInfo: MyUserData;
   date: number;
-  handleEdit: (state: boolean) => void;
+  // handleEdit: (state: boolean) => void;
 }
-export default function Profile({ myInfo, date, handleEdit }: IProps) {
+export default function Profile({ myInfo, date }: IProps) {
   return (
     <Container>
       <img
@@ -22,7 +22,7 @@ export default function Profile({ myInfo, date, handleEdit }: IProps) {
       <img className="badge-img" src={Bronze} alt="badge" />
       <Nickname>{myInfo.nickname}</Nickname>
       <Email>{myInfo.email}</Email>
-      <EditButton onClick={() => handleEdit(true)}>edit</EditButton>
+      {/* <EditButton onClick={() => handleEdit(true)}>edit</EditButton> */}
       <ProgressWrapper>
         <ImageWrapper>
           <img src={Bronze} alt="current-badge" />

@@ -16,7 +16,7 @@ export default function MyPage() {
   // TODO:  마이페이지 데이터 api 연결
   const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
 
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  // const [isEdit, setIsEdit] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchMypage() {
@@ -26,9 +26,9 @@ export default function MyPage() {
     }
     fetchMypage();
   }, []);
-  const handleEdit = (state: boolean) => {
-    setIsEdit(state);
-  };
+  // const handleEdit = (state: boolean) => {
+  //   setIsEdit(state);
+  // };
   const length = 30;
   return (
     <Container>
