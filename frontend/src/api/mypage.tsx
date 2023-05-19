@@ -6,7 +6,7 @@ export async function getMyPageInfo() {
     const res = await api.get(`/api/v1/page/me`);
     if (res.status === 200) {
       console.log(res.data.myPageResponseDTO);
-      return res.data;
+      return res.data.myPageResponseDTO;
     }
 
     throw new Error();

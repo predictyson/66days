@@ -1,20 +1,25 @@
 import styled from "styled-components";
 import ProfileImg from "../../assets/main/Profile3.png";
 import Bronze from "../../assets/main/Bronze.png";
+import Silver from "../../assets/silver.png";
 import Coin from "../../assets/main/Coin.png";
 import { Progress } from "antd";
 import { theme } from "../../styles/theme";
-import { MyPageMemberData } from "../../types/mypage";
-
+import { MyUserData } from "../../types/mypage";
+import { getImagePath } from "../../util/common";
 interface IProps {
-  myInfo: MyPageMemberData;
+  myInfo: MyUserData;
   date: number;
   handleEdit: (state: boolean) => void;
 }
 export default function Profile({ myInfo, date, handleEdit }: IProps) {
   return (
     <Container>
-      <img className="profile-img" src={ProfileImg} alt="profile-img" />
+      <img
+        className="profile-img"
+        src={getImagePath(myInfo.profileImagePath)}
+        alt="profile-img"
+      />
       <img className="badge-img" src={Bronze} alt="badge" />
       <Nickname>{myInfo.nickname}</Nickname>
       <Email>{myInfo.email}</Email>
@@ -22,7 +27,7 @@ export default function Profile({ myInfo, date, handleEdit }: IProps) {
       <ProgressWrapper>
         <ImageWrapper>
           <img src={Bronze} alt="current-badge" />
-          <img src={Bronze} alt="next-badge" />
+          <img src={Silver} alt="next-badge" />
         </ImageWrapper>
         <CustomProgress percent={(date / 66) * 100} />
       </ProgressWrapper>

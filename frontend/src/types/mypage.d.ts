@@ -1,7 +1,7 @@
 import { userDetailData } from "./main";
 export interface MyPageData {
   badges: BadgeData[];
-  userDetail: userDetailData;
+  userDetail: MyUserData;
   challenges: MyChallengeData[];
   // streak: StreakData[];
   groups: MyGroupData[];
@@ -23,6 +23,18 @@ export interface BadgeData {
 //   point: number;
 // }
 
+export interface MyUserData {
+  animalId: number | null;
+  blogUrl: number | null;
+  email: string;
+  exp: number;
+  githubUrl: string | null;
+  nickname: string;
+  point: number;
+  profileImagePath: string;
+  tierId: number | null;
+  userId: number;
+}
 export interface MyChallengeData {
   category: string;
   myChallengeId: number;

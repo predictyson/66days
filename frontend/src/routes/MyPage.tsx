@@ -21,6 +21,7 @@ export default function MyPage() {
   useEffect(() => {
     async function fetchMypage() {
       const data = await getMyPageInfo();
+      console.log(data);
       setMyPageInfo(data);
     }
     fetchMypage();
@@ -28,23 +29,23 @@ export default function MyPage() {
   const handleEdit = (state: boolean) => {
     setIsEdit(state);
   };
-
-  const length = 66;
+  const length = 30;
   return (
     <Container>
       <div className="left">
-        {!isEdit ? (
+        {mypageInfo && <Profile myInfo={mypageInfo.userDetail} date={30} />}
+        {/* {!isEdit ? (
           <Profile
             handleEdit={handleEdit}
-            myInfo={DUMMY_DATA_MYPAGE.memberInfo}
+            myInfo={mypageInfo.userDetail}
             date={DUMMY_DATA_MYPAGE.streak.length}
           />
         ) : (
           <EditProfile handleEdit={handleEdit} />
-        )}
+        )} */}
         <Badge />
       </div>
-      <div className="right">
+      {/* <div className="right">
         <div className="streak-wrapper">
           <Title>
             My 챌린지 그래프
@@ -85,7 +86,7 @@ export default function MyPage() {
           groups={DUMMY_DATA_MYPAGE.group}
           challenges={DUMMY_DATA_MYPAGE.challenge}
         />
-      </div>
+      </div> */}
     </Container>
   );
 }
@@ -167,7 +168,7 @@ const Container = styled.div`
   }
 `;
 
-const DUMMY_DATA_MYPAGE: MyPageData = {
+const DUMMY_DATA_MYPAGE = {
   badges: [
     {
       image: "/image/image.jpg",
