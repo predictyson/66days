@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import FreezeIcon from "../assets/freeze.svg";
 import { mockStreak, mockUsers } from "../mock/challenge";
-import Title from "../components/challenge/Title";
 import Chat from "../components/challenge/Chat";
 import Member from "../components/challenge/Member";
 import { mockMessages } from "../mock/challenge";
 // import useChat from "../hooks/useChat";
 import { useEffect, useState } from "react";
 import Graph from "../components/challenge/Graph";
+import { DesktopOutlined } from "@ant-design/icons";
 
 const TEMP_TOTAL_PARTICIPANTS = 3;
 export default function Challenge() {
@@ -23,10 +23,12 @@ export default function Challenge() {
 
   return (
     <div style={{ marginInline: "8rem" }}>
-      <Title
-        title="김태원의 Figma 정복"
-        subtitle="김태원과 아이들의 피그마 정복기"
-      />
+      <TitleWrapper>
+        <Icon>
+          <DesktopOutlined className="icon" />
+        </Icon>
+        <div>네트워크강의</div>
+      </TitleWrapper>
       <StyledContainer>
         <Chat messages={messages} />
         <Member users={members} />
@@ -54,12 +56,25 @@ export default function Challenge() {
         />
         <StyledFreeze>
           <img src={FreezeIcon} width={50} height={50} />
-          <span>0개</span>
+          <span>2개</span>
         </StyledFreeze>
       </StyledContainer>
     </div>
   );
 }
+
+const TitleWrapper = styled.div`
+  font-size: 3rem;
+  font-weight: 700;
+  display: flex;
+  padding-bottom: 1rem;
+`;
+
+const Icon = styled.div`
+  .icon {
+    padding-right: 1rem;
+  }
+`;
 
 const StyledContainer = styled.div`
   display: flex;
@@ -74,6 +89,6 @@ const StyledFreeze = styled.section`
 
   span {
     font-size: 2.4rem;
-    margin-left: 1rem;
+    margin-left: 2rem;
   }
 `;

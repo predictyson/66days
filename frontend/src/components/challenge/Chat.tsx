@@ -30,7 +30,7 @@ export default function Chat(props: PropsType) {
       </div>
       <div ref={messagesEndRef}></div>
       <Space.Compact>
-        <Input placeholder="메시지를 입력해주세요..." />
+        <Input placeholder="메시지를 입력해주세요..." className="chat-input" />
         {/* <Button type="primary" icon={<SendOutlined />} onClick={sendMessage}>
           Send
         </Button> */}
@@ -46,6 +46,10 @@ const StyledChat = styled.section`
   background-color: #f7f5ff;
   height: 40rem;
   padding: 2rem;
+
+  .chat-input {
+    font-size: 1.6rem;
+  }
 
   .chat {
     flex: 1;

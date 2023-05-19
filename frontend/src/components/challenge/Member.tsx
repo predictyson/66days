@@ -12,20 +12,24 @@ interface PropsType {
 export default function Member(props: PropsType) {
   return (
     <StyledMember>
-      <Typography.Title level={3}>
+      <Typography.Title level={3} style={{ paddingBottom: "1rem" }}>
         <TeamOutlined style={{ fontSize: "2rem" }} />
         구성원({props.users.length}인)
       </Typography.Title>
       {props.users.map((user, idx) => (
         <Space
           key={idx}
-          style={{ justifyContent: "space-between", width: "100%" }}
+          style={{
+            justifyContent: "space-between",
+            width: "100%",
+            paddingBottom: "2rem",
+          }}
         >
           <Typography.Text
             ellipsis={{
               tooltip: `${user.name}`,
             }}
-            style={{ width: "150px" }}
+            style={{ width: "150px", fontSize: "1.5rem" }}
             // style={{ width: "calc(100% - 20px)" }}
           >
             <Avatar
