@@ -14,12 +14,16 @@ import EditProfile from "../components/mypage/EditProfile";
 export default function MyPage() {
   // const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
   // TODO:  마이페이지 데이터 api 연결
-  // const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
+  const [mypageInfo, setMyPageInfo] = useState<MyPageData | null>(null);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
 
   useEffect(() => {
-    getMyPageInfo();
+    async function fetchMypage() {
+      const data = await getMyPageInfo();
+      setMyPageInfo(data);
+    }
+    fetchMypage();
   }, []);
   const handleEdit = (state: boolean) => {
     setIsEdit(state);
