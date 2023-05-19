@@ -67,10 +67,10 @@ export default function GroupIntro() {
               style={{ width: "80%", margin: "auto" }}
             >
               <Typography.Title style={{ fontSize: "4.8rem" }}>
-                뭉치뭉치똥뭉치네
+                A705
               </Typography.Title>
               <Typography.Text style={{ fontSize: "2.4rem" }}>
-                뭉치의 친구들로 이루어진 뭉치뭉치똥뭉치네 공간입니다.
+                둥둥섬의 성장 일지
               </Typography.Text>
               <Button
                 size="large"
