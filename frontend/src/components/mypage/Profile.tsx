@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import ProfileImg from "../../assets/main/Profile3.png";
 import Bronze from "../../assets/main/Bronze.png";
 import Silver from "../../assets/silver.png";
 import Coin from "../../assets/main/Coin.png";
@@ -66,6 +65,7 @@ const Container = styled.div`
     width: 18rem;
     height: 18rem;
     margin-top: 4.8rem;
+    border-radius: 50%;
   }
   .badge-img {
     position: absolute;

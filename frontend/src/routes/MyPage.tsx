@@ -43,7 +43,7 @@ export default function MyPage() {
         ) : (
           <EditProfile handleEdit={handleEdit} />
         )} */}
-        <Badge />
+        <Badge badges={mypageInfo.badges} />
       </div>
       {/* <div className="right">
         <div className="streak-wrapper">
