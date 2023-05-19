@@ -6,7 +6,7 @@ import avartar from "../../assets/avatar.svg";
 import { Dropdown, MenuProps, Space } from "antd";
 import { useState } from "react";
 import { CreateGroupModal } from "../group/CreateGroupModal";
-import { LoginOutlined, LogoutOutlined } from "@ant-design/icons";
+import { LoginOutlined } from "@ant-design/icons";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { expireUserToken } from "../../api/auth";
 import { useNavigate } from "react-router-dom";
@@ -28,14 +28,18 @@ export default function CustomHeader() {
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: <a href="/mypage">my page</a>,
+      label: (
+        <a href="/mypage" style={{ fontSize: "1.6rem" }}>
+          my page
+        </a>
+      ),
     },
     {
       key: "2",
       danger: true,
       label: (
-        <a onClick={logoutHandler}>
-          <LogoutOutlined /> logout
+        <a onClick={logoutHandler} style={{ fontSize: "1.6rem" }}>
+          logout
         </a>
       ),
     },
