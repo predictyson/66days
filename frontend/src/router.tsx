@@ -13,6 +13,7 @@ import SearchPage from "./routes/SearchPage";
 import MyPage from "./routes/MyPage";
 import OAuth2Redirect from "./routes/OAuth2Redirect";
 import SocialSignup from "./routes/SocialSignup";
+import GroupIntro from "./routes/GroupIntro";
 // import OAuth2Redirect from "./routes/OAuth2Redirect";
 // import Signup from "./routes/Signup";
 
@@ -25,6 +26,7 @@ export default createBrowserRouter(
         <Route path="/landing" element={<LandingPage />} />
         <Route path="/socialsignup" element={<SocialSignup />} />
         <Route path="/groups" element={<SearchPage />} />
+        <Route path="/groupintro/:groupId" index element={<GroupIntro />} />
         <Route path="/groups/:groupId" index element={<Group />} />
         <Route path="/groups/:groupId/c/:challengeId" element={<Challenge />} />
         <Route path="/group" index element={<Group />} />

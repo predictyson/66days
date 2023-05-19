@@ -32,6 +32,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { getImagePath } from "../util/common";
 import BoardBox from "../components/group/BoardBox";
 import { useNavigate } from "react-router-dom";
+import ChallengeSettingModal from "../components/group/ChallengeSettingModal";
 
 // const navigate = useNavigate();
 const { Content } = Layout;
@@ -114,9 +115,9 @@ interface CategoryType {
 }
 
 export default function Group() {
-  // const location = useLocation();
-  // const groupId = location.state.groupId;
-  // console.log(groupId);
+  const location = window.location.href;
+  const groupId = Number(location.split("/").reverse()[0]);
+
   const navigate = useNavigate();
 
   const [isOpenMemberModal, setOpenMemberModal] = useState(false);
@@ -125,6 +126,8 @@ export default function Group() {
   const [isOpenNewChallgeModal, setOpenNewChallgeModal] = useState(false);
   const [isOpenNewBoardModal, setOpenNewBoardModal] = useState(false);
   const [isOpenBoardModal, setOpenBoardModal] = useState(false);
+  const [isOpenChallengeSettingModal, setOpenChallengeSettingModal] =
+    useState(false);
 
   const [boardPage, setBoardPage] = useState<number>(0);
   const [totalPage, setTotalPage] = useState<number>(0);
@@ -134,6 +137,9 @@ export default function Group() {
   const [badgePreview, setBadgePreview] = useState<BadgePreviewType[]>([]);
   const [challengeList, setChallengeList] = useState<ChallengeType[]>([]);
   const [memberList, setMemberList] = useState<MemberType[]>([]);
+  const [appliedChallengeList, setAppliedChallengeList] = useState<
+    MemberType[]
+  >([]);
   const [appliedList, setAppliedList] = useState<MemberType[]>([]);
   const [badgeList, setBadgeList] = useState<BadgeType[]>([]);
   const [filteredBadgeList, setFilteredBadgeList] = useState<BadgeType[]>([]);
@@ -162,6 +168,7 @@ export default function Group() {
           {challengeList.map((challenge: ChallengeType) => (
             <ChallengeBox
               key={challenge.groupChallengeId}
+              groupChallengeId={challenge.groupChallengeId}
               bgImg={getImagePath(challenge.imagePath)}
               notStarted={calcDueDate(challenge.startAt) < 0 ? true : false}
               title={challenge.challengeName}
@@ -169,6 +176,10 @@ export default function Group() {
               profileList={challenge.profileImagePathList}
               memberCnt={challenge.memberCount}
               maxCnt={challenge.maxMemberCount}
+              authority={authority}
+              open={isOpenChallengeSettingModal}
+              toggleModal={() => setOpenChallengeSettingModal((prev) => !prev)}
+              setChallengeAppliedMembers={setAppliedChallengeList}
             />
           ))}
           {[...Array(10 - challengeList.length)].map((index: number) => (
@@ -216,8 +227,7 @@ export default function Group() {
   }
 
   async function fetchAndSetNewBoardList(page: number) {
-    // TODO: group page api 완성되면 1대신 groupId 전송
-    const newObj = await fetchBoardListByPage(1, page);
+    const newObj = await fetchBoardListByPage(groupId, page);
     console.log(newObj.articles);
     setTotalPage(Math.ceil(newObj.articles[1] / 3) - 1);
     console.log(newObj.articles[0]);
@@ -259,7 +269,7 @@ export default function Group() {
     async function fetchAndSetGroupPageData() {
       const data = await fetchGroupPageData();
       if (data === false) {
-        navigate("/");
+        navigate(`/groupintro/${groupId}`);
         return;
       }
       setGroupName(data["group-name"]);
@@ -304,7 +314,7 @@ export default function Group() {
               <TrophyFilled className="badge-icon" />
             </div>
             <div className="btn-wrapper">
-              {authority === "MAINTAINER" ? (
+              {authority === "OWNER" ? (
                 <CommonButton
                   color={theme.colors.black}
                   margin="0 1rem 0 0"
@@ -316,14 +326,14 @@ export default function Group() {
               ) : (
                 <></>
               )}
-
+              {/* 
               <CommonButton
                 color={theme.colors.gray500}
                 cursor="true"
                 onClick={() => setOpenMemberModal((prev) => !prev)}
               >
                 그룹원 보기
-              </CommonButton>
+              </CommonButton> */}
             </div>
           </div>
           <BadgesContainer>
@@ -355,13 +365,13 @@ export default function Group() {
           <div className="title-box">
             <div className="small__title">66 챌린지 목록</div>
             {/* TODO: 그룹장이랑 매니저만 보이게 하기 */}
-            {authority === "MAINTAINER" ? (
+            {authority === "OWNER" || "MANAGER" ? (
               <div className="btn-wrapper">
                 <CommonButton
                   color={theme.colors.gray500}
                   font="Kanit-Regular"
                   cursor="true"
-                  onClick={() => handleClickCreateChallenge(1)}
+                  onClick={() => handleClickCreateChallenge(groupId)}
                 >
                   챌린지 추가
                 </CommonButton>
@@ -468,6 +478,13 @@ export default function Group() {
         setCommentData={setCommentData}
         setTotalPage={setTotalPage}
         setBoardPage={setBoardPage}
+      />
+      <ChallengeSettingModal
+        open={isOpenChallengeSettingModal}
+        toggleModal={() => setOpenChallengeSettingModal((prev) => !prev)}
+        groupChallengeId={21}
+        appliedList={appliedChallengeList}
+        setAppliedList={setAppliedList}
       />
     </div>
   );

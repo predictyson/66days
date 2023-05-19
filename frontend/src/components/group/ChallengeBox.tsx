@@ -1,6 +1,8 @@
 import { Layout, Avatar } from "antd";
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
+import { getImagePath } from "../../util/common";
+import { fetchAppliedChallengeMembers } from "../../api/group";
 
 const { Content } = Layout;
 
@@ -9,7 +11,43 @@ interface ChallengeImgStyled {
   ending?: boolean;
 }
 
-export default function ChallengeBox({ ...props }) {
+interface MemberType {
+  image: string;
+  nickname: string;
+  badge: number;
+  authority: "MEMBER" | "OWNER" | "MANAGER";
+}
+
+interface PropsType {
+  open: boolean;
+  toggleModal: () => void;
+  groupChallengeId: number;
+  notStarted: boolean;
+  dueDate: number;
+  bgImg: string;
+  title: string;
+  authority: string;
+  profileList: string[];
+  memberCnt: number;
+  maxCnt: number;
+  setChallengeAppliedMembers: React.Dispatch<
+    React.SetStateAction<MemberType[]>
+  >;
+}
+
+export default function ChallengeBox(props: PropsType) {
+  async function fetchAndSetChallengeAppliedMembers(groupChallengeId: number) {
+    const fetchedAppliedMembers = await fetchAppliedChallengeMembers(
+      groupChallengeId
+    );
+    props.setChallengeAppliedMembers(fetchedAppliedMembers);
+  }
+
+  async function handleClickChallengeSetting(groupChallengeId: number) {
+    fetchAndSetChallengeAppliedMembers(groupChallengeId);
+    props.toggleModal();
+  }
+
   return (
     <>
       <ChallengeBoxWrapper>
@@ -37,21 +75,30 @@ export default function ChallengeBox({ ...props }) {
           )}
         </div>
         <div className="challenge__members-box">
-          <Avatar.Group
-            maxCount={2}
-            maxStyle={{
-              color: theme.colors.black,
-              backgroundColor: "#fde3cf",
-            }}
-          >
-            {props.profileList.map((index: number) => (
-              // 추후 participant.image로 수정 예성
-              <Avatar
-                src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=2"
-                key={index}
-              />
-            ))}
-          </Avatar.Group>
+          {props.authority ? (
+            <div
+              className="manage__challenge"
+              onClick={() =>
+                handleClickChallengeSetting(props.groupChallengeId)
+              }
+            >
+              관리
+            </div>
+          ) : (
+            <Avatar.Group
+              maxCount={2}
+              maxStyle={{
+                color: theme.colors.black,
+                backgroundColor: "#fde3cf",
+              }}
+            >
+              {props.profileList.map((profile: string, index: number) => (
+                // 추후 participant.image로 수정 예성
+                <Avatar src={getImagePath(profile)} key={index} />
+              ))}
+            </Avatar.Group>
+          )}
+
           <div className="members__cnt-info">
             {props.memberCnt} / {props.maxCnt} 명
           </div>
@@ -114,6 +161,18 @@ const ChallengeBoxWrapper = styled(Content)`
     align-items: start;
   }
 
+  .manage__challenge {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: ${theme.colors.lightred};
+    color: white;
+
+    &:hover {
+      background-color: #eb7171;
+      transition: all 0.3s ease-in-out;
+    }
+  }
+
   .members__cnt-info {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
@@ -121,6 +180,7 @@ const ChallengeBoxWrapper = styled(Content)`
     color: ${theme.colors.white};
     text-align: center;
     margin-left: 1rem;
+    cursor: initial;
 
     @media all and (max-width: 830px) {
       margin-top: 1rem;

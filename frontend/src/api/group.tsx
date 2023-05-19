@@ -328,6 +328,49 @@ async function getNewChallengeList(groupId: number) {
   }
 }
 
+async function fetchAppliedChallengeMembers(groupChallengeId: number) {
+  try {
+    const res = await api.get(
+      `/api/v1/challenge/group_challenge/${groupChallengeId}/application_list`
+    );
+    if (res.status === 200) {
+      return res.data;
+    }
+
+    throw new Error();
+  } catch (error) {
+    console.log(error);
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
+
+async function handleChallengeApplication(
+  groupChallengeId: number,
+  state: string,
+  nickname: string
+) {
+  try {
+    const res = await api.patch(
+      `/api/v1/challenge/group_challenge/${groupChallengeId}/${nickname}/${state}`
+    );
+    if (res.status === 200) {
+      if (state === "ACCEPTED") {
+        alert(`${nickname} 님의 챌린지 승인이 완료되었습니다.`);
+      } else if (state === "REJECTED") {
+        alert(`${nickname} 님의 챌린지 거절이 완료되었습니다.`);
+      }
+      return true;
+    }
+
+    throw new Error();
+  } catch (error) {
+    console.log(error);
+    // login error -> login  page
+    // unauthorized -> unauthorized error
+  }
+}
+
 export {
   fetchGroupPageData,
   fetchGroupMembers,
@@ -346,4 +389,6 @@ export {
   fetchChallengeList,
   createNewChallenge,
   getNewChallengeList,
+  fetchAppliedChallengeMembers,
+  handleChallengeApplication,
 };
