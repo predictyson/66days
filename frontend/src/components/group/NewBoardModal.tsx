@@ -47,7 +47,7 @@ export default function NewBoardModal(props: PropsType) {
         content: contentInputRef.current.value,
       };
       // TODO: 나중에 하드코딩 된 부분 groupId로 수정
-      const resp = await postBoard(1, newBoard);
+      const resp = await postBoard(3, newBoard);
       if (resp) {
         titleInputRef.current.value = "";
         contentInputRef.current.value = "";
@@ -62,7 +62,7 @@ export default function NewBoardModal(props: PropsType) {
 
   async function fetchAndSetNewBoardList(page: number) {
     // TODO: group page api 완성되면 1대신 groupId 전송
-    const newBoardList = await fetchBoardListByPage(1, page);
+    const newBoardList = await fetchBoardListByPage(3, page);
     console.log(newBoardList);
     props.setBoardDataList({ articles: newBoardList.articles[0] });
     props.setTotalPage(Math.ceil(newBoardList.articles[1] / 3) - 1);

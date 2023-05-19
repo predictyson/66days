@@ -36,6 +36,11 @@ import { useNavigate } from "react-router-dom";
 // const navigate = useNavigate();
 const { Content } = Layout;
 
+localStorage.setItem(
+  "token",
+  "eyJ0eXBlIjoiSldUIiwicmVnRGF0ZSI6MTY4NDQ0ODUxMzgxNywiYWxnIjoiSFMyNTYifQ.eyJleHAiOjE2ODQ1MzQ5MTMsInN1YiI6IjY2ZGF5cyIsInVzZXJJZCI6Ijk5ODYyNzM2LWI1MjktNDdhZS04ZjU4LTMyNGZkZDUzNDlhNSJ9.tQLc-ozNoWbtTtdh_4C3yrZuhVYfWaSQMVhFwhMZxDc"
+);
+
 // FIXME: 타입이 아직 명확히 설정되지 않았습니다
 interface ButtonStyled {
   color?: string;
@@ -114,6 +119,9 @@ interface CategoryType {
 }
 
 export default function Group() {
+  // const location = window.location.href;
+  // const groupId = Number(location.split("/").reverse()[0]);
+
   // const location = useLocation();
   // const groupId = location.state.groupId;
   // console.log(groupId);
@@ -217,7 +225,7 @@ export default function Group() {
 
   async function fetchAndSetNewBoardList(page: number) {
     // TODO: group page api 완성되면 1대신 groupId 전송
-    const newObj = await fetchBoardListByPage(1, page);
+    const newObj = await fetchBoardListByPage(3, page);
     console.log(newObj.articles);
     setTotalPage(Math.ceil(newObj.articles[1] / 3) - 1);
     console.log(newObj.articles[0]);
@@ -304,7 +312,7 @@ export default function Group() {
               <TrophyFilled className="badge-icon" />
             </div>
             <div className="btn-wrapper">
-              {authority === "MAINTAINER" ? (
+              {/* {authority === "OWNER" || "MANAGER" ? (
                 <CommonButton
                   color={theme.colors.black}
                   margin="0 1rem 0 0"
@@ -315,15 +323,15 @@ export default function Group() {
                 </CommonButton>
               ) : (
                 <></>
-              )}
+              )} */}
 
-              <CommonButton
+              {/* <CommonButton
                 color={theme.colors.gray500}
                 cursor="true"
                 onClick={() => setOpenMemberModal((prev) => !prev)}
               >
                 그룹원 보기
-              </CommonButton>
+              </CommonButton> */}
             </div>
           </div>
           <BadgesContainer>
@@ -355,7 +363,7 @@ export default function Group() {
           <div className="title-box">
             <div className="small__title">66 챌린지 목록</div>
             {/* TODO: 그룹장이랑 매니저만 보이게 하기 */}
-            {authority === "MAINTAINER" ? (
+            {authority === "MANAGER" || "OWNER" ? (
               <div className="btn-wrapper">
                 <CommonButton
                   color={theme.colors.gray500}
