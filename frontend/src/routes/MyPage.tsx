@@ -49,9 +49,7 @@ export default function MyPage() {
         <div className="streak-wrapper">
           <Title>
             My 챌린지 그래프
-            <div className="accum">
-              누적 {DUMMY_DATA_MYPAGE.streak.length}일
-            </div>
+            <div className="accum">누적 30일</div>
           </Title>
           <StreakGraph
             commits={DUMMY_DATA_MYPAGE.streak.map((item) => item.count)}
