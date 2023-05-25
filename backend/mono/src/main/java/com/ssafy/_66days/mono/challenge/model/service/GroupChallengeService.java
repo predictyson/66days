@@ -93,7 +93,9 @@ public class GroupChallengeService {
             state = "WAITING";
         }
 
-        List<GroupChallenge> groupChallenges = groupChallengeRepository.findByGroupAndChallengeAndStateIn(group, challenge, Arrays.asList("ACTIVATED", "WAITING")); // 현재 진행 중인 챌린지가 있는지 찾아온다
+        List<GroupChallenge> groupChallenges =
+                groupChallengeRepository.findByGroupAndChallengeAndStateIn
+                        (group, challenge, Arrays.asList("ACTIVATED", "WAITING")); // 현재 진행 중인 챌린지가 있는지 찾아온다
         if (ChronoUnit.DAYS.between(today, startAt) > 30) {                                              //  시작날짜가 오늘 날짜에서 30일 초과한 날짜인지 확인
             throw new IllegalArgumentException("챌린지는 최대 30일 이내에 시작해야 합니다");
         }
